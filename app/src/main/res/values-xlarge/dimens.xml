@@ -1,0 +1,23 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    
+    <dimen name="menu_width">540dp</dimen>
+    <dimen name="dialog_empty">27dp</dimen>
+    <dimen name="spinner_width">240dp</dimen>
+
+    <dimen name="search_button_size">160dp</dimen>
+    <dimen name="spinner_orderby_and_edittext_search_height">78dp</dimen>
+    <dimen name="empty">4dp</dimen>
+
+    <dimen name="text_size_12">27dp</dimen>
+    <dimen name="text_size_16">36dp</dimen>
+    <dimen name="text_size_20">45dp</dimen>
+    <dimen name="text_size_24">54dp</dimen>
+    <dimen name="song_text_empty">63dp</dimen>
+
+    <dimen name="padding_8">16dp</dimen>
+    <dimen name="padding_20">45dp</dimen>
+</resources>
