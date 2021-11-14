@@ -184,7 +184,7 @@ private fun AppDrawer(
     val theme = mvvmViewModel.settings.theme
     val artistList by mvvmViewModel.artistList.collectAsState()
 
-    val fontScale = mvvmViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
+    val fontScale = mvvmViewModel.settings.getSpecificFontScale(ScalePow.MENU)
     val fontSizeDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
     val fontSizeSp = with(LocalDensity.current) {
         fontSizeDp.toSp()
