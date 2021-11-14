@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.db
+package jatx.russianrocksongbook.db.util
 
 import android.content.Context
 import com.google.gson.Gson
