@@ -1,5 +1,6 @@
 package jatx.russianrocksongbook.debug
 
+import android.annotation.SuppressLint
 import android.util.Log
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -29,6 +30,7 @@ class AppCrashHandler(
     private val songBookAPIAdapter: SongBookAPIAdapter
     ) : Thread.UncaughtExceptionHandler {
 
+    @SuppressLint("CheckResult")
     override fun uncaughtException(
         thread: Thread,
         throwable: Throwable

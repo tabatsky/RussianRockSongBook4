@@ -1,5 +1,6 @@
 package jatx.russianrocksongbook.preferences
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.provider.Settings
 import jatx.russianrocksongbook.domain.util.HashingUtil
@@ -13,6 +14,7 @@ class UserInfo(private val context: Context) {
     private val sp = context.getSharedPreferences(USER_PREFS_NAME, 0)
 
     val deviceIdHash: String
+        @SuppressLint("HardwareIds")
         get() {
             val deviceId = Settings.Secure.getString(
                 context.contentResolver,
@@ -26,6 +28,6 @@ class UserInfo(private val context: Context) {
         set(value) {
             val editor = sp.edit()
             editor.putString(KEY_GOOGLE_ACCOUNT, value)
-            editor.commit()
+            editor.apply()
         }
 }
