@@ -1,5 +1,6 @@
 package jatx.russianrocksongbook.preferences
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import androidx.compose.ui.graphics.Color
@@ -16,24 +17,14 @@ const val KEY_FOOTER_ROWS = "footerRows"
 const val KEY_SCROLL_SPEED = "scrollSpeed"
 const val KEY_YOUTUBE_MUSIC_DONT_ASK = "youtubeMusicDontAsk"
 const val KEY_VK_MUSIC_DONT_ASK = "vkMusicDontAsk"
-const val KEY_LAUNCH_NUMBER = "launchNumber"
 
 const val ARTIST_KINO = "Кино"
 
+@SuppressLint("ApplySharedPref")
 class Settings(
     private val context: Context
 ) {
     private val sp = context.getSharedPreferences(PREFS_NAME, 0)
-
-    var launchNumber: Int
-        get() {
-            return sp.getInt(KEY_LAUNCH_NUMBER, 0)
-        }
-        set(value) {
-            val editor = sp.edit()
-            editor.putInt(KEY_LAUNCH_NUMBER, value)
-            editor.apply()
-        }
 
     val appWasUpdated: Boolean
         get() {
@@ -62,7 +53,7 @@ class Settings(
 
             val editor = sp.edit()
             editor.putInt(KEY_APK_VERSION, newVersion)
-            editor.apply()
+            editor.commit()
         } catch (e: Throwable) {}
     }
 
@@ -72,7 +63,7 @@ class Settings(
         set(value) {
             val editor = sp.edit()
             editor.putInt(KEY_THEME, value.ordinal)
-            editor.apply()
+            editor.commit()
         }
 
     var orientation: Orientation
@@ -80,7 +71,7 @@ class Settings(
         set(value) {
             val editor = sp.edit()
             editor.putInt(KEY_ORIENTATION, value.ordinal)
-            editor.apply()
+            editor.commit()
         }
 
     var defaultArtist: String
@@ -88,7 +79,7 @@ class Settings(
         set(value) {
             val editor = sp.edit()
             editor.putString(KEY_DEFAULT_ARTIST, value)
-            editor.apply()
+            editor.commit()
         }
 
     var footerRows: Int
@@ -96,7 +87,7 @@ class Settings(
         set(value) {
             val editor = sp.edit()
             editor.putInt(KEY_FOOTER_ROWS, value)
-            editor.apply()
+            editor.commit()
         }
 
     var scrollSpeed: Float
@@ -104,7 +95,7 @@ class Settings(
         set(value) {
             val editor = sp.edit()
             editor.putFloat(KEY_SCROLL_SPEED, value)
-            editor.apply()
+            editor.commit()
         }
 
     var youtubeMusicDontAsk: Boolean
@@ -112,7 +103,7 @@ class Settings(
         set(value) {
             val editor = sp.edit()
             editor.putBoolean(KEY_YOUTUBE_MUSIC_DONT_ASK, value)
-            editor.apply()
+            editor.commit()
         }
 
     var vkMusicDontAsk: Boolean
@@ -120,7 +111,7 @@ class Settings(
         set(value) {
             val editor = sp.edit()
             editor.putBoolean(KEY_VK_MUSIC_DONT_ASK, value)
-            editor.apply()
+            editor.commit()
         }
     
     var commonFontScale: Float
@@ -128,7 +119,7 @@ class Settings(
         set(value) {
             val editor = sp.edit()
             editor.putFloat(KEY_FONT_SCALE, value)
-            editor.apply()
+            editor.commit()
         }
 
     val commonFontScaleEnum: FontScale
