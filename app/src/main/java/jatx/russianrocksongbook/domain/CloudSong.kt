@@ -1,9 +1,7 @@
-package jatx.russianrocksongbook.gson
+package jatx.russianrocksongbook.domain
 
 import jatx.russianrocksongbook.data.UserInfo
-import jatx.russianrocksongbook.db.entities.Song
-import jatx.russianrocksongbook.db.entities.USER_SONG_MD5
-import jatx.russianrocksongbook.db.entities.songTextHash
+import jatx.russianrocksongbook.data.gson.CloudSongGson
 import java.text.DecimalFormat
 import java.text.NumberFormat
 
@@ -29,6 +27,19 @@ data class CloudSong(
         isUserSong = song.origTextMD5 == USER_SONG_MD5
     )
 
+    constructor(cloudSongGson: CloudSongGson): this(
+        songId = cloudSongGson.songId,
+        googleAccount = cloudSongGson.googleAccount,
+        deviceIdHash = cloudSongGson.deviceIdHash,
+        artist = cloudSongGson.artist,
+        title = cloudSongGson.title,
+        text = cloudSongGson.text,
+        textHash = cloudSongGson.textHash,
+        isUserSong = cloudSongGson.isUserSong,
+        variant = cloudSongGson.variant,
+        raiting = cloudSongGson.raiting
+    )
+
     val visibleTitle: String
         get() = "$title${if (variant == 0) "" else " ($variant)"}"
 
@@ -37,6 +48,19 @@ data class CloudSong(
 
     val visibleTitleWithRating: String
         get() = "$visibleTitle | $formattedRating"
+
+    fun toCloudSongGson() = CloudSongGson(
+        songId,
+        googleAccount,
+        deviceIdHash,
+        artist,
+        title,
+        text,
+        textHash,
+        isUserSong,
+        variant,
+        raiting
+    )
 }
 
 fun formatRating(rating: Double): String {

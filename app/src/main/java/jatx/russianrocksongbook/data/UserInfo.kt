@@ -2,7 +2,7 @@ package jatx.russianrocksongbook.data
 
 import android.content.Context
 import android.provider.Settings
-import jatx.russianrocksongbook.db.util.HashingUtil
+import jatx.russianrocksongbook.domain.util.HashingUtil
 
 const val USER_PREFS_NAME = "RussianRockUserPrefs"
 

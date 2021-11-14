@@ -1,11 +1,12 @@
-package jatx.russianrocksongbook.gson
+package jatx.russianrocksongbook.data.gson
 
-import jatx.russianrocksongbook.db.entities.Song
+import jatx.russianrocksongbook.domain.CloudSong
+import jatx.russianrocksongbook.domain.Song
 
 const val TYPE_CLOUD = "cloud"
 const val TYPE_OUT_OF_THE_BOX = "outOfTheBox"
 
-data class Warning(
+data class WarningGson(
     var warningType: String = TYPE_OUT_OF_THE_BOX,
     var artist: String = "",
     var title: String = "",

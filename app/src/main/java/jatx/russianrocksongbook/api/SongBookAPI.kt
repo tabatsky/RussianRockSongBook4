@@ -1,10 +1,10 @@
 package jatx.russianrocksongbook.api
 
 import io.reactivex.Single
-import jatx.russianrocksongbook.gson.ResultWithAddSongListResultData
-import jatx.russianrocksongbook.gson.ResultWithCloudSongListData
-import jatx.russianrocksongbook.gson.ResultWithNumber
-import jatx.russianrocksongbook.gson.ResultWithoutData
+import jatx.russianrocksongbook.data.gson.ResultWithAddSongListResultDataGson
+import jatx.russianrocksongbook.data.gson.ResultWithCloudSongListDataGson
+import jatx.russianrocksongbook.data.gson.ResultWithNumberGson
+import jatx.russianrocksongbook.data.gson.ResultWithoutDataGson
 import retrofit2.http.*
 
 const val BASE_URL = "http://tabatsky.ru/SongBook/api/"
@@ -12,25 +12,25 @@ const val BASE_URL = "http://tabatsky.ru/SongBook/api/"
 interface SongBookAPI {
     @FormUrlEncoded
     @POST("crashes/add")
-    fun sendCrash(@FieldMap params: Map<String, String>): Single<ResultWithoutData>
+    fun sendCrash(@FieldMap params: Map<String, String>): Single<ResultWithoutDataGson>
 
     @FormUrlEncoded
     @POST("songs/add")
-    fun addSong(@FieldMap params: Map<String, String>): Single<ResultWithoutData>
+    fun addSong(@FieldMap params: Map<String, String>): Single<ResultWithoutDataGson>
 
     @FormUrlEncoded
     @POST("songs/addList")
-    fun addSongList(@FieldMap params: Map<String, String>): Single<ResultWithAddSongListResultData>
+    fun addSongList(@FieldMap params: Map<String, String>): Single<ResultWithAddSongListResultDataGson>
 
     @FormUrlEncoded
     @POST("warnings/add")
-    fun addWarning(@FieldMap params: Map<String, String>): Single<ResultWithoutData>
+    fun addWarning(@FieldMap params: Map<String, String>): Single<ResultWithoutDataGson>
 
     @GET("songs/search/{searchFor}/{orderBy}")
     fun searchSongs(
         @Path("searchFor") searchFor: String,
         @Path("orderBy") orderBy: String
-    ): Single<ResultWithCloudSongListData>
+    ): Single<ResultWithCloudSongListDataGson>
 
     @GET("songs/vote/{googleAccount}/{deviceIdHash}/{artist}/{title}/{variant}/{voteValue}")
     fun vote(
@@ -40,13 +40,13 @@ interface SongBookAPI {
         @Path("title") title: String,
         @Path("variant") variant: Int,
         @Path("voteValue") voteValue: Int
-    ): Single<ResultWithNumber>
+    ): Single<ResultWithNumberGson>
     
     @GET("songs/getUploadsCountForUser/{googleAccount}/{deviceIdHash}")
     fun getUploadsCountForUser(
         @Path("googleAccount") googleAccount: String,
         @Path("deviceIdHash") deviceIdHash: String
-    ): Single<ResultWithNumber>
+    ): Single<ResultWithNumberGson>
 
     @GET("songs/delete/{secret1}/{secret2}/{artist}/{title}/{variant}")
     fun delete(
@@ -55,5 +55,5 @@ interface SongBookAPI {
         @Path("artist") artist: String,
         @Path("title") title: String,
         @Path("variant") variant: Int,
-    ): Single<ResultWithNumber>
+    ): Single<ResultWithNumberGson>
 }

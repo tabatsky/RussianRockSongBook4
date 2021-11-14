@@ -1,17 +1,12 @@
 package jatx.russianrocksongbook.db
 
 import android.content.Context
-import android.content.Intent
 import com.google.gson.Gson
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.data.SongRepository
-import jatx.russianrocksongbook.db.entities.Song
-import jatx.russianrocksongbook.gson.SongBook
+import jatx.russianrocksongbook.data.gson.SongBookGson
+import jatx.russianrocksongbook.domain.Song
 import java.util.*
-
-const val ACTION_UPDATE_PROGRESS = "jatx.russianrocksongbook.UPDATE_PROGRESS"
-const val EXTRA_CURRENT = "current"
-const val EXTRA_TOTAL = "total"
 
 fun fillDbFromJSON(songRepo: SongRepository, context: Context, onProgressChanged: (Int, Int) -> Unit) {
     val jsonLoader = JsonLoader(context)
@@ -43,7 +38,7 @@ class JsonLoader(
                 val jsonStr = sc.useDelimiter("\\A").next()
                 sc.close()
 
-                val songbook = Gson().fromJson(jsonStr, SongBook::class.java)
+                val songbook = Gson().fromJson(jsonStr, SongBookGson::class.java)
 
                 return songbook.songbook.map { Song(artist, it) }
             }

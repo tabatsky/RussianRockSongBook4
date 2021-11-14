@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.db.util
+package jatx.russianrocksongbook.domain.util
 
 import android.util.Log
 import org.apache.commons.lang3.RandomStringUtils

@@ -1,8 +1,9 @@
-package jatx.russianrocksongbook.gson
+package jatx.russianrocksongbook.domain
 
 import android.os.Build
 import jatx.russianrocksongbook.debug.exceptionToString
 import jatx.russianrocksongbook.data.Version
+import jatx.russianrocksongbook.data.gson.AppCrashGson
 
 data class AppCrash(
     val appVersionName: String = Version.appVersionName,
@@ -13,4 +14,8 @@ data class AppCrash(
     val stackTrace: String
 ) {
     constructor(e: Throwable): this(stackTrace = exceptionToString(e))
+
+    fun toAppCrashJson() = AppCrashGson(
+        appVersionName, appVersionCode, androidVersion, manufacturer, product, stackTrace
+    )
 }
