@@ -25,9 +25,10 @@ class UserInfo(private val context: Context) {
 
     var googleAccount: String
         get() = sp.getString(KEY_GOOGLE_ACCOUNT, null) ?: ""
+        @SuppressLint("ApplySharedPref")
         set(value) {
             val editor = sp.edit()
             editor.putString(KEY_GOOGLE_ACCOUNT, value)
-            editor.apply()
+            editor.commit()
         }
 }
