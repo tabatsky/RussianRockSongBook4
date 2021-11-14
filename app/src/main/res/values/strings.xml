@@ -60,9 +60,6 @@
     <string name="close">Закрыть</string>
 
     <string name="item_review_app">Оценить приложение</string>
-    <string name="item_donate_50">Пожертвовать 50 рублей</string>
-    <string name="item_donate_100">Пожертвовать 100 рублей</string>
-    <string name="item_donate_150">Пожертвовать 150 рублей</string>
     <string name="item_dev_site">Сайт разработчика</string>
 
     <string name="add_artist_manual">
