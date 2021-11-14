@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.PowerManager
 import android.util.Log
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
@@ -41,6 +42,16 @@ import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 import java.util.*
 import javax.inject.Inject
+import com.android.billingclient.api.Purchase
+
+import com.android.billingclient.api.BillingResult
+
+import com.android.billingclient.api.PurchasesResponseListener
+
+import com.android.billingclient.api.BillingClient
+
+
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity(), PurchasesUpdatedListener {
@@ -56,7 +67,7 @@ class MainActivity : ComponentActivity(), PurchasesUpdatedListener {
     lateinit var fileSystemAdapter: FileSystemAdapter
 
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
-    private lateinit var wakeLock: PowerManager.WakeLock
+//    private lateinit var wakeLock: PowerManager.WakeLock
 
     private lateinit var billingClient: BillingClient
 
@@ -70,6 +81,7 @@ class MainActivity : ComponentActivity(), PurchasesUpdatedListener {
         when (settings.orientation) {
             Orientation.PORTRAIT -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             Orientation.LANDSCAPE -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            else -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         }
 
         setContent {
@@ -203,15 +215,20 @@ class MainActivity : ComponentActivity(), PurchasesUpdatedListener {
             }
         })
 
-        val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
-        wakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "russianrocksongbook:song-text-power")
-        wakeLock.acquire()
+//        val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
+//        wakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "russianrocksongbook:song-text-power")
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
-    override fun onDestroy() {
-        wakeLock.release()
-        super.onDestroy()
-    }
+//    override fun onStart() {
+//        super.onStart()
+//        wakeLock.acquire(900 * 1000L)
+//    }
+//
+//    override fun onPause() {
+//        wakeLock.release()
+//        super.onPause()
+//    }
 
     override fun onBackPressed() = mvvmViewModel.back {
         finish()
@@ -250,7 +267,7 @@ class MainActivity : ComponentActivity(), PurchasesUpdatedListener {
     private fun showFileSelectDialog() {
         ChooserDialog(this)
             .withFilter(true, false)
-            .withStartFile(Environment.getExternalStorageDirectory().absolutePath)
+            .withStartFile(getExternalFilesDir(null)?.absolutePath)
             .withChosenListener { path, _ ->
                 mvvmViewModel.copySongsFromDirToRepo(path)
             }
@@ -274,10 +291,12 @@ class MainActivity : ComponentActivity(), PurchasesUpdatedListener {
     }
 
     private fun checkDonations() {
-        val purchasesResult = billingClient.queryPurchases("inapp")
-
-        purchasesResult.purchasesList?.forEach {
-            consumePurchase(it)
+        billingClient.queryPurchasesAsync(
+            BillingClient.SkuType.INAPP
+        ) { _, list ->
+            list.forEach {
+                consumePurchase(it)
+            }
         }
     }
 
@@ -290,7 +309,9 @@ class MainActivity : ComponentActivity(), PurchasesUpdatedListener {
                     .build()
                 billingClient.consumeAsync(consumeParams) { responseCode, _ ->
                     Log.e("consume", responseCode.responseCode.toString())
-                    mvvmViewModel.showToast(R.string.thanks_for_donation)
+                    runOnUiThread {
+                        mvvmViewModel.showToast(R.string.thanks_for_donation)
+                    }
                 }
             }
         }

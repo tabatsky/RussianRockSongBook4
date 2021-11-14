@@ -27,20 +27,15 @@
     </string-array>
 
     <string name="app_name">Песенник русского рока</string>
-    <string name="action_settings">Настройки</string>
     <string name="title_settings">Настройки</string>
-    <string name="drawer_open">drawer_open</string>
-    <string name="drawer_close">drawer_close</string>
 
     <string name="yes">Да</string>
-    <string name="no">Нет</string>
     <string name="ok">Ок</string>
     <string name="cancel">Отмена</string>
 
     <string name="save_and_restart">Сохранить и перезапустить</string>
-    <string name="help_dev">Помочь разработчику</string>
 
-    <string name="wait_please">ПОДОЖДИТЕ...</string>
+    <string name="wait_please">ПОДОЖДИТЕ…</string>
     <string name="wait_db_init">Построение базы данных</string>
 
     <string name="theme">Тема:</string>
@@ -49,14 +44,7 @@
     <string name="orientFix">Ориентация:</string>
     <string name="hidePanel">Нижняя панель:</string>
     <string name="scrollSpeed">Скорость прокрутки (x):</string>
-    <string name="listenFind">Искать в Google Play</string>
-    <string name="sendToDev">Отправить разработчику</string>
 
-    <string name="new_chords">Новые аккорды</string>
-    <string name="review">Оставить отзыв</string>
-    <string name="r50">50Р</string>
-    <string name="r100">100Р</string>
-    <string name="r150">150Р</string>
     <string name="close">Закрыть</string>
 
     <string name="item_review_app">Оценить приложение</string>
@@ -171,7 +159,6 @@
             \nДобавлена возможность поиска аудио в Яндекс-музыке.
 	</string>
 
-    <string name="need_save_before">Сначала нужно сохранить</string>
     <string name="song_is_out_of_the_box">Нельзя залить в облако: данный вариант аккордов поставляется вместе с приложением либо был сохранен из облака</string>
     <string name="dialog_upload_to_cloud_title">Отправить в облако?</string>
     <string name="dialog_upload_to_cloud_message">Трафик оплачивается согласно тарифу Вашего провайдера</string>
@@ -183,41 +170,9 @@
         Если Вы считаете, что с данной песней что-то не так, Вы можете отправить об этом уведомление разработчику.
         \nУточнить, что именно не так, можно в комментарии.
     </string>
-    <string name="send">Отправить</string>
     <string name="hint_comment">Комментарий</string>
     <string name="title_activity_cloud_search">Аккорды онлайн</string>
 
-    <string name="button_bind_first_attempt">Привязать</string>
-    <string name="button_bind_one_more_attempt">Еще раз</string>
-    <string name="button_not_bind">Без аккаунта</string>
-    <string name="title_bind_first_attempt">Привязать аккаунт Google?</string>
-    <string name="title_bind_one_more_attempt">Неудача</string>
-    <string name="message_bind_first_attempt">
-        \nБез аккаунта Google аккорды, загруженные Вами в облако, не будут учитываться
-        на других Ваших устройствах, а так же после удаления и повторной установки приложения.
-        <!--Вы можете привязать аккаунт позже в настройках приложения.\n-->
-        \nПродолжить?
-    </string>
-    <string name="message_bind_one_more_attempt">
-        \nНе удалось привязать аккаунт Google.
-        \nПопробовать еще раз?
-    </string>
-
-    <string name="download_cancel">Не надо</string>
-    <string name="download_buy">Купить безлимит</string>
-    <string name="download_ads">Посмотреть рекламу\n и сохранить</string>
-
-    <string name="download_message">
-        \nЧтобы иметь возможность сохранять песни из облака, нужно внести свой вклад в развитие приложения.
-        \n
-        \nСделать это можно двумя способами:
-        \n1. Загрузить в облако аккорды %d песен, которых там еще нет (Вы загрузили: %d).
-        \n2. Приобрести встроенный товар \"Безлимитное сохранение\".
-        \n
-        \nТак же, за каждый просмотр рекламного видео, Вы получаете возможность сохранить одну песню.
-    </string>
-
-    <string name="ads_waiting">Ожидаем загрузку рекламы...</string>
     <string name="utf8_not_supported">Кодировка UTF-8 не поддерживается</string>
     <string name="vk_app_not_installed">Приложение VK не установлено</string>
     <string name="upload_to_cloud_success">Успешно добавлено в облако</string>
@@ -231,17 +186,11 @@
     <string name="dont_ask_more">Больше не спрашивать</string>
     <string name="question_search_at_youtube_music">Искать песню в Youtube Music?</string>
     <string name="question_search_at_vk_music">Искать песню в приложении VK?</string>
-    <string name="error_get_purchase_info">Ошибка получения информации о покупках</string>
     <string name="chords_saved_and_added_to_favorite">Аккорды сохранены в локальной базе данных и добавлены в избранное</string>
-    <string name="error_load_ads">Ошибка загрузки рекламы</string>
-    <string name="unlimited_save_purchased">Приобретено безлимитное сохранение</string>
-    <string name="purchase_canceled">Отмена покупки</string>
-    <string name="purchase_error">Ошибка покупки</string>
     <string name="folder_does_not_exist">Папка не существует</string>
     <string name="this_is_not_folder">Это не папка</string>
     <string name="added_songs_count">Добавлено песен: %d</string>
     <string name="upload_songs_result">Добавлено: %d\nПовторов: %d\nОшибок: %d</string>
-    <string name="no_app_to_open_folder">Не установлено подходящее приложение, чтобы открыть папку</string>
 
     <string name="add_artist">Добавить исполнителя</string>
     <string name="donation">Пожертвования</string>
@@ -254,14 +203,5 @@
     <string name="toast_song_added">Песня добавлена</string>
     <string name="toast_fill_all_fields">Заполните все поля</string>
 
-    <string name="donation_1">Пожертвовать 1$</string>
-    <string name="donation_2">Пожертвовать 2$</string>
-    <string name="donation_5">Пожертвовать 5$</string>
-    <string name="donation_10">Пожертвовать 10$</string>
-    <string name="donation_20">Пожертвовать 20$</string>
-    <string name="donation_50">Пожертвовать 50$</string>
-    <string name="donation_100">Пожертвовать 100$</string>
-    <string name="donation_200">Пожертвовать 200$</string>
     <string name="thanks_for_donation">Спасибо за Ваше пожертвование</string>
-    <string name="toast_not_supported">Функция не поддерживается на Вашем устройстве</string>
 </resources>

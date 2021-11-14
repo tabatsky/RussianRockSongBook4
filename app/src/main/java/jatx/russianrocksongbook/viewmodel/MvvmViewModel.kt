@@ -636,7 +636,7 @@ class MvvmViewModel(
         onPurchaseItem(sku)
     }
 
-    fun showToast(toastText: String) {
+    private fun showToast(toastText: String) {
         Toast.makeText(context, toastText, Toast.LENGTH_LONG).show()
     }
 
