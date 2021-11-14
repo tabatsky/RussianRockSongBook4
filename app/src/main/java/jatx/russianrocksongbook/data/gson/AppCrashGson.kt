@@ -1,7 +1,7 @@
 package jatx.russianrocksongbook.data.gson
 
 import android.os.Build
-import jatx.russianrocksongbook.data.Version
+import jatx.russianrocksongbook.preferences.Version
 
 data class AppCrashGson(
     val appVersionName: String = Version.appVersionName,

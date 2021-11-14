@@ -15,14 +15,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.R
-import jatx.russianrocksongbook.data.*
+import jatx.russianrocksongbook.data.ARTIST_ADD_ARTIST
+import jatx.russianrocksongbook.data.ARTIST_ADD_SONG
+import jatx.russianrocksongbook.data.ARTIST_CLOUD_SONGS
+import jatx.russianrocksongbook.data.ARTIST_DONATION
+import jatx.russianrocksongbook.preferences.*
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 
 @Composable

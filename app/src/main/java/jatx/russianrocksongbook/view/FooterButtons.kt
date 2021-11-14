@@ -15,7 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.R
-import jatx.russianrocksongbook.data.Theme
+import jatx.russianrocksongbook.preferences.Theme
 
 @Composable
 fun FooterButton(

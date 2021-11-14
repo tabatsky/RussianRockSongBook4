@@ -71,7 +71,7 @@ class SongRepository(
     fun getSongByArtistAndTitle(artist: String, title: String) =
         songDao.getSongByArtistAndTitle(artist, title)?.apply {
             Song(this)
-        } ?: null
+        }
 
     fun setFavorite(favorite: Boolean, artist: String, title: String) = songDao.setFavorite(favorite, artist, title)
 

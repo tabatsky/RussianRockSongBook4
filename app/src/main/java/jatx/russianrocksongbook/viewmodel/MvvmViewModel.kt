@@ -10,12 +10,13 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.data.*
-import jatx.russianrocksongbook.data.FileSystemAdapter
 import jatx.russianrocksongbook.data.gson.STATUS_ERROR
 import jatx.russianrocksongbook.data.gson.STATUS_SUCCESS
 import jatx.russianrocksongbook.domain.CloudSong
 import jatx.russianrocksongbook.domain.Song
 import jatx.russianrocksongbook.domain.formatRating
+import jatx.russianrocksongbook.preferences.Settings
+import jatx.russianrocksongbook.preferences.UserInfo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.io.File

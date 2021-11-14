@@ -13,9 +13,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import jatx.russianrocksongbook.R
-import jatx.russianrocksongbook.data.ScalePow
+import jatx.russianrocksongbook.preferences.ScalePow
+import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 
 @Composable
 fun StubScreen(mvvmViewModel: MvvmViewModel) {
