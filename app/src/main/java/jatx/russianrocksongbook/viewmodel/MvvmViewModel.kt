@@ -10,12 +10,12 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.data.*
-import jatx.russianrocksongbook.db.entities.Song
 import jatx.russianrocksongbook.data.FileSystemAdapter
-import jatx.russianrocksongbook.gson.CloudSong
-import jatx.russianrocksongbook.gson.STATUS_ERROR
-import jatx.russianrocksongbook.gson.STATUS_SUCCESS
-import jatx.russianrocksongbook.gson.formatRating
+import jatx.russianrocksongbook.data.gson.STATUS_ERROR
+import jatx.russianrocksongbook.data.gson.STATUS_SUCCESS
+import jatx.russianrocksongbook.domain.CloudSong
+import jatx.russianrocksongbook.domain.Song
+import jatx.russianrocksongbook.domain.formatRating
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.io.File
@@ -152,7 +152,7 @@ class MvvmViewModel(
                     STATUS_ERROR -> showToast(result.message ?: "")
                     STATUS_SUCCESS -> {
                         result.data?.apply {
-                            _cloudSongList.value = this
+                            _cloudSongList.value = this.map{ CloudSong(it) }
                             _cloudSongCount.value = this.size
                         }
                     }
@@ -274,7 +274,8 @@ class MvvmViewModel(
     fun setFavorite(value: Boolean) {
         Log.e("set favorite", value.toString())
         currentSong.value?.apply {
-            saveSong(this.withFavorite(value))
+            this.favorite = value
+            saveSong(this)
             if (!value && currentArtist.value == ARTIST_FAVORITE) {
                 _currentSongCount.value = songRepo.getCountByArtist(ARTIST_FAVORITE)
                 if (currentSongCount.value > 0) {
@@ -586,9 +587,9 @@ class MvvmViewModel(
 
     fun addSongToRepo(artist: String, title: String, text: String) {
         val song = Song()
-            .withArtist(artist)
-            .withTitle(title)
-            .withText(text)
+        song.artist = artist
+        song.title = title
+        song.text = text
         val actualSong = songRepo.insertReplaceUserSong(song)
         showToast(R.string.toast_song_added)
         showUploadOfferForSong(actualSong)

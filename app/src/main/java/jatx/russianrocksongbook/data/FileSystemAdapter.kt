@@ -2,7 +2,7 @@ package jatx.russianrocksongbook.data
 
 import android.content.Context
 import androidx.documentfile.provider.DocumentFile
-import jatx.russianrocksongbook.db.entities.Song
+import jatx.russianrocksongbook.domain.Song
 import java.io.File
 import java.io.FileNotFoundException
 import java.util.*
@@ -30,9 +30,9 @@ class FileSystemAdapter(
                 val text = sc.useDelimiter("\\A").next()
                 val title = file.name?.replace("\\.txt$".toRegex(), "")?.trim() ?: ""
                 val song = Song()
-                    .withArtist(artist)
-                    .withTitle(title)
-                    .withText(text)
+                song.artist = artist
+                song.title = title
+                song.text = text
                 songs.add(song)
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()
@@ -62,9 +62,9 @@ class FileSystemAdapter(
                 val text = sc.useDelimiter("\\A").next()
                 val title = file.name.replace("\\.txt$".toRegex(), "").trim()
                 val song = Song()
-                    .withArtist(artist)
-                    .withTitle(title)
-                    .withText(text)
+                song.artist = artist
+                song.title = title
+                song.text = text
                 songs.add(song)
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()

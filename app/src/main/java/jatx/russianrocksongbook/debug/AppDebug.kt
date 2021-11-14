@@ -1,17 +1,12 @@
 package jatx.russianrocksongbook.debug
 
 import android.util.Log
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import jatx.russianrocksongbook.App
 import jatx.russianrocksongbook.data.SongBookAPIAdapter
-import jatx.russianrocksongbook.gson.AppCrash
+import jatx.russianrocksongbook.domain.AppCrash
 import java.io.PrintWriter
 import java.io.StringWriter
-import javax.inject.Inject
 
 object AppDebug {
     fun setAppCrashHandler(songBookAPIAdapter: SongBookAPIAdapter) {

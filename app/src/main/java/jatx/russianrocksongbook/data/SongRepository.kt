@@ -2,10 +2,10 @@ package jatx.russianrocksongbook.data
 
 import io.reactivex.Flowable
 import jatx.russianrocksongbook.db.dao.SongDao
-import jatx.russianrocksongbook.db.entities.Song
-import jatx.russianrocksongbook.db.entities.USER_SONG_MD5
-import jatx.russianrocksongbook.db.entities.songTextHash
-import jatx.russianrocksongbook.gson.CloudSong
+import jatx.russianrocksongbook.domain.CloudSong
+import jatx.russianrocksongbook.domain.Song
+import jatx.russianrocksongbook.domain.USER_SONG_MD5
+import jatx.russianrocksongbook.domain.songTextHash
 
 const val ARTIST_FAVORITE = "Избранное"
 const val ARTIST_ADD_ARTIST = "Добавить исполнителя"
@@ -53,43 +53,46 @@ class SongRepository(
             songDao.getCountByArtist(artist)
 
     fun getSongsByArtist(artist: String) =
-        if (artist == ARTIST_FAVORITE)
+        (if (artist == ARTIST_FAVORITE)
             songDao.getSongsFavorite()
         else
-            songDao.getSongsByArtist(artist)
+            songDao.getSongsByArtist(artist))
+            .map { list ->
+                list.map { Song(it) }
+            }
 
     fun getSongByArtistAndPosition(artist: String, position: Int) =
-        if (artist == ARTIST_FAVORITE)
+        (if (artist == ARTIST_FAVORITE)
             songDao.getSongByPositionFavorite(position)
         else
-            songDao.getSongByPositionAndArtist(position, artist)
+            songDao.getSongByPositionAndArtist(position, artist))
+            .map { Song(it) }
 
     fun getSongByArtistAndTitle(artist: String, title: String) =
-        songDao.getSongByArtistAndTitle(artist, title)
+        songDao.getSongByArtistAndTitle(artist, title)?.apply {
+            Song(this)
+        } ?: null
 
     fun setFavorite(favorite: Boolean, artist: String, title: String) = songDao.setFavorite(favorite, artist, title)
 
     fun updateSong(song: Song) {
-        songDao.updateSong(
-            song.withOutOfTheBox(
-                songTextHash(song.text) == song.origTextMD5
-            )
-        )
+        song.outOfTheBox = (songTextHash(song.text) == song.origTextMD5)
+        songDao.updateSong(song.toSongEntity())
     }
 
     fun deleteSongToTrash(song: Song) = songDao.setDeleted(true, song.artist, song.title)
 
     fun addSongFromCloud(cloudSong: CloudSong) {
         val song = Song()
-            .withArtist(cloudSong.artist)
-            .withTitle(cloudSong.visibleTitle)
-            .withText(cloudSong.text)
-            .withFavorite(true)
-            .withOutOfTheBox(true)
-            .withOrigTextMD5(songTextHash(cloudSong.text))
+        song.artist = cloudSong.artist
+        song.title = cloudSong.title
+        song.text = cloudSong.text
+        song.favorite = true
+        song.outOfTheBox = true
+        song.origTextMD5 = songTextHash(cloudSong.text)
 
         if (songDao.getSongByArtistAndTitle(cloudSong.artist, cloudSong.visibleTitle) == null) {
-            songDao.insertReplaceSong(song)
+            songDao.insertReplaceSong(song.toSongEntity())
         } else {
             updateSongText(song)
             setFavorite(true, cloudSong.artist, cloudSong.visibleTitle)
@@ -100,24 +103,24 @@ class SongRepository(
 
     fun insertReplaceUserSongs(songs: List<Song>): List<Song> {
         val actualSongs = songs.map {
+            it.favorite = isSongFavorite(it.artist, it.title)
+            it.origTextMD5 = USER_SONG_MD5
+            it.outOfTheBox = false
             it
-                .withFavorite(isSongFavorite(it.artist, it.title))
-                .withOrigTextMD5(USER_SONG_MD5)
-                .withOutOfTheBox(false)
         }
-        songDao.insertReplaceSongs(actualSongs)
+        songDao.insertReplaceSongs(actualSongs.map { it.toSongEntity() })
         return actualSongs
     }
 
-    fun insertIgnoreSongs(songs: List<Song>) = songDao.insertIgnoreSongs(songs)
+    fun insertIgnoreSongs(songs: List<Song>) = songDao
+        .insertIgnoreSongs(songs.map { it.toSongEntity() })
 
     fun insertReplaceUserSong(song: Song): Song {
-        val actualSong = song
-            .withFavorite(isSongFavorite(song.artist, song.title))
-            .withOrigTextMD5(USER_SONG_MD5)
-            .withOutOfTheBox(false)
-        songDao.insertReplaceSong(actualSong)
-        return actualSong
+        song.favorite = isSongFavorite(song.artist, song.title)
+        song.origTextMD5 = USER_SONG_MD5
+        song.outOfTheBox = false
+        songDao.insertReplaceSong(song.toSongEntity())
+        return song
     }
 
     fun deleteWrongSong(artist: String, title: String) = songDao.deleteWrongSong(artist, title)

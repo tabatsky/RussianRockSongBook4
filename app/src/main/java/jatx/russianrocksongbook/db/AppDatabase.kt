@@ -1,7 +1,6 @@
 package jatx.russianrocksongbook.db
 
 import android.content.Context
-import android.content.Intent
 import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
@@ -9,12 +8,11 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import jatx.russianrocksongbook.db.dao.SongDao
-import jatx.russianrocksongbook.db.entities.Song
-import kotlin.concurrent.thread
+import jatx.russianrocksongbook.db.entities.SongEntity
 
 @Database(
     entities = [
-        Song::class
+        SongEntity::class
     ],
     version = 17
 )

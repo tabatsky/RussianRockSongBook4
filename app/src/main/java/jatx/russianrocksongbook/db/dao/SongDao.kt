@@ -2,7 +2,7 @@ package jatx.russianrocksongbook.db.dao
 
 import androidx.room.*
 import io.reactivex.Flowable
-import jatx.russianrocksongbook.db.entities.Song
+import jatx.russianrocksongbook.db.entities.SongEntity
 
 @Dao
 interface SongDao {
@@ -19,40 +19,40 @@ interface SongDao {
     fun getCountByArtist(artist: String): Int
 
     @Query("SELECT * FROM songs WHERE favorite=1 AND deleted=0")
-    fun getSongsFavorite(): Flowable<List<Song>>
+    fun getSongsFavorite(): Flowable<List<SongEntity>>
 
     @Query("SELECT * FROM songs WHERE artist=:artist AND deleted=0")
-    fun getSongsByArtist(artist: String): Flowable<List<Song>>
+    fun getSongsByArtist(artist: String): Flowable<List<SongEntity>>
 
     @Query("""
         SELECT * FROM songs WHERE favorite=1 AND deleted=0 
         ORDER BY artist||title LIMIT 1 OFFSET :position
         """)
-    fun getSongByPositionFavorite(position: Int): Flowable<Song>
+    fun getSongByPositionFavorite(position: Int): Flowable<SongEntity>
 
     @Query("""
         SELECT * FROM songs WHERE artist=:artist AND deleted=0 
         ORDER BY title LIMIT 1 OFFSET :position
     """)
-    fun getSongByPositionAndArtist(position: Int, artist: String): Flowable<Song>
+    fun getSongByPositionAndArtist(position: Int, artist: String): Flowable<SongEntity>
 
     @Query("SELECT * FROM songs WHERE artist=:artist AND title=:title")
-    fun getSongByArtistAndTitle(artist: String, title: String): Song?
+    fun getSongByArtistAndTitle(artist: String, title: String): SongEntity?
 
     @Query("SELECT favorite FROM songs WHERE artist=:artist AND title=:title")
     fun isSongFavorite(artist: String, title: String): Boolean
 
     @Query("SELECT * FROM songs WHERE artist=:artist")
-    fun getAllSongsByArtist(artist: String): List<Song>
+    fun getAllSongsByArtist(artist: String): List<SongEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertIgnoreSongs(songs: List<Song>)
+    fun insertIgnoreSongs(songs: List<SongEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertReplaceSongs(songs: List<Song>)
+    fun insertReplaceSongs(songs: List<SongEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertReplaceSong(song: Song)
+    fun insertReplaceSong(song: SongEntity)
 
     @Query("UPDATE songs SET deleted=:deleted WHERE artist=:artist AND title=:title")
     fun setDeleted(deleted: Boolean, artist: String, title: String)
@@ -67,7 +67,7 @@ interface SongDao {
     fun deleteWrongArtist(artist: String)
 
     @Update
-    fun updateSong(song: Song)
+    fun updateSong(song: SongEntity)
 
     @Query("""
             UPDATE songs SET text=:text, deleted=0, outOfTheBox=:outOfTheBox 

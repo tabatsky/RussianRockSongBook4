@@ -3,46 +3,48 @@ package jatx.russianrocksongbook.data
 import com.google.gson.Gson
 import io.reactivex.Single
 import jatx.russianrocksongbook.api.RetrofitClient
-import jatx.russianrocksongbook.db.entities.Song
-import jatx.russianrocksongbook.gson.*
+import jatx.russianrocksongbook.data.gson.*
+import jatx.russianrocksongbook.domain.AppCrash
+import jatx.russianrocksongbook.domain.CloudSong
+import jatx.russianrocksongbook.domain.Song
 import javax.inject.Inject
 
 class SongBookAPIAdapter @Inject constructor(
     private val retrofitClient: RetrofitClient
 ) {
-    fun sendCrash(appCrash: AppCrash): Single<ResultWithoutData> {
+    fun sendCrash(appCrash: AppCrash): Single<ResultWithoutDataGson> {
         val params = mapOf(
-            "appCrashJSON" to Gson().toJson(appCrash)
+            "appCrashJSON" to Gson().toJson(appCrash.toAppCrashJson())
         )
         return retrofitClient.songBookAPI.sendCrash(params)
     }
 
-    fun addSong(song: Song, userInfo: UserInfo): Single<ResultWithoutData> {
+    fun addSong(song: Song, userInfo: UserInfo): Single<ResultWithoutDataGson> {
         val cloudSong = CloudSong(song, userInfo)
         val params = mapOf(
-            "cloudSongJSON" to Gson().toJson(cloudSong)
+            "cloudSongJSON" to Gson().toJson(cloudSong.toCloudSongGson())
         )
         return retrofitClient.songBookAPI.addSong(params)
     }
 
-    fun addSongList(songs: List<Song>, userInfo: UserInfo): Single<ResultWithAddSongListResultData> {
-        val cloudSongs = songs.map { CloudSong(it, userInfo) }
+    fun addSongList(songs: List<Song>, userInfo: UserInfo): Single<ResultWithAddSongListResultDataGson> {
+        val cloudSongs = songs.map { CloudSong(it, userInfo).toCloudSongGson() }
         val params = mapOf(
             "cloudSongListJSON" to Gson().toJson(cloudSongs)
         )
         return retrofitClient.songBookAPI.addSongList(params)
     }
 
-    fun addWarning(song: Song, comment: String): Single<ResultWithoutData> {
-        val warning = Warning(song, comment)
+    fun addWarning(song: Song, comment: String): Single<ResultWithoutDataGson> {
+        val warning = WarningGson(song, comment)
         val params = mapOf(
             "warningJSON" to Gson().toJson(warning)
         )
         return retrofitClient.songBookAPI.addWarning(params)
     }
 
-    fun addWarning(cloudSong: CloudSong, comment: String): Single<ResultWithoutData> {
-        val warning = Warning(cloudSong, comment)
+    fun addWarning(cloudSong: CloudSong, comment: String): Single<ResultWithoutDataGson> {
+        val warning = WarningGson(cloudSong, comment)
         val params = mapOf(
             "warningJSON" to Gson().toJson(warning)
         )

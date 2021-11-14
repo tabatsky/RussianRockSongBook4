@@ -1,9 +1,9 @@
-package jatx.russianrocksongbook.gson
+package jatx.russianrocksongbook.data.gson
 
 const val STATUS_SUCCESS = "success"
 const val STATUS_ERROR = "error"
 
-data class ResultWithoutData(
+data class ResultWithoutDataGson(
     val status: String,
     val message: String?
 )

@@ -1,6 +1,6 @@
-package jatx.russianrocksongbook.gson
+package jatx.russianrocksongbook.data.gson
 
-data class ResultWithAddSongListResultData(
+data class ResultWithAddSongListResultDataGson(
     val status: String,
     val message: String?,
     val data: AddSongListResult?

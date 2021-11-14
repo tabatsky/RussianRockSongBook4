@@ -86,7 +86,8 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
 
     val onSaveClick = {
         song?.apply {
-            mvvmViewModel.saveSong(this.withText(text))
+            this.text = text
+            mvvmViewModel.saveSong(this)
         }
         mvvmViewModel.setEditorMode(false)
     }
