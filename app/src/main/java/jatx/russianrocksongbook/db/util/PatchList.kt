@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.db
+package jatx.russianrocksongbook.db.util
 
 import jatx.russianrocksongbook.data.SongRepository
 import jatx.russianrocksongbook.domain.Song
