@@ -1,9 +1,9 @@
 package jatx.russianrocksongbook.domain
 
 import android.os.Build
-import jatx.russianrocksongbook.debug.exceptionToString
-import jatx.russianrocksongbook.data.Version
 import jatx.russianrocksongbook.data.gson.AppCrashGson
+import jatx.russianrocksongbook.debug.exceptionToString
+import jatx.russianrocksongbook.preferences.Version
 
 data class AppCrash(
     val appVersionName: String = Version.appVersionName,

@@ -27,8 +27,8 @@ val patches = listOf(
 
 fun applySongPatches(songRepo: SongRepository) {
     patches.forEach {
-        val song = songRepo.getSongByArtistAndTitle(it.artist, it.title)
-        song?.apply {
+        val songEntity = songRepo.getSongByArtistAndTitle(it.artist, it.title)
+        songEntity?.apply {
             val song = Song(this)
             val patchedText = song.text.replace(it.orig, it.patch)
             song.text = patchedText

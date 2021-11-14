@@ -3,10 +3,13 @@ package jatx.russianrocksongbook.data
 import com.google.gson.Gson
 import io.reactivex.Single
 import jatx.russianrocksongbook.api.RetrofitClient
-import jatx.russianrocksongbook.data.gson.*
+import jatx.russianrocksongbook.data.gson.ResultWithAddSongListResultDataGson
+import jatx.russianrocksongbook.data.gson.ResultWithoutDataGson
+import jatx.russianrocksongbook.data.gson.WarningGson
 import jatx.russianrocksongbook.domain.AppCrash
 import jatx.russianrocksongbook.domain.CloudSong
 import jatx.russianrocksongbook.domain.Song
+import jatx.russianrocksongbook.preferences.UserInfo
 import javax.inject.Inject
 
 class SongBookAPIAdapter @Inject constructor(

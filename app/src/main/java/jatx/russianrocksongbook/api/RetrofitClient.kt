@@ -1,7 +1,6 @@
 package jatx.russianrocksongbook.api
 
 import retrofit2.Retrofit
-import java.lang.Exception
 import javax.inject.Inject
 
 class RetrofitClient @Inject constructor(
