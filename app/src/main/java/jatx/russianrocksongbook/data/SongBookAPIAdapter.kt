@@ -3,9 +3,9 @@ package jatx.russianrocksongbook.data
 import com.google.gson.Gson
 import io.reactivex.Single
 import jatx.russianrocksongbook.api.RetrofitClient
-import jatx.russianrocksongbook.data.gson.ResultWithAddSongListResultDataGson
-import jatx.russianrocksongbook.data.gson.ResultWithoutDataGson
-import jatx.russianrocksongbook.data.gson.WarningGson
+import jatx.russianrocksongbook.api.gson.ResultWithAddSongListResultDataGson
+import jatx.russianrocksongbook.api.gson.ResultWithoutDataGson
+import jatx.russianrocksongbook.api.gson.WarningGson
 import jatx.russianrocksongbook.domain.AppCrash
 import jatx.russianrocksongbook.domain.CloudSong
 import jatx.russianrocksongbook.domain.Song

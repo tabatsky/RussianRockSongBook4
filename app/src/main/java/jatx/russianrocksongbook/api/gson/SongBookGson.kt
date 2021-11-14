@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.data.gson
+package jatx.russianrocksongbook.api.gson
 
 data class SongBookGson(
     val songbook: List<JsonSong>

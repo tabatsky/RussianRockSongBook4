@@ -1,10 +1,10 @@
 package jatx.russianrocksongbook.api
 
 import io.reactivex.Single
-import jatx.russianrocksongbook.data.gson.ResultWithAddSongListResultDataGson
-import jatx.russianrocksongbook.data.gson.ResultWithCloudSongListDataGson
-import jatx.russianrocksongbook.data.gson.ResultWithNumberGson
-import jatx.russianrocksongbook.data.gson.ResultWithoutDataGson
+import jatx.russianrocksongbook.api.gson.ResultWithAddSongListResultDataGson
+import jatx.russianrocksongbook.api.gson.ResultWithCloudSongListDataGson
+import jatx.russianrocksongbook.api.gson.ResultWithNumberGson
+import jatx.russianrocksongbook.api.gson.ResultWithoutDataGson
 import retrofit2.http.*
 
 const val BASE_URL = "http://tabatsky.ru/SongBook/api/"

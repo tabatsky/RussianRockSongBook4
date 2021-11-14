@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.data.gson
+package jatx.russianrocksongbook.api.gson
 
 import jatx.russianrocksongbook.domain.CloudSong
 import jatx.russianrocksongbook.domain.Song

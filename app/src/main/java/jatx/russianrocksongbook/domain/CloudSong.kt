@@ -1,6 +1,6 @@
 package jatx.russianrocksongbook.domain
 
-import jatx.russianrocksongbook.data.gson.CloudSongGson
+import jatx.russianrocksongbook.api.gson.CloudSongGson
 import jatx.russianrocksongbook.preferences.UserInfo
 import java.text.DecimalFormat
 import java.text.NumberFormat

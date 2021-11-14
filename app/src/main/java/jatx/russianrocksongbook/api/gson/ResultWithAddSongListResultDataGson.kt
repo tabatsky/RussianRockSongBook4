@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.data.gson
+package jatx.russianrocksongbook.api.gson
 
 data class ResultWithAddSongListResultDataGson(
     val status: String,

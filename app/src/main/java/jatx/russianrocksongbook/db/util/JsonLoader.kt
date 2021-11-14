@@ -4,7 +4,7 @@ import android.content.Context
 import com.google.gson.Gson
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.data.SongRepository
-import jatx.russianrocksongbook.data.gson.SongBookGson
+import jatx.russianrocksongbook.api.gson.SongBookGson
 import jatx.russianrocksongbook.domain.Song
 import java.util.*
 
