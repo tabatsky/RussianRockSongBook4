@@ -1,5 +1,6 @@
 package jatx.russianrocksongbook.viewmodel
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
@@ -10,8 +11,8 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.data.*
-import jatx.russianrocksongbook.data.gson.STATUS_ERROR
-import jatx.russianrocksongbook.data.gson.STATUS_SUCCESS
+import jatx.russianrocksongbook.api.gson.STATUS_ERROR
+import jatx.russianrocksongbook.api.gson.STATUS_SUCCESS
 import jatx.russianrocksongbook.domain.CloudSong
 import jatx.russianrocksongbook.domain.Song
 import jatx.russianrocksongbook.domain.formatRating
@@ -89,6 +90,13 @@ class MvvmViewModel(
 
     private var showSongsDisposable: Disposable? = null
     private var selectSongDisposable: Disposable? = null
+    private var getArtistsDisposable: Disposable? = null
+    private var cloudSearchDisposable: Disposable? = null
+    private var voteDisposable: Disposable? = null
+    private var uploadListDisposable: Disposable? = null
+    private var uploadSongDisposable: Disposable? = null
+    private var sendWarningDisposable: Disposable? = null
+
 
     fun back(onFinish: () -> Unit) {
         Log.e("current screen", currentScreen.value.toString())
@@ -109,7 +117,10 @@ class MvvmViewModel(
         _currentScreen.value = screen
         Log.e("select screen", currentScreen.value.toString())
         if (screen == CurrentScreen.SONG_LIST && !isBack) {
-            songRepo
+            getArtistsDisposable?.apply {
+                if (!this.isDisposed) this.dispose()
+            }
+            getArtistsDisposable = songRepo
                 .getArtistsFlowable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
@@ -118,7 +129,10 @@ class MvvmViewModel(
             selectArtist(currentArtist.value) {}
         }
         if (screen == CurrentScreen.FAVORITE) {
-            songRepo
+            getArtistsDisposable?.apply {
+                if (!this.isDisposed) this.dispose()
+            }
+            getArtistsDisposable = songRepo
                 .getArtistsFlowable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
@@ -143,7 +157,10 @@ class MvvmViewModel(
 
     fun cloudSearch(searchFor: String, orderBy: OrderBy) {
         _isCloudLoading.value = true
-        songBookAPIAdapter
+        cloudSearchDisposable?.apply {
+            if (!this.isDisposed) this.dispose()
+        }
+        cloudSearchDisposable = songBookAPIAdapter
             .searchSongs(searchFor, orderBy)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -323,7 +340,10 @@ class MvvmViewModel(
 
     fun voteForCurrent(voteValue: Int) {
         cloudSong.value?.apply {
-            songBookAPIAdapter
+            voteDisposable?.apply {
+                if (!this.isDisposed) this.dispose()
+            }
+            voteDisposable = songBookAPIAdapter
                 .vote(this, userInfo, voteValue)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -345,6 +365,7 @@ class MvvmViewModel(
         }
     }
 
+    @SuppressLint("CheckResult")
     fun deleteCurrentFromCloud(secret1: String, secret2: String) {
         cloudSong.value?.apply {
             songBookAPIAdapter
@@ -427,7 +448,10 @@ class MvvmViewModel(
     }
 
     fun uploadListToCloud() {
-        songBookAPIAdapter
+        uploadListDisposable?.apply {
+            if (!this.isDisposed) this.dispose()
+        }
+        uploadListDisposable = songBookAPIAdapter
             .addSongList(uploadSongList.value, userInfo)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -454,7 +478,10 @@ class MvvmViewModel(
 
     fun uploadNewToCloud() {
         newSong.value?.apply {
-            songBookAPIAdapter
+            uploadSongDisposable?.apply {
+                if (!this.isDisposed) this.dispose()
+            }
+            uploadSongDisposable = songBookAPIAdapter
                 .addSong(this, userInfo)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -495,7 +522,10 @@ class MvvmViewModel(
     fun uploadCurrentToCloud() {
         currentSong.value?.apply {
             _isUploadButtonEnabled.value = false
-            songBookAPIAdapter
+            uploadSongDisposable?.apply {
+                if (!this.isDisposed) this.dispose()
+            }
+            uploadSongDisposable = songBookAPIAdapter
                 .addSong(this, userInfo)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -515,7 +545,10 @@ class MvvmViewModel(
 
     fun sendWarning(comment: String) {
         currentSong.value?.apply {
-            songBookAPIAdapter
+            sendWarningDisposable?.apply {
+                if (!this.isDisposed) this.dispose()
+            }
+            sendWarningDisposable = songBookAPIAdapter
                 .addWarning(this, comment)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -533,7 +566,10 @@ class MvvmViewModel(
 
     fun sendWarningCloud(comment: String) {
         cloudSong.value?.apply {
-            songBookAPIAdapter
+            sendWarningDisposable?.apply {
+                if (!this.isDisposed) this.dispose()
+            }
+            sendWarningDisposable = songBookAPIAdapter
                 .addWarning(this, comment)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

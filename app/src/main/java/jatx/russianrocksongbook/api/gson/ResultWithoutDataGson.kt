@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.data.gson
+package jatx.russianrocksongbook.api.gson
 
 const val STATUS_SUCCESS = "success"
 const val STATUS_ERROR = "error"

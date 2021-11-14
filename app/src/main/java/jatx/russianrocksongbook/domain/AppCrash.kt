@@ -1,7 +1,7 @@
 package jatx.russianrocksongbook.domain
 
 import android.os.Build
-import jatx.russianrocksongbook.data.gson.AppCrashGson
+import jatx.russianrocksongbook.api.gson.AppCrashGson
 import jatx.russianrocksongbook.debug.exceptionToString
 import jatx.russianrocksongbook.preferences.Version
 

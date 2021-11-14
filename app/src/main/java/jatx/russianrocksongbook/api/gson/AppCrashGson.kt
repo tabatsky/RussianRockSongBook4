@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.data.gson
+package jatx.russianrocksongbook.api.gson
 
 import android.os.Build
 import jatx.russianrocksongbook.preferences.Version

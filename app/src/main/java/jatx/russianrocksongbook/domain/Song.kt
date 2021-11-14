@@ -1,6 +1,6 @@
 package jatx.russianrocksongbook.domain
 
-import jatx.russianrocksongbook.data.gson.JsonSong
+import jatx.russianrocksongbook.api.gson.JsonSong
 import jatx.russianrocksongbook.db.entities.SongEntity
 import jatx.russianrocksongbook.domain.util.HashingUtil
 
