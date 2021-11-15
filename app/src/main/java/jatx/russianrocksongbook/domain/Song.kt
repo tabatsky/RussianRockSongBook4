@@ -41,14 +41,9 @@ data class Song(
         id, artist, title, text, favorite, deleted, outOfTheBox, origTextMD5
     )
 
-    // next two methods for correct MutableStateFlow working
-
+    // for correct MutableStateFlow working
     override fun equals(other: Any?): Boolean {
-        return false
-    }
-
-    override fun hashCode(): Int {
-        return Random.nextInt()
+        return super.equals(other) && other is Song && favorite == other.favorite
     }
 }
 
