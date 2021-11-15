@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -16,12 +17,14 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import jatx.clickablewordstextview.ClickableWordsTextView
 import jatx.clickablewordstextview.OnWordClickListener
 import jatx.clickablewordstextview.Word
 import jatx.russianrocksongbook.R
+import jatx.russianrocksongbook.preferences.ListenToMusicVariant
 import jatx.russianrocksongbook.preferences.ScalePow
 import jatx.russianrocksongbook.preferences.Theme
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
@@ -35,6 +38,7 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel) {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
+    var showYandexDialog by remember { mutableStateOf(false) }
     var showVkDialog by remember { mutableStateOf(false) }
     var showYoutubeMusicDialog by remember { mutableStateOf(false) }
 
@@ -44,6 +48,10 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel) {
     var selectedChord by remember { mutableStateOf("") }
 
     var showDeleteDialog by remember { mutableStateOf(false) }
+
+    val onYandexMusicClick = {
+        showYandexDialog = true
+    }
 
     val onVkMusicClick = {
         showVkDialog = true
@@ -132,45 +140,57 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel) {
                     color = theme.colorBg,
                     thickness = dimensionResource(id = R.dimen.song_text_empty)
                 )
-                LazyColumn(
-                    state = listState,
+                Box(
                     modifier = Modifier
-                        .weight(1.0f)
+                        .weight(1.0f),
+                    contentAlignment = Alignment.BottomStart
                 ) {
-                    item {
-                        AndroidView(
-                            factory = { context ->
-                                ClickableWordsTextView(context)
-                            },
-                            update = { view ->
-                                view.text = cloudSong!!.text
-                                view.setTextColor(theme.colorMain.toArgb())
-                                view.setBackgroundColor(theme.colorBg.toArgb())
-                                view.textSize = fontSizeTextSp.value
-                                view.typeface = Typeface.MONOSPACE
-                                view.onWordClickListener = object : OnWordClickListener {
-                                    override fun onWordClick(word: Word) {
-                                        selectedChord = word.text
-                                        showChordDialog = true
+                    val paddingBottom = if (W < H) W * 3.0f / 21 else 0.dp
+
+                    LazyColumn(
+                        state = listState,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(bottom = paddingBottom)
+                    ) {
+                        item {
+                            AndroidView(
+                                factory = { context ->
+                                    ClickableWordsTextView(context)
+                                },
+                                update = { view ->
+                                    view.text = cloudSong!!.text
+                                    view.setTextColor(theme.colorMain.toArgb())
+                                    view.setBackgroundColor(theme.colorBg.toArgb())
+                                    view.textSize = fontSizeTextSp.value
+                                    view.typeface = Typeface.MONOSPACE
+                                    view.onWordClickListener = object : OnWordClickListener {
+                                        override fun onWordClick(word: Word) {
+                                            selectedChord = word.text
+                                            showChordDialog = true
+                                        }
                                     }
                                 }
-                            }
-                        )
-
-                        coroutineScope.launch {
-                            listState.scrollToItem(
-                                index = 0,
-                                scrollOffset = 0
                             )
+
+                            coroutineScope.launch {
+                                listState.scrollToItem(
+                                    index = 0,
+                                    scrollOffset = 0
+                                )
+                            }
                         }
                     }
-                }
 
-                if (mvvmViewModel.settings.footerRows == 2 && W < H) {
-                    CloudFooter2Row(
+                    CloudFooter(
                         W = W,
                         H = H,
                         theme = theme,
+                        listenToMusicVariant =
+                                        mvvmViewModel
+                                            .settings
+                                            .listenToMusicVariant,
+                        onYandexMusicClick = onYandexMusicClick,
                         onVkMusicClick = onVkMusicClick,
                         onYoutubeMusicClick = onYoutubeMusicClick,
                         onDownloadClick = onDownloadClick,
@@ -179,19 +199,19 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel) {
                         onDislikeClick = onDislikeClick,
                         onDislikeLongClick = onDislikeLongClick
                     )
-                } else if (mvvmViewModel.settings.footerRows > 0) {
-                    CloudFooter1Row(
-                        W = W,
-                        H = H,
-                        theme = theme,
-                        onVkMusicClick = onVkMusicClick,
-                        onYoutubeMusicClick = onYoutubeMusicClick,
-                        onDownloadClick = onDownloadClick,
-                        onWarningClick = onWarningClick,
-                        onLikeClick = onLikeClick,
-                        onDislikeClick = onDislikeClick,
-                        onDislikeLongClick = onDislikeLongClick
-                    )
+                }
+            }
+            if (showYandexDialog) {
+                if (mvvmViewModel.settings.yandexMusicDontAsk) {
+                    showYandexDialog = false
+                    mvvmViewModel.openYandexMusicCloud(true)
+                } else {
+                    YandexMusicDialog(
+                        mvvmViewModel = mvvmViewModel,
+                        isCloudScreen = true
+                    ) {
+                        showYandexDialog = false
+                    }
                 }
             }
             if (showVkDialog) {
@@ -282,10 +302,12 @@ fun CloudActions(
 }
 
 @Composable
-fun CloudFooter1Row(
+fun CloudFooter(
     W: Dp,
     H: Dp,
     theme: Theme,
+    listenToMusicVariant: ListenToMusicVariant,
+    onYandexMusicClick: () -> Unit,
     onVkMusicClick: () -> Unit,
     onYoutubeMusicClick: () -> Unit,
     onDownloadClick: () -> Unit,
@@ -294,35 +316,62 @@ fun CloudFooter1Row(
     onDislikeClick: () -> Unit,
     onDislikeLongClick: () -> Unit
 ) {
-    var A = W * 3.0f / 21
-    if (W >= H) A *= 2.0f / 3
-    val C = (W - A * 6.0f) / 5
+    val A = if (W < H) W * 3.0f / 21 else W * 0.5f * 3.0f / 21
+    val C = if (W < H) (W - A * 6.0f) / 5 else (W * 0.5f - A * 6.0f) / 5
 
     Row (
         modifier = Modifier
             .fillMaxWidth()
             .height(A)
+            .background(Color.Transparent)
     ) {
-        VkMusicButton(
-            size = A,
-            theme = theme,
-            onClick = onVkMusicClick
-        )
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(C)
-        )
-        YoutubeMusicButton(
-            size = A,
-            theme = theme,
-            onClick = onYoutubeMusicClick
-        )
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(C)
-        )
+        if (W >= H) {
+            Box(
+                modifier = Modifier
+                    .weight(1.0f)
+                    .fillMaxHeight()
+                    .background(Color.Transparent)
+            )
+        }
+        if (listenToMusicVariant.isYandex) {
+            YandexMusicButton(
+                size = A,
+                theme = theme,
+                onClick = onYandexMusicClick
+            )
+            Divider(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(C)
+                    .background(theme.colorBg)
+            )
+        }
+        if (listenToMusicVariant.isVk) {
+            VkMusicButton(
+                size = A,
+                theme = theme,
+                onClick = onVkMusicClick
+            )
+            Divider(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(C)
+                    .background(theme.colorBg)
+            )
+        }
+        if (listenToMusicVariant.isYoutube) {
+            YoutubeMusicButton(
+                size = A,
+                theme = theme,
+                onClick = onYoutubeMusicClick
+            )
+            Divider(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(C)
+                    .background(theme.colorBg)
+            )
+        }
         DownloadButton(
             size = A,
             theme = theme,
@@ -332,6 +381,7 @@ fun CloudFooter1Row(
             modifier = Modifier
                 .fillMaxHeight()
                 .width(C)
+                .background(theme.colorBg)
         )
         WarningButton(
             size = A,
@@ -342,6 +392,7 @@ fun CloudFooter1Row(
             modifier = Modifier
                 .fillMaxHeight()
                 .width(C)
+                .background(theme.colorBg)
         )
         LikeButton(
             size = A,
@@ -352,124 +403,13 @@ fun CloudFooter1Row(
             modifier = Modifier
                 .fillMaxHeight()
                 .width(C)
+                .background(theme.colorBg)
         )
         DislikeButton(
             size = A,
             theme = theme,
             onClick = onDislikeClick,
             onLongClick = onDislikeLongClick
-        )
-    }
-}
-
-@Composable
-fun CloudFooter2Row(
-    W: Dp,
-    H: Dp,
-    theme: Theme,
-    onVkMusicClick: () -> Unit,
-    onYoutubeMusicClick: () -> Unit,
-    onDownloadClick: () -> Unit,
-    onWarningClick: () -> Unit,
-    onLikeClick: () -> Unit,
-    onDislikeClick: () -> Unit,
-    onDislikeLongClick: () -> Unit
-) {
-    var A = if (W < H) {
-        W * 5.0f / 21
-    } else {
-        W * 3.0f / 21
-    }
-    if (W >= H) A *= 2.0f / 3
-    val B = (W - A * 3.0f) / 4
-
-
-    Row (
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(A)
-    ) {
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(B)
-        )
-        VkMusicButton(
-            size = A,
-            theme = theme,
-            onClick = onVkMusicClick
-        )
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(B)
-        )
-        YoutubeMusicButton(
-            size = A,
-            theme = theme,
-            onClick = onYoutubeMusicClick
-        )
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(B)
-        )
-        DownloadButton(
-            size = A,
-            theme = theme,
-            onClick = onDownloadClick
-        )
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(B)
-        )
-    }
-    Divider(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(B)
-    )
-    Row (
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(A)
-    ) {
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(B)
-        )
-        WarningButton(
-            size = A,
-            theme = theme,
-            onClick = onWarningClick
-        )
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(B)
-        )
-        LikeButton(
-            size = A,
-            theme = theme,
-            onClick = onLikeClick
-        )
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(B)
-        )
-        DislikeButton(
-            size = A,
-            theme = theme,
-            onClick = onDislikeClick,
-            onLongClick = onDislikeLongClick
-        )
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(B)
         )
     }
 }

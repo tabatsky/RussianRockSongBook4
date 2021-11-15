@@ -104,6 +104,23 @@ fun MusicDialog(
     )
 }
 
+@Composable
+fun YandexMusicDialog(
+    mvvmViewModel: MvvmViewModel,
+    isCloudScreen: Boolean = false,
+    onDismiss: () -> Unit
+) = MusicDialog(
+    mvvmViewModel = mvvmViewModel,
+    stringRes = R.string.question_search_at_yandex_music,
+    onConfirm = {
+        if (isCloudScreen) {
+            mvvmViewModel.openYandexMusicCloud(it)
+        } else {
+            mvvmViewModel.openYandexMusic(it)
+        }
+    },
+    onDismiss = onDismiss
+)
 
 @Composable
 fun VkMusicDialog(

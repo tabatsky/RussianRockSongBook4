@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "songs", indices = arrayOf(Index(name = "the_index", value = arrayOf("artist", "title"), unique = true)))
+@Entity(tableName = "songs", indices = [Index(name = "the_index", value = arrayOf("artist", "title"), unique = true)])
 data class SongEntity(
     @PrimaryKey
     val id: Long? = null,

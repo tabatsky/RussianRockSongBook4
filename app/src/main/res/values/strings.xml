@@ -20,10 +20,10 @@
         <item>Ландшафтная</item>
     </string-array>
 
-    <string-array name="footer_row_count_list">
-        <item>Скрывать</item>
-        <item>В один ряд</item>
-        <item>В два ряда</item>
+    <string-array name="listen_to_music_variants">
+        <item>Яндекс и Youtube</item>
+        <item>VK и Youtube</item>
+        <item>Яндекс и VK</item>
     </string-array>
 
     <string name="app_name">Песенник русского рока</string>
@@ -39,11 +39,11 @@
     <string name="wait_db_init">Построение базы данных</string>
 
     <string name="theme">Тема:</string>
-    <string name="textScale">Размер шрифта:</string>
-    <string name="defArtist">По умолчанию:</string>
-    <string name="orientFix">Ориентация:</string>
-    <string name="hidePanel">Нижняя панель:</string>
-    <string name="scrollSpeed">Скорость прокрутки (x):</string>
+    <string name="text_scale">Размер шрифта:</string>
+    <string name="def_artist">По умолчанию:</string>
+    <string name="orient_fix">Ориентация:</string>
+    <string name="listen_to_music">Слушать музыку:</string>
+    <string name="scroll_speed">Скорость прокрутки (x):</string>
 
     <string name="close">Закрыть</string>
 
@@ -65,6 +65,11 @@
 
     <string name="whats_new_title">Что нового?</string>
     <string name="whats_new_message">
+        \nВерсия 5.2
+            \nУлучшен интерфейс в ландшафтном режиме.
+            \nДобавлена возможность прослушивания через Яндекс-Музыку
+            (нужно выбрать в настройках приложения).
+        \n
         \nВерсия 5.1.8
             \nДобавлена группа: КняZz.
         \n
@@ -179,11 +184,13 @@
     <string name="send_warning_success">Уведомление отправлено</string>
     <string name="toast_added_to_favorite">Добавлено в избранное</string>
     <string name="toast_removed_from_favorite">Удалено из избранного</string>
-    <string name="search_at_google_play">Искать в Youtube Music</string>
+    <string name="search_at_yandex_music">Искать в Яндекс-Музыке</string>
+    <string name="search_at_youtube_music">Искать в Youtube Music</string>
     <string name="toast_deleted_to_trash">Удалено</string>
     <string name="label_placeholder">Список пуст</string>
     <string name="error_in_app">Ошибка в приложении</string>
     <string name="dont_ask_more">Больше не спрашивать</string>
+    <string name="question_search_at_yandex_music">Искать песню в Яндекс-Музыке?</string>
     <string name="question_search_at_youtube_music">Искать песню в Youtube Music?</string>
     <string name="question_search_at_vk_music">Искать песню в приложении VK?</string>
     <string name="chords_saved_and_added_to_favorite">Аккорды сохранены в локальной базе данных и добавлены в избранное</string>
@@ -204,4 +211,5 @@
     <string name="toast_fill_all_fields">Заполните все поля</string>
 
     <string name="thanks_for_donation">Спасибо за Ваше пожертвование</string>
+    <string name="comment_cannot_be_empty">Комментарий не должен быть пустым</string>
 </resources>

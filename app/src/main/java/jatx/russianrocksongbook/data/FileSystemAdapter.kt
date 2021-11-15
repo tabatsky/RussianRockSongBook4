@@ -26,7 +26,7 @@ class FileSystemAdapter(
         val songs = arrayListOf<Song>()
         txtFileList.forEach { file ->
             try {
-                val sc = Scanner(context.contentResolver.openInputStream(file.getUri()))
+                val sc = Scanner(context.contentResolver.openInputStream(file.uri))
                 val text = sc.useDelimiter("\\A").next()
                 val title = file.name?.replace("\\.txt$".toRegex(), "")?.trim() ?: ""
                 val song = Song()

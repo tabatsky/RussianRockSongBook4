@@ -87,8 +87,13 @@ fun WarningDialog(
                         contentColor = theme.colorMain
                     ),
                 onClick = {
-                    onDismiss()
-                    onConfirm(comment)
+                    if (comment.isNotEmpty()) {
+                        onDismiss()
+                        onConfirm(comment)
+                    } else {
+                        mvvmViewModel
+                            .showToast(R.string.comment_cannot_be_empty)
+                    }
                 }) {
                 Text(text = stringResource(id = R.string.ok))
             }

@@ -13,10 +13,11 @@ const val KEY_THEME = "theme_int"
 const val KEY_ORIENTATION = "orientation_int"
 const val KEY_DEFAULT_ARTIST = "defaultArtist"
 const val KEY_FONT_SCALE = "fontScale"
-const val KEY_FOOTER_ROWS = "footerRows"
+const val KEY_LISTEN_TO_MUSIC_VARIANT = "listenToMusicVariant"
 const val KEY_SCROLL_SPEED = "scrollSpeed"
 const val KEY_YOUTUBE_MUSIC_DONT_ASK = "youtubeMusicDontAsk"
 const val KEY_VK_MUSIC_DONT_ASK = "vkMusicDontAsk"
+const val KEY_YANDEX_MUSIC_DONT_ASK = "vkMusicDontAsk"
 
 const val ARTIST_KINO = "Кино"
 
@@ -74,19 +75,21 @@ class Settings(
             editor.commit()
         }
 
+
+    var listenToMusicVariant: ListenToMusicVariant
+        get() = ListenToMusicVariant
+            .values()[sp.getInt(KEY_LISTEN_TO_MUSIC_VARIANT, 1)]
+        set(value) {
+            val editor = sp.edit()
+            editor.putInt(KEY_LISTEN_TO_MUSIC_VARIANT, value.ordinal)
+            editor.commit()
+        }
+
     var defaultArtist: String
         get() = sp.getString(KEY_DEFAULT_ARTIST, null) ?: ARTIST_KINO
         set(value) {
             val editor = sp.edit()
             editor.putString(KEY_DEFAULT_ARTIST, value)
-            editor.commit()
-        }
-
-    var footerRows: Int
-        get() = sp.getInt(KEY_FOOTER_ROWS, 1)
-        set(value) {
-            val editor = sp.edit()
-            editor.putInt(KEY_FOOTER_ROWS, value)
             editor.commit()
         }
 
@@ -111,6 +114,15 @@ class Settings(
         set(value) {
             val editor = sp.edit()
             editor.putBoolean(KEY_VK_MUSIC_DONT_ASK, value)
+            editor.commit()
+        }
+
+
+    var yandexMusicDontAsk: Boolean
+        get() = sp.getBoolean(KEY_YANDEX_MUSIC_DONT_ASK, false)
+        set(value) {
+            val editor = sp.edit()
+            editor.putBoolean(KEY_YANDEX_MUSIC_DONT_ASK, value)
             editor.commit()
         }
     
@@ -146,6 +158,19 @@ enum class Theme(
 
 enum class Orientation {
     RANDOM, PORTRAIT, LANDSCAPE
+}
+
+enum class ListenToMusicVariant {
+    YANDEX_AND_YOUTUBE,
+    VK_AND_YOUTUBE,
+    YANDEX_AND_VK;
+
+    val isYandex: Boolean
+        get() = (this == YANDEX_AND_YOUTUBE).or(this == YANDEX_AND_VK)
+    val isYoutube: Boolean
+        get() = (this == YANDEX_AND_YOUTUBE).or(this == VK_AND_YOUTUBE)
+    val isVk: Boolean
+        get() = (this == VK_AND_YOUTUBE).or(this == YANDEX_AND_VK)
 }
 
 enum class ScalePow(
