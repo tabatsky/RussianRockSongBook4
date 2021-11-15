@@ -1,15 +1,12 @@
 package jatx.russianrocksongbook
 
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.os.PowerManager
 import android.util.Log
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
@@ -22,18 +19,18 @@ import com.android.billingclient.api.*
 import com.obsez.android.lib.filechooser.ChooserDialog
 import dagger.hilt.android.AndroidEntryPoint
 import jatx.russianrocksongbook.data.*
-import jatx.russianrocksongbook.db.deleteWrongArtists
-import jatx.russianrocksongbook.db.deleteWrongSongs
 import jatx.russianrocksongbook.db.util.applySongPatches
+import jatx.russianrocksongbook.db.util.deleteWrongArtists
+import jatx.russianrocksongbook.db.util.deleteWrongSongs
 import jatx.russianrocksongbook.db.util.fillDbFromJSON
 import jatx.russianrocksongbook.debug.AppDebug
 import jatx.russianrocksongbook.preferences.Orientation
 import jatx.russianrocksongbook.preferences.Settings
 import jatx.russianrocksongbook.preferences.Version
+import jatx.russianrocksongbook.purchase.SKUS
 import jatx.russianrocksongbook.view.*
 import jatx.russianrocksongbook.viewmodel.CurrentScreen
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
-import jatx.russianrocksongbook.viewmodel.SKUS
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -42,15 +39,6 @@ import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 import java.util.*
 import javax.inject.Inject
-import com.android.billingclient.api.Purchase
-
-import com.android.billingclient.api.BillingResult
-
-import com.android.billingclient.api.PurchasesResponseListener
-
-import com.android.billingclient.api.BillingClient
-
-
 
 
 @AndroidEntryPoint
@@ -67,7 +55,6 @@ class MainActivity : ComponentActivity(), PurchasesUpdatedListener {
     lateinit var fileSystemAdapter: FileSystemAdapter
 
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
-//    private lateinit var wakeLock: PowerManager.WakeLock
 
     private lateinit var billingClient: BillingClient
 
@@ -78,10 +65,10 @@ class MainActivity : ComponentActivity(), PurchasesUpdatedListener {
         Version.init(applicationContext)
         registerForResult()
 
-        when (settings.orientation) {
-            Orientation.PORTRAIT -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            Orientation.LANDSCAPE -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            else -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        requestedOrientation = when (settings.orientation) {
+            Orientation.PORTRAIT -> ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            Orientation.LANDSCAPE -> ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            else -> ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         }
 
         setContent {
@@ -142,6 +129,21 @@ class MainActivity : ComponentActivity(), PurchasesUpdatedListener {
             )
         }
 
+        mvvmViewModel.onOpenYandexMusic = { searchFor ->
+            try {
+                val searchForEncoded = URLEncoder.encode(searchFor.replace(" ", "+"), "UTF-8")
+                val uri = "https://music.yandex.ru/search?text=$searchForEncoded"
+                startActivity(
+                    Intent.createChooser(
+                        Intent(Intent.ACTION_VIEW, Uri.parse(uri)),
+                        getString(R.string.search_at_yandex_music)
+                    )
+                )
+            } catch (e: UnsupportedEncodingException) {
+                mvvmViewModel.showToast(R.string.utf8_not_supported)
+            }
+        }
+
         mvvmViewModel.onOpenVkMusic = { searchFor ->
             try {
                 val searchForEncoded = URLEncoder.encode(searchFor, "UTF-8")
@@ -163,15 +165,13 @@ class MainActivity : ComponentActivity(), PurchasesUpdatedListener {
                 startActivity(
                     Intent.createChooser(
                         Intent(Intent.ACTION_VIEW, Uri.parse(uri)),
-                        getString(R.string.search_at_google_play)
+                        getString(R.string.search_at_youtube_music)
                     )
                 )
             } catch (e: UnsupportedEncodingException) {
                 mvvmViewModel.showToast(R.string.utf8_not_supported)
             }
         }
-
-        mvvmViewModel
 
         mvvmViewModel.onAddSongsFromDir = {
             addSongsFromDir()
@@ -215,20 +215,8 @@ class MainActivity : ComponentActivity(), PurchasesUpdatedListener {
             }
         })
 
-//        val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
-//        wakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "russianrocksongbook:song-text-power")
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
-
-//    override fun onStart() {
-//        super.onStart()
-//        wakeLock.acquire(900 * 1000L)
-//    }
-//
-//    override fun onPause() {
-//        wakeLock.release()
-//        super.onPause()
-//    }
 
     override fun onBackPressed() = mvvmViewModel.back {
         finish()

@@ -3,6 +3,7 @@ package jatx.russianrocksongbook.domain
 import jatx.russianrocksongbook.api.gson.JsonSong
 import jatx.russianrocksongbook.db.entities.SongEntity
 import jatx.russianrocksongbook.domain.util.HashingUtil
+import kotlin.random.Random
 
 const val USER_SONG_MD5 = "USER"
 
@@ -39,6 +40,16 @@ data class Song(
     fun toSongEntity() = SongEntity(
         id, artist, title, text, favorite, deleted, outOfTheBox, origTextMD5
     )
+
+    // next two methods for correct MutableStateFlow working
+
+    override fun equals(other: Any?): Boolean {
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return Random.nextInt()
+    }
 }
 
 fun songTextHash(text: String): String {

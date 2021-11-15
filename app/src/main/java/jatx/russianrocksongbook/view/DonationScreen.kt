@@ -12,10 +12,10 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import jatx.russianrocksongbook.purchase.DONATIONS
+import jatx.russianrocksongbook.purchase.SKUS
 import jatx.russianrocksongbook.R
-import jatx.russianrocksongbook.viewmodel.DONATIONS
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
-import jatx.russianrocksongbook.viewmodel.SKUS
 
 @Composable
 fun DonationScreen(mvvmViewModel: MvvmViewModel) {

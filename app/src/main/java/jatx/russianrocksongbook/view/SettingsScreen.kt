@@ -37,7 +37,7 @@ fun SettingsScreen(mvvmViewModel: MvvmViewModel) {
     var fontScaleToSave by remember { mutableStateOf(settings.commonFontScaleEnum) }
     var defaultArtistToSave by remember { mutableStateOf(settings.defaultArtist) }
     var orientationToSave by remember { mutableStateOf(settings.orientation) }
-    var footerRowsToSave by remember { mutableStateOf(settings.footerRows) }
+    var listenToMusicVariantToSave by remember { mutableStateOf(settings.listenToMusicVariant) }
     var scrollSpeedToSave by remember { mutableStateOf(settings.scrollSpeed) }
 
     val labelFontScale = settings.getSpecificFontScale(ScalePow.LABEL)
@@ -140,7 +140,7 @@ fun SettingsScreen(mvvmViewModel: MvvmViewModel) {
                         color = theme.colorBg,
                         thickness = 2.dp
                     )
-                    FooterRowsRow(
+                    ListenToMusicVariantRow(
                         theme = theme,
                         settings = settings,
                         modifier = Modifier
@@ -148,7 +148,8 @@ fun SettingsScreen(mvvmViewModel: MvvmViewModel) {
                             .wrapContentHeight(),
                         fontSize = fontSizeLabelSp,
                         onPositionChanged = { position ->
-                            footerRowsToSave = position
+                            listenToMusicVariantToSave =
+                                ListenToMusicVariant.values()[position]
                         }
                     )
                     Divider(
@@ -241,7 +242,7 @@ fun SettingsScreen(mvvmViewModel: MvvmViewModel) {
                             .wrapContentHeight(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        FooterRowsRow(
+                        ListenToMusicVariantRow(
                             theme = theme,
                             settings = settings,
                             modifier = Modifier
@@ -249,7 +250,8 @@ fun SettingsScreen(mvvmViewModel: MvvmViewModel) {
                                 .wrapContentHeight(),
                             fontSize = fontSizeLabelSp,
                             onPositionChanged = { position ->
-                                footerRowsToSave = position
+                                listenToMusicVariantToSave =
+                                    ListenToMusicVariant.values()[position]
                             }
                         )
                         ScrollSpeedRow(
@@ -286,7 +288,7 @@ fun SettingsScreen(mvvmViewModel: MvvmViewModel) {
                     settings.commonFontScale = fontScaleToSave.scale
                     settings.defaultArtist = defaultArtistToSave
                     settings.orientation = orientationToSave
-                    settings.footerRows = footerRowsToSave
+                    settings.listenToMusicVariant = listenToMusicVariantToSave
                     settings.scrollSpeed = scrollSpeedToSave
                     mvvmViewModel.onRestartApp()
                 }
@@ -351,7 +353,7 @@ fun FontScaleRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = stringResource(id = R.string.textScale),
+            text = stringResource(id = R.string.text_scale),
             modifier = Modifier
                 .weight(1.0f)
                 .padding(10.dp),
@@ -398,7 +400,7 @@ fun DefaultArtistRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = stringResource(id = R.string.defArtist),
+            text = stringResource(id = R.string.def_artist),
             modifier = Modifier
                 .weight(1.0f)
                 .padding(10.dp),
@@ -437,7 +439,7 @@ fun OrientationRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = stringResource(id = R.string.orientFix),
+            text = stringResource(id = R.string.orient_fix),
             modifier = Modifier
                 .weight(1.0f)
                 .padding(10.dp),
@@ -462,7 +464,7 @@ fun OrientationRow(
 }
 
 @Composable
-fun FooterRowsRow(
+fun ListenToMusicVariantRow(
     modifier: Modifier,
     theme: Theme,
     settings: Settings,
@@ -474,7 +476,7 @@ fun FooterRowsRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = stringResource(id = R.string.hidePanel),
+            text = stringResource(id = R.string.listen_to_music),
             modifier = Modifier
                 .weight(1.0f)
                 .padding(10.dp),
@@ -483,7 +485,7 @@ fun FooterRowsRow(
             overflow = TextOverflow.Ellipsis,
             color = theme.colorMain
         )
-        val valueList = stringArrayResource(id = R.array.footer_row_count_list)
+        val valueList = stringArrayResource(id = R.array.listen_to_music_variants)
         Spinner(
             modifier = Modifier
                 .weight(1.0f)
@@ -491,7 +493,7 @@ fun FooterRowsRow(
             theme = theme,
             fontSize = fontSize,
             valueList = valueList,
-            initialPosition = settings.footerRows,
+            initialPosition = settings.listenToMusicVariant.ordinal,
             onPositionChanged = onPositionChanged
         )
     }
@@ -511,7 +513,7 @@ fun ScrollSpeedRow(
     ) {
         var text by remember { mutableStateOf(settings.scrollSpeed.toString()) }
         Text(
-            text = stringResource(id = R.string.scrollSpeed),
+            text = stringResource(id = R.string.scroll_speed),
             modifier = Modifier
                 .weight(1.0f)
                 .padding(10.dp),

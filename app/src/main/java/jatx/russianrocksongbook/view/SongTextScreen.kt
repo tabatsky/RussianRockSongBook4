@@ -12,7 +12,9 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalDensity
@@ -22,11 +24,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import jatx.clickablewordstextview.ClickableWordsTextView
 import jatx.clickablewordstextview.OnWordClickListener
 import jatx.clickablewordstextview.Word
 import jatx.russianrocksongbook.R
+import jatx.russianrocksongbook.preferences.ListenToMusicVariant
 import jatx.russianrocksongbook.preferences.ScalePow
 import jatx.russianrocksongbook.preferences.Theme
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
@@ -45,6 +49,7 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
+    var showYandexDialog by remember { mutableStateOf(false) }
     var showVkDialog by remember { mutableStateOf(false) }
     var showYoutubeMusicDialog by remember { mutableStateOf(false) }
 
@@ -55,6 +60,10 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
     var showChordDialog by remember { mutableStateOf(false) }
     var selectedChord by remember { mutableStateOf("") }
 
+    val onYandexMusicClick = {
+        showYandexDialog = true
+    }
+
     val onVkMusicClick = {
         showVkDialog = true
     }
@@ -64,10 +73,14 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
     }
 
     val isUploadButtonEnabled by mvvmViewModel.isUploadButtonEnabled.collectAsState()
-    val onUploadClick = if (isUploadButtonEnabled) {
-        { showUploadDialog = true }
-    } else {
-        {}
+    val onUploadClick = {
+        if (isUploadButtonEnabled) {
+            if (song!!.outOfTheBox) {
+                mvvmViewModel.showToast(R.string.song_is_out_of_the_box)
+            } else {
+                showUploadDialog = true
+            }
+        }
     }
 
     val onTrashClick = {
@@ -111,7 +124,8 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
                 .fillMaxSize()
         ) {
             val W = this.maxWidth
-            val H = this.minHeight
+            val H = this.maxHeight
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -157,92 +171,104 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
                     color = theme.colorBg,
                     thickness = dimensionResource(id = R.dimen.song_text_empty)
                 )
-                LazyColumn(
-                    state = listState,
+                Box(
                     modifier = Modifier
-                        .weight(1.0f)
+                        .weight(1.0f),
+                    contentAlignment = Alignment.BottomStart
                 ) {
-                    if (isEditorMode) {
-                        item {
-                            BasicTextField(
-                                modifier = Modifier.fillMaxWidth(),
-                                value = text,
-                                onValueChange = {
-                                    text = it
-                                },
-                                textStyle = TextStyle(
-                                    fontFamily = FontFamily.Monospace,
-                                    fontSize = fontSizeTextSp,
-                                    color = theme.colorMain
-                                ),
-                                decorationBox = { innerTextField ->
-                                    Row(
-                                        modifier = Modifier
-                                            .background(theme.colorBg)
-                                    ) {
-                                        innerTextField()  //<-- Add this
-                                    }
-                                },
-                                cursorBrush = SolidColor(theme.colorCommon)
-                            )
-                        }
-                    } else {
-                        item {
-                            AndroidView(
-                                factory = { context ->
-                                    ClickableWordsTextView(context)
-                                },
-                                update = { view ->
-                                    view.text = song!!.text
-                                    view.setTextColor(theme.colorMain.toArgb())
-                                    view.setBackgroundColor(theme.colorBg.toArgb())
-                                    view.textSize = fontSizeTextSp.value
-                                    view.typeface = Typeface.MONOSPACE
-                                    view.onWordClickListener = object : OnWordClickListener {
-                                        override fun onWordClick(word: Word) {
-                                            selectedChord = word.text
-                                            showChordDialog = true
-                                        }
-                                    }
-                                }
-                            )
+                    val paddingBottom = if (W < H) W * 3.0f / 21 else 0.dp
 
-                            coroutineScope.launch {
-                                listState.scrollToItem(
-                                    index = 0,
-                                    scrollOffset = y
+                    LazyColumn(
+                        state = listState,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(bottom = paddingBottom)
+                    ) {
+                        if (isEditorMode) {
+                            item {
+                                BasicTextField(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    value = text,
+                                    onValueChange = {
+                                        text = it
+                                    },
+                                    textStyle = TextStyle(
+                                        fontFamily = FontFamily.Monospace,
+                                        fontSize = fontSizeTextSp,
+                                        color = theme.colorMain
+                                    ),
+                                    decorationBox = { innerTextField ->
+                                        Row(
+                                            modifier = Modifier
+                                                .background(theme.colorBg)
+                                        ) {
+                                            innerTextField()  //<-- Add this
+                                        }
+                                    },
+                                    cursorBrush = SolidColor(theme.colorCommon)
                                 )
                             }
-
-                            val interval = 250L
-                            val dY = (10 * mvvmViewModel.settings.scrollSpeed).toInt()
-
-                            tailrec suspend fun autoScroll(listState: LazyListState) {
-                                if (isAutoPlayMode) {
-                                    y = listState.firstVisibleItemScrollOffset
-                                    listState.scroll(MutatePriority.PreventUserInput) {
-                                        scrollBy(dY.toFloat())
+                        } else {
+                            item {
+                                AndroidView(
+                                    factory = { context ->
+                                        ClickableWordsTextView(context)
+                                    },
+                                    update = { view ->
+                                        view.text = song!!.text
+                                        view.setTextColor(theme.colorMain.toArgb())
+                                        view.setBackgroundColor(theme.colorBg.toArgb())
+                                        view.textSize = fontSizeTextSp.value
+                                        view.typeface = Typeface.MONOSPACE
+                                        view.onWordClickListener = object : OnWordClickListener {
+                                            override fun onWordClick(word: Word) {
+                                                selectedChord = word.text
+                                                showChordDialog = true
+                                            }
+                                        }
                                     }
-                                } else {
-                                    y = 0
-                                }
-                                delay(interval)
-                                autoScroll(listState)
-                            }
+                                )
 
-                            LaunchedEffect(Unit) {
-                                autoScroll(listState)
+                                coroutineScope.launch {
+                                    listState.scrollToItem(
+                                        index = 0,
+                                        scrollOffset = y
+                                    )
+                                }
+
+                                val interval = 250L
+                                val dY = (10 * mvvmViewModel.settings.scrollSpeed).toInt()
+
+                                tailrec suspend fun autoScroll(listState: LazyListState) {
+                                    if (isAutoPlayMode) {
+                                        y = listState.firstVisibleItemScrollOffset
+                                        listState.scroll(MutatePriority.PreventUserInput) {
+                                            scrollBy(dY.toFloat())
+                                        }
+                                    } else {
+                                        y = 0
+                                    }
+                                    delay(interval)
+                                    autoScroll(listState)
+                                }
+
+                                LaunchedEffect(Unit) {
+                                    autoScroll(listState)
+                                }
                             }
                         }
                     }
-                }
 
-                if (mvvmViewModel.settings.footerRows == 2 && W < H) {
-                    Footer2Row(
+                    Footer(
                         W = W,
                         H = H,
                         theme = theme,
                         isEditorMode = isEditorMode,
+                        listenToMusicVariant =
+                                        mvvmViewModel
+                                            .settings
+                                            .listenToMusicVariant,
+                        onYandexMusicClick = onYandexMusicClick,
                         onVkMusicClick = onVkMusicClick,
                         onYoutubeMusicClick = onYoutubeMusicClick,
                         onUploadClick = onUploadClick,
@@ -251,20 +277,16 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
                         onEditClick = onEditClick,
                         onSaveClick = onSaveClick
                     )
-                } else if (mvvmViewModel.settings.footerRows > 0) {
-                    Footer1Row(
-                        W = W,
-                        H = H,
-                        theme = theme,
-                        isEditorMode = isEditorMode,
-                        onVkMusicClick = onVkMusicClick,
-                        onYoutubeMusicClick = onYoutubeMusicClick,
-                        onUploadClick = onUploadClick,
-                        onWarningClick = onWarningClick,
-                        onTrashClick = onTrashClick,
-                        onEditClick = onEditClick,
-                        onSaveClick = onSaveClick
-                    )
+                }
+            }
+            if (showYandexDialog) {
+                if (mvvmViewModel.settings.yandexMusicDontAsk) {
+                    showYandexDialog = false
+                    mvvmViewModel.openYandexMusic(true)
+                } else {
+                    YandexMusicDialog(mvvmViewModel = mvvmViewModel) {
+                        showYandexDialog = false
+                    }
                 }
             }
             if (showVkDialog) {
@@ -288,20 +310,15 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
                 }
             }
             if (showUploadDialog) {
-                if (song!!.outOfTheBox) {
-                    mvvmViewModel.showToast(R.string.song_is_out_of_the_box)
-                    showUploadDialog = false
-                } else {
-                    UploadDialog(
-                        mvvmViewModel = mvvmViewModel,
-                        onConfirm = {
-                            mvvmViewModel.uploadCurrentToCloud()
-                        },
-                        onDismiss = {
-                            showUploadDialog = false
-                        }
-                    )
-                }
+                UploadDialog(
+                    mvvmViewModel = mvvmViewModel,
+                    onConfirm = {
+                        mvvmViewModel.uploadCurrentToCloud()
+                    },
+                    onDismiss = {
+                        showUploadDialog = false
+                    }
+                )
             }
             if (showDeleteToTrashDialog) {
                 DeleteToTrashDialog(mvvmViewModel = mvvmViewModel) {
@@ -378,11 +395,13 @@ fun Actions(
 }
 
 @Composable
-fun Footer1Row(
+fun Footer(
     W: Dp,
     H: Dp,
     theme: Theme,
     isEditorMode: Boolean,
+    listenToMusicVariant: ListenToMusicVariant,
+    onYandexMusicClick: () -> Unit,
     onVkMusicClick: () -> Unit,
     onYoutubeMusicClick: () -> Unit,
     onUploadClick: () -> Unit,
@@ -391,35 +410,62 @@ fun Footer1Row(
     onEditClick: () -> Unit,
     onSaveClick: () -> Unit
 ) {
-    var A = W * 3.0f / 21
-    if (W >= H) A *= 2.0f / 3
-    val C = (W - A * 6.0f) / 5
+    val A = if (W < H) W * 3.0f / 21 else W * 0.5f * 3.0f / 21
+    val C = if (W < H) (W - A * 6.0f) / 5 else (W * 0.5f - A * 6.0f) / 5
 
     Row (
         modifier = Modifier
             .fillMaxWidth()
             .height(A)
+            .background(Color.Transparent)
     ) {
-        VkMusicButton(
-            size = A,
-            theme = theme,
-            onClick = onVkMusicClick
-        )
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(C)
-        )
-        YoutubeMusicButton(
-            size = A,
-            theme = theme,
-            onClick = onYoutubeMusicClick
-        )
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(C)
-        )
+        if (W >= H) {
+            Box(
+                modifier = Modifier
+                    .weight(1.0f)
+                    .fillMaxHeight()
+                    .background(Color.Transparent)
+            )
+        }
+        if (listenToMusicVariant.isYandex) {
+            YandexMusicButton(
+                size = A,
+                theme = theme,
+                onClick = onYandexMusicClick
+            )
+            Divider(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(C)
+                    .background(theme.colorBg)
+            )
+        }
+        if (listenToMusicVariant.isVk) {
+            VkMusicButton(
+                size = A,
+                theme = theme,
+                onClick = onVkMusicClick
+            )
+            Divider(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(C)
+                    .background(theme.colorBg)
+            )
+        }
+        if (listenToMusicVariant.isYoutube) {
+            YoutubeMusicButton(
+                size = A,
+                theme = theme,
+                onClick = onYoutubeMusicClick
+            )
+            Divider(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(C)
+                    .background(theme.colorBg)
+            )
+        }
         UploadButton(
             size = A,
             theme = theme,
@@ -429,6 +475,7 @@ fun Footer1Row(
             modifier = Modifier
                 .fillMaxHeight()
                 .width(C)
+                .background(theme.colorBg)
         )
         WarningButton(
             size = A,
@@ -439,6 +486,7 @@ fun Footer1Row(
             modifier = Modifier
                 .fillMaxHeight()
                 .width(C)
+                .background(theme.colorBg)
         )
         TrashButton(
             size = A,
@@ -449,6 +497,7 @@ fun Footer1Row(
             modifier = Modifier
                 .fillMaxHeight()
                 .width(C)
+                .background(theme.colorBg)
         )
         if (isEditorMode) {
             SaveButton(
@@ -463,125 +512,5 @@ fun Footer1Row(
                 onClick = onEditClick
             )
         }
-    }
-}
-
-@Composable
-fun Footer2Row(
-    W: Dp,
-    H: Dp,
-    theme: Theme,
-    isEditorMode: Boolean,
-    onVkMusicClick: () -> Unit,
-    onYoutubeMusicClick: () -> Unit,
-    onUploadClick: () -> Unit,
-    onWarningClick: () -> Unit,
-    onTrashClick: () -> Unit,
-    onEditClick: () -> Unit,
-    onSaveClick: () -> Unit
-) {
-    var A = if (W < H) {
-        W * 5.0f / 21
-    } else {
-        W * 3.0f / 21
-    }
-    if (W >= H) A *= 2.0f / 3
-    val B = (W - A * 3.0f) / 4
-
-
-    Row (
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(A)
-    ) {
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(B)
-        )
-        VkMusicButton(
-            size = A,
-            theme = theme,
-            onClick = onVkMusicClick
-        )
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(B)
-        )
-        YoutubeMusicButton(
-            size = A,
-            theme = theme,
-            onClick = onYoutubeMusicClick
-        )
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(B)
-        )
-        UploadButton(
-            size = A,
-            theme = theme,
-            onClick = onUploadClick
-        )
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(B)
-        )
-    }
-    Divider(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(B)
-    )
-    Row (
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(A)
-    ) {
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(B)
-        )
-        WarningButton(
-            size = A,
-            theme = theme,
-            onClick = onWarningClick
-        )
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(B)
-        )
-        TrashButton(
-            size = A,
-            theme = theme,
-            onClick = onTrashClick
-        )
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(B)
-        )
-        if (isEditorMode) {
-            SaveButton(
-                size = A,
-                theme = theme,
-                onClick = onSaveClick
-            )
-        } else {
-            EditButton(
-                size = A,
-                theme = theme,
-                onClick = onEditClick
-            )
-        }
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(B)
-        )
     }
 }

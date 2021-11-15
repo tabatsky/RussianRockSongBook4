@@ -9,7 +9,6 @@ import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import com.dqt.libs.chorddroid.classes.ChordLibrary

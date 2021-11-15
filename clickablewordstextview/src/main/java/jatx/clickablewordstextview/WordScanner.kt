@@ -12,9 +12,9 @@ class WordScanner(private val text: String) {
     }
 
     private fun scanNextWord(): Word? {
-        if (!isLetter(text[currentIndex])) {
+        return if (!isLetter(text[currentIndex])) {
             currentIndex++
-            return null
+            null
         } else {
             val sb = StringBuilder()
             val start = currentIndex
@@ -23,7 +23,7 @@ class WordScanner(private val text: String) {
                 currentIndex++
             }
             val end = currentIndex
-            return Word(sb.toString(), start, end)
+            Word(sb.toString(), start, end)
         }
     }
 

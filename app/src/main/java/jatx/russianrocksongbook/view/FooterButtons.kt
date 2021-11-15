@@ -45,6 +45,14 @@ fun FooterButton(
     }
 }
 
+@Composable
+fun YandexMusicButton(size: Dp, theme: Theme, onClick: () -> Unit) =
+    FooterButton(
+        size = size,
+        theme = theme,
+        resId = R.drawable.ic_yandex,
+        onClick = onClick
+    )
 
 @Composable
 fun VkMusicButton(size: Dp, theme: Theme, onClick: () -> Unit) =

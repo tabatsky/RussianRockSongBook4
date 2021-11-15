@@ -30,6 +30,7 @@ class MvvmViewModel(
     val userInfo: UserInfo,
     val fileSystemAdapter: FileSystemAdapter
     ) {
+    var onOpenYandexMusic: (String) -> Unit = {}
     var onOpenVkMusic: (String) -> Unit = {}
     var onOpenYoutubeMusic: (String) -> Unit = {}
     var onShowDevSite: () -> Unit = {}
@@ -394,6 +395,13 @@ class MvvmViewModel(
         }
     }
 
+    fun openYandexMusic(dontAskMore: Boolean) {
+        settings.yandexMusicDontAsk = dontAskMore
+        currentSong.value?.apply {
+            onOpenYandexMusic("$artist $title")
+        }
+    }
+
     fun openVkMusic(dontAskMore: Boolean) {
         settings.vkMusicDontAsk = dontAskMore
         currentSong.value?.apply {
@@ -405,6 +413,13 @@ class MvvmViewModel(
         settings.youtubeMusicDontAsk = dontAskMore
         currentSong.value?.apply {
             onOpenYoutubeMusic("$artist $title")
+        }
+    }
+
+    fun openYandexMusicCloud(dontAskMore: Boolean) {
+        settings.yandexMusicDontAsk = dontAskMore
+        cloudSong.value?.apply {
+            onOpenYandexMusic("$artist $title")
         }
     }
 
