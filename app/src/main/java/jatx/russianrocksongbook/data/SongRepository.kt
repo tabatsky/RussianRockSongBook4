@@ -6,6 +6,7 @@ import jatx.russianrocksongbook.domain.CloudSong
 import jatx.russianrocksongbook.domain.Song
 import jatx.russianrocksongbook.domain.USER_SONG_MD5
 import jatx.russianrocksongbook.domain.songTextHash
+import javax.inject.Inject
 
 const val ARTIST_FAVORITE = "Избранное"
 const val ARTIST_ADD_ARTIST = "Добавить исполнителя"
@@ -13,7 +14,7 @@ const val ARTIST_ADD_SONG = "Добавить песню"
 const val ARTIST_CLOUD_SONGS = "Аккорды онлайн"
 const val ARTIST_DONATION = "Пожертвования"
 
-class SongRepository(
+class SongRepository @Inject constructor(
     private val songDao: SongDao
 ) {
     fun getArtistsFlowable(): Flowable<List<String>> {

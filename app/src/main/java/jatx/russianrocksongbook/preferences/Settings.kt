@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import androidx.compose.ui.graphics.Color
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 import kotlin.math.pow
 
 const val PREFS_NAME = "RussianRockPreferences"
@@ -22,8 +24,8 @@ const val KEY_YANDEX_MUSIC_DONT_ASK = "vkMusicDontAsk"
 const val ARTIST_KINO = "Кино"
 
 @SuppressLint("ApplySharedPref")
-class Settings(
-    private val context: Context
+class Settings @Inject constructor(
+    @ApplicationContext private val context: Context
 ) {
     private val sp = context.getSharedPreferences(PREFS_NAME, 0)
 
