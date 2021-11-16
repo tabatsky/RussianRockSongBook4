@@ -2,13 +2,15 @@ package jatx.russianrocksongbook.data
 
 import android.content.Context
 import androidx.documentfile.provider.DocumentFile
+import dagger.hilt.android.qualifiers.ApplicationContext
 import jatx.russianrocksongbook.domain.Song
 import java.io.File
 import java.io.FileNotFoundException
 import java.util.*
+import javax.inject.Inject
 
-class FileSystemAdapter(
-    val context: Context,
+class FileSystemAdapter @Inject constructor(
+    @ApplicationContext val context: Context,
     val songRepo: SongRepository
 ) {
     fun getSongsFromDir(

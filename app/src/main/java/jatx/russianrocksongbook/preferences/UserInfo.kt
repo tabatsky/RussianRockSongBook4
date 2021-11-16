@@ -3,13 +3,16 @@ package jatx.russianrocksongbook.preferences
 import android.annotation.SuppressLint
 import android.content.Context
 import android.provider.Settings
+import dagger.hilt.android.qualifiers.ApplicationContext
 import jatx.russianrocksongbook.domain.util.HashingUtil
+import javax.inject.Inject
 
 const val USER_PREFS_NAME = "RussianRockUserPrefs"
 
 const val KEY_GOOGLE_ACCOUNT = "googleAccount"
 
-class UserInfo(private val context: Context) {
+class UserInfo @Inject constructor(
+    @ApplicationContext private val context: Context) {
 
     private val sp = context.getSharedPreferences(USER_PREFS_NAME, 0)
 

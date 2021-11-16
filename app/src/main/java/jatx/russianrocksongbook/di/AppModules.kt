@@ -23,19 +23,15 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
+class DbModule {
     @Singleton
     @Provides
     fun provideSongDao(@ApplicationContext context: Context) = AppDatabase.invoke(context).songDao()
+}
 
-    @Singleton
-    @Provides
-    fun provideSongRepo(songDao: SongDao) = SongRepository(songDao)
-
-    @Singleton
-    @Provides
-    fun provideSettings(@ApplicationContext context: Context) = Settings(context)
-
+@Module
+@InstallIn(SingletonComponent::class)
+class NetworkModule {
     @Singleton
     @Provides
     fun provideRetrofit(): Retrofit = Retrofit
@@ -44,43 +40,4 @@ object AppModule {
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .addConverterFactory(GsonConverterFactory.create())
         .build()!!
-
-    @Singleton
-    @Provides
-    fun provideRetrofitClient(retrofit: Retrofit) = RetrofitClient(retrofit)
-
-    @Singleton
-    @Provides
-    fun provideSongBookAPIAdapter(retrofitClient: RetrofitClient) =
-        SongBookAPIAdapter(retrofitClient)
-
-    @Singleton
-    @Provides
-    fun provideUserInfo(@ApplicationContext context: Context) =
-        UserInfo(context)
-
-    @Singleton
-    @Provides
-    fun provideFileSystemAdapter(
-        @ApplicationContext context: Context,
-        songRepo: SongRepository
-    ) = FileSystemAdapter(context, songRepo)
-
-    @Singleton
-    @Provides
-    fun provideViewModel(
-        @ApplicationContext context: Context,
-        songRepo: SongRepository,
-        settings: Settings,
-        songBookAPIAdapter: SongBookAPIAdapter,
-        userInfo: UserInfo,
-        fileSystemAdapter: FileSystemAdapter
-    ) = MvvmViewModel(
-        context,
-        songRepo,
-        settings,
-        songBookAPIAdapter,
-        userInfo,
-        fileSystemAdapter
-    )
 }

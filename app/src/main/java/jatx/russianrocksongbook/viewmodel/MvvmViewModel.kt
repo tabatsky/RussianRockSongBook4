@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.documentfile.provider.DocumentFile
+import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -21,9 +22,10 @@ import jatx.russianrocksongbook.preferences.UserInfo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.io.File
+import javax.inject.Inject
 
-class MvvmViewModel(
-    val context: Context,
+class MvvmViewModel @Inject constructor(
+    @ApplicationContext val context: Context,
     val songRepo: SongRepository,
     val settings: Settings,
     val songBookAPIAdapter: SongBookAPIAdapter,
