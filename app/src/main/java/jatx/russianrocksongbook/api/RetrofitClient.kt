@@ -4,8 +4,7 @@ import retrofit2.Retrofit
 import javax.inject.Inject
 
 class RetrofitClient @Inject constructor(
-    private val retrofit: Retrofit
+    retrofit: Retrofit
 ) {
-    val songBookAPI: SongBookAPI
-        get() = retrofit.create(SongBookAPI::class.java)
+    val songBookAPI = retrofit.create(SongBookAPI::class.java)
 }
