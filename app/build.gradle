@@ -86,6 +86,7 @@ dependencies {
     implementation 'com.android.billingclient:billing:4.0.0'
     implementation 'com.android.billingclient:billing-ktx:4.0.0'
 
+    implementation project(':sideAppBar')
     implementation project(':clickablewordstextview')
     implementation project(':ChordDroidLibrary')
 }
