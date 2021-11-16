@@ -14,6 +14,10 @@ import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.data.*
 import jatx.russianrocksongbook.api.gson.STATUS_ERROR
 import jatx.russianrocksongbook.api.gson.STATUS_SUCCESS
+import jatx.russianrocksongbook.db.util.applySongPatches
+import jatx.russianrocksongbook.db.util.deleteWrongArtists
+import jatx.russianrocksongbook.db.util.deleteWrongSongs
+import jatx.russianrocksongbook.db.util.fillDbFromJSON
 import jatx.russianrocksongbook.domain.CloudSong
 import jatx.russianrocksongbook.domain.Song
 import jatx.russianrocksongbook.domain.formatRating
@@ -100,6 +104,19 @@ class MvvmViewModel @Inject constructor(
     private var uploadSongDisposable: Disposable? = null
     private var sendWarningDisposable: Disposable? = null
 
+    fun asyncInit() {
+        if (settings.appWasUpdated) {
+            fillDbFromJSON(songRepo, context) { current, total ->
+                updateStubProgress(current, total)
+            }
+            deleteWrongSongs(songRepo)
+            deleteWrongArtists(songRepo)
+            applySongPatches(songRepo)
+            setAppWasUpdated(true)
+        }
+        settings.confirmAppUpdate()
+        selectScreen(CurrentScreen.SONG_LIST)
+    }
 
     fun back(onFinish: () -> Unit) {
         Log.e("current screen", currentScreen.value.toString())
@@ -124,7 +141,7 @@ class MvvmViewModel @Inject constructor(
                 if (!this.isDisposed) this.dispose()
             }
             getArtistsDisposable = songRepo
-                .getArtistsFlowable()
+                .getArtists()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     _artistList.value = it
@@ -136,7 +153,7 @@ class MvvmViewModel @Inject constructor(
                 if (!this.isDisposed) this.dispose()
             }
             getArtistsDisposable = songRepo
-                .getArtistsFlowable()
+                .getArtists()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     _artistList.value = it

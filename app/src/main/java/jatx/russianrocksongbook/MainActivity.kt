@@ -14,10 +14,6 @@ import androidx.compose.runtime.collectAsState
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jatx.russianrocksongbook.data.*
-import jatx.russianrocksongbook.db.util.applySongPatches
-import jatx.russianrocksongbook.db.util.deleteWrongArtists
-import jatx.russianrocksongbook.db.util.deleteWrongSongs
-import jatx.russianrocksongbook.db.util.fillDbFromJSON
 import jatx.russianrocksongbook.debug.AppDebug
 import jatx.russianrocksongbook.helpers.AddSongsFromDirHelper
 import jatx.russianrocksongbook.helpers.DonationHelper
@@ -38,15 +34,9 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @Inject
-    lateinit var songRepo: SongRepository
-    @Inject
     lateinit var settings: Settings
     @Inject
     lateinit var mvvmViewModel: MvvmViewModel
-    @Inject
-    lateinit var songBookAPIAdapter: SongBookAPIAdapter
-    @Inject
-    lateinit var fileSystemAdapter: FileSystemAdapter
     @Inject
     lateinit var donationHelper: DonationHelper
     @Inject
@@ -106,7 +96,7 @@ class MainActivity : ComponentActivity() {
 
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
-                asyncInit()
+                mvvmViewModel.asyncInit()
             }
         }
     }
@@ -125,20 +115,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onBackPressed() = mvvmViewModel.back {
         finish()
-    }
-
-    private fun asyncInit() {
-        if (settings.appWasUpdated) {
-            fillDbFromJSON(songRepo, applicationContext) { current, total ->
-                mvvmViewModel.updateStubProgress(current, total)
-            }
-            deleteWrongSongs(songRepo)
-            deleteWrongArtists(songRepo)
-            applySongPatches(songRepo)
-            mvvmViewModel.setAppWasUpdated(true)
-        }
-        settings.confirmAppUpdate()
-        mvvmViewModel.selectScreen(CurrentScreen.SONG_LIST)
     }
 
     private fun restartApp() {
