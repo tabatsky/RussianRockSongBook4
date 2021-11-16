@@ -1,6 +1,7 @@
 package jatx.russianrocksongbook
 
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
@@ -8,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.DocumentsContract
+import android.util.Log
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,6 +19,7 @@ import androidx.documentfile.provider.DocumentFile
 import com.android.billingclient.api.*
 import com.obsez.android.lib.filechooser.ChooserDialog
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.qualifiers.ApplicationContext
 import jatx.russianrocksongbook.data.*
 import jatx.russianrocksongbook.db.util.applySongPatches
 import jatx.russianrocksongbook.db.util.deleteWrongArtists
@@ -70,9 +73,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        AppDebug.setAppCrashHandler(songBookAPIAdapter)
-        Version.init(applicationContext)
-
         requestedOrientation = when (settings.orientation) {
             Orientation.PORTRAIT -> ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             Orientation.LANDSCAPE -> ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -125,6 +125,18 @@ class MainActivity : ComponentActivity() {
                 asyncInit()
             }
         }
+    }
+
+    @Inject
+    fun initAppDebug(songBookAPIAdapter: SongBookAPIAdapter) {
+        Log.e("inject init", "AppDebug")
+        AppDebug.setAppCrashHandler(songBookAPIAdapter)
+    }
+
+    @Inject
+    fun initVersion(@ApplicationContext context: Context) {
+        Log.e("inject init", "Version")
+        Version.init(context)
     }
 
     override fun onBackPressed() = mvvmViewModel.back {
