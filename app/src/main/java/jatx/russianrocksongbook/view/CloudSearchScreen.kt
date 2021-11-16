@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.data.OrderBy
 import jatx.russianrocksongbook.preferences.ScalePow
-import jatx.russianrocksongbook.viewmodel.CurrentScreen
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import kotlinx.coroutines.launch
 
@@ -159,7 +158,7 @@ fun CloudSearchScreen(mvvmViewModel: MvvmViewModel) {
                                 .clickable {
                                     println("selected: ${cloudSong.artist} - ${cloudSong.title}")
                                     mvvmViewModel.selectCloudSong(index)
-                                    mvvmViewModel.selectScreen(CurrentScreen.CLOUD_SONG_TEXT)
+                                    mvvmViewModel.selectScreen(CurrentScreenVariant.CLOUD_SONG_TEXT)
                                 }
                         ) {
                             Text(

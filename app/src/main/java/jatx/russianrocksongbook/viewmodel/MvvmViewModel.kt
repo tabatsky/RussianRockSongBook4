@@ -23,6 +23,7 @@ import jatx.russianrocksongbook.domain.Song
 import jatx.russianrocksongbook.domain.formatRating
 import jatx.russianrocksongbook.preferences.Settings
 import jatx.russianrocksongbook.preferences.UserInfo
+import jatx.russianrocksongbook.view.CurrentScreenVariant
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.io.File
@@ -46,8 +47,8 @@ class MvvmViewModel @Inject constructor(
     var onPurchaseItem: (String) -> Unit = {}
 
 
-    private val _currentScreen = MutableStateFlow(CurrentScreen.STUB)
-    val currentScreen = _currentScreen.asStateFlow()
+    private val _currentScreenVariant = MutableStateFlow(CurrentScreenVariant.STUB)
+    val currentScreenVariant = _currentScreenVariant.asStateFlow()
     private val _appWasUpdated = MutableStateFlow(false)
     val appWasUpdated = _appWasUpdated.asStateFlow()
 
@@ -115,28 +116,28 @@ class MvvmViewModel @Inject constructor(
             setAppWasUpdated(true)
         }
         settings.confirmAppUpdate()
-        selectScreen(CurrentScreen.SONG_LIST)
+        selectScreen(CurrentScreenVariant.SONG_LIST)
     }
 
     fun back(onFinish: () -> Unit) {
-        Log.e("current screen", currentScreen.value.toString())
-        when (currentScreen.value) {
-            CurrentScreen.STUB, CurrentScreen.SONG_LIST -> {
+        Log.e("current screen", currentScreenVariant.value.toString())
+        when (currentScreenVariant.value) {
+            CurrentScreenVariant.STUB, CurrentScreenVariant.SONG_LIST -> {
                 onFinish()
             }
-            CurrentScreen.CLOUD_SONG_TEXT -> {
-                selectScreen(CurrentScreen.CLOUD_SEARCH, true)
+            CurrentScreenVariant.CLOUD_SONG_TEXT -> {
+                selectScreen(CurrentScreenVariant.CLOUD_SEARCH, true)
             }
             else -> {
-                selectScreen(CurrentScreen.SONG_LIST, true)
+                selectScreen(CurrentScreenVariant.SONG_LIST, true)
             }
         }
     }
 
-    fun selectScreen(screen: CurrentScreen, isBack: Boolean = false) {
-        _currentScreen.value = screen
-        Log.e("select screen", currentScreen.value.toString())
-        if (screen == CurrentScreen.SONG_LIST && !isBack) {
+    fun selectScreen(screen: CurrentScreenVariant, isBack: Boolean = false) {
+        _currentScreenVariant.value = screen
+        Log.e("select screen", currentScreenVariant.value.toString())
+        if (screen == CurrentScreenVariant.SONG_LIST && !isBack) {
             getArtistsDisposable?.apply {
                 if (!this.isDisposed) this.dispose()
             }
@@ -148,7 +149,7 @@ class MvvmViewModel @Inject constructor(
                 }
             selectArtist(currentArtist.value) {}
         }
-        if (screen == CurrentScreen.FAVORITE) {
+        if (screen == CurrentScreenVariant.FAVORITE) {
             getArtistsDisposable?.apply {
                 if (!this.isDisposed) this.dispose()
             }
@@ -160,7 +161,7 @@ class MvvmViewModel @Inject constructor(
                 }
             selectArtist(ARTIST_FAVORITE) {}
         }
-        if (screen == CurrentScreen.CLOUD_SEARCH && !isBack) {
+        if (screen == CurrentScreenVariant.CLOUD_SEARCH && !isBack) {
             cloudSearch("", OrderBy.BY_ID_DESC)
             selectCloudSong(0)
         }
@@ -213,16 +214,16 @@ class MvvmViewModel @Inject constructor(
         }
         when (artist) {
             ARTIST_ADD_ARTIST -> {
-                selectScreen(CurrentScreen.ADD_ARTIST)
+                selectScreen(CurrentScreenVariant.ADD_ARTIST)
             }
             ARTIST_ADD_SONG -> {
-                selectScreen(CurrentScreen.ADD_SONG)
+                selectScreen(CurrentScreenVariant.ADD_SONG)
             }
             ARTIST_CLOUD_SONGS -> {
-                selectScreen(CurrentScreen.CLOUD_SEARCH)
+                selectScreen(CurrentScreenVariant.CLOUD_SEARCH)
             }
             ARTIST_DONATION -> {
-                selectScreen(CurrentScreen.DONATION)
+                selectScreen(CurrentScreenVariant.DONATION)
             }
             else -> {
                 _currentArtist.value = artist
@@ -499,7 +500,7 @@ class MvvmViewModel @Inject constructor(
                             )
                             showToast(toastText)
                             selectArtist(uploadArtist.value) {}
-                            selectScreen(CurrentScreen.SONG_LIST)
+                            selectScreen(CurrentScreenVariant.SONG_LIST)
                         }
                     }
                     STATUS_ERROR -> showToast(result.message ?: "")
@@ -547,7 +548,7 @@ class MvvmViewModel @Inject constructor(
                         .map { it.title }
                         .indexOf(this.title)
                     selectSong(position)
-                    selectScreen(CurrentScreen.SONG_TEXT)
+                    selectScreen(CurrentScreenVariant.SONG_TEXT)
                 }
             )
         }
