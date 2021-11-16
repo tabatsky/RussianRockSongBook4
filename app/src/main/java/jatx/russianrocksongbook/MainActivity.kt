@@ -7,11 +7,10 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.provider.DocumentsContract
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.collectAsState
 import androidx.documentfile.provider.DocumentFile
@@ -24,10 +23,11 @@ import jatx.russianrocksongbook.db.util.deleteWrongArtists
 import jatx.russianrocksongbook.db.util.deleteWrongSongs
 import jatx.russianrocksongbook.db.util.fillDbFromJSON
 import jatx.russianrocksongbook.debug.AppDebug
+import jatx.russianrocksongbook.music.MusicHelper
 import jatx.russianrocksongbook.preferences.Orientation
 import jatx.russianrocksongbook.preferences.Settings
 import jatx.russianrocksongbook.preferences.Version
-import jatx.russianrocksongbook.purchase.SKUS
+import jatx.russianrocksongbook.purchase.DonationHelper
 import jatx.russianrocksongbook.view.*
 import jatx.russianrocksongbook.viewmodel.CurrentScreen
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
@@ -35,14 +35,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.UnsupportedEncodingException
-import java.net.URLEncoder
 import java.util.*
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity(), PurchasesUpdatedListener {
+class MainActivity : ComponentActivity() {
     @Inject
     lateinit var songRepo: SongRepository
     @Inject
@@ -53,17 +51,27 @@ class MainActivity : ComponentActivity(), PurchasesUpdatedListener {
     lateinit var songBookAPIAdapter: SongBookAPIAdapter
     @Inject
     lateinit var fileSystemAdapter: FileSystemAdapter
+    @Inject
+    lateinit var donationHelper: DonationHelper
+    @Inject
+    lateinit var musicHelper: MusicHelper
 
-    private lateinit var resultLauncher: ActivityResultLauncher<Intent>
-
-    private lateinit var billingClient: BillingClient
+    private val openDirResultLauncher = registerForActivityResult(
+        ActivityResultContracts.OpenDocumentTree()
+    ) { uri ->
+        uri?.apply {
+            val pickedDir = DocumentFile.fromTreeUri(this@MainActivity, this)
+            pickedDir?.apply {
+                mvvmViewModel.copySongsFromDirToRepo(pickedDir)
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         AppDebug.setAppCrashHandler(songBookAPIAdapter)
         Version.init(applicationContext)
-        registerForResult()
 
         requestedOrientation = when (settings.orientation) {
             Orientation.PORTRAIT -> ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -101,142 +109,68 @@ class MainActivity : ComponentActivity(), PurchasesUpdatedListener {
             }
         }
 
-        mvvmViewModel.onRestartApp = {
-            val packageManager: PackageManager = packageManager
-            val intent = packageManager.getLaunchIntentForPackage(getPackageName())
-            val componentName = intent!!.component
-            val mainIntent = Intent.makeRestartActivityTask(componentName)
-            startActivity(mainIntent)
-            Runtime.getRuntime().exit(0)
-        }
+        mvvmViewModel.onRestartApp = ::restartApp
+        mvvmViewModel.onReviewApp = ::reviewApp
+        mvvmViewModel.onShowDevSite = ::showDevSite
+        mvvmViewModel.onOpenYandexMusic = musicHelper::openYandexMusic
+        mvvmViewModel.onOpenVkMusic = musicHelper::openVkMusic
+        mvvmViewModel.onOpenYoutubeMusic = musicHelper::openYoutubeMusic
+        mvvmViewModel.onAddSongsFromDir = ::addSongsFromDir
+        mvvmViewModel.onPurchaseItem = donationHelper::purchaseItem
 
-        mvvmViewModel.onReviewApp = {
-            startActivity(
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("https://play.google.com/store/apps/details?id=jatx.russianrocksongbook")
-                )
-            )
-        }
-
-        mvvmViewModel.onShowDevSite = {
-            startActivity(
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("http://tabatsky.ru"
-                    )
-                )
-            )
-        }
-
-        mvvmViewModel.onOpenYandexMusic = { searchFor ->
-            try {
-                val searchForEncoded = URLEncoder.encode(searchFor.replace(" ", "+"), "UTF-8")
-                val uri = "https://music.yandex.ru/search?text=$searchForEncoded"
-                startActivity(
-                    Intent.createChooser(
-                        Intent(Intent.ACTION_VIEW, Uri.parse(uri)),
-                        getString(R.string.search_at_yandex_music)
-                    )
-                )
-            } catch (e: UnsupportedEncodingException) {
-                mvvmViewModel.showToast(R.string.utf8_not_supported)
-            }
-        }
-
-        mvvmViewModel.onOpenVkMusic = { searchFor ->
-            try {
-                val searchForEncoded = URLEncoder.encode(searchFor, "UTF-8")
-                val uri = "https://vk.com/audio?q=$searchForEncoded"
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
-                intent.setPackage("com.vkontakte.android")
-                startActivity(intent)
-            } catch (e: UnsupportedEncodingException) {
-                mvvmViewModel.showToast(R.string.utf8_not_supported)
-            } catch (e: ActivityNotFoundException) {
-                mvvmViewModel.showToast(R.string.vk_app_not_installed)
-            }
-        }
-
-        mvvmViewModel.onOpenYoutubeMusic = { searchFor ->
-            try {
-                val searchForEncoded = URLEncoder.encode(searchFor.replace(" ", "+"), "UTF-8")
-                val uri = "https://music.youtube.com/search?q=$searchForEncoded"
-                startActivity(
-                    Intent.createChooser(
-                        Intent(Intent.ACTION_VIEW, Uri.parse(uri)),
-                        getString(R.string.search_at_youtube_music)
-                    )
-                )
-            } catch (e: UnsupportedEncodingException) {
-                mvvmViewModel.showToast(R.string.utf8_not_supported)
-            }
-        }
-
-        mvvmViewModel.onAddSongsFromDir = {
-            addSongsFromDir()
-        }
-
-        mvvmViewModel.onPurchaseItem = {
-            purchaseItem(it)
-        }
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
-                if (settings.appWasUpdated) {
-                    fillDbFromJSON(songRepo, applicationContext) { current, total ->
-                        mvvmViewModel.updateStubProgress(current, total)
-                    }
-                    deleteWrongSongs(songRepo)
-                    deleteWrongArtists(songRepo)
-                    applySongPatches(songRepo)
-                    mvvmViewModel.setAppWasUpdated(true)
-                }
-                settings.confirmAppUpdate()
-                mvvmViewModel.selectScreen(CurrentScreen.SONG_LIST)
+                asyncInit()
             }
         }
-
-        billingClient = BillingClient
-            .newBuilder(this)
-            .enablePendingPurchases()
-            .setListener(this)
-            .build()
-        billingClient.startConnection(object : BillingClientStateListener {
-            override fun onBillingSetupFinished(billingResult: BillingResult) {
-                if (billingResult.responseCode ==  BillingClient.BillingResponseCode.OK) {
-                    checkDonations()
-                } else {
-                    Log.e("response code", billingResult.responseCode.toString())
-                }
-            }
-            override fun onBillingServiceDisconnected() {
-                Log.e("billing service", "disconnected")
-            }
-        })
-
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     override fun onBackPressed() = mvvmViewModel.back {
         finish()
     }
 
-    private fun registerForResult() {
-        resultLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { result ->
-            if (result.resultCode == RESULT_OK) {
-                val data: Intent? = result.data
-                val treeUri = data?.data
-                treeUri?.apply {
-                    val pickedDir = DocumentFile.fromTreeUri(this@MainActivity, this)
-                    pickedDir?.apply {
-                        mvvmViewModel.copySongsFromDirToRepo(pickedDir)
-                    }
-                }
+    private fun asyncInit() {
+        if (settings.appWasUpdated) {
+            fillDbFromJSON(songRepo, applicationContext) { current, total ->
+                mvvmViewModel.updateStubProgress(current, total)
             }
+            deleteWrongSongs(songRepo)
+            deleteWrongArtists(songRepo)
+            applySongPatches(songRepo)
+            mvvmViewModel.setAppWasUpdated(true)
         }
+        settings.confirmAppUpdate()
+        mvvmViewModel.selectScreen(CurrentScreen.SONG_LIST)
+    }
+
+    private fun restartApp() {
+        val packageManager: PackageManager = packageManager
+        val intent = packageManager.getLaunchIntentForPackage(getPackageName())
+        val componentName = intent!!.component
+        val mainIntent = Intent.makeRestartActivityTask(componentName)
+        startActivity(mainIntent)
+        Runtime.getRuntime().exit(0)
+    }
+
+    private fun showDevSite() {
+        startActivity(
+            Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("http://tabatsky.ru"
+                )
+            )
+        )
+    }
+
+    private fun reviewApp() {
+        startActivity(
+            Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://play.google.com/store/apps/details?id=jatx.russianrocksongbook")
+            )
+        )
     }
 
     private fun addSongsFromDir() {
@@ -244,8 +178,7 @@ class MainActivity : ComponentActivity(), PurchasesUpdatedListener {
             if (Build.VERSION.SDK_INT < 29) {
                 showFileSelectDialog()
             } else {
-                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
-                resultLauncher.launch(intent)
+                openDirResultLauncher.launch(Uri.parse(DocumentsContract.EXTRA_INITIAL_URI))
             }
         } catch (e: ActivityNotFoundException) {
             showFileSelectDialog()
@@ -264,66 +197,5 @@ class MainActivity : ComponentActivity(), PurchasesUpdatedListener {
             }
             .build()
             .show()
-    }
-
-    override fun onPurchasesUpdated(
-        billingResult: BillingResult,
-        mutableList: MutableList<Purchase>?
-    ) {
-        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && mutableList != null) {
-            Log.e("mutableList0", mutableList.toString())
-            mutableList.forEach {
-                consumePurchase(it)
-            }
-        }
-    }
-
-    private fun checkDonations() {
-        billingClient.queryPurchasesAsync(
-            BillingClient.SkuType.INAPP
-        ) { _, list ->
-            list.forEach {
-                consumePurchase(it)
-            }
-        }
-    }
-
-    private fun consumePurchase(purchase: Purchase) {
-        for (sku in purchase.skus) {
-            if (sku in SKUS) {
-                val consumeParams = ConsumeParams
-                    .newBuilder()
-                    .setPurchaseToken(purchase.purchaseToken)
-                    .build()
-                billingClient.consumeAsync(consumeParams) { responseCode, _ ->
-                    Log.e("consume", responseCode.responseCode.toString())
-                    runOnUiThread {
-                        mvvmViewModel.showToast(R.string.thanks_for_donation)
-                    }
-                }
-            }
-        }
-    }
-
-    private fun purchaseItem(sku: String) {
-        val skuList = ArrayList<String>()
-        skuList.add(sku)
-        val params = SkuDetailsParams.newBuilder()
-        params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP)
-
-        billingClient.querySkuDetailsAsync(params.build()) { billingResult, mutableList ->
-            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && mutableList != null) {
-                Log.e("mutableList", mutableList.toString())
-                mutableList.forEach {
-                    if (it.sku == sku) {
-                        Log.e("billing flow", "launching")
-                        val flowParams = BillingFlowParams.newBuilder()
-                            .setSkuDetails(it)
-                            .build()
-                        billingClient.launchBillingFlow(this@MainActivity, flowParams)
-                    }
-                }
-            }
-        }
     }
 }
