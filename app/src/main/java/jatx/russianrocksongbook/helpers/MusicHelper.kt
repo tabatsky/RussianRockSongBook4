@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.music
+package jatx.russianrocksongbook.helpers
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
@@ -11,12 +11,12 @@ import java.net.URLEncoder
 import javax.inject.Inject
 
 class MusicHelper @Inject constructor(
-    val mainActivity: Activity,
-    val mvvmViewModel: MvvmViewModel
+    private val activity: Activity,
+    private val mvvmViewModel: MvvmViewModel
 ) {
     fun openYandexMusic(searchFor: String) {
         try {
-            with(mainActivity) {
+            with(activity) {
                 val searchForEncoded = URLEncoder.encode(searchFor.replace(" ", "+"), "UTF-8")
                 val uri = "https://music.yandex.ru/search?text=$searchForEncoded"
                 startActivity(
@@ -33,7 +33,7 @@ class MusicHelper @Inject constructor(
 
     fun openVkMusic(searchFor: String) {
         try {
-            with(mainActivity) {
+            with(activity) {
                 val searchForEncoded = URLEncoder.encode(searchFor, "UTF-8")
                 val uri = "https://vk.com/audio?q=$searchForEncoded"
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
@@ -49,7 +49,7 @@ class MusicHelper @Inject constructor(
 
     fun openYoutubeMusic(searchFor: String) {
         try {
-            with(mainActivity) {
+            with(activity) {
                 val searchForEncoded = URLEncoder.encode(searchFor.replace(" ", "+"), "UTF-8")
                 val uri = "https://music.youtube.com/search?q=$searchForEncoded"
                 startActivity(

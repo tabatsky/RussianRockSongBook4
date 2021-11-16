@@ -602,7 +602,7 @@ class MvvmViewModel @Inject constructor(
         }
     }
 
-    fun copySongsFromDirToRepo(pickedDir: DocumentFile) {
+    fun copySongsFromDirToRepoWithPickedDir(pickedDir: DocumentFile) {
         if (!pickedDir.exists()) {
             val toastText = context.getString(R.string.folder_does_not_exist)
             showToast(toastText)
@@ -620,7 +620,7 @@ class MvvmViewModel @Inject constructor(
         }
     }
 
-    fun copySongsFromDirToRepo(path: String) {
+    fun copySongsFromDirToRepoWithPath(path: String) {
         val dir = File(path)
         if (!dir.exists()) {
             val toastText = context.getString(R.string.folder_does_not_exist)
