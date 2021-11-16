@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.data.*
 import jatx.russianrocksongbook.preferences.ScalePow
-import jatx.russianrocksongbook.viewmodel.CurrentScreen
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import kotlinx.coroutines.launch
 
@@ -91,7 +90,7 @@ fun Content(
                 var expanded by remember { mutableStateOf(false) }
                 IconButton(onClick = {
                     println("selected: settings")
-                    mvvmViewModel.selectScreen(CurrentScreen.SETTINGS)
+                    mvvmViewModel.selectScreen(CurrentScreenVariant.SETTINGS)
                 }) {
                     Icon(painterResource(id = R.drawable.ic_settings), "")
                 }
@@ -145,7 +144,7 @@ fun Content(
                             .clickable {
                                 println("selected: ${song.artist} - ${song.title}")
                                 mvvmViewModel.selectSong(index)
-                                mvvmViewModel.selectScreen(CurrentScreen.SONG_TEXT)
+                                mvvmViewModel.selectScreen(CurrentScreenVariant.SONG_TEXT)
                             },
                         fontSize = fontSizeSp,
                         color = theme.colorMain

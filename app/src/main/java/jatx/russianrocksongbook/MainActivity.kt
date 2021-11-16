@@ -10,7 +10,6 @@ import android.util.Log
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.collectAsState
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jatx.russianrocksongbook.data.*
@@ -22,12 +21,8 @@ import jatx.russianrocksongbook.preferences.Orientation
 import jatx.russianrocksongbook.preferences.Settings
 import jatx.russianrocksongbook.preferences.Version
 import jatx.russianrocksongbook.view.*
-import jatx.russianrocksongbook.viewmodel.CurrentScreen
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 
@@ -44,6 +39,7 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var addSongsFromDirHelper: AddSongsFromDirHelper
 
+    @DelicateCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -54,33 +50,7 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            when (mvvmViewModel.currentScreen.collectAsState().value) {
-                CurrentScreen.STUB -> StubScreen(mvvmViewModel = mvvmViewModel)
-                CurrentScreen.SONG_LIST, CurrentScreen.FAVORITE -> SongListScreen(
-                    mvvmViewModel = mvvmViewModel,
-                )
-                CurrentScreen.SONG_TEXT -> SongTextScreen(
-                    mvvmViewModel = mvvmViewModel
-                )
-                CurrentScreen.SETTINGS -> SettingsScreen(
-                    mvvmViewModel = mvvmViewModel
-                )
-                CurrentScreen.CLOUD_SEARCH -> CloudSearchScreen(
-                    mvvmViewModel = mvvmViewModel
-                )
-                CurrentScreen.CLOUD_SONG_TEXT -> CloudSongTextScreen(
-                    mvvmViewModel = mvvmViewModel
-                )
-                CurrentScreen.ADD_ARTIST -> AddArtistScreen(
-                    mvvmViewModel = mvvmViewModel
-                )
-                CurrentScreen.ADD_SONG -> AddSongScreen(
-                    mvvmViewModel = mvvmViewModel
-                )
-                CurrentScreen.DONATION -> DonationScreen(
-                    mvvmViewModel = mvvmViewModel
-                )
-            }
+            CurrentScreen(mvvmViewModel = mvvmViewModel)
         }
 
         mvvmViewModel.onRestartApp = ::restartApp

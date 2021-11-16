@@ -15,7 +15,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.preferences.ScalePow
-import jatx.russianrocksongbook.viewmodel.CurrentScreen
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 
 @Composable
@@ -90,7 +89,7 @@ fun AddArtistScreen(mvvmViewModel: MvvmViewModel) {
                     onDismiss = {
                         mvvmViewModel.hideUploadOfferForDir()
                         mvvmViewModel.selectArtist(uploadArtist) {}
-                        mvvmViewModel.selectScreen(CurrentScreen.SONG_LIST)
+                        mvvmViewModel.selectScreen(CurrentScreenVariant.SONG_LIST)
                     }
                 )
             }
