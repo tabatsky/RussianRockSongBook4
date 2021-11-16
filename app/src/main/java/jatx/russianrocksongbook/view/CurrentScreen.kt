@@ -7,7 +7,7 @@ import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 @Composable
 fun CurrentScreen(mvvmViewModel: MvvmViewModel) {
     when (mvvmViewModel.currentScreenVariant.collectAsState().value) {
-        CurrentScreenVariant.STUB -> StubScreen(mvvmViewModel = mvvmViewModel)
+        CurrentScreenVariant.START -> StartScreen(mvvmViewModel = mvvmViewModel)
         CurrentScreenVariant.SONG_LIST, CurrentScreenVariant.FAVORITE -> SongListScreen(
             mvvmViewModel = mvvmViewModel,
         )
@@ -36,7 +36,7 @@ fun CurrentScreen(mvvmViewModel: MvvmViewModel) {
 }
 
 enum class CurrentScreenVariant {
-    STUB,
+    START,
     SONG_LIST,
     FAVORITE,
     SONG_TEXT,

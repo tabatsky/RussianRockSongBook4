@@ -47,7 +47,7 @@ class MvvmViewModel @Inject constructor(
     var onPurchaseItem: (String) -> Unit = {}
 
 
-    private val _currentScreenVariant = MutableStateFlow(CurrentScreenVariant.STUB)
+    private val _currentScreenVariant = MutableStateFlow(CurrentScreenVariant.START)
     val currentScreenVariant = _currentScreenVariant.asStateFlow()
     private val _appWasUpdated = MutableStateFlow(false)
     val appWasUpdated = _appWasUpdated.asStateFlow()
@@ -122,7 +122,7 @@ class MvvmViewModel @Inject constructor(
     fun back(onFinish: () -> Unit) {
         Log.e("current screen", currentScreenVariant.value.toString())
         when (currentScreenVariant.value) {
-            CurrentScreenVariant.STUB, CurrentScreenVariant.SONG_LIST -> {
+            CurrentScreenVariant.START, CurrentScreenVariant.SONG_LIST -> {
                 onFinish()
             }
             CurrentScreenVariant.CLOUD_SONG_TEXT -> {

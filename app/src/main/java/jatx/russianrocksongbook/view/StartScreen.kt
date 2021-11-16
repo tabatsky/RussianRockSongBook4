@@ -18,7 +18,7 @@ import jatx.russianrocksongbook.preferences.ScalePow
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 
 @Composable
-fun StubScreen(mvvmViewModel: MvvmViewModel) {
+fun StartScreen(mvvmViewModel: MvvmViewModel) {
     val theme = mvvmViewModel.settings.theme
     val currentProgress by mvvmViewModel.stubCurrentProgress.collectAsState()
     val totalProgress by mvvmViewModel.stubTotalProgress.collectAsState()
