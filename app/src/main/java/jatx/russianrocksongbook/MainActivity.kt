@@ -1,23 +1,16 @@
 package jatx.russianrocksongbook
 
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.DocumentsContract
 import android.util.Log
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.collectAsState
-import androidx.documentfile.provider.DocumentFile
-import com.android.billingclient.api.*
-import com.obsez.android.lib.filechooser.ChooserDialog
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jatx.russianrocksongbook.data.*
@@ -26,11 +19,12 @@ import jatx.russianrocksongbook.db.util.deleteWrongArtists
 import jatx.russianrocksongbook.db.util.deleteWrongSongs
 import jatx.russianrocksongbook.db.util.fillDbFromJSON
 import jatx.russianrocksongbook.debug.AppDebug
-import jatx.russianrocksongbook.music.MusicHelper
+import jatx.russianrocksongbook.helpers.AddSongsFromDirHelper
+import jatx.russianrocksongbook.helpers.DonationHelper
+import jatx.russianrocksongbook.helpers.MusicHelper
 import jatx.russianrocksongbook.preferences.Orientation
 import jatx.russianrocksongbook.preferences.Settings
 import jatx.russianrocksongbook.preferences.Version
-import jatx.russianrocksongbook.purchase.DonationHelper
 import jatx.russianrocksongbook.view.*
 import jatx.russianrocksongbook.viewmodel.CurrentScreen
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
@@ -38,7 +32,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.*
 import javax.inject.Inject
 
 
@@ -58,17 +51,8 @@ class MainActivity : ComponentActivity() {
     lateinit var donationHelper: DonationHelper
     @Inject
     lateinit var musicHelper: MusicHelper
-
-    private val openDirResultLauncher = registerForActivityResult(
-        ActivityResultContracts.OpenDocumentTree()
-    ) { uri ->
-        uri?.apply {
-            val pickedDir = DocumentFile.fromTreeUri(this@MainActivity, this)
-            pickedDir?.apply {
-                mvvmViewModel.copySongsFromDirToRepo(pickedDir)
-            }
-        }
-    }
+    @Inject
+    lateinit var addSongsFromDirHelper: AddSongsFromDirHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -185,29 +169,8 @@ class MainActivity : ComponentActivity() {
         )
     }
 
-    private fun addSongsFromDir() {
-        try {
-            if (Build.VERSION.SDK_INT < 29) {
-                showFileSelectDialog()
-            } else {
-                openDirResultLauncher.launch(Uri.parse(DocumentsContract.EXTRA_INITIAL_URI))
-            }
-        } catch (e: ActivityNotFoundException) {
-            showFileSelectDialog()
-        }
-    }
-
-    private fun showFileSelectDialog() {
-        ChooserDialog(this)
-            .withFilter(true, false)
-            .withStartFile(getExternalFilesDir(null)?.absolutePath)
-            .withChosenListener { path, _ ->
-                mvvmViewModel.copySongsFromDirToRepo(path)
-            }
-            .withOnCancelListener { dialog ->
-                dialog.cancel()
-            }
-            .build()
-            .show()
-    }
+    private fun addSongsFromDir() = addSongsFromDirHelper.addSongsFromDir(
+        onPickedDirReturned = mvvmViewModel::copySongsFromDirToRepoWithPickedDir,
+        onPathReturned = mvvmViewModel::copySongsFromDirToRepoWithPath
+    )
 }

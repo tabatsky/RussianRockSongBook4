@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.purchase
+package jatx.russianrocksongbook.helpers
 
 import android.app.Activity
 import android.util.Log
@@ -15,11 +15,11 @@ val DONATIONS = listOf(
 val SKUS = DONATIONS.map { "donation_$it" }
 
 class DonationHelper @Inject constructor(
-    val mainActivity: Activity,
-    val mvvmViewModel: MvvmViewModel
+    private val activity: Activity,
+    private val mvvmViewModel: MvvmViewModel
 ): PurchasesUpdatedListener {
     private var billingClient: BillingClient = BillingClient
-        .newBuilder(mainActivity)
+        .newBuilder(activity)
         .enablePendingPurchases()
         .setListener(this)
         .build()
@@ -54,7 +54,7 @@ class DonationHelper @Inject constructor(
                         val flowParams = BillingFlowParams.newBuilder()
                             .setSkuDetails(it)
                             .build()
-                        billingClient.launchBillingFlow(mainActivity, flowParams)
+                        billingClient.launchBillingFlow(activity, flowParams)
                     }
                 }
             }
@@ -92,7 +92,7 @@ class DonationHelper @Inject constructor(
                     .build()
                 billingClient.consumeAsync(consumeParams) { responseCode, _ ->
                     Log.e("consume", responseCode.responseCode.toString())
-                    mainActivity.runOnUiThread {
+                    activity.runOnUiThread {
                         mvvmViewModel.showToast(R.string.thanks_for_donation)
                     }
                 }
