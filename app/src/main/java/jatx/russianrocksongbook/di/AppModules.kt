@@ -1,6 +1,7 @@
 package jatx.russianrocksongbook.di
 
 import android.content.Context
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -11,6 +12,9 @@ import jatx.russianrocksongbook.api.RetrofitClient
 import jatx.russianrocksongbook.data.FileSystemAdapter
 import jatx.russianrocksongbook.data.SongBookAPIAdapter
 import jatx.russianrocksongbook.data.SongRepository
+import jatx.russianrocksongbook.data.impl.FileSystemAdapterImpl
+import jatx.russianrocksongbook.data.impl.SongBookAPIAdapterImpl
+import jatx.russianrocksongbook.data.impl.SongRepositoryImpl
 import jatx.russianrocksongbook.db.AppDatabase
 import jatx.russianrocksongbook.db.dao.SongDao
 import jatx.russianrocksongbook.preferences.Settings
@@ -40,4 +44,22 @@ class NetworkModule {
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .addConverterFactory(GsonConverterFactory.create())
         .build()!!
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+interface DataModule {
+    @Singleton
+    @Binds
+    fun bindSongRepository(songRepositoryImpl: SongRepositoryImpl): SongRepository
+
+    @Singleton
+    @Binds
+    fun bindSongBookAPIAdapter(songBookAPIAdapterImpl: SongBookAPIAdapterImpl):
+            SongBookAPIAdapter
+
+    @Singleton
+    @Binds
+    fun bindFileSystemAdapter(fileSystemAdapterImpl: FileSystemAdapterImpl):
+            FileSystemAdapter
 }
