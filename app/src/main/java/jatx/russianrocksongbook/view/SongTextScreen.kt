@@ -416,7 +416,7 @@ fun Editor(
 }
 
 @Composable
-fun Viewer(
+private fun Viewer(
     song: Song,
     theme: Theme,
     fontSizeTextSp: TextUnit,
@@ -442,7 +442,7 @@ fun Viewer(
 }
 
 @Composable
-fun SongTextBody(
+private fun SongTextBody(
     W: Dp,
     H: Dp,
     song: Song,
@@ -494,7 +494,7 @@ fun SongTextBody(
 }
 
 @Composable
-fun SongTextLazyColumn(
+private fun SongTextLazyColumn(
     song: Song,
     text: String,
     isEditorMode: Boolean,
@@ -556,7 +556,7 @@ fun SongTextLazyColumn(
 
 
 @Composable
-fun Panel(
+private fun Panel(
     W: Dp,
     H: Dp,
     theme: Theme,
@@ -623,7 +623,7 @@ fun Panel(
 }
 
 @Composable
-fun PanelContent(
+private fun PanelContent(
     W: Dp,
     H: Dp,
     theme: Theme,
