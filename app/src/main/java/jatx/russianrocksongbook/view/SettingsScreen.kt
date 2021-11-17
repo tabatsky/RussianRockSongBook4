@@ -304,7 +304,7 @@ fun SettingsScreen(mvvmViewModel: MvvmViewModel) {
 }
 
 @Composable
-fun ThemeRow(
+private fun ThemeRow(
     modifier: Modifier,
     theme: Theme,
     settings: Settings,
@@ -341,7 +341,7 @@ fun ThemeRow(
 }
 
 @Composable
-fun FontScaleRow(
+private fun FontScaleRow(
     modifier: Modifier,
     theme: Theme,
     settings: Settings,
@@ -378,7 +378,7 @@ fun FontScaleRow(
 }
 
 @Composable
-fun DefaultArtistRow(
+private fun DefaultArtistRow(
     modifier: Modifier,
     theme: Theme,
     settings: Settings,
@@ -427,7 +427,7 @@ fun DefaultArtistRow(
 }
 
 @Composable
-fun OrientationRow(
+private fun OrientationRow(
     modifier: Modifier,
     theme: Theme,
     settings: Settings,
@@ -464,7 +464,7 @@ fun OrientationRow(
 }
 
 @Composable
-fun ListenToMusicVariantRow(
+private fun ListenToMusicVariantRow(
     modifier: Modifier,
     theme: Theme,
     settings: Settings,
@@ -500,7 +500,7 @@ fun ListenToMusicVariantRow(
 }
 
 @Composable
-fun ScrollSpeedRow(
+private fun ScrollSpeedRow(
     modifier: Modifier,
     theme: Theme,
     settings: Settings,

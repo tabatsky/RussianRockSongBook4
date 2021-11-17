@@ -33,7 +33,7 @@ import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import jatx.sideappbar.SideAppBar
 import kotlinx.coroutines.launch
 
-val CLOUD_APP_BAR_WIDTH = 96.dp
+private val CLOUD_APP_BAR_WIDTH = 96.dp
 
 @Composable
 fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel) {
@@ -298,7 +298,7 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel) {
 }
 
 @Composable
-fun CloudActions(
+private fun CloudActions(
     mvvmViewModel: MvvmViewModel,
     onCloudSongChanged: () -> Unit
 ) {
