@@ -22,7 +22,61 @@ import jatx.russianrocksongbook.preferences.ScalePow
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 
 @Composable
-fun MusicDialog(
+fun YandexMusicDialog(
+    mvvmViewModel: MvvmViewModel,
+    isCloudScreen: Boolean = false,
+    onDismiss: () -> Unit
+) = MusicDialog(
+    mvvmViewModel = mvvmViewModel,
+    stringRes = R.string.question_search_at_yandex_music,
+    onConfirm = {
+        if (isCloudScreen) {
+            mvvmViewModel.openYandexMusicCloud(it)
+        } else {
+            mvvmViewModel.openYandexMusic(it)
+        }
+    },
+    onDismiss = onDismiss
+)
+
+@Composable
+fun VkMusicDialog(
+    mvvmViewModel: MvvmViewModel,
+    isCloudScreen: Boolean = false,
+    onDismiss: () -> Unit
+) = MusicDialog(
+    mvvmViewModel = mvvmViewModel,
+    stringRes = R.string.question_search_at_vk_music,
+    onConfirm = {
+        if (isCloudScreen) {
+            mvvmViewModel.openVkMusicCloud(it)
+        } else {
+            mvvmViewModel.openVkMusic(it)
+        }
+    },
+    onDismiss = onDismiss
+)
+
+@Composable
+fun YoutubeMusicDialog(
+    mvvmViewModel: MvvmViewModel,
+    isCloudScreen: Boolean = false,
+    onDismiss: () -> Unit
+) = MusicDialog(
+    mvvmViewModel = mvvmViewModel,
+    stringRes = R.string.question_search_at_youtube_music,
+    onConfirm = {
+        if (isCloudScreen) {
+            mvvmViewModel.openYoutubeMusicCloud(it)
+        } else {
+            mvvmViewModel.openYoutubeMusic(it)
+        }
+    },
+    onDismiss = onDismiss
+)
+
+@Composable
+private fun MusicDialog(
     mvvmViewModel: MvvmViewModel,
     @StringRes stringRes: Int,
     onConfirm: (Boolean) -> Unit,
@@ -103,58 +157,3 @@ fun MusicDialog(
         }
     )
 }
-
-@Composable
-fun YandexMusicDialog(
-    mvvmViewModel: MvvmViewModel,
-    isCloudScreen: Boolean = false,
-    onDismiss: () -> Unit
-) = MusicDialog(
-    mvvmViewModel = mvvmViewModel,
-    stringRes = R.string.question_search_at_yandex_music,
-    onConfirm = {
-        if (isCloudScreen) {
-            mvvmViewModel.openYandexMusicCloud(it)
-        } else {
-            mvvmViewModel.openYandexMusic(it)
-        }
-    },
-    onDismiss = onDismiss
-)
-
-@Composable
-fun VkMusicDialog(
-    mvvmViewModel: MvvmViewModel,
-    isCloudScreen: Boolean = false,
-    onDismiss: () -> Unit
-) = MusicDialog(
-    mvvmViewModel = mvvmViewModel,
-    stringRes = R.string.question_search_at_vk_music,
-    onConfirm = {
-        if (isCloudScreen) {
-            mvvmViewModel.openVkMusicCloud(it)
-        } else {
-            mvvmViewModel.openVkMusic(it)
-        }
-    },
-    onDismiss = onDismiss
-)
-
-@Composable
-fun YoutubeMusicDialog(
-    mvvmViewModel: MvvmViewModel,
-    isCloudScreen: Boolean = false,
-    onDismiss: () -> Unit
-) = MusicDialog(
-    mvvmViewModel = mvvmViewModel,
-    stringRes = R.string.question_search_at_youtube_music,
-    onConfirm = {
-        if (isCloudScreen) {
-            mvvmViewModel.openYoutubeMusicCloud(it)
-        } else {
-            mvvmViewModel.openYoutubeMusic(it)
-        }
-    },
-    onDismiss = onDismiss
-)
-

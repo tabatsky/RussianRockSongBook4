@@ -40,7 +40,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-val APP_BAR_WIDTH = 72.dp
+private val APP_BAR_WIDTH = 72.dp
 
 @Composable
 fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
@@ -339,7 +339,7 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
 }
 
 @Composable
-fun Actions(
+private fun Actions(
     mvvmViewModel: MvvmViewModel,
     isFavorite: Boolean,
     onSongChanged: () -> Unit
@@ -388,7 +388,7 @@ fun Actions(
 }
 
 @Composable
-fun Editor(
+private fun Editor(
     text: String,
     fontSizeTextSp: TextUnit,
     theme: Theme,

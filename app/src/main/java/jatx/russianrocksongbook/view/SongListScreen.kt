@@ -54,7 +54,7 @@ fun SongListScreen(
 }
 
 @Composable
-fun Content(
+private fun Content(
     mvvmViewModel: MvvmViewModel,
     openDrawer: () -> Unit
 ) {

@@ -18,34 +18,6 @@ import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.preferences.Theme
 
 @Composable
-fun FooterButton(
-    size: Dp,
-    theme: Theme,
-    @DrawableRes resId: Int,
-    onClick: () -> Unit,
-    onLongClick: () -> Unit = {}
-) {
-    Box(
-        modifier = Modifier
-            .background(theme.colorCommon)
-            .width(size)
-            .height(size)
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onTap = { onClick() },
-                    onLongPress = { onLongClick() }
-                )
-            }
-    ) {
-        Icon(
-            painter = painterResource(id = resId),
-            contentDescription = "",
-            modifier = Modifier.padding(10.dp)
-        )
-    }
-}
-
-@Composable
 fun YandexMusicButton(size: Dp, theme: Theme, onClick: () -> Unit) =
     FooterButton(
         size = size,
@@ -149,3 +121,31 @@ fun DislikeButton(
         onClick = onClick,
         onLongClick = onLongClick
     )
+
+@Composable
+private fun FooterButton(
+    size: Dp,
+    theme: Theme,
+    @DrawableRes resId: Int,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit = {}
+) {
+    Box(
+        modifier = Modifier
+            .background(theme.colorCommon)
+            .width(size)
+            .height(size)
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onTap = { onClick() },
+                    onLongPress = { onLongClick() }
+                )
+            }
+    ) {
+        Icon(
+            painter = painterResource(id = resId),
+            contentDescription = "",
+            modifier = Modifier.padding(10.dp)
+        )
+    }
+}
