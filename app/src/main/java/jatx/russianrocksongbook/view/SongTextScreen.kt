@@ -40,6 +40,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+val APP_BAR_WIDTH = 72.dp
+
 @Composable
 fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
     val song by mvvmViewModel.currentSong.collectAsState()
