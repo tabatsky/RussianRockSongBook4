@@ -35,7 +35,7 @@ import jatx.russianrocksongbook.preferences.ListenToMusicVariant
 import jatx.russianrocksongbook.preferences.ScalePow
 import jatx.russianrocksongbook.preferences.Theme
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
-import jatx.sideappbar.LeftAppBar
+import jatx.sideappbar.SideAppBar
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -211,7 +211,7 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
                         .fillMaxSize()
                         .background(color = theme.colorBg)
                 ) {
-                    LeftAppBar(
+                    SideAppBar(
                         title = {},
                         backgroundColor = theme.colorCommon,
                         navigationIcon = {
@@ -223,7 +223,8 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
                                 isFavorite = this@apply.favorite,
                                 onSongChanged = onSongChanged
                             )
-                        }
+                        },
+                        appBarWidth = APP_BAR_WIDTH
                     )
 
                     SongTextBody(

@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import kotlin.math.sqrt
 
 @Composable
-fun LeftAppBar(
+fun SideAppBar(
     title: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     navigationIcon: @Composable (() -> Unit)? = null,
@@ -81,7 +81,7 @@ fun LeftAppBar(
 }
 
 @Composable
-fun LeftAppBar(
+fun SideAppBar(
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colors.primarySurface,
     contentColor: Color = contentColorFor(backgroundColor),
