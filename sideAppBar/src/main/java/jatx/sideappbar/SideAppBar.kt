@@ -36,11 +36,13 @@ fun SideAppBar(
     actions: @Composable ColumnScope.() -> Unit = {},
     backgroundColor: Color = MaterialTheme.colors.primarySurface,
     contentColor: Color = contentColorFor(backgroundColor),
+    appBarWidth: Dp = 72.dp,
     elevation: Dp = AppBarDefaults.LeftAppBarElevation
 ) {
     SideAppBar(
         backgroundColor,
         contentColor,
+        appBarWidth,
         elevation,
         AppBarDefaults.ContentPadding,
         RectangleShape,
@@ -85,6 +87,7 @@ fun SideAppBar(
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colors.primarySurface,
     contentColor: Color = contentColorFor(backgroundColor),
+    appBarWidth: Dp,
     elevation: Dp = AppBarDefaults.LeftAppBarElevation,
     contentPadding: PaddingValues = AppBarDefaults.ContentPadding,
     content: @Composable ColumnScope.() -> Unit
@@ -92,6 +95,7 @@ fun SideAppBar(
     SideAppBar(
         backgroundColor,
         contentColor,
+        appBarWidth,
         elevation,
         contentPadding,
         RectangleShape,
@@ -190,6 +194,7 @@ internal fun calculateRoundedEdgeIntercept(
 private fun SideAppBar(
     backgroundColor: Color,
     contentColor: Color,
+    appBarWidth: Dp,
     elevation: Dp,
     contentPadding: PaddingValues,
     shape: Shape,
@@ -207,7 +212,7 @@ private fun SideAppBar(
             Column(
                 Modifier.fillMaxHeight()
                     .padding(contentPadding)
-                    .width(AppBarWidth),
+                    .width(appBarWidth),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 content = content
@@ -216,7 +221,7 @@ private fun SideAppBar(
     }
 }
 
-private val AppBarWidth = 80.dp
+//private val AppBarWidth = 80.dp
 // TODO: this should probably be part of the touch target of the start and end icons, clarify this
 private val AppBarVerticalPadding = 4.dp
 // Start inset for the title when there is no navigation icon provided
