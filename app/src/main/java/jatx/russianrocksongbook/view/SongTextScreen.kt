@@ -37,6 +37,7 @@ import jatx.russianrocksongbook.preferences.Theme
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import jatx.sideappbar.LeftAppBar
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 @Composable
@@ -48,9 +49,22 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
     }
     val onTextChange: (String) -> Unit = { text = it }
 
-    var y by remember { mutableStateOf(0) }
+    val isAutoPlayMode = mvvmViewModel.isAutoPlayMode
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
+    val interval = 250L
+    val dY = (10 * mvvmViewModel.settings.scrollSpeed).toInt()
+
+    val onSongChanged: () -> Unit = {
+        Log.e("event", "song changed")
+
+        coroutineScope.launch {
+            listState.scrollToItem(
+                index = 0,
+                scrollOffset = 0
+            )
+        }
+    }
 
     var showYandexDialog by remember { mutableStateOf(false) }
     var showVkDialog by remember { mutableStateOf(false) }
@@ -62,6 +76,10 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
 
     var showChordDialog by remember { mutableStateOf(false) }
     var selectedChord by remember { mutableStateOf("") }
+    val onWordClick: (Word) -> Unit = {
+        selectedChord = it.text
+        showChordDialog = true
+    }
 
     val onYandexMusicClick = {
         showYandexDialog = true
@@ -109,7 +127,6 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
 
     val theme = mvvmViewModel.settings.theme
     val isEditorMode by mvvmViewModel.isEditorMode.collectAsState()
-    val isAutoPlayMode by mvvmViewModel.isAutoPlayMode.collectAsState()
 
     val fontScale = mvvmViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTitleDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
@@ -139,116 +156,54 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
                         title = {},
                         backgroundColor = theme.colorCommon,
                         navigationIcon = {
-                            IconButton(onClick = {
-                                mvvmViewModel.back { }
-                            }) {
-                                Icon(painterResource(id = R.drawable.ic_back), "")
-                            }
+                            NavigationIcon(mvvmViewModel)
                         },
                         actions = {
                             Actions(
                                 mvvmViewModel = mvvmViewModel,
-                                isFavorite = song!!.favorite,
-                                onSongChanged = {
-                                    Log.e("event", "song changed")
-                                    Log.e("y", y.toString())
-
-                                    y = 0
-
-                                    coroutineScope.launch {
-                                        listState.scrollToItem(
-                                            index = 0,
-                                            scrollOffset = y
-                                        )
-                                    }
-                                }
+                                isFavorite = this@apply.favorite,
+                                onSongChanged = onSongChanged
                             )
                         }
                     )
-                    Text(
-                        text = "${song!!.title} (${song!!.artist})",
-                        color = theme.colorMain,
-                        fontWeight = FontWeight.W700,
-                        fontSize = fontSizeTitleSp
-                    )
-                    Divider(
-                        color = theme.colorBg,
-                        thickness = dimensionResource(id = R.dimen.song_text_empty)
-                    )
-                    Column (
+
+                    SongTextBody(
+                        W = W,
+                        H = H,
+                        song = this@apply,
+                        text = text,
+                        isEditorMode = isEditorMode,
+                        listState = listState,
+                        fontSizeTextSp = fontSizeTextSp,
+                        fontSizeTitleSp = fontSizeTitleSp,
+                        theme = theme,
                         modifier = Modifier
                             .weight(1.0f),
-                    ) {
-                        LazyColumn(
-                            state = listState,
-                            modifier = Modifier
-                                .weight(1.0f)
-                        ) {
-                            if (isEditorMode) {
-                                item {
-                                    Editor(
-                                        text = text,
-                                        fontSizeTextSp = fontSizeTextSp,
-                                        theme = theme,
-                                        onTextChange = onTextChange
-                                    )
-                                }
-                            } else {
-                                item {
-                                    Viewer(song, theme, fontSizeTextSp) {
-                                        selectedChord = it.text
-                                        showChordDialog = true
-                                    }
+                        isAutoPlayMode = isAutoPlayMode,
+                        interval = interval,
+                        dY = dY,
+                        onTextChange = onTextChange,
+                        onWordClick = onWordClick
+                    )
 
-                                    coroutineScope.launch {
-                                        listState.scrollToItem(
-                                            index = 0,
-                                            scrollOffset = y
-                                        )
-                                    }
-
-                                    val interval = 250L
-                                    val dY = (10 * mvvmViewModel.settings.scrollSpeed).toInt()
-
-                                    tailrec suspend fun autoScroll(listState: LazyListState) {
-                                        if (isAutoPlayMode) {
-                                            y = listState.firstVisibleItemScrollOffset
-                                            listState.scroll(MutatePriority.PreventUserInput) {
-                                                scrollBy(dY.toFloat())
-                                            }
-                                        } else {
-                                            y = 0
-                                        }
-                                        delay(interval)
-                                        autoScroll(listState)
-                                    }
-
-                                    LaunchedEffect(Unit) {
-                                        autoScroll(listState)
-                                    }
-                                }
-                            }
-                        }
-
-                        Panel(
-                            W = W,
-                            H = H,
-                            theme = theme,
-                            isEditorMode = isEditorMode,
-                            listenToMusicVariant =
-                            mvvmViewModel
-                                .settings
-                                .listenToMusicVariant,
-                            onYandexMusicClick = onYandexMusicClick,
-                            onVkMusicClick = onVkMusicClick,
-                            onYoutubeMusicClick = onYoutubeMusicClick,
-                            onUploadClick = onUploadClick,
-                            onWarningClick = onWarningClick,
-                            onTrashClick = onTrashClick,
-                            onEditClick = onEditClick,
-                            onSaveClick = onSaveClick
-                        )
-                    }
+                    Panel(
+                        W = W,
+                        H = H,
+                        theme = theme,
+                        isEditorMode = isEditorMode,
+                        listenToMusicVariant =
+                        mvvmViewModel
+                            .settings
+                            .listenToMusicVariant,
+                        onYandexMusicClick = onYandexMusicClick,
+                        onVkMusicClick = onVkMusicClick,
+                        onYoutubeMusicClick = onYoutubeMusicClick,
+                        onUploadClick = onUploadClick,
+                        onWarningClick = onWarningClick,
+                        onTrashClick = onTrashClick,
+                        onEditClick = onEditClick,
+                        onSaveClick = onSaveClick
+                    )
                 }
             } else {
                 Row(
@@ -260,122 +215,54 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
                         title = {},
                         backgroundColor = theme.colorCommon,
                         navigationIcon = {
-                            IconButton(onClick = {
-                                mvvmViewModel.back { }
-                            }) {
-                                Icon(painterResource(id = R.drawable.ic_back), "")
-                            }
+                            NavigationIcon(mvvmViewModel)
                         },
                         actions = {
                             Actions(
                                 mvvmViewModel = mvvmViewModel,
-                                isFavorite = song!!.favorite,
-                                onSongChanged = {
-                                    Log.e("event", "song changed")
-                                    Log.e("y", y.toString())
-
-                                    y = 0
-
-                                    coroutineScope.launch {
-                                        listState.scrollToItem(
-                                            index = 0,
-                                            scrollOffset = y
-                                        )
-                                    }
-                                }
+                                isFavorite = this@apply.favorite,
+                                onSongChanged = onSongChanged
                             )
                         }
                     )
-                    Row (
+
+                    SongTextBody(
+                        W = W,
+                        H = H,
+                        song = this@apply,
+                        text = text,
+                        isEditorMode = isEditorMode,
+                        listState = listState,
+                        fontSizeTextSp = fontSizeTextSp,
+                        fontSizeTitleSp = fontSizeTitleSp,
+                        theme = theme,
                         modifier = Modifier
                             .weight(1.0f),
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .weight(1.0f)
-                                .padding(start = 20.dp)
-                        ) {
-                            Text(
-                                text = "${song!!.title} (${song!!.artist})",
-                                color = theme.colorMain,
-                                fontWeight = FontWeight.W700,
-                                fontSize = fontSizeTitleSp
-                            )
-                            Divider(
-                                color = theme.colorBg,
-                                thickness = dimensionResource(id = R.dimen.song_text_empty)
-                            )
-                            LazyColumn(
-                                state = listState,
-                                modifier = Modifier
-                                    .weight(1.0f)
-                            ) {
-                                if (isEditorMode) {
-                                    item {
-                                        Editor(
-                                            text = text,
-                                            fontSizeTextSp = fontSizeTextSp,
-                                            theme = theme,
-                                            onTextChange = onTextChange
-                                        )
-                                    }
-                                } else {
-                                    item {
-                                        Viewer(song, theme, fontSizeTextSp) {
-                                            selectedChord = it.text
-                                            showChordDialog = true
-                                        }
+                        isAutoPlayMode = isAutoPlayMode,
+                        interval = interval,
+                        dY = dY,
+                        onTextChange = onTextChange,
+                        onWordClick = onWordClick
+                    )
 
-                                        coroutineScope.launch {
-                                            listState.scrollToItem(
-                                                index = 0,
-                                                scrollOffset = y
-                                            )
-                                        }
-
-                                        val interval = 250L
-                                        val dY = (10 * mvvmViewModel.settings.scrollSpeed).toInt()
-
-                                        tailrec suspend fun autoScroll(listState: LazyListState) {
-                                            if (isAutoPlayMode) {
-                                                y = listState.firstVisibleItemScrollOffset
-                                                listState.scroll(MutatePriority.PreventUserInput) {
-                                                    scrollBy(dY.toFloat())
-                                                }
-                                            } else {
-                                                y = 0
-                                            }
-                                            delay(interval)
-                                            autoScroll(listState)
-                                        }
-
-                                        LaunchedEffect(Unit) {
-                                            autoScroll(listState)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        Panel(
-                            W = W,
-                            H = H,
-                            theme = theme,
-                            isEditorMode = isEditorMode,
-                            listenToMusicVariant =
-                            mvvmViewModel
-                                .settings
-                                .listenToMusicVariant,
-                            onYandexMusicClick = onYandexMusicClick,
-                            onVkMusicClick = onVkMusicClick,
-                            onYoutubeMusicClick = onYoutubeMusicClick,
-                            onUploadClick = onUploadClick,
-                            onWarningClick = onWarningClick,
-                            onTrashClick = onTrashClick,
-                            onEditClick = onEditClick,
-                            onSaveClick = onSaveClick
-                        )
-                    }
+                    Panel(
+                        W = W,
+                        H = H,
+                        theme = theme,
+                        isEditorMode = isEditorMode,
+                        listenToMusicVariant =
+                        mvvmViewModel
+                            .settings
+                            .listenToMusicVariant,
+                        onYandexMusicClick = onYandexMusicClick,
+                        onVkMusicClick = onVkMusicClick,
+                        onYoutubeMusicClick = onYoutubeMusicClick,
+                        onUploadClick = onUploadClick,
+                        onWarningClick = onWarningClick,
+                        onTrashClick = onTrashClick,
+                        onEditClick = onEditClick,
+                        onSaveClick = onSaveClick
+                    )
                 }
             }
 
@@ -461,8 +348,11 @@ fun Actions(
             Icon(painterResource(id = R.drawable.ic_pause), "")
         }
     } else {
+        val isEditorMode = mvvmViewModel.isEditorMode.collectAsState().value
         IconButton(onClick = {
-            mvvmViewModel.setAutoPlayMode(true)
+            if (!isEditorMode) {
+                mvvmViewModel.setAutoPlayMode(true)
+            }
         }) {
             Icon(painterResource(id = R.drawable.ic_play), "")
         }
@@ -493,6 +383,174 @@ fun Actions(
         Icon(painterResource(id = R.drawable.ic_right), "")
     }
 }
+
+@Composable
+fun Editor(
+    text: String,
+    fontSizeTextSp: TextUnit,
+    theme: Theme,
+    onTextChange: (String) -> Unit
+) {
+    BasicTextField(
+        modifier = Modifier.fillMaxWidth(),
+        value = text,
+        onValueChange = onTextChange,
+        textStyle = TextStyle(
+            fontFamily = FontFamily.Monospace,
+            fontSize = fontSizeTextSp,
+            color = theme.colorMain
+        ),
+        decorationBox = { innerTextField ->
+            Row(
+                modifier = Modifier
+                    .background(theme.colorBg)
+            ) {
+                innerTextField()  //<-- Add this
+            }
+        },
+        cursorBrush = SolidColor(theme.colorCommon)
+    )
+}
+
+@Composable
+fun Viewer(
+    song: Song,
+    theme: Theme,
+    fontSizeTextSp: TextUnit,
+    onWordClick: (Word) -> Unit
+) {
+    AndroidView(
+        factory = { context ->
+            ClickableWordsTextView(context)
+        },
+        update = { view ->
+            view.text = song.text
+            view.setTextColor(theme.colorMain.toArgb())
+            view.setBackgroundColor(theme.colorBg.toArgb())
+            view.textSize = fontSizeTextSp.value
+            view.typeface = Typeface.MONOSPACE
+            view.onWordClickListener = object : OnWordClickListener {
+                override fun onWordClick(word: Word) {
+                    onWordClick(word)
+                }
+            }
+        }
+    )
+}
+
+@Composable
+fun SongTextBody(
+    W: Dp,
+    H: Dp,
+    song: Song,
+    text: String,
+    isEditorMode: Boolean,
+    listState: LazyListState,
+    fontSizeTextSp: TextUnit,
+    fontSizeTitleSp: TextUnit,
+    theme: Theme,
+    modifier: Modifier,
+    isAutoPlayMode: StateFlow<Boolean>,
+    interval: Long,
+    dY: Int,
+    onTextChange: (String) -> Unit,
+    onWordClick: (Word) -> Unit
+) {
+    val paddingStart = if (W > H) 20.dp else 0.dp
+
+    Column(
+        modifier = modifier
+            .padding(start = paddingStart)
+    ) {
+        Text(
+            text = "${song.title} (${song.artist})",
+            color = theme.colorMain,
+            fontWeight = FontWeight.W700,
+            fontSize = fontSizeTitleSp
+        )
+        Divider(
+            color = theme.colorBg,
+            thickness = dimensionResource(id = R.dimen.song_text_empty)
+        )
+        SongTextLazyColumn(
+            song = song,
+            text = text,
+            isEditorMode = isEditorMode,
+            listState = listState,
+            fontSizeTextSp = fontSizeTextSp,
+            theme = theme,
+            modifier = Modifier
+                .weight(1.0f),
+            isAutoPlayMode = isAutoPlayMode,
+            interval = interval,
+            dY = dY,
+            onTextChange = onTextChange,
+            onWordClick = onWordClick
+        )
+    }
+}
+
+@Composable
+fun SongTextLazyColumn(
+    song: Song,
+    text: String,
+    isEditorMode: Boolean,
+    listState: LazyListState,
+    fontSizeTextSp: TextUnit,
+    theme: Theme,
+    modifier: Modifier,
+    isAutoPlayMode: StateFlow<Boolean>,
+    interval: Long,
+    dY: Int,
+    onTextChange: (String) -> Unit,
+    onWordClick: (Word) -> Unit
+) {
+    LazyColumn(
+        state = listState,
+        modifier = modifier
+    ) {
+        if (isEditorMode) {
+            item {
+                Editor(
+                    text = text,
+                    fontSizeTextSp = fontSizeTextSp,
+                    theme = theme,
+                    onTextChange = onTextChange
+                )
+            }
+        } else {
+            item {
+                Viewer(
+                    song = song,
+                    theme = theme,
+                    fontSizeTextSp = fontSizeTextSp,
+                    onWordClick = onWordClick
+                )
+
+                val needToScroll by isAutoPlayMode.collectAsState()
+
+                tailrec suspend fun autoScroll(listState: LazyListState) {
+                    Log.e("launched effect", "autoScroll")
+
+                    listState.scroll(MutatePriority.PreventUserInput) {
+                        scrollBy(dY.toFloat())
+                    }
+
+                    delay(interval)
+                    autoScroll(listState)
+                }
+
+                if (needToScroll) {
+                    LaunchedEffect(Unit) {
+                        Log.e("launched effect", "start")
+                        autoScroll(listState)
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 @Composable
 fun Panel(
@@ -559,60 +617,6 @@ fun Panel(
             )
         }
     }
-}
-
-@Composable
-fun Editor(
-    text: String,
-    fontSizeTextSp: TextUnit,
-    theme: Theme,
-    onTextChange: (String) -> Unit
-) {
-    BasicTextField(
-        modifier = Modifier.fillMaxWidth(),
-        value = text,
-        onValueChange = onTextChange,
-        textStyle = TextStyle(
-            fontFamily = FontFamily.Monospace,
-            fontSize = fontSizeTextSp,
-            color = theme.colorMain
-        ),
-        decorationBox = { innerTextField ->
-            Row(
-                modifier = Modifier
-                    .background(theme.colorBg)
-            ) {
-                innerTextField()  //<-- Add this
-            }
-        },
-        cursorBrush = SolidColor(theme.colorCommon)
-    )
-}
-
-@Composable
-fun Viewer(
-    song: Song?,
-    theme: Theme,
-    fontSizeTextSp: TextUnit,
-    onWordClickLambda: (Word) -> Unit
-) {
-    AndroidView(
-        factory = { context ->
-            ClickableWordsTextView(context)
-        },
-        update = { view ->
-            view.text = song!!.text
-            view.setTextColor(theme.colorMain.toArgb())
-            view.setBackgroundColor(theme.colorBg.toArgb())
-            view.textSize = fontSizeTextSp.value
-            view.typeface = Typeface.MONOSPACE
-            view.onWordClickListener = object : OnWordClickListener {
-                override fun onWordClick(word: Word) {
-                    onWordClickLambda(word)
-                }
-            }
-        }
-    )
 }
 
 @Composable
@@ -709,5 +713,14 @@ fun Divider(W: Dp, H: Dp, theme: Theme) {
                 .height(C)
                 .background(theme.colorBg)
         )
+    }
+}
+
+@Composable
+fun NavigationIcon(mvvmViewModel: MvvmViewModel) {
+    IconButton(onClick = {
+        mvvmViewModel.back { }
+    }) {
+        Icon(painterResource(id = R.drawable.ic_back), "")
     }
 }
