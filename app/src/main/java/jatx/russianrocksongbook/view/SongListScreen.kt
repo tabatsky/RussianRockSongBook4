@@ -17,10 +17,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.data.*
+import jatx.russianrocksongbook.domain.Song
 import jatx.russianrocksongbook.preferences.ScalePow
+import jatx.russianrocksongbook.preferences.Theme
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import kotlinx.coroutines.launch
 
@@ -80,53 +83,10 @@ private fun Content(
             },
             backgroundColor = theme.colorCommon,
             navigationIcon = {
-                IconButton(onClick = {
-                    openDrawer()
-                }) {
-                    Icon(painterResource(id = R.drawable.ic_drawer), "")
-                }
+                SongListNavigationIcon(onClick = openDrawer)
             },
             actions = {
-                var expanded by remember { mutableStateOf(false) }
-                IconButton(onClick = {
-                    println("selected: settings")
-                    mvvmViewModel.selectScreen(CurrentScreenVariant.SETTINGS)
-                }) {
-                    Icon(painterResource(id = R.drawable.ic_settings), "")
-                }
-                IconButton(onClick = {
-                    println("selected: question")
-                    expanded = !expanded
-                }) {
-                    Icon(painterResource(id = R.drawable.ic_question), "")
-                }
-                DropdownMenu(
-                    expanded = expanded,
-                    modifier = Modifier
-                        .background(theme.colorMain),
-                    onDismissRequest = {
-                        expanded = false
-                    }
-                ) {
-                    DropdownMenuItem(onClick = {
-                        println("selected: review app")
-                        mvvmViewModel.onReviewApp()
-                    }) {
-                        Text(
-                            text = stringResource(id = R.string.item_review_app),
-                            color = theme.colorBg
-                        )
-                    }
-                    DropdownMenuItem(onClick = {
-                        println("selected: dev site")
-                        mvvmViewModel.onShowDevSite()
-                    }) {
-                        Text(
-                            text = stringResource(id = R.string.item_dev_site),
-                            color = theme.colorBg
-                        )
-                    }
-                }
+                SongListActions(mvvmViewModel = mvvmViewModel)
             }
         )
         if (songList.isNotEmpty()) {
@@ -136,42 +96,20 @@ private fun Content(
                 state = listState
             ) {
                 itemsIndexed(songList) { index, song ->
-                    Text(
-                        text = song.title,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(dimensionResource(id = R.dimen.padding_20))
-                            .clickable {
-                                println("selected: ${song.artist} - ${song.title}")
-                                mvvmViewModel.selectSong(index)
-                                mvvmViewModel.selectScreen(CurrentScreenVariant.SONG_TEXT)
-                            },
-                        fontSize = fontSizeSp,
-                        color = theme.colorMain
-                    )
-                    Divider(color = theme.colorCommon, thickness = 1.dp)
+                    SongItem(song, theme, fontSizeSp) {
+                        println("selected: ${song.artist} - ${song.title}")
+                        mvvmViewModel.selectSong(index)
+                        mvvmViewModel.selectScreen(CurrentScreenVariant.SONG_TEXT)
+                    }
                 }
                 coroutineScope.launch {
                     listState.scrollToItem(position)
                 }
             }
         } else {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = stringResource(id = R.string.label_placeholder),
-                    textAlign = TextAlign.Center,
-                    fontSize = fontSizeSp,
-                    color = theme.colorMain
-                )
-            }
+            Stub(fontSizeSp, theme)
         }
-        WhatsNewDialog(
-            mvvmViewModel = mvvmViewModel
-        )
+        WhatsNewDialog(mvvmViewModel)
     }
 }
 
@@ -201,40 +139,143 @@ private fun AppDrawer(
             },
             backgroundColor = theme.colorCommon,
             navigationIcon = {
-                IconButton(onClick = {
-                    closeDrawer()
-                }) {
-                    Icon(painterResource(id = R.drawable.ic_drawer), "")
-                }
+                SongListNavigationIcon(onClick = closeDrawer)
             }
         )
         LazyColumn {
             items(artistList) { artist ->
-                val isBold =
-                        (listOf(
-                            ARTIST_FAVORITE,
-                            ARTIST_ADD_ARTIST,
-                            ARTIST_ADD_SONG,
-                            ARTIST_CLOUD_SONGS,
-                            ARTIST_DONATION
-                        ).contains(artist))
-                Text(
-                    text = artist,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(5.dp)
-                        .clickable {
-                            mvvmViewModel.selectArtist(artist) {
-                                mvvmViewModel.selectSong(0)
-                            }
-                            closeDrawer()
-                        },
-                    fontWeight = if (isBold) FontWeight.W700 else FontWeight.W400,
-                    fontSize = fontSizeSp,
-                    color = theme.colorBg
-                )
-                Divider(color = theme.colorCommon, thickness = 1.dp)
+                ArtistItem(artist, fontSizeSp, theme) {
+                    mvvmViewModel.selectArtist(artist) {
+                        mvvmViewModel.selectSong(0)
+                    }
+                    closeDrawer()
+                }
             }
         }
     }
+}
+
+@Composable
+private fun SongListActions(mvvmViewModel: MvvmViewModel) {
+    val theme = mvvmViewModel.settings.theme
+    var expanded by remember { mutableStateOf(false) }
+
+    IconButton(onClick = {
+        println("selected: settings")
+        mvvmViewModel.selectScreen(CurrentScreenVariant.SETTINGS)
+    }) {
+        Icon(painterResource(id = R.drawable.ic_settings), "")
+    }
+    IconButton(onClick = {
+        println("selected: question")
+        expanded = !expanded
+    }) {
+        Icon(painterResource(id = R.drawable.ic_question), "")
+    }
+    DropdownMenu(
+        expanded = expanded,
+        modifier = Modifier
+            .background(theme.colorMain),
+        onDismissRequest = {
+            expanded = false
+        }
+    ) {
+        DropdownMenuItem(onClick = {
+            println("selected: review app")
+            mvvmViewModel.onReviewApp()
+        }) {
+            Text(
+                text = stringResource(id = R.string.item_review_app),
+                color = theme.colorBg
+            )
+        }
+        DropdownMenuItem(onClick = {
+            println("selected: dev site")
+            mvvmViewModel.onShowDevSite()
+        }) {
+            Text(
+                text = stringResource(id = R.string.item_dev_site),
+                color = theme.colorBg
+            )
+        }
+    }
+}
+
+@Composable
+private fun SongListNavigationIcon(
+    onClick: () -> Unit
+) {
+    IconButton(onClick = onClick) {
+        Icon(painterResource(id = R.drawable.ic_drawer), "")
+    }
+}
+
+@Composable
+private fun SongItem(
+    song: Song,
+    theme: Theme,
+    fontSizeSp: TextUnit,
+    onClick: () -> Unit
+) {
+    Text(
+        text = song.title,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(dimensionResource(id = R.dimen.padding_20))
+            .clickable {
+                onClick()
+            },
+        fontSize = fontSizeSp,
+        color = theme.colorMain
+    )
+    Divider(color = theme.colorCommon, thickness = 1.dp)
+}
+
+@Composable
+private fun Stub(
+    fontSizeSp: TextUnit,
+    theme: Theme
+) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = stringResource(id = R.string.label_placeholder),
+            textAlign = TextAlign.Center,
+            fontSize = fontSizeSp,
+            color = theme.colorMain
+        )
+    }
+}
+
+@Composable
+private fun ArtistItem(
+    artist: String,
+    fontSizeSp: TextUnit,
+    theme: Theme,
+    onClick: () -> Unit
+) {
+    val isBold =
+        (listOf(
+            ARTIST_FAVORITE,
+            ARTIST_ADD_ARTIST,
+            ARTIST_ADD_SONG,
+            ARTIST_CLOUD_SONGS,
+            ARTIST_DONATION
+        ).contains(artist))
+    Text(
+        text = artist,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(5.dp)
+            .clickable {
+                onClick()
+            },
+        fontWeight = if (isBold) FontWeight.W700 else FontWeight.W400,
+        fontSize = fontSizeSp,
+        color = theme.colorBg
+    )
+    Divider(color = theme.colorCommon, thickness = 1.dp)
 }
