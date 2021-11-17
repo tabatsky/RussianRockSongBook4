@@ -33,7 +33,7 @@ import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import jatx.sideappbar.SideAppBar
 import kotlinx.coroutines.launch
 
-private val CLOUD_APP_BAR_WIDTH = 96.dp
+private val CLOUD_SONG_TEXT_APP_BAR_WIDTH = 96.dp
 
 @Composable
 fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel) {
@@ -130,10 +130,10 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel) {
                         title = {},
                         backgroundColor = theme.colorCommon,
                         navigationIcon = {
-                            NavigationIcon(mvvmViewModel)
+                            CommonNavigationIcon(mvvmViewModel)
                         },
                         actions = {
-                            CloudActions(
+                            CloudSongTextActions(
                                 mvvmViewModel = mvvmViewModel,
                                 onCloudSongChanged = onCloudSongChanged
                             )
@@ -153,7 +153,7 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel) {
                         onWordClick = onWordClick
                     )
 
-                    CloudPanel(
+                    CloudSongTextPanel(
                         W = W,
                         H = H,
                         theme = theme,
@@ -181,15 +181,15 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel) {
                         title = {},
                         backgroundColor = theme.colorCommon,
                         navigationIcon = {
-                            NavigationIcon(mvvmViewModel)
+                            CommonNavigationIcon(mvvmViewModel)
                         },
                         actions = {
-                            CloudActions(
+                            CloudSongTextActions(
                                 mvvmViewModel = mvvmViewModel,
                                 onCloudSongChanged = onCloudSongChanged
                             )
                         },
-                        appBarWidth = CLOUD_APP_BAR_WIDTH
+                        appBarWidth = CLOUD_SONG_TEXT_APP_BAR_WIDTH
                     )
 
                     CloudSongTextBody(
@@ -205,7 +205,7 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel) {
                         onWordClick = onWordClick
                     )
 
-                    CloudPanel(
+                    CloudSongTextPanel(
                         W = W,
                         H = H,
                         theme = theme,
@@ -298,7 +298,7 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel) {
 }
 
 @Composable
-private fun CloudActions(
+private fun CloudSongTextActions(
     mvvmViewModel: MvvmViewModel,
     onCloudSongChanged: () -> Unit
 ) {
@@ -325,7 +325,7 @@ private fun CloudActions(
 }
 
 @Composable
-private fun CloudViewer(
+private fun CloudSongTextViewer(
     cloudSong: CloudSong,
     theme: Theme,
     fontSizeTextSp: TextUnit,
@@ -404,7 +404,7 @@ private fun CloudSongTextLazyColumn(
         modifier = modifier
     ) {
         item {
-            CloudViewer(
+            CloudSongTextViewer(
                 cloudSong = cloudSong,
                 theme = theme,
                 fontSizeTextSp = fontSizeTextSp,
@@ -416,7 +416,7 @@ private fun CloudSongTextLazyColumn(
 
 
 @Composable
-private fun CloudPanel(
+private fun CloudSongTextPanel(
     W: Dp,
     H: Dp,
     theme: Theme,
@@ -439,7 +439,7 @@ private fun CloudPanel(
                 .height(A)
                 .background(Color.Transparent)
         ) {
-            CloudPanelContent(
+            CloudSongTextPanelContent(
                 W = W,
                 H = H,
                 theme = theme,
@@ -461,7 +461,7 @@ private fun CloudPanel(
                 .width(A)
                 .background(Color.Transparent)
         ) {
-            CloudPanelContent(
+            CloudSongTextPanelContent(
                 W = W,
                 H = H,
                 theme = theme,
@@ -480,7 +480,7 @@ private fun CloudPanel(
 }
 
 @Composable
-private fun CloudPanelContent(
+private fun CloudSongTextPanelContent(
     W: Dp,
     H: Dp,
     theme: Theme,
@@ -502,7 +502,7 @@ private fun CloudPanelContent(
             theme = theme,
             onClick = onYandexMusicClick
         )
-        Divider(W = W, H = H, theme = theme)
+        CommonPanelDivider(W = W, H = H, theme = theme)
     }
     if (listenToMusicVariant.isVk) {
         VkMusicButton(
@@ -510,7 +510,7 @@ private fun CloudPanelContent(
             theme = theme,
             onClick = onVkMusicClick
         )
-        Divider(W = W, H = H, theme = theme)
+        CommonPanelDivider(W = W, H = H, theme = theme)
     }
     if (listenToMusicVariant.isYoutube) {
         YoutubeMusicButton(
@@ -518,26 +518,26 @@ private fun CloudPanelContent(
             theme = theme,
             onClick = onYoutubeMusicClick
         )
-        Divider(W = W, H = H, theme = theme)
+        CommonPanelDivider(W = W, H = H, theme = theme)
     }
     DownloadButton(
         size = A,
         theme = theme,
         onClick = onDownloadClick
     )
-    Divider(W = W, H = H, theme = theme)
+    CommonPanelDivider(W = W, H = H, theme = theme)
     WarningButton(
         size = A,
         theme = theme,
         onClick = onWarningClick
     )
-    Divider(W = W, H = H, theme = theme)
+    CommonPanelDivider(W = W, H = H, theme = theme)
     LikeButton(
         size = A,
         theme = theme,
         onClick = onLikeClick
     )
-    Divider(W = W, H = H, theme = theme)
+    CommonPanelDivider(W = W, H = H, theme = theme)
     DislikeButton(
         size = A,
         theme = theme,

@@ -40,7 +40,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-private val APP_BAR_WIDTH = 72.dp
+private val SONG_TEXT_APP_BAR_WIDTH = 72.dp
 
 @Composable
 fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
@@ -158,10 +158,10 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
                         title = {},
                         backgroundColor = theme.colorCommon,
                         navigationIcon = {
-                            NavigationIcon(mvvmViewModel)
+                            CommonNavigationIcon(mvvmViewModel)
                         },
                         actions = {
-                            Actions(
+                            SongTextActions(
                                 mvvmViewModel = mvvmViewModel,
                                 isFavorite = this@apply.favorite,
                                 onSongChanged = onSongChanged
@@ -188,7 +188,7 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
                         onWordClick = onWordClick
                     )
 
-                    Panel(
+                    SongTextPanel(
                         W = W,
                         H = H,
                         theme = theme,
@@ -217,16 +217,16 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
                         title = {},
                         backgroundColor = theme.colorCommon,
                         navigationIcon = {
-                            NavigationIcon(mvvmViewModel)
+                            CommonNavigationIcon(mvvmViewModel)
                         },
                         actions = {
-                            Actions(
+                            SongTextActions(
                                 mvvmViewModel = mvvmViewModel,
                                 isFavorite = this@apply.favorite,
                                 onSongChanged = onSongChanged
                             )
                         },
-                        appBarWidth = APP_BAR_WIDTH
+                        appBarWidth = SONG_TEXT_APP_BAR_WIDTH
                     )
 
                     SongTextBody(
@@ -248,7 +248,7 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
                         onWordClick = onWordClick
                     )
 
-                    Panel(
+                    SongTextPanel(
                         W = W,
                         H = H,
                         theme = theme,
@@ -339,7 +339,7 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
 }
 
 @Composable
-private fun Actions(
+private fun SongTextActions(
     mvvmViewModel: MvvmViewModel,
     isFavorite: Boolean,
     onSongChanged: () -> Unit
@@ -388,7 +388,7 @@ private fun Actions(
 }
 
 @Composable
-private fun Editor(
+private fun SongTextEditor(
     text: String,
     fontSizeTextSp: TextUnit,
     theme: Theme,
@@ -416,7 +416,7 @@ private fun Editor(
 }
 
 @Composable
-private fun Viewer(
+private fun SongTextViewer(
     song: Song,
     theme: Theme,
     fontSizeTextSp: TextUnit,
@@ -514,7 +514,7 @@ private fun SongTextLazyColumn(
     ) {
         if (isEditorMode) {
             item {
-                Editor(
+                SongTextEditor(
                     text = text,
                     fontSizeTextSp = fontSizeTextSp,
                     theme = theme,
@@ -523,7 +523,7 @@ private fun SongTextLazyColumn(
             }
         } else {
             item {
-                Viewer(
+                SongTextViewer(
                     song = song,
                     theme = theme,
                     fontSizeTextSp = fontSizeTextSp,
@@ -556,7 +556,7 @@ private fun SongTextLazyColumn(
 
 
 @Composable
-private fun Panel(
+private fun SongTextPanel(
     W: Dp,
     H: Dp,
     theme: Theme,
@@ -580,7 +580,7 @@ private fun Panel(
                 .height(A)
                 .background(Color.Transparent)
         ) {
-            PanelContent(
+            SongTextPanelContent(
                 W = W,
                 H = H,
                 theme = theme,
@@ -603,7 +603,7 @@ private fun Panel(
                 .width(A)
                 .background(Color.Transparent)
         ) {
-            PanelContent(
+            SongTextPanelContent(
                 W = W,
                 H = H,
                 theme = theme,
@@ -623,7 +623,7 @@ private fun Panel(
 }
 
 @Composable
-private fun PanelContent(
+private fun SongTextPanelContent(
     W: Dp,
     H: Dp,
     theme: Theme,
@@ -646,7 +646,7 @@ private fun PanelContent(
             theme = theme,
             onClick = onYandexMusicClick
         )
-        Divider(W = W, H = H, theme = theme)
+        CommonPanelDivider(W = W, H = H, theme = theme)
     }
     if (listenToMusicVariant.isVk) {
         VkMusicButton(
@@ -654,7 +654,7 @@ private fun PanelContent(
             theme = theme,
             onClick = onVkMusicClick
         )
-        Divider(W = W, H = H, theme = theme)
+        CommonPanelDivider(W = W, H = H, theme = theme)
     }
     if (listenToMusicVariant.isYoutube) {
         YoutubeMusicButton(
@@ -662,26 +662,26 @@ private fun PanelContent(
             theme = theme,
             onClick = onYoutubeMusicClick
         )
-        Divider(W = W, H = H, theme = theme)
+        CommonPanelDivider(W = W, H = H, theme = theme)
     }
     UploadButton(
         size = A,
         theme = theme,
         onClick = onUploadClick
     )
-    Divider(W = W, H = H, theme = theme)
+    CommonPanelDivider(W = W, H = H, theme = theme)
     WarningButton(
         size = A,
         theme = theme,
         onClick = onWarningClick
     )
-    Divider(W = W, H = H, theme = theme)
+    CommonPanelDivider(W = W, H = H, theme = theme)
     TrashButton(
         size = A,
         theme = theme,
         onClick = onTrashClick
     )
-    Divider(W = W, H = H, theme = theme)
+    CommonPanelDivider(W = W, H = H, theme = theme)
     if (isEditorMode) {
         SaveButton(
             size = A,

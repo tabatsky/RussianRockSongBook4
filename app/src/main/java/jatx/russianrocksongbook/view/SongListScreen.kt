@@ -107,7 +107,7 @@ private fun Content(
                 }
             }
         } else {
-            Stub(fontSizeSp, theme)
+            SongListStub(fontSizeSp, theme)
         }
         WhatsNewDialog(mvvmViewModel)
     }
@@ -232,7 +232,7 @@ private fun SongItem(
 }
 
 @Composable
-private fun Stub(
+private fun SongListStub(
     fontSizeSp: TextUnit,
     theme: Theme
 ) {
