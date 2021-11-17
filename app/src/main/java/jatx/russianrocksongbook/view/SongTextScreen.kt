@@ -12,7 +12,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -245,7 +244,7 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
                             }
                         }
 
-                        Footer(
+                        Panel(
                             W = W,
                             H = H,
                             theme = theme,
@@ -387,7 +386,7 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
                             }
                         }
 
-                        RightSidePanel(
+                        Panel(
                             W = W,
                             H = H,
                             theme = theme,
@@ -525,7 +524,7 @@ fun Actions(
 }
 
 @Composable
-fun Footer(
+fun Panel(
     W: Dp,
     H: Dp,
     theme: Theme,
@@ -541,210 +540,51 @@ fun Footer(
     onSaveClick: () -> Unit
 ) {
     val A = if (W < H) W * 3.0f / 21 else H * 3.0f / 21
-    val C = if (W < H) (W - A * 6.0f) / 5 else (H - A * 6.0f) / 5
 
-    Row (
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(A)
-            .background(Color.Transparent)
-    ) {
-        if (listenToMusicVariant.isYandex) {
-            YandexMusicButton(
-                size = A,
-                theme = theme,
-                onClick = onYandexMusicClick
-            )
-            Divider(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(C)
-                    .background(theme.colorBg)
-            )
-        }
-        if (listenToMusicVariant.isVk) {
-            VkMusicButton(
-                size = A,
-                theme = theme,
-                onClick = onVkMusicClick
-            )
-            Divider(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(C)
-                    .background(theme.colorBg)
-            )
-        }
-        if (listenToMusicVariant.isYoutube) {
-            YoutubeMusicButton(
-                size = A,
-                theme = theme,
-                onClick = onYoutubeMusicClick
-            )
-            Divider(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(C)
-                    .background(theme.colorBg)
-            )
-        }
-        UploadButton(
-            size = A,
-            theme = theme,
-            onClick = onUploadClick
-        )
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(C)
-                .background(theme.colorBg)
-        )
-        WarningButton(
-            size = A,
-            theme = theme,
-            onClick = onWarningClick
-        )
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(C)
-                .background(theme.colorBg)
-        )
-        TrashButton(
-            size = A,
-            theme = theme,
-            onClick = onTrashClick
-        )
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(C)
-                .background(theme.colorBg)
-        )
-        if (isEditorMode) {
-            SaveButton(
-                size = A,
-                theme = theme,
-                onClick = onSaveClick
-            )
-        } else {
-            EditButton(
-                size = A,
-                theme = theme,
-                onClick = onEditClick
-            )
-        }
-    }
-}
-
-@Composable
-fun RightSidePanel(
-    W: Dp,
-    H: Dp,
-    theme: Theme,
-    isEditorMode: Boolean,
-    listenToMusicVariant: ListenToMusicVariant,
-    onYandexMusicClick: () -> Unit,
-    onVkMusicClick: () -> Unit,
-    onYoutubeMusicClick: () -> Unit,
-    onUploadClick: () -> Unit,
-    onWarningClick: () -> Unit,
-    onTrashClick: () -> Unit,
-    onEditClick: () -> Unit,
-    onSaveClick: () -> Unit
-) {
-    val A = if (W < H) W * 3.0f / 21 else H * 3.0f / 21
-    val C = if (W < H) (W - A * 6.0f) / 5 else (H - A * 6.0f) / 5
-
-    Column (
-        modifier = Modifier
-            .fillMaxHeight()
-            .width(A)
-            .background(Color.Transparent)
-    ) {
-        if (listenToMusicVariant.isYandex) {
-            YandexMusicButton(
-                size = A,
-                theme = theme,
-                onClick = onYandexMusicClick
-            )
-            Divider(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(C)
-                    .background(theme.colorBg)
-            )
-        }
-        if (listenToMusicVariant.isVk) {
-            VkMusicButton(
-                size = A,
-                theme = theme,
-                onClick = onVkMusicClick
-            )
-            Divider(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(C)
-                    .background(theme.colorBg)
-            )
-        }
-        if (listenToMusicVariant.isYoutube) {
-            YoutubeMusicButton(
-                size = A,
-                theme = theme,
-                onClick = onYoutubeMusicClick
-            )
-            Divider(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(C)
-                    .background(theme.colorBg)
-            )
-        }
-        UploadButton(
-            size = A,
-            theme = theme,
-            onClick = onUploadClick
-        )
-        Divider(
+    if (W < H) {
+        Row (
             modifier = Modifier
                 .fillMaxWidth()
-                .height(C)
-                .background(theme.colorBg)
-        )
-        WarningButton(
-            size = A,
-            theme = theme,
-            onClick = onWarningClick
-        )
-        Divider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(C)
-                .background(theme.colorBg)
-        )
-        TrashButton(
-            size = A,
-            theme = theme,
-            onClick = onTrashClick
-        )
-        Divider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(C)
-                .background(theme.colorBg)
-        )
-        if (isEditorMode) {
-            SaveButton(
-                size = A,
+                .height(A)
+                .background(Color.Transparent)
+        ) {
+            PanelContent(
+                W = W,
+                H = H,
                 theme = theme,
-                onClick = onSaveClick
+                isEditorMode = isEditorMode,
+                listenToMusicVariant = listenToMusicVariant,
+                onYandexMusicClick = onYandexMusicClick,
+                onVkMusicClick = onVkMusicClick,
+                onYoutubeMusicClick = onYoutubeMusicClick,
+                onUploadClick = onUploadClick,
+                onWarningClick = onWarningClick,
+                onTrashClick = onTrashClick,
+                onEditClick = onEditClick,
+                onSaveClick = onSaveClick
             )
-        } else {
-            EditButton(
-                size = A,
+        }
+    } else {
+        Column (
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(A)
+                .background(Color.Transparent)
+        ) {
+            PanelContent(
+                W = W,
+                H = H,
                 theme = theme,
-                onClick = onEditClick
+                isEditorMode = isEditorMode,
+                listenToMusicVariant = listenToMusicVariant,
+                onYandexMusicClick = onYandexMusicClick,
+                onVkMusicClick = onVkMusicClick,
+                onYoutubeMusicClick = onYoutubeMusicClick,
+                onUploadClick = onUploadClick,
+                onWarningClick = onWarningClick,
+                onTrashClick = onTrashClick,
+                onEditClick = onEditClick,
+                onSaveClick = onSaveClick
             )
         }
     }
@@ -774,4 +614,101 @@ fun Viewer(
             }
         }
     )
+}
+
+@Composable
+fun PanelContent(
+    W: Dp,
+    H: Dp,
+    theme: Theme,
+    isEditorMode: Boolean,
+    listenToMusicVariant: ListenToMusicVariant,
+    onYandexMusicClick: () -> Unit,
+    onVkMusicClick: () -> Unit,
+    onYoutubeMusicClick: () -> Unit,
+    onUploadClick: () -> Unit,
+    onWarningClick: () -> Unit,
+    onTrashClick: () -> Unit,
+    onEditClick: () -> Unit,
+    onSaveClick: () -> Unit
+) {
+    val A = if (W < H) W * 3.0f / 21 else H * 3.0f / 21
+
+    if (listenToMusicVariant.isYandex) {
+        YandexMusicButton(
+            size = A,
+            theme = theme,
+            onClick = onYandexMusicClick
+        )
+        Divider(W = W, H = H, theme = theme)
+    }
+    if (listenToMusicVariant.isVk) {
+        VkMusicButton(
+            size = A,
+            theme = theme,
+            onClick = onVkMusicClick
+        )
+        Divider(W = W, H = H, theme = theme)
+    }
+    if (listenToMusicVariant.isYoutube) {
+        YoutubeMusicButton(
+            size = A,
+            theme = theme,
+            onClick = onYoutubeMusicClick
+        )
+        Divider(W = W, H = H, theme = theme)
+    }
+    UploadButton(
+        size = A,
+        theme = theme,
+        onClick = onUploadClick
+    )
+    Divider(W = W, H = H, theme = theme)
+    WarningButton(
+        size = A,
+        theme = theme,
+        onClick = onWarningClick
+    )
+    Divider(W = W, H = H, theme = theme)
+    TrashButton(
+        size = A,
+        theme = theme,
+        onClick = onTrashClick
+    )
+    Divider(W = W, H = H, theme = theme)
+    if (isEditorMode) {
+        SaveButton(
+            size = A,
+            theme = theme,
+            onClick = onSaveClick
+        )
+    } else {
+        EditButton(
+            size = A,
+            theme = theme,
+            onClick = onEditClick
+        )
+    }
+}
+
+@Composable
+fun Divider(W: Dp, H: Dp, theme: Theme) {
+    val A = if (W < H) W * 3.0f / 21 else H * 3.0f / 21
+    val C = if (W < H) (W - A * 6.0f) / 5 else (H - A * 6.0f) / 5
+
+    if (W < H) {
+        Divider(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(C)
+                .background(theme.colorBg)
+        )
+    } else {
+        Divider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(C)
+                .background(theme.colorBg)
+        )
+    }
 }
