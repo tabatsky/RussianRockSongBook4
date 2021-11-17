@@ -5,10 +5,10 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -17,6 +17,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -24,19 +25,33 @@ import jatx.clickablewordstextview.ClickableWordsTextView
 import jatx.clickablewordstextview.OnWordClickListener
 import jatx.clickablewordstextview.Word
 import jatx.russianrocksongbook.R
+import jatx.russianrocksongbook.domain.CloudSong
 import jatx.russianrocksongbook.preferences.ListenToMusicVariant
 import jatx.russianrocksongbook.preferences.ScalePow
 import jatx.russianrocksongbook.preferences.Theme
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.sideappbar.SideAppBar
 import kotlinx.coroutines.launch
+
+val CLOUD_APP_BAR_WIDTH = 96.dp
 
 @Composable
 fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel) {
     val cloudSong by mvvmViewModel.cloudSong.collectAsState()
 
-
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
+
+    val onCloudSongChanged: () -> Unit = {
+        Log.e("event", "song changed")
+
+        coroutineScope.launch {
+            listState.scrollToItem(
+                index = 0,
+                scrollOffset = 0
+            )
+        }
+    }
 
     var showYandexDialog by remember { mutableStateOf(false) }
     var showVkDialog by remember { mutableStateOf(false) }
@@ -46,8 +61,10 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel) {
 
     var showChordDialog by remember { mutableStateOf(false) }
     var selectedChord by remember { mutableStateOf("") }
-
-    var showDeleteDialog by remember { mutableStateOf(false) }
+    val onWordClick: (Word) -> Unit = {
+        selectedChord = it.text
+        showChordDialog = true
+    }
 
     val onYandexMusicClick = {
         showYandexDialog = true
@@ -77,6 +94,7 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel) {
         mvvmViewModel.voteForCurrent(-1)
     }
 
+    var showDeleteDialog by remember { mutableStateOf(false) }
     val onDislikeLongClick = {
         Log.e("dislike", "long click")
         showDeleteDialog = true
@@ -101,95 +119,100 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel) {
         ) {
             val W = this.maxWidth
             val H = this.minHeight
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(color = theme.colorBg)
-            ) {
-                TopAppBar(
-                    title = {},
-                    backgroundColor = theme.colorCommon,
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            mvvmViewModel.back { }
-                        }) {
-                            Icon(painterResource(id = R.drawable.ic_back), "")
-                        }
-                    },
-                    actions = {
-                        CloudActions(
-                            mvvmViewModel = mvvmViewModel,
-                            onSongChanged = {
-                                coroutineScope.launch {
-                                    listState.scrollToItem(
-                                        index = 0,
-                                        scrollOffset = 0
-                                    )
-                                }
-                            }
-                        )
-                    }
-                )
-                Text(
-                    text = "${cloudSong!!.visibleTitle} (${cloudSong!!.artist})",
-                    color = theme.colorMain,
-                    fontWeight = FontWeight.W700,
-                    fontSize = fontSizeTitleSp
-                )
-                Divider(
-                    color = theme.colorBg,
-                    thickness = dimensionResource(id = R.dimen.song_text_empty)
-                )
-                Box(
+
+            if (W < H) {
+                Column(
                     modifier = Modifier
-                        .weight(1.0f),
-                    contentAlignment = Alignment.BottomStart
+                        .fillMaxSize()
+                        .background(color = theme.colorBg)
                 ) {
-                    val paddingBottom = if (W < H) W * 3.0f / 21 else 0.dp
-
-                    LazyColumn(
-                        state = listState,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(bottom = paddingBottom)
-                    ) {
-                        item {
-                            AndroidView(
-                                factory = { context ->
-                                    ClickableWordsTextView(context)
-                                },
-                                update = { view ->
-                                    view.text = cloudSong!!.text
-                                    view.setTextColor(theme.colorMain.toArgb())
-                                    view.setBackgroundColor(theme.colorBg.toArgb())
-                                    view.textSize = fontSizeTextSp.value
-                                    view.typeface = Typeface.MONOSPACE
-                                    view.onWordClickListener = object : OnWordClickListener {
-                                        override fun onWordClick(word: Word) {
-                                            selectedChord = word.text
-                                            showChordDialog = true
-                                        }
-                                    }
-                                }
+                    TopAppBar(
+                        title = {},
+                        backgroundColor = theme.colorCommon,
+                        navigationIcon = {
+                            NavigationIcon(mvvmViewModel)
+                        },
+                        actions = {
+                            CloudActions(
+                                mvvmViewModel = mvvmViewModel,
+                                onCloudSongChanged = onCloudSongChanged
                             )
-
-                            coroutineScope.launch {
-                                listState.scrollToItem(
-                                    index = 0,
-                                    scrollOffset = 0
-                                )
-                            }
                         }
-                    }
+                    )
 
-                    CloudFooter(
+                    CloudSongTextBody(
+                        W = W,
+                        H = H,
+                        cloudSong = this@apply,
+                        listState = listState,
+                        fontSizeTextSp = fontSizeTextSp,
+                        fontSizeTitleSp = fontSizeTitleSp,
+                        theme = theme,
+                        modifier = Modifier
+                            .weight(1.0f),
+                        onWordClick = onWordClick
+                    )
+
+                    CloudPanel(
                         W = W,
                         H = H,
                         theme = theme,
                         listenToMusicVariant =
-                                        mvvmViewModel
-                                            .settings
-                                            .listenToMusicVariant,
+                        mvvmViewModel
+                            .settings
+                            .listenToMusicVariant,
+                        onYandexMusicClick = onYandexMusicClick,
+                        onVkMusicClick = onVkMusicClick,
+                        onYoutubeMusicClick = onYoutubeMusicClick,
+                        onDownloadClick = onDownloadClick,
+                        onWarningClick = onWarningClick,
+                        onLikeClick = onLikeClick,
+                        onDislikeClick = onDislikeClick,
+                        onDislikeLongClick = onDislikeLongClick
+                    )
+                }
+            } else {
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = theme.colorBg)
+                ) {
+                    SideAppBar(
+                        title = {},
+                        backgroundColor = theme.colorCommon,
+                        navigationIcon = {
+                            NavigationIcon(mvvmViewModel)
+                        },
+                        actions = {
+                            CloudActions(
+                                mvvmViewModel = mvvmViewModel,
+                                onCloudSongChanged = onCloudSongChanged
+                            )
+                        },
+                        appBarWidth = CLOUD_APP_BAR_WIDTH
+                    )
+
+                    CloudSongTextBody(
+                        W = W,
+                        H = H,
+                        cloudSong = this@apply,
+                        listState = listState,
+                        fontSizeTextSp = fontSizeTextSp,
+                        fontSizeTitleSp = fontSizeTitleSp,
+                        theme = theme,
+                        modifier = Modifier
+                            .weight(1.0f),
+                        onWordClick = onWordClick
+                    )
+
+                    CloudPanel(
+                        W = W,
+                        H = H,
+                        theme = theme,
+                        listenToMusicVariant =
+                        mvvmViewModel
+                            .settings
+                            .listenToMusicVariant,
                         onYandexMusicClick = onYandexMusicClick,
                         onVkMusicClick = onVkMusicClick,
                         onYoutubeMusicClick = onYoutubeMusicClick,
@@ -277,14 +300,14 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel) {
 @Composable
 fun CloudActions(
     mvvmViewModel: MvvmViewModel,
-    onSongChanged: () -> Unit
+    onCloudSongChanged: () -> Unit
 ) {
     val position by mvvmViewModel.cloudSongPosition.collectAsState()
     val count by mvvmViewModel.cloudSongCount.collectAsState()
 
     IconButton(onClick = {
         mvvmViewModel.prevCloudSong()
-        onSongChanged()
+        onCloudSongChanged()
     }) {
         Icon(painterResource(id = R.drawable.ic_left), "")
     }
@@ -295,14 +318,169 @@ fun CloudActions(
     )
     IconButton(onClick = {
         mvvmViewModel.nextCloudSong()
-        onSongChanged()
+        onCloudSongChanged()
     }) {
         Icon(painterResource(id = R.drawable.ic_right), "")
     }
 }
 
 @Composable
-fun CloudFooter(
+private fun CloudViewer(
+    cloudSong: CloudSong,
+    theme: Theme,
+    fontSizeTextSp: TextUnit,
+    onWordClick: (Word) -> Unit
+) {
+    AndroidView(
+        factory = { context ->
+            ClickableWordsTextView(context)
+        },
+        update = { view ->
+            view.text = cloudSong.text
+            view.setTextColor(theme.colorMain.toArgb())
+            view.setBackgroundColor(theme.colorBg.toArgb())
+            view.textSize = fontSizeTextSp.value
+            view.typeface = Typeface.MONOSPACE
+            view.onWordClickListener = object : OnWordClickListener {
+                override fun onWordClick(word: Word) {
+                    onWordClick(word)
+                }
+            }
+        }
+    )
+}
+
+@Composable
+private fun CloudSongTextBody(
+    W: Dp,
+    H: Dp,
+    cloudSong: CloudSong,
+    listState: LazyListState,
+    fontSizeTextSp: TextUnit,
+    fontSizeTitleSp: TextUnit,
+    theme: Theme,
+    modifier: Modifier,
+    onWordClick: (Word) -> Unit
+) {
+    val paddingStart = if (W > H) 20.dp else 0.dp
+
+    Column(
+        modifier = modifier
+            .padding(start = paddingStart)
+    ) {
+        Text(
+            text = "${cloudSong.title} (${cloudSong.artist})",
+            color = theme.colorMain,
+            fontWeight = FontWeight.W700,
+            fontSize = fontSizeTitleSp
+        )
+        Divider(
+            color = theme.colorBg,
+            thickness = dimensionResource(id = R.dimen.song_text_empty)
+        )
+        CloudSongTextLazyColumn(
+            cloudSong = cloudSong,
+            listState = listState,
+            fontSizeTextSp = fontSizeTextSp,
+            theme = theme,
+            modifier = Modifier
+                .weight(1.0f),
+            onWordClick = onWordClick
+        )
+    }
+}
+
+@Composable
+private fun CloudSongTextLazyColumn(
+    cloudSong: CloudSong,
+    listState: LazyListState,
+    fontSizeTextSp: TextUnit,
+    theme: Theme,
+    modifier: Modifier,
+    onWordClick: (Word) -> Unit
+) {
+    LazyColumn(
+        state = listState,
+        modifier = modifier
+    ) {
+        item {
+            CloudViewer(
+                cloudSong = cloudSong,
+                theme = theme,
+                fontSizeTextSp = fontSizeTextSp,
+                onWordClick = onWordClick
+            )
+        }
+    }
+}
+
+
+@Composable
+private fun CloudPanel(
+    W: Dp,
+    H: Dp,
+    theme: Theme,
+    listenToMusicVariant: ListenToMusicVariant,
+    onYandexMusicClick: () -> Unit,
+    onVkMusicClick: () -> Unit,
+    onYoutubeMusicClick: () -> Unit,
+    onDownloadClick: () -> Unit,
+    onWarningClick: () -> Unit,
+    onLikeClick: () -> Unit,
+    onDislikeClick: () -> Unit,
+    onDislikeLongClick: () -> Unit
+) {
+    val A = if (W < H) W * 3.0f / 21 else H * 3.0f / 21
+
+    if (W < H) {
+        Row (
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(A)
+                .background(Color.Transparent)
+        ) {
+            CloudPanelContent(
+                W = W,
+                H = H,
+                theme = theme,
+                listenToMusicVariant = listenToMusicVariant,
+                onYandexMusicClick = onYandexMusicClick,
+                onVkMusicClick = onVkMusicClick,
+                onYoutubeMusicClick = onYoutubeMusicClick,
+                onDownloadClick = onDownloadClick,
+                onWarningClick = onWarningClick,
+                onLikeClick = onLikeClick,
+                onDislikeClick = onDislikeClick,
+                onDislikeLongClick = onDislikeLongClick
+            )
+        }
+    } else {
+        Column (
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(A)
+                .background(Color.Transparent)
+        ) {
+            CloudPanelContent(
+                W = W,
+                H = H,
+                theme = theme,
+                listenToMusicVariant = listenToMusicVariant,
+                onYandexMusicClick = onYandexMusicClick,
+                onVkMusicClick = onVkMusicClick,
+                onYoutubeMusicClick = onYoutubeMusicClick,
+                onDownloadClick = onDownloadClick,
+                onWarningClick = onWarningClick,
+                onLikeClick = onLikeClick,
+                onDislikeClick = onDislikeClick,
+                onDislikeLongClick = onDislikeLongClick
+            )
+        }
+    }
+}
+
+@Composable
+private fun CloudPanelContent(
     W: Dp,
     H: Dp,
     theme: Theme,
@@ -317,99 +495,54 @@ fun CloudFooter(
     onDislikeLongClick: () -> Unit
 ) {
     val A = if (W < H) W * 3.0f / 21 else W * 0.5f * 3.0f / 21
-    val C = if (W < H) (W - A * 6.0f) / 5 else (W * 0.5f - A * 6.0f) / 5
 
-    Row (
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(A)
-            .background(Color.Transparent)
-    ) {
-        if (W >= H) {
-            Box(
-                modifier = Modifier
-                    .weight(1.0f)
-                    .fillMaxHeight()
-                    .background(Color.Transparent)
-            )
-        }
-        if (listenToMusicVariant.isYandex) {
-            YandexMusicButton(
-                size = A,
-                theme = theme,
-                onClick = onYandexMusicClick
-            )
-            Divider(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(C)
-                    .background(theme.colorBg)
-            )
-        }
-        if (listenToMusicVariant.isVk) {
-            VkMusicButton(
-                size = A,
-                theme = theme,
-                onClick = onVkMusicClick
-            )
-            Divider(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(C)
-                    .background(theme.colorBg)
-            )
-        }
-        if (listenToMusicVariant.isYoutube) {
-            YoutubeMusicButton(
-                size = A,
-                theme = theme,
-                onClick = onYoutubeMusicClick
-            )
-            Divider(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(C)
-                    .background(theme.colorBg)
-            )
-        }
-        DownloadButton(
+    if (listenToMusicVariant.isYandex) {
+        YandexMusicButton(
             size = A,
             theme = theme,
-            onClick = onDownloadClick
+            onClick = onYandexMusicClick
         )
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(C)
-                .background(theme.colorBg)
-        )
-        WarningButton(
-            size = A,
-            theme = theme,
-            onClick = onWarningClick
-        )
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(C)
-                .background(theme.colorBg)
-        )
-        LikeButton(
-            size = A,
-            theme = theme,
-            onClick = onLikeClick
-        )
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(C)
-                .background(theme.colorBg)
-        )
-        DislikeButton(
-            size = A,
-            theme = theme,
-            onClick = onDislikeClick,
-            onLongClick = onDislikeLongClick
-        )
+        Divider(W = W, H = H, theme = theme)
     }
+    if (listenToMusicVariant.isVk) {
+        VkMusicButton(
+            size = A,
+            theme = theme,
+            onClick = onVkMusicClick
+        )
+        Divider(W = W, H = H, theme = theme)
+    }
+    if (listenToMusicVariant.isYoutube) {
+        YoutubeMusicButton(
+            size = A,
+            theme = theme,
+            onClick = onYoutubeMusicClick
+        )
+        Divider(W = W, H = H, theme = theme)
+    }
+    DownloadButton(
+        size = A,
+        theme = theme,
+        onClick = onDownloadClick
+    )
+    Divider(W = W, H = H, theme = theme)
+    WarningButton(
+        size = A,
+        theme = theme,
+        onClick = onWarningClick
+    )
+    Divider(W = W, H = H, theme = theme)
+    LikeButton(
+        size = A,
+        theme = theme,
+        onClick = onLikeClick
+    )
+    Divider(W = W, H = H, theme = theme)
+    DislikeButton(
+        size = A,
+        theme = theme,
+        onClick = onDislikeClick,
+        onLongClick = onDislikeLongClick
+    )
+
 }
