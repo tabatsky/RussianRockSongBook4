@@ -697,33 +697,3 @@ private fun SongTextPanelContent(
     }
 }
 
-@Composable
-fun Divider(W: Dp, H: Dp, theme: Theme) {
-    val A = if (W < H) W * 3.0f / 21 else H * 3.0f / 21
-    val C = if (W < H) (W - A * 6.0f) / 5 else (H - A * 6.0f) / 5
-
-    if (W < H) {
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(C)
-                .background(theme.colorBg)
-        )
-    } else {
-        Divider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(C)
-                .background(theme.colorBg)
-        )
-    }
-}
-
-@Composable
-fun NavigationIcon(mvvmViewModel: MvvmViewModel) {
-    IconButton(onClick = {
-        mvvmViewModel.back { }
-    }) {
-        Icon(painterResource(id = R.drawable.ic_back), "")
-    }
-}
