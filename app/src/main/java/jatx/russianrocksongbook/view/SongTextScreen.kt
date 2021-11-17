@@ -46,6 +46,7 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
     song?.apply {
         text = this.text
     }
+    val onTextChange: (String) -> Unit = { text = it }
 
     var y by remember { mutableStateOf(0) }
     val listState = rememberLazyListState()
@@ -185,26 +186,11 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
                         ) {
                             if (isEditorMode) {
                                 item {
-                                    BasicTextField(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        value = text,
-                                        onValueChange = {
-                                            text = it
-                                        },
-                                        textStyle = TextStyle(
-                                            fontFamily = FontFamily.Monospace,
-                                            fontSize = fontSizeTextSp,
-                                            color = theme.colorMain
-                                        ),
-                                        decorationBox = { innerTextField ->
-                                            Row(
-                                                modifier = Modifier
-                                                    .background(theme.colorBg)
-                                            ) {
-                                                innerTextField()  //<-- Add this
-                                            }
-                                        },
-                                        cursorBrush = SolidColor(theme.colorCommon)
+                                    Editor(
+                                        text = text,
+                                        fontSizeTextSp = fontSizeTextSp,
+                                        theme = theme,
+                                        onTextChange = onTextChange
                                     )
                                 }
                             } else {
@@ -326,26 +312,11 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
                             ) {
                                 if (isEditorMode) {
                                     item {
-                                        BasicTextField(
-                                            modifier = Modifier.fillMaxWidth(),
-                                            value = text,
-                                            onValueChange = {
-                                                text = it
-                                            },
-                                            textStyle = TextStyle(
-                                                fontFamily = FontFamily.Monospace,
-                                                fontSize = fontSizeTextSp,
-                                                color = theme.colorMain
-                                            ),
-                                            decorationBox = { innerTextField ->
-                                                Row(
-                                                    modifier = Modifier
-                                                        .background(theme.colorBg)
-                                                ) {
-                                                    innerTextField()  //<-- Add this
-                                                }
-                                            },
-                                            cursorBrush = SolidColor(theme.colorCommon)
+                                        Editor(
+                                            text = text,
+                                            fontSizeTextSp = fontSizeTextSp,
+                                            theme = theme,
+                                            onTextChange = onTextChange
                                         )
                                     }
                                 } else {
@@ -588,6 +559,34 @@ fun Panel(
             )
         }
     }
+}
+
+@Composable
+fun Editor(
+    text: String,
+    fontSizeTextSp: TextUnit,
+    theme: Theme,
+    onTextChange: (String) -> Unit
+) {
+    BasicTextField(
+        modifier = Modifier.fillMaxWidth(),
+        value = text,
+        onValueChange = onTextChange,
+        textStyle = TextStyle(
+            fontFamily = FontFamily.Monospace,
+            fontSize = fontSizeTextSp,
+            color = theme.colorMain
+        ),
+        decorationBox = { innerTextField ->
+            Row(
+                modifier = Modifier
+                    .background(theme.colorBg)
+            ) {
+                innerTextField()  //<-- Add this
+            }
+        },
+        cursorBrush = SolidColor(theme.colorCommon)
+    )
 }
 
 @Composable
