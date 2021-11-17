@@ -14,7 +14,8 @@ import jatx.russianrocksongbook.db.entities.SongEntity
     entities = [
         SongEntity::class
     ],
-    version = 17
+    version = 17,
+    exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun songDao(): SongDao
