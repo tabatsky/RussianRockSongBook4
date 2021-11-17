@@ -19,7 +19,7 @@ const val KEY_LISTEN_TO_MUSIC_VARIANT = "listenToMusicVariant"
 const val KEY_SCROLL_SPEED = "scrollSpeed"
 const val KEY_YOUTUBE_MUSIC_DONT_ASK = "youtubeMusicDontAsk"
 const val KEY_VK_MUSIC_DONT_ASK = "vkMusicDontAsk"
-const val KEY_YANDEX_MUSIC_DONT_ASK = "vkMusicDontAsk"
+const val KEY_YANDEX_MUSIC_DONT_ASK = "yandexMusicDontAsk"
 
 const val ARTIST_KINO = "Кино"
 
