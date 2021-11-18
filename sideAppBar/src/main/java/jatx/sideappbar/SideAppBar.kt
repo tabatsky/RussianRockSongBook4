@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 The Android Open Source Project
+ * Copyright 2021 Evgeny Tabatsky
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,30 +15,42 @@
  */
 package jatx.sideappbar
 
+import androidx.compose.foundation.MutatePriority
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.launch
 import kotlin.math.sqrt
 
 @Composable
 fun SideAppBar(
-    title: @Composable () -> Unit,
+    title: String? = null,
     modifier: Modifier = Modifier,
     navigationIcon: @Composable (() -> Unit)? = null,
     actions: @Composable ColumnScope.() -> Unit = {},
     backgroundColor: Color = MaterialTheme.colors.primarySurface,
     contentColor: Color = contentColorFor(backgroundColor),
     appBarWidth: Dp = 72.dp,
-    elevation: Dp = AppBarDefaults.LeftAppBarElevation
+    elevation: Dp = AppBarDefaults.SideAppBarElevation
 ) {
+    val offset = (TextMaxWidth - appBarWidth) / 2
+
     SideAppBar(
         backgroundColor,
         contentColor,
@@ -60,24 +72,62 @@ fun SideAppBar(
         }
 
         Column(
-            Modifier.fillMaxWidth().weight(1f),
-            horizontalAlignment = Alignment.CenterHorizontally
+            Modifier
+                .width(appBarWidth)
+                .weight(1.0f)
         ) {
-            ProvideTextStyle(value = MaterialTheme.typography.h6) {
-                CompositionLocalProvider(
-                    LocalContentAlpha provides ContentAlpha.high,
-                    content = title
-                )
+            title?.apply {
+                val scope = rememberCoroutineScope()
+                val state = rememberLazyListState()
+                LazyRow(
+                    modifier = Modifier
+                        .width(appBarWidth)
+                        .fillMaxHeight(),
+                    state = state
+                ) {
+                    item {
+                        Column(
+                            modifier = Modifier
+                                .rotate(-90f)
+                                .height(appBarWidth)
+                                .offset(x = -offset, y = -offset),
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            ProvideTextStyle(value = MaterialTheme.typography.h6) {
+                                CompositionLocalProvider(
+                                    LocalContentAlpha provides ContentAlpha.high,
+                                ) {
+                                    Text(
+                                        text = this@apply,
+                                        modifier = Modifier
+                                            .width(TextMaxWidth),
+                                        softWrap = false,
+                                        textAlign = TextAlign.End
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+                state.disableScrolling(scope)
             }
         }
 
         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
             Column(
-                Modifier.fillMaxHeight(),
+                Modifier.wrapContentHeight(),
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 content = actions
             )
+        }
+    }
+}
+
+private fun LazyListState.disableScrolling(scope: CoroutineScope) {
+    scope.launch {
+        scroll(scrollPriority = MutatePriority.PreventUserInput) {
+            awaitCancellation()
         }
     }
 }
@@ -88,7 +138,7 @@ fun SideAppBar(
     backgroundColor: Color = MaterialTheme.colors.primarySurface,
     contentColor: Color = contentColorFor(backgroundColor),
     appBarWidth: Dp,
-    elevation: Dp = AppBarDefaults.LeftAppBarElevation,
+    elevation: Dp = AppBarDefaults.SideAppBarElevation,
     contentPadding: PaddingValues = AppBarDefaults.ContentPadding,
     content: @Composable ColumnScope.() -> Unit
 ) {
@@ -111,7 +161,7 @@ object AppBarDefaults {
     /**
      * Default elevation used for [TopAppBar].
      */
-    val LeftAppBarElevation = 4.dp
+    val SideAppBarElevation = 4.dp
 
     /**
      * Default padding used for [TopAppBar] and [BottomAppBar].
@@ -210,7 +260,8 @@ private fun SideAppBar(
     ) {
         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
             Column(
-                Modifier.fillMaxHeight()
+                Modifier
+                    .fillMaxHeight()
                     .padding(contentPadding)
                     .width(appBarWidth),
                 verticalArrangement = Arrangement.Top,
@@ -221,12 +272,14 @@ private fun SideAppBar(
     }
 }
 
+private val TextMaxWidth = 1000.dp
 //private val AppBarWidth = 80.dp
 // TODO: this should probably be part of the touch target of the start and end icons, clarify this
 private val AppBarVerticalPadding = 4.dp
 // Start inset for the title when there is no navigation icon provided
 private val TitleInsetWithoutIcon = Modifier.height(16.dp - AppBarVerticalPadding)
 // Start inset for the title when there is a navigation icon provided
-private val TitleIconModifier = Modifier.fillMaxWidth()
-    .width(72.dp - AppBarVerticalPadding)
+private val TitleIconModifier = Modifier
+    .fillMaxWidth()
+    .height(64.dp - AppBarVerticalPadding)
 
