@@ -283,7 +283,7 @@ private fun CloudSearchPanelPortrait(
                 colors = ButtonDefaults
                     .outlinedButtonColors(
                         backgroundColor = theme.colorCommon,
-                        contentColor = Color.Black
+                        contentColor = theme.colorMain
                     ),
                 onClick = onSearchClick,
             ) {
@@ -355,7 +355,7 @@ private fun CloudSearchPanelLandscape(
                 colors = ButtonDefaults
                     .outlinedButtonColors(
                         backgroundColor = theme.colorCommon,
-                        contentColor = Color.Black
+                        contentColor = theme.colorMain
                     ),
                 onClick = onSearchClick,
             ) {
