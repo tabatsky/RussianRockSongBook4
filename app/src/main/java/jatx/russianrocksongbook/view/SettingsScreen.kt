@@ -27,6 +27,7 @@ import jatx.russianrocksongbook.data.ARTIST_CLOUD_SONGS
 import jatx.russianrocksongbook.data.ARTIST_DONATION
 import jatx.russianrocksongbook.preferences.*
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.sideappbar.SideAppBar
 
 @Composable
 fun SettingsScreen(mvvmViewModel: MvvmViewModel) {
@@ -34,11 +35,45 @@ fun SettingsScreen(mvvmViewModel: MvvmViewModel) {
     val settings = mvvmViewModel.settings
 
     var themeToSave by remember { mutableStateOf(theme) }
+    val onThemePositionChanged: (Int) -> Unit = {
+        themeToSave = Theme.values()[it]
+    }
+
     var fontScaleToSave by remember { mutableStateOf(settings.commonFontScaleEnum) }
+    val onFontScalePositionChanged: (Int) -> Unit = {
+        fontScaleToSave = FontScale.values()[it]
+    }
+
     var defaultArtistToSave by remember { mutableStateOf(settings.defaultArtist) }
+    val onDefaultArtistValueChanged: (String) -> Unit = {
+        defaultArtistToSave = it
+    }
+
     var orientationToSave by remember { mutableStateOf(settings.orientation) }
+    val onOrientationPositionChanged: (Int) -> Unit = {
+        orientationToSave = Orientation.values()[it]
+    }
+
     var listenToMusicVariantToSave by remember { mutableStateOf(settings.listenToMusicVariant) }
+    val onListenToMusicVariantPositionChanged: (Int) -> Unit = {
+        listenToMusicVariantToSave =
+            ListenToMusicVariant.values()[it]
+    }
+
     var scrollSpeedToSave by remember { mutableStateOf(settings.scrollSpeed) }
+    val onScrollSpeedValueChanged: (Float) -> Unit = {
+        scrollSpeedToSave = it
+    }
+
+    val onSaveClick: () -> Unit = {
+        settings.theme = themeToSave
+        settings.commonFontScale = fontScaleToSave.scale
+        settings.defaultArtist = defaultArtistToSave
+        settings.orientation = orientationToSave
+        settings.listenToMusicVariant = listenToMusicVariantToSave
+        settings.scrollSpeed = scrollSpeedToSave
+        mvvmViewModel.onRestartApp()
+    }
 
     val labelFontScale = settings.getSpecificFontScale(ScalePow.LABEL)
     val fontSizeLabelDp = dimensionResource(id = R.dimen.text_size_20) * labelFontScale
@@ -52,256 +87,318 @@ fun SettingsScreen(mvvmViewModel: MvvmViewModel) {
         fontSizeButtonDp.toSp()
     }
 
-    Column(
+    BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = theme.colorBg)
     ) {
-        TopAppBar(
-            title = {
-                Text(text = stringResource(id = R.string.title_settings))
-            },
-            backgroundColor = theme.colorCommon,
-            navigationIcon = {
-                IconButton(onClick = {
-                    mvvmViewModel.back { }
-                }) {
-                    Icon(painterResource(id = R.drawable.ic_back), "")
-                }
-            }
-        )
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = theme.colorBg)
-                .padding(4.dp)
-        ) {
-            val configuration = LocalConfiguration.current
-            when (configuration.orientation) {
-                Configuration.ORIENTATION_PORTRAIT -> {
-                    ThemeRow(
-                        theme = theme,
-                        settings = settings,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight(),
-                        fontSize = fontSizeLabelSp,
-                        onPositionChanged = { position ->
-                            themeToSave = Theme.values()[position]
-                        }
-                    )
-                    Divider(
-                        color = theme.colorBg,
-                        thickness = 2.dp
-                    )
-                    FontScaleRow(
-                        theme = theme,
-                        settings = settings,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight(),
-                        fontSize = fontSizeLabelSp,
-                        onPositionChanged = { position ->
-                            fontScaleToSave = FontScale.values()[position]
-                        }
-                    )
-                    Divider(
-                        color = theme.colorBg,
-                        thickness = 2.dp
-                    )
-                    DefaultArtistRow(
-                        theme = theme,
-                        settings = settings,
-                        mvvmViewModel = mvvmViewModel,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight(),
-                        fontSize = fontSizeLabelSp,
-                        onValueChanged = { value ->
-                            defaultArtistToSave = value
-                        }
-                    )
-                    Divider(
-                        color = theme.colorBg,
-                        thickness = 2.dp
-                    )
-                    OrientationRow(
-                        theme = theme,
-                        settings = settings,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight(),
-                        fontSize = fontSizeLabelSp,
-                        onPositionChanged = { position ->
-                            orientationToSave = Orientation.values()[position]
-                        }
-                    )
-                    Divider(
-                        color = theme.colorBg,
-                        thickness = 2.dp
-                    )
-                    ListenToMusicVariantRow(
-                        theme = theme,
-                        settings = settings,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight(),
-                        fontSize = fontSizeLabelSp,
-                        onPositionChanged = { position ->
-                            listenToMusicVariantToSave =
-                                ListenToMusicVariant.values()[position]
-                        }
-                    )
-                    Divider(
-                        color = theme.colorBg,
-                        thickness = 2.dp
-                    )
-                    ScrollSpeedRow(
-                        theme = theme,
-                        settings = settings,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight(),
-                        fontSize = fontSizeLabelSp,
-                        onValueChanged = { value ->
-                            scrollSpeedToSave = value
-                        }
-                    )
-                }
-                else -> {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        ThemeRow(
-                            theme = theme,
-                            settings = settings,
-                            modifier = Modifier
-                                .weight(1.0f)
-                                .wrapContentHeight(),
-                            fontSize = fontSizeLabelSp,
-                            onPositionChanged = { position ->
-                                themeToSave = Theme.values()[position]
-                            }
-                        )
-                        FontScaleRow(
-                            theme = theme,
-                            settings = settings,
-                            modifier = Modifier
-                                .weight(1.0f)
-                                .wrapContentHeight(),
-                            fontSize = fontSizeLabelSp,
-                            onPositionChanged = { position ->
-                                fontScaleToSave = FontScale.values()[position]
-                            }
-                        )
-                    }
-                    Divider(
-                        color = theme.colorBg,
-                        thickness = 2.dp
-                    )
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        DefaultArtistRow(
-                            theme = theme,
-                            settings = settings,
-                            mvvmViewModel = mvvmViewModel,
-                            modifier = Modifier
-                                .weight(1.0f)
-                                .wrapContentHeight(),
-                            fontSize = fontSizeLabelSp,
-                            onValueChanged = { value ->
-                                defaultArtistToSave = value
-                            }
-                        )
-                        OrientationRow(
-                            theme = theme,
-                            settings = settings,
-                            modifier = Modifier
-                                .weight(1.0f)
-                                .wrapContentHeight(),
-                            fontSize = fontSizeLabelSp,
-                            onPositionChanged = { position ->
-                                orientationToSave = Orientation.values()[position]
-                            }
-                        )
-                    }
-                    Divider(
-                        color = theme.colorBg,
-                        thickness = 2.dp
-                    )
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        ListenToMusicVariantRow(
-                            theme = theme,
-                            settings = settings,
-                            modifier = Modifier
-                                .weight(1.0f)
-                                .wrapContentHeight(),
-                            fontSize = fontSizeLabelSp,
-                            onPositionChanged = { position ->
-                                listenToMusicVariantToSave =
-                                    ListenToMusicVariant.values()[position]
-                            }
-                        )
-                        ScrollSpeedRow(
-                            theme = theme,
-                            settings = settings,
-                            modifier = Modifier
-                                .weight(1.0f)
-                                .wrapContentHeight(),
-                            fontSize = fontSizeLabelSp,
-                            onValueChanged = { value ->
-                                scrollSpeedToSave = value
-                            }
-                        )
-                    }
-                }
-            }
-            Divider(
-                color = theme.colorBg,
+        val W = this.maxWidth
+        val H = this.minHeight
+
+        if (W < H) {
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1.0f)
-            )
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(75.dp),
-                colors = ButtonDefaults
-                    .buttonColors(
-                        backgroundColor = theme.colorCommon,
-                        contentColor = theme.colorMain
-                    ),
-                onClick = {
-                    settings.theme = themeToSave
-                    settings.commonFontScale = fontScaleToSave.scale
-                    settings.defaultArtist = defaultArtistToSave
-                    settings.orientation = orientationToSave
-                    settings.listenToMusicVariant = listenToMusicVariantToSave
-                    settings.scrollSpeed = scrollSpeedToSave
-                    mvvmViewModel.onRestartApp()
-                }
+                    .fillMaxSize()
+                    .background(color = theme.colorBg)
             ) {
-                Text(
-                    text = stringResource(id = R.string.save_and_restart),
-                    textAlign = TextAlign.Center,
-                    fontSize = fontSizeButtonSp
+                TopAppBar(
+                    title = {
+                        Text(text = stringResource(id = R.string.title_settings))
+                    },
+                    backgroundColor = theme.colorCommon,
+                    navigationIcon = {
+                        CommonNavigationIcon(mvvmViewModel)
+                    }
+                )
+                SettingsBodyPortrait(
+                    theme = theme,
+                    settings = settings,
+                    mvvmViewModel = mvvmViewModel,
+                    fontSizeLabelSp = fontSizeLabelSp,
+                    fontSizeButtonSp = fontSizeButtonSp,
+                    onThemePositionChanged = onThemePositionChanged,
+                    onFontScalePositionChanged = onFontScalePositionChanged,
+                    onDefaultArtistValueChanged = onDefaultArtistValueChanged,
+                    onOrientationPositionChanged = onOrientationPositionChanged,
+                    onListenToMusicVariantPositionChanged = onListenToMusicVariantPositionChanged,
+                    onScrollSpeedValueChanged = onScrollSpeedValueChanged,
+                    onSaveClick = onSaveClick
+                )
+            }
+        } else {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = theme.colorBg)
+            ) {
+                SideAppBar(
+                    title = stringResource(id = R.string.title_settings),
+                    backgroundColor = theme.colorCommon,
+                    navigationIcon = {
+                        CommonNavigationIcon(mvvmViewModel)
+                    }
+                )
+                SettingsBodyLandscape(
+                    theme = theme,
+                    settings = settings,
+                    mvvmViewModel = mvvmViewModel,
+                    fontSizeLabelSp = fontSizeLabelSp,
+                    fontSizeButtonSp = fontSizeButtonSp,
+                    onThemePositionChanged = onThemePositionChanged,
+                    onFontScalePositionChanged = onFontScalePositionChanged,
+                    onDefaultArtistValueChanged = onDefaultArtistValueChanged,
+                    onOrientationPositionChanged = onOrientationPositionChanged,
+                    onListenToMusicVariantPositionChanged = onListenToMusicVariantPositionChanged,
+                    onScrollSpeedValueChanged = onScrollSpeedValueChanged,
+                    onSaveClick = onSaveClick
                 )
             }
         }
     }
 }
+
+@Composable
+private fun SettingsBodyPortrait(
+    theme: Theme,
+    settings: Settings,
+    mvvmViewModel: MvvmViewModel,
+    fontSizeLabelSp: TextUnit,
+    fontSizeButtonSp: TextUnit,
+    onThemePositionChanged: (Int) -> Unit,
+    onFontScalePositionChanged: (Int) -> Unit,
+    onDefaultArtistValueChanged: (String) -> Unit,
+    onOrientationPositionChanged: (Int) -> Unit,
+    onListenToMusicVariantPositionChanged: (Int) -> Unit,
+    onScrollSpeedValueChanged: (Float) -> Unit,
+    onSaveClick: () -> Unit
+) {
+    Column(Modifier.fillMaxSize().padding(2.dp)) {
+        ThemeRow(
+            theme = theme,
+            settings = settings,
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            fontSize = fontSizeLabelSp,
+            onPositionChanged = onThemePositionChanged
+        )
+        Divider(
+            color = theme.colorBg,
+            thickness = 2.dp
+        )
+        FontScaleRow(
+            theme = theme,
+            settings = settings,
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            fontSize = fontSizeLabelSp,
+            onPositionChanged = onFontScalePositionChanged
+        )
+        Divider(
+            color = theme.colorBg,
+            thickness = 2.dp
+        )
+        DefaultArtistRow(
+            theme = theme,
+            settings = settings,
+            mvvmViewModel = mvvmViewModel,
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            fontSize = fontSizeLabelSp,
+            onValueChanged = onDefaultArtistValueChanged
+        )
+        Divider(
+            color = theme.colorBg,
+            thickness = 2.dp
+        )
+        OrientationRow(
+            theme = theme,
+            settings = settings,
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            fontSize = fontSizeLabelSp,
+            onPositionChanged = onOrientationPositionChanged
+        )
+        Divider(
+            color = theme.colorBg,
+            thickness = 2.dp
+        )
+        ListenToMusicVariantRow(
+            theme = theme,
+            settings = settings,
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            fontSize = fontSizeLabelSp,
+            onPositionChanged = onListenToMusicVariantPositionChanged
+        )
+        Divider(
+            color = theme.colorBg,
+            thickness = 2.dp
+        )
+        ScrollSpeedRow(
+            theme = theme,
+            settings = settings,
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            fontSize = fontSizeLabelSp,
+            onValueChanged = onScrollSpeedValueChanged
+        )
+        Divider(
+            color = theme.colorBg,
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1.0f)
+        )
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(75.dp),
+            colors = ButtonDefaults
+                .buttonColors(
+                    backgroundColor = theme.colorCommon,
+                    contentColor = theme.colorMain
+                ),
+            onClick = onSaveClick
+        ) {
+            Text(
+                text = stringResource(id = R.string.save_and_restart),
+                textAlign = TextAlign.Center,
+                fontSize = fontSizeButtonSp
+            )
+        }
+    }
+}
+
+@Composable
+private fun SettingsBodyLandscape(
+    theme: Theme,
+    settings: Settings,
+    mvvmViewModel: MvvmViewModel,
+    fontSizeLabelSp: TextUnit,
+    fontSizeButtonSp: TextUnit,
+    onThemePositionChanged: (Int) -> Unit,
+    onFontScalePositionChanged: (Int) -> Unit,
+    onDefaultArtistValueChanged: (String) -> Unit,
+    onOrientationPositionChanged: (Int) -> Unit,
+    onListenToMusicVariantPositionChanged: (Int) -> Unit,
+    onScrollSpeedValueChanged: (Float) -> Unit,
+    onSaveClick: () -> Unit
+) {
+    Column(Modifier.fillMaxSize().padding(start = 2.dp, end = 2.dp, top = 2.dp)) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            ThemeRow(
+                theme = theme,
+                settings = settings,
+                modifier = Modifier
+                    .weight(1.0f)
+                    .wrapContentHeight(),
+                fontSize = fontSizeLabelSp,
+                onPositionChanged = onThemePositionChanged
+            )
+            FontScaleRow(
+                theme = theme,
+                settings = settings,
+                modifier = Modifier
+                    .weight(1.0f)
+                    .wrapContentHeight(),
+                fontSize = fontSizeLabelSp,
+                onPositionChanged = onFontScalePositionChanged
+            )
+        }
+        Divider(
+            color = theme.colorBg,
+            thickness = 2.dp
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            DefaultArtistRow(
+                theme = theme,
+                settings = settings,
+                mvvmViewModel = mvvmViewModel,
+                modifier = Modifier
+                    .weight(1.0f)
+                    .wrapContentHeight(),
+                fontSize = fontSizeLabelSp,
+                onValueChanged = onDefaultArtistValueChanged
+            )
+            OrientationRow(
+                theme = theme,
+                settings = settings,
+                modifier = Modifier
+                    .weight(1.0f)
+                    .wrapContentHeight(),
+                fontSize = fontSizeLabelSp,
+                onPositionChanged = onOrientationPositionChanged
+            )
+        }
+        Divider(
+            color = theme.colorBg,
+            thickness = 2.dp
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            ListenToMusicVariantRow(
+                theme = theme,
+                settings = settings,
+                modifier = Modifier
+                    .weight(1.0f)
+                    .wrapContentHeight(),
+                fontSize = fontSizeLabelSp,
+                onPositionChanged = onListenToMusicVariantPositionChanged
+            )
+            ScrollSpeedRow(
+                theme = theme,
+                settings = settings,
+                modifier = Modifier
+                    .weight(1.0f)
+                    .wrapContentHeight(),
+                fontSize = fontSizeLabelSp,
+                onValueChanged = onScrollSpeedValueChanged
+            )
+        }
+        Divider(
+            color = theme.colorBg,
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1.0f)
+        )
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(75.dp),
+            colors = ButtonDefaults
+                .buttonColors(
+                    backgroundColor = theme.colorCommon,
+                    contentColor = theme.colorMain
+                ),
+            onClick = onSaveClick
+        ) {
+            Text(
+                text = stringResource(id = R.string.save_and_restart),
+                textAlign = TextAlign.Center,
+                fontSize = fontSizeButtonSp
+            )
+        }
+    }
+}
+
 
 @Composable
 private fun ThemeRow(
