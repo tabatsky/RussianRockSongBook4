@@ -1,7 +1,7 @@
 package jatx.russianrocksongbook.data.impl
 
 import io.reactivex.Flowable
-import jatx.russianrocksongbook.data.SongRepository
+import jatx.russianrocksongbook.data.*
 import jatx.russianrocksongbook.db.dao.SongDao
 import jatx.russianrocksongbook.domain.CloudSong
 import jatx.russianrocksongbook.domain.Song
@@ -9,11 +9,13 @@ import jatx.russianrocksongbook.domain.USER_SONG_MD5
 import jatx.russianrocksongbook.domain.songTextHash
 import javax.inject.Inject
 
-const val ARTIST_FAVORITE = "Избранное"
-const val ARTIST_ADD_ARTIST = "Добавить исполнителя"
-const val ARTIST_ADD_SONG = "Добавить песню"
-const val ARTIST_CLOUD_SONGS = "Аккорды онлайн"
-const val ARTIST_DONATION = "Пожертвования"
+val predefinedList = listOf(
+    ARTIST_FAVORITE,
+    ARTIST_ADD_ARTIST,
+    ARTIST_ADD_SONG,
+    ARTIST_CLOUD_SONGS,
+    ARTIST_DONATION
+)
 
 class SongRepositoryImpl @Inject constructor(
     private val songDao: SongDao
@@ -23,13 +25,8 @@ class SongRepositoryImpl @Inject constructor(
             .getArtistsFlowable()
             .map {
                 val arrayList = arrayListOf<String>()
-                arrayList.add(ARTIST_FAVORITE)
-                arrayList.add(ARTIST_ADD_ARTIST)
-                arrayList.add(ARTIST_ADD_SONG)
-                arrayList.add(ARTIST_CLOUD_SONGS)
-                arrayList.add(ARTIST_DONATION)
-
-                arrayList.addAll(it)
+                arrayList.addAll(predefinedList)
+                arrayList.addAll(it.filter { !predefinedList.contains(it) })
 
                 arrayList
             }
@@ -37,14 +34,8 @@ class SongRepositoryImpl @Inject constructor(
 
     override fun getArtistsAsList(): List<String> {
         val arrayList = arrayListOf<String>()
-        arrayList.add(ARTIST_FAVORITE)
-        arrayList.add(ARTIST_ADD_ARTIST)
-        arrayList.add(ARTIST_ADD_SONG)
-        arrayList.add(ARTIST_CLOUD_SONGS)
-        arrayList.add(ARTIST_DONATION)
-
-        arrayList.addAll(songDao.getArtists())
-
+        arrayList.addAll(predefinedList)
+        arrayList.addAll(songDao.getArtists().filter { !predefinedList.contains(it) })
         return arrayList
     }
 
