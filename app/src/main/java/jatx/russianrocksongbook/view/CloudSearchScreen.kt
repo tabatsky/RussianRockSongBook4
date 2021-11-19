@@ -1,15 +1,18 @@
 package jatx.russianrocksongbook.view
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -101,6 +104,7 @@ fun CloudSearchScreen(mvvmViewModel: MvvmViewModel) {
                     cloudSongList = cloudSongList,
                     position = position,
                     modifier = Modifier.weight(1.0f),
+                    isPortrait = true,
                     onSearchForValueChange = onSearchForValueChange,
                     onOrderByValueChange = onOrderByValueChange,
                     onSearchClick = onSearchClick,
@@ -132,6 +136,7 @@ fun CloudSearchScreen(mvvmViewModel: MvvmViewModel) {
                     cloudSongList = cloudSongList,
                     position = position,
                     modifier = Modifier.weight(1.0f),
+                    isPortrait = false,
                     onSearchForValueChange = onSearchForValueChange,
                     onOrderByValueChange = onOrderByValueChange,
                     onSearchClick = onSearchClick,
@@ -153,6 +158,7 @@ private fun CloudSearchBody(
     cloudSongList: List<CloudSong>,
     position: Int,
     modifier: Modifier,
+    isPortrait: Boolean,
     onSearchForValueChange: (String) -> Unit,
     onOrderByValueChange: (OrderBy) -> Unit,
     onSearchClick: () -> Unit,
@@ -161,14 +167,25 @@ private fun CloudSearchBody(
     Column(
         modifier = modifier
     ) {
-        CloudSearchPanel(
-            searchFor = searchFor,
-            theme = theme,
-            fontSizeTextSp = fontSizeTextSp,
-            onSearchForValueChange = onSearchForValueChange,
-            onOrderByValueChange = onOrderByValueChange,
-            onSearchClick = onSearchClick
-        )
+        if (isPortrait) {
+            CloudSearchPanelPortrait(
+                searchFor = searchFor,
+                theme = theme,
+                fontSizeTextSp = fontSizeTextSp,
+                onSearchForValueChange = onSearchForValueChange,
+                onOrderByValueChange = onOrderByValueChange,
+                onSearchClick = onSearchClick
+            )
+        } else {
+            CloudSearchPanelLandscape(
+                searchFor = searchFor,
+                theme = theme,
+                fontSizeTextSp = fontSizeTextSp,
+                onSearchForValueChange = onSearchForValueChange,
+                onOrderByValueChange = onOrderByValueChange,
+                onSearchClick = onSearchClick
+            )
+        }
 
         if (!isCloudLoading) {
             if (cloudSongList.isNotEmpty()) {
@@ -200,7 +217,7 @@ private fun CloudSearchBody(
 }
 
 @Composable
-private fun CloudSearchPanel(
+private fun CloudSearchPanelPortrait(
     searchFor: String,
     theme: Theme,
     fontSizeTextSp: TextUnit,
@@ -216,6 +233,7 @@ private fun CloudSearchPanel(
         modifier = Modifier
             .fillMaxWidth()
             .height(size3)
+            .padding(all = padding)
     ) {
         Column(
             modifier = Modifier
@@ -226,7 +244,7 @@ private fun CloudSearchPanel(
                 value = searchFor,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(size2)
+                    .height(size2 - padding)
                     .padding(padding),
                 colors = TextFieldDefaults
                     .textFieldColors(
@@ -237,10 +255,6 @@ private fun CloudSearchPanel(
                     fontSize = fontSizeTextSp
                 ),
                 onValueChange = onSearchForValueChange
-            )
-            Divider(
-                color = theme.colorBg,
-                thickness = padding
             )
             Spinner(
                 modifier = Modifier
@@ -257,25 +271,103 @@ private fun CloudSearchPanel(
         }
         Box (
             modifier = Modifier
-                .width(size3)
-                .height(size3)
+                .width(size3 - padding * 2)
+                .height(size3 - padding * 2)
                 .padding(padding)
         ) {
-            IconButton(
+            OutlinedButton(
                 modifier = Modifier
-                    .background(theme.colorCommon)
                     .fillMaxSize(),
-                onClick = onSearchClick
+                shape = RoundedCornerShape(size3 * 0.1f),
+                contentPadding = PaddingValues(10.dp),
+                colors = ButtonDefaults
+                    .outlinedButtonColors(
+                        backgroundColor = theme.colorCommon,
+                        contentColor = Color.Black
+                    ),
+                onClick = onSearchClick,
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_cloud_search),
-                    contentDescription = "",
-                    modifier = Modifier.padding(10.dp)
+                    contentDescription = ""
                 )
             }
         }
     }
 }
+
+@Composable
+private fun CloudSearchPanelLandscape(
+    searchFor: String,
+    theme: Theme,
+    fontSizeTextSp: TextUnit,
+    onSearchForValueChange: (String) -> Unit,
+    onOrderByValueChange: (OrderBy) -> Unit,
+    onSearchClick: () -> Unit
+) {
+    val size = dimensionResource(id = R.dimen.search_button_size) * 0.75f
+    val padding = dimensionResource(id = R.dimen.empty)
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(size)
+            .padding(start = padding, end = padding)
+    ) {
+        TextField(
+            value = searchFor,
+            modifier = Modifier
+                .weight(1.0f)
+                .fillMaxHeight()
+                .padding(padding),
+            colors = TextFieldDefaults
+                .textFieldColors(
+                    backgroundColor = theme.colorMain,
+                    textColor = theme.colorBg
+                ),
+            textStyle = TextStyle(
+                fontSize = fontSizeTextSp
+            ),
+            onValueChange = onSearchForValueChange
+        )
+        Spinner(
+            modifier = Modifier
+                .weight(0.6f)
+                .fillMaxHeight()
+                .padding(padding),
+            theme = theme,
+            fontSize = fontSizeTextSp,
+            valueList = OrderBy.values().map { it.orderByRus }.toTypedArray(),
+            initialPosition = 0
+        ) {
+            onOrderByValueChange(OrderBy.values()[it])
+        }
+        Box (
+            modifier = Modifier
+                .width(size)
+                .height(size)
+                .padding(padding)
+        ) {
+            OutlinedButton(
+                modifier = Modifier
+                    .fillMaxSize(),
+                shape = RoundedCornerShape(size * 0.1f),
+                contentPadding = PaddingValues(10.dp),
+                colors = ButtonDefaults
+                    .outlinedButtonColors(
+                        backgroundColor = theme.colorCommon,
+                        contentColor = Color.Black
+                    ),
+                onClick = onSearchClick,
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_cloud_search),
+                    contentDescription = ""
+                )
+            }
+        }
+    }
+}
+
 
 @Composable
 private fun CloudSongItem(
