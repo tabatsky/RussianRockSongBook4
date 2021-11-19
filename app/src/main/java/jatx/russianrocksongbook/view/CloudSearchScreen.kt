@@ -24,12 +24,20 @@ import jatx.russianrocksongbook.domain.CloudSong
 import jatx.russianrocksongbook.preferences.ScalePow
 import jatx.russianrocksongbook.preferences.Theme
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.sideappbar.SideAppBar
 import kotlinx.coroutines.launch
 
 @Composable
 fun CloudSearchScreen(mvvmViewModel: MvvmViewModel) {
     var searchFor by remember { mutableStateOf("") }
+    val onSearchForValueChange: (String) -> Unit = {
+        searchFor = it
+    }
+
     var orderBy by remember { mutableStateOf(OrderBy.BY_ID_DESC) }
+    val onOrderByValueChange: (OrderBy) -> Unit = {
+        orderBy = it
+    }
 
     val cloudSongList by mvvmViewModel.cloudSongList.collectAsState()
     val position by mvvmViewModel.cloudSongPosition.collectAsState()
@@ -54,31 +62,111 @@ fun CloudSearchScreen(mvvmViewModel: MvvmViewModel) {
         mvvmViewModel.cloudSearch(searchFor, orderBy)
     }
 
-    Column(
+    val onItemClick: (Int, CloudSong) -> Unit = { index, cloudSong ->
+        println("selected: ${cloudSong.artist} - ${cloudSong.title}")
+        mvvmViewModel.selectCloudSong(index)
+        mvvmViewModel.selectScreen(CurrentScreenVariant.CLOUD_SONG_TEXT)
+    }
+
+    BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
-            .background(theme.colorBg)
     ) {
-        TopAppBar(
-            title = {
-                Text(text = stringResource(id = R.string.title_activity_cloud_search))
-            },
-            backgroundColor = theme.colorCommon,
-            navigationIcon = {
-                CommonNavigationIcon(mvvmViewModel)
-            }
-        )
+        val W = this.maxWidth
+        val H = this.maxHeight
 
+        if (W < H) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(theme.colorBg)
+            ) {
+                TopAppBar(
+                    title = {
+                        Text(text = stringResource(id = R.string.title_activity_cloud_search))
+                    },
+                    backgroundColor = theme.colorCommon,
+                    navigationIcon = {
+                        CommonNavigationIcon(mvvmViewModel)
+                    }
+                )
+
+                CloudSearchBody(
+                    searchFor = searchFor,
+                    theme = theme,
+                    fontSizeTextSp = fontSizeTextSp,
+                    fontSizeArtistSp = fontSizeArtistSp,
+                    fontSizeSongTitleSp = fontSizeSongTitleSp,
+                    isCloudLoading = isCloudLoading,
+                    cloudSongList = cloudSongList,
+                    position = position,
+                    modifier = Modifier.weight(1.0f),
+                    onSearchForValueChange = onSearchForValueChange,
+                    onOrderByValueChange = onOrderByValueChange,
+                    onSearchClick = onSearchClick,
+                    onItemClick = onItemClick
+                )
+            }
+        } else {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(theme.colorBg)
+            ) {
+                SideAppBar(
+                    title = stringResource(id = R.string.title_activity_cloud_search),
+                    backgroundColor = theme.colorCommon,
+                    navigationIcon = {
+                        CommonNavigationIcon(mvvmViewModel)
+                    }
+                )
+
+
+                CloudSearchBody(
+                    searchFor = searchFor,
+                    theme = theme,
+                    fontSizeTextSp = fontSizeTextSp,
+                    fontSizeArtistSp = fontSizeArtistSp,
+                    fontSizeSongTitleSp = fontSizeSongTitleSp,
+                    isCloudLoading = isCloudLoading,
+                    cloudSongList = cloudSongList,
+                    position = position,
+                    modifier = Modifier.weight(1.0f),
+                    onSearchForValueChange = onSearchForValueChange,
+                    onOrderByValueChange = onOrderByValueChange,
+                    onSearchClick = onSearchClick,
+                    onItemClick = onItemClick
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun CloudSearchBody(
+    searchFor: String,
+    theme: Theme,
+    fontSizeTextSp: TextUnit,
+    fontSizeArtistSp: TextUnit,
+    fontSizeSongTitleSp: TextUnit,
+    isCloudLoading: Boolean,
+    cloudSongList: List<CloudSong>,
+    position: Int,
+    modifier: Modifier,
+    onSearchForValueChange: (String) -> Unit,
+    onOrderByValueChange: (OrderBy) -> Unit,
+    onSearchClick: () -> Unit,
+    onItemClick: (Int, CloudSong) -> Unit
+) {
+    Column(
+        modifier = modifier
+    ) {
         CloudSearchPanel(
             searchFor = searchFor,
             theme = theme,
             fontSizeTextSp = fontSizeTextSp,
-            onSearchForValueChange = {
-                searchFor = it
-            },
-            onOrderByValueChange = {
-                orderBy = it
-            },
+            onSearchForValueChange = onSearchForValueChange,
+            onOrderByValueChange = onOrderByValueChange,
             onSearchClick = onSearchClick
         )
 
@@ -95,9 +183,7 @@ fun CloudSearchScreen(mvvmViewModel: MvvmViewModel) {
                         CloudSongItem(
                             cloudSong, theme, fontSizeArtistSp, fontSizeSongTitleSp
                         ) {
-                            println("selected: ${cloudSong.artist} - ${cloudSong.title}")
-                            mvvmViewModel.selectCloudSong(index)
-                            mvvmViewModel.selectScreen(CurrentScreenVariant.CLOUD_SONG_TEXT)
+                            onItemClick(index, cloudSong)
                         }
                     }
                     coroutineScope.launch {
