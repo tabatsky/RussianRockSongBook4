@@ -28,7 +28,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class DbModule {
-    @Singleton
     @Provides
     fun provideSongDao(@ApplicationContext context: Context) = AppDatabase.invoke(context).songDao()
 }
@@ -36,7 +35,6 @@ class DbModule {
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
-    @Singleton
     @Provides
     fun provideRetrofit(): Retrofit = Retrofit
         .Builder()
@@ -49,16 +47,13 @@ class NetworkModule {
 @Module
 @InstallIn(SingletonComponent::class)
 interface DataModule {
-    @Singleton
     @Binds
     fun bindSongRepository(songRepositoryImpl: SongRepositoryImpl): SongRepository
 
-    @Singleton
     @Binds
     fun bindSongBookAPIAdapter(songBookAPIAdapterImpl: SongBookAPIAdapterImpl):
             SongBookAPIAdapter
 
-    @Singleton
     @Binds
     fun bindFileSystemAdapter(fileSystemAdapterImpl: FileSystemAdapterImpl):
             FileSystemAdapter
