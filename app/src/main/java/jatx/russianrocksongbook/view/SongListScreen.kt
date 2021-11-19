@@ -25,6 +25,8 @@ import jatx.russianrocksongbook.preferences.Theme
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import kotlinx.coroutines.launch
 
+private val MAX_ARTIST_LENGTH = 12
+
 @Composable
 fun SongListScreen(
     mvvmViewModel: MvvmViewModel
@@ -70,6 +72,12 @@ private fun Content(
         fontSizeDp.toSp()
     }
 
+    val visibleArtist =
+        if (artist.length <= MAX_ARTIST_LENGTH)
+            artist
+        else
+            artist.take(MAX_ARTIST_LENGTH - 1) + "…"
+
     Column(
         modifier = Modifier
             .background(theme.colorBg)
@@ -77,7 +85,7 @@ private fun Content(
     ) {
         TopAppBar(
             title = {
-                Text(text = artist)
+                Text(text = visibleArtist)
             },
             backgroundColor = theme.colorCommon,
             navigationIcon = {
