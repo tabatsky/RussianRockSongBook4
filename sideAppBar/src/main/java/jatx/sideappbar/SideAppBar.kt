@@ -1,6 +1,9 @@
 /*
  * Copyright 2021 Evgeny Tabatsky
  *
+ * Based on following code:
+ * https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:compose/material/material/src/commonMain/kotlin/androidx/compose/material/AppBar.kt
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
