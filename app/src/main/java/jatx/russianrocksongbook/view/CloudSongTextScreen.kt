@@ -178,7 +178,6 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel) {
                         .background(color = theme.colorBg)
                 ) {
                     SideAppBar(
-                        title = {},
                         backgroundColor = theme.colorCommon,
                         navigationIcon = {
                             CommonNavigationIcon(mvvmViewModel)
