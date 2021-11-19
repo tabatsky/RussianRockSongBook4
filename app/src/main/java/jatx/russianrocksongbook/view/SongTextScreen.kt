@@ -40,8 +40,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-private val SONG_TEXT_APP_BAR_WIDTH = 72.dp
-
 @Composable
 fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
     val song by mvvmViewModel.currentSong.collectAsState()
@@ -214,7 +212,6 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
                         .background(color = theme.colorBg)
                 ) {
                     SideAppBar(
-                        title = {},
                         backgroundColor = theme.colorCommon,
                         navigationIcon = {
                             CommonNavigationIcon(mvvmViewModel)
@@ -226,7 +223,7 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
                                 onSongChanged = onSongChanged
                             )
                         },
-                        appBarWidth = SONG_TEXT_APP_BAR_WIDTH
+                        appBarWidth = COMMON_APP_BAR_WIDTH
                     )
 
                     SongTextBody(

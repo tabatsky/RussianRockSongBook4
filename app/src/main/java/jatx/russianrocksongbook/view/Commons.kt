@@ -14,9 +14,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.preferences.Theme
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+
+val COMMON_APP_BAR_WIDTH = 72.dp
 
 @Composable
 fun CommonPanelDivider(W: Dp, H: Dp, theme: Theme) {
