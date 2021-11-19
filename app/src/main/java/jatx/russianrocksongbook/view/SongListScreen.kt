@@ -23,6 +23,7 @@ import jatx.russianrocksongbook.domain.Song
 import jatx.russianrocksongbook.preferences.ScalePow
 import jatx.russianrocksongbook.preferences.Theme
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.sideappbar.SideAppBar
 import kotlinx.coroutines.launch
 
 private val MAX_ARTIST_LENGTH = 12
@@ -63,6 +64,74 @@ private fun Content(
 ) {
     val theme = mvvmViewModel.settings.theme
     val artist by mvvmViewModel.currentArtist.collectAsState()
+
+    val visibleArtist =
+        if (artist.length <= MAX_ARTIST_LENGTH)
+            artist
+        else
+            artist.take(MAX_ARTIST_LENGTH - 1) + "…"
+
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        val W = this.maxWidth
+        val H = this.maxHeight
+
+        if (W < H) {
+            Column(
+                modifier = Modifier
+                    .background(theme.colorBg)
+                    .fillMaxSize()
+            ) {
+                TopAppBar(
+                    title = {
+                        Text(text = visibleArtist)
+                    },
+                    backgroundColor = theme.colorCommon,
+                    navigationIcon = {
+                        SongListNavigationIcon(onClick = openDrawer)
+                    },
+                    actions = {
+                        SongListActions(mvvmViewModel)
+                    }
+                )
+
+                SongListBody(mvvmViewModel)
+
+                WhatsNewDialog(mvvmViewModel)
+            }
+        } else {
+            Row(
+                modifier = Modifier
+                    .background(theme.colorBg)
+                    .fillMaxSize()
+            ) {
+                SideAppBar(
+                    title = visibleArtist,
+                    backgroundColor = theme.colorCommon,
+                    navigationIcon = {
+                        SongListNavigationIcon(onClick = openDrawer)
+                    },
+                    actions = {
+                        SongListActions(mvvmViewModel)
+                    }
+                )
+
+                SongListBody(mvvmViewModel)
+
+                WhatsNewDialog(mvvmViewModel)
+            }
+        }
+    }
+}
+
+@Composable
+private fun SongListBody(
+    mvvmViewModel: MvvmViewModel
+) {
+    val theme = mvvmViewModel.settings.theme
+
     val songList by mvvmViewModel.currentSongList.collectAsState()
     val position by mvvmViewModel.currentSongPosition.collectAsState()
 
@@ -72,57 +141,88 @@ private fun Content(
         fontSizeDp.toSp()
     }
 
-    val visibleArtist =
-        if (artist.length <= MAX_ARTIST_LENGTH)
-            artist
-        else
-            artist.take(MAX_ARTIST_LENGTH - 1) + "…"
-
-    Column(
-        modifier = Modifier
-            .background(theme.colorBg)
-            .fillMaxSize()
-    ) {
-        TopAppBar(
-            title = {
-                Text(text = visibleArtist)
-            },
-            backgroundColor = theme.colorCommon,
-            navigationIcon = {
-                SongListNavigationIcon(onClick = openDrawer)
-            },
-            actions = {
-                SongListActions(mvvmViewModel = mvvmViewModel)
-            }
-        )
-        if (songList.isNotEmpty()) {
-            val listState = rememberLazyListState()
-            val coroutineScope = rememberCoroutineScope()
-            LazyColumn(
-                state = listState
-            ) {
-                itemsIndexed(songList) { index, song ->
-                    SongItem(song, theme, fontSizeSp) {
-                        println("selected: ${song.artist} - ${song.title}")
-                        mvvmViewModel.selectSong(index)
-                        mvvmViewModel.selectScreen(CurrentScreenVariant.SONG_TEXT)
-                    }
-                }
-                coroutineScope.launch {
-                    listState.scrollToItem(position)
+    if (songList.isNotEmpty()) {
+        val listState = rememberLazyListState()
+        val coroutineScope = rememberCoroutineScope()
+        LazyColumn(
+            state = listState
+        ) {
+            itemsIndexed(songList) { index, song ->
+                SongItem(song, theme, fontSizeSp) {
+                    println("selected: ${song.artist} - ${song.title}")
+                    mvvmViewModel.selectSong(index)
+                    mvvmViewModel.selectScreen(CurrentScreenVariant.SONG_TEXT)
                 }
             }
-        } else {
-            CommonSongListStub(fontSizeSp, theme)
+            coroutineScope.launch {
+                listState.scrollToItem(position)
+            }
         }
-        WhatsNewDialog(mvvmViewModel)
+    } else {
+        CommonSongListStub(fontSizeSp, theme)
     }
 }
 
 @Composable
 private fun AppDrawer(
     mvvmViewModel: MvvmViewModel,
-    closeDrawer: () -> Unit
+    onCloseDrawer: () -> Unit
+) {
+    val theme = mvvmViewModel.settings.theme
+
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        val W = this.maxWidth
+        val H = this.maxHeight
+
+        if (W < H) {
+            Column(
+                modifier = Modifier
+                    .background(theme.colorMain)
+                    .fillMaxSize()
+            ) {
+                TopAppBar(
+                    title = {
+                        Text(text = stringResource(R.string.menu))
+                    },
+                    backgroundColor = theme.colorCommon,
+                    navigationIcon = {
+                        SongListNavigationIcon(onClick = onCloseDrawer)
+                    }
+                )
+                SongTextMenuBody(
+                    mvvmViewModel = mvvmViewModel,
+                    onCloseDrawer = onCloseDrawer
+                )
+            }
+        } else {
+            Row(
+                modifier = Modifier
+                    .background(theme.colorMain)
+                    .fillMaxSize()
+            ) {
+                SideAppBar(
+                    title = stringResource(R.string.menu),
+                    backgroundColor = theme.colorCommon,
+                    navigationIcon = {
+                        SongListNavigationIcon(onClick = onCloseDrawer)
+                    }
+                )
+                SongTextMenuBody(
+                    mvvmViewModel = mvvmViewModel,
+                    onCloseDrawer = onCloseDrawer
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun SongTextMenuBody(
+    mvvmViewModel: MvvmViewModel,
+    onCloseDrawer: () -> Unit
 ) {
     val theme = mvvmViewModel.settings.theme
     val artistList by mvvmViewModel.artistList.collectAsState()
@@ -133,29 +233,13 @@ private fun AppDrawer(
         fontSizeDp.toSp()
     }
 
-    Column(
-        modifier = Modifier
-            .background(theme.colorMain)
-            .fillMaxWidth()
-            .fillMaxHeight()
-    ) {
-        TopAppBar(
-            title = {
-                Text(text = "Меню")
-            },
-            backgroundColor = theme.colorCommon,
-            navigationIcon = {
-                SongListNavigationIcon(onClick = closeDrawer)
-            }
-        )
-        LazyColumn {
-            items(artistList) { artist ->
-                ArtistItem(artist, fontSizeSp, theme) {
-                    mvvmViewModel.selectArtist(artist) {
-                        mvvmViewModel.selectSong(0)
-                    }
-                    closeDrawer()
+    LazyColumn {
+        items(artistList) { artist ->
+            ArtistItem(artist, fontSizeSp, theme) {
+                mvvmViewModel.selectArtist(artist) {
+                    mvvmViewModel.selectSong(0)
                 }
+                onCloseDrawer()
             }
         }
     }

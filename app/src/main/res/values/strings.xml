@@ -215,4 +215,5 @@
 
     <string name="thanks_for_donation">Спасибо за Ваше пожертвование</string>
     <string name="comment_cannot_be_empty">Комментарий не должен быть пустым</string>
+    <string name="menu">Меню</string>
 </resources>
