@@ -15,7 +15,9 @@ import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.helpers.DONATIONS
 import jatx.russianrocksongbook.helpers.SKUS
+import jatx.russianrocksongbook.preferences.Theme
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.sideappbar.SideAppBar
 
 @Composable
 fun DonationScreen(mvvmViewModel: MvvmViewModel) {
@@ -25,112 +27,156 @@ fun DonationScreen(mvvmViewModel: MvvmViewModel) {
         mvvmViewModel.purchaseItem(SKUS[index])
     }
 
-    Column(
+    BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = theme.colorBg)
     ) {
-        TopAppBar(
-            title = {
-                Text(text = stringResource(id = R.string.donation))
-            },
-            backgroundColor = theme.colorCommon,
-            navigationIcon = {
-                IconButton(onClick = {
-                    mvvmViewModel.back { }
-                }) {
-                    Icon(painterResource(id = R.drawable.ic_back), "")
-                }
-            }
-        )
+        val W = this.maxWidth
+        val H = this.minHeight
 
-        val configuration = LocalConfiguration.current
-        when (configuration.orientation) {
-            Configuration.ORIENTATION_PORTRAIT -> {
-                LazyColumn(
-                    modifier = Modifier
-                        .weight(1.0f)
-                        .padding(4.dp)
-                ) {
-                    itemsIndexed(DONATIONS) { index, value ->
-                        Button(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(50.dp),
-                            colors = ButtonDefaults
-                                .buttonColors(
-                                    backgroundColor = theme.colorCommon,
-                                    contentColor = theme.colorMain
-                                ),
-                            onClick = {
-                                onPurchaseClick(index)
-                            }) {
-                            Text(text = "Пожертвовать $value\$")
+        if (W < H) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = theme.colorBg)
+            ) {
+                TopAppBar(
+                    title = {
+                        Text(text = stringResource(id = R.string.donation))
+                    },
+                    backgroundColor = theme.colorCommon,
+                    navigationIcon = {
+                        IconButton(onClick = {
+                            mvvmViewModel.back { }
+                        }) {
+                            Icon(painterResource(id = R.drawable.ic_back), "")
                         }
-                        Divider(
-                            color = theme.colorBg,
-                            thickness = 4.dp
-                        )
                     }
+                )
+                DonationBodyPortrait(
+                    theme = theme,
+                    onPurchaseClick = onPurchaseClick
+                )
+            }
+        } else {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = theme.colorBg)
+            ) {
+                SideAppBar(
+                    title = stringResource(id = R.string.donation),
+                    backgroundColor = theme.colorCommon,
+                    navigationIcon = {
+                        CommonNavigationIcon(mvvmViewModel)
+                    }
+                )
+                DonationBodyLandscape(
+                    theme = theme,
+                    onPurchaseClick = onPurchaseClick
+                )
+            }
+        }
+    }
+
+
+}
+
+@Composable
+private fun DonationBodyPortrait(
+    theme: Theme,
+    onPurchaseClick: (Int) -> Unit
+) {
+    Column {
+        LazyColumn(
+            modifier = Modifier
+                .weight(1.0f)
+                .padding(4.dp)
+        ) {
+            itemsIndexed(DONATIONS) { index, value ->
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
+                    colors = ButtonDefaults
+                        .buttonColors(
+                            backgroundColor = theme.colorCommon,
+                            contentColor = theme.colorMain
+                        ),
+                    onClick = {
+                        onPurchaseClick(index)
+                    }) {
+                    Text(text = "Пожертвовать $value\$")
+                }
+                Divider(
+                    color = theme.colorBg,
+                    thickness = 4.dp
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun DonationBodyLandscape(
+    theme: Theme,
+    onPurchaseClick: (Int) -> Unit
+) {
+    Column(Modifier.fillMaxSize().padding(end = 2.dp)) {
+        Row(
+            modifier = Modifier
+                .weight(1.0f)
+        ) {
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1.0f)
+                    .padding(4.dp)
+            ) {
+                itemsIndexed(DONATIONS.take(4)) { index, value ->
+                    Button(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp),
+                        colors = ButtonDefaults
+                            .buttonColors(
+                                backgroundColor = theme.colorCommon,
+                                contentColor = theme.colorMain
+                            ),
+                        onClick = {
+                            onPurchaseClick(index)
+                        }) {
+                        Text(text = "Пожертвовать $value\$")
+                    }
+                    Divider(
+                        color = theme.colorBg,
+                        thickness = 4.dp
+                    )
                 }
             }
-            else -> {
-                Row(
-                    modifier = Modifier
-                        .weight(1.0f)
-                ) {
-                    LazyColumn(
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1.0f)
+                    .padding(4.dp)
+            ) {
+                itemsIndexed(DONATIONS.takeLast(4)) { index, value ->
+                    Button(
                         modifier = Modifier
-                            .weight(1.0f)
-                            .padding(4.dp)
-                    ) {
-                        itemsIndexed(DONATIONS.take(4)) { index, value ->
-                            Button(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(50.dp),
-                                colors = ButtonDefaults
-                                    .buttonColors(
-                                        backgroundColor = theme.colorCommon,
-                                        contentColor = theme.colorMain
-                                    ),
-                                onClick = {
-                                    onPurchaseClick(index)
-                                }) {
-                                Text(text = "Пожертвовать $value\$")
-                            }
-                            Divider(
-                                color = theme.colorBg,
-                                thickness = 4.dp
-                            )
-                        }
+                            .fillMaxWidth()
+                            .height(50.dp),
+                        colors = ButtonDefaults
+                            .buttonColors(
+                                backgroundColor = theme.colorCommon,
+                                contentColor = theme.colorMain
+                            ),
+                        onClick = {
+                            onPurchaseClick(index + 4)
+                        }) {
+                        Text(text = "Пожертвовать $value\$")
                     }
-                    LazyColumn(
-                        modifier = Modifier
-                            .weight(1.0f)
-                            .padding(4.dp)
-                    ) {
-                        itemsIndexed(DONATIONS.takeLast(4)) { index, value ->
-                            Button(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(50.dp),
-                                colors = ButtonDefaults
-                                    .buttonColors(
-                                        backgroundColor = theme.colorCommon,
-                                        contentColor = theme.colorMain
-                                    ),
-                                onClick = {
-                                    onPurchaseClick(index + 4)
-                                }) {
-                                Text(text = "Пожертвовать $value\$")
-                            }
-                            Divider(
-                                color = theme.colorBg,
-                                thickness = 4.dp
-                            )
-                        }
-                    }
+                    Divider(
+                        color = theme.colorBg,
+                        thickness = 4.dp
+                    )
                 }
             }
         }
