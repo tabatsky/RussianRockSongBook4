@@ -2,9 +2,9 @@ package jatx.russianrocksongbook.helpers
 
 import android.app.Activity
 import android.util.Log
+import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import com.android.billingclient.api.*
-import jatx.russianrocksongbook.MainActivity
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import java.util.ArrayList
@@ -26,7 +26,7 @@ class DonationHelper @Inject constructor(
     private val activity: Activity
 ): PurchasesUpdatedListener {
     private val mvvmViewModel: MvvmViewModel? by lazy {
-        if (activity is MainActivity) {
+        if (activity is ComponentActivity) {
             val viewModel: MvvmViewModel by activity.viewModels()
             viewModel
         } else {
