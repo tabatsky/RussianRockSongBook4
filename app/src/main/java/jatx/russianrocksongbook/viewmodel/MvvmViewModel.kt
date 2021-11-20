@@ -128,16 +128,27 @@ class MvvmViewModel @Inject constructor(
             CurrentScreenVariant.CLOUD_SONG_TEXT -> {
                 selectScreen(CurrentScreenVariant.CLOUD_SEARCH, true)
             }
+            CurrentScreenVariant.SONG_TEXT -> {
+                if (currentArtist.value != ARTIST_FAVORITE) {
+                    selectScreen(CurrentScreenVariant.SONG_LIST)
+                } else {
+                    selectScreen(CurrentScreenVariant.FAVORITE)
+                }
+            }
             else -> {
-                selectScreen(CurrentScreenVariant.SONG_LIST, true)
+                if (currentArtist.value != ARTIST_FAVORITE) {
+                    selectScreen(CurrentScreenVariant.SONG_LIST, false)
+                } else {
+                    selectScreen(CurrentScreenVariant.FAVORITE, false)
+                }
             }
         }
     }
 
-    fun selectScreen(screen: CurrentScreenVariant, isBack: Boolean = false) {
+    fun selectScreen(screen: CurrentScreenVariant, isBackFromSong: Boolean = false) {
         _currentScreenVariant.value = screen
         Log.e("select screen", currentScreenVariant.value.toString())
-        if (screen == CurrentScreenVariant.SONG_LIST && !isBack) {
+        if (screen == CurrentScreenVariant.SONG_LIST && !isBackFromSong) {
             getArtistsDisposable?.apply {
                 if (!this.isDisposed) this.dispose()
             }
@@ -161,7 +172,7 @@ class MvvmViewModel @Inject constructor(
                 }
             selectArtist(ARTIST_FAVORITE) {}
         }
-        if (screen == CurrentScreenVariant.CLOUD_SEARCH && !isBack) {
+        if (screen == CurrentScreenVariant.CLOUD_SEARCH && !isBackFromSong) {
             cloudSearch("", OrderBy.BY_ID_DESC)
             selectCloudSong(0)
         }
@@ -208,7 +219,7 @@ class MvvmViewModel @Inject constructor(
         forceOnSuccess: Boolean = false,
         onSuccess: () -> Unit
     ) {
-        println("selected: $artist")
+        Log.e("select artist", artist)
         showSongsDisposable?.apply {
             if (!this.isDisposed) this.dispose()
         }
