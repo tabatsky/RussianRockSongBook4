@@ -496,7 +496,7 @@ private fun CloudSongTextPanelContent(
     onDislikeClick: () -> Unit,
     onDislikeLongClick: () -> Unit
 ) {
-    val A = if (W < H) W * 3.0f / 21 else W * 0.5f * 3.0f / 21
+    val A = if (W < H) W * 3.0f / 21 else H * 3.0f / 21
 
     if (listenToMusicVariant.isYandex) {
         YandexMusicButton(
