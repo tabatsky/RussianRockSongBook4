@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.dqt.libs.chorddroid.classes.ChordLibrary
 import jatx.clickablewordstextview.ClickableWordsTextView
 import jatx.clickablewordstextview.OnWordClickListener
 import jatx.clickablewordstextview.Word
@@ -336,6 +337,8 @@ private fun CloudSongTextViewer(
         },
         update = { view ->
             view.text = cloudSong.text
+            view.actualWordMappings = ChordLibrary.chordMappings
+            view.actualWordSet = ChordLibrary.baseChords.keys
             view.setTextColor(theme.colorMain.toArgb())
             view.setBackgroundColor(theme.colorBg.toArgb())
             view.textSize = fontSizeTextSp.value
