@@ -1,11 +1,9 @@
 package jatx.russianrocksongbook.view
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,9 +13,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.preferences.Theme
+import jatx.russianrocksongbook.preferences.colorDarkYellow
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.sideappbar.SideAppBar
 
 val COMMON_APP_BAR_WIDTH = 72.dp
 
@@ -44,12 +45,23 @@ fun CommonPanelDivider(W: Dp, H: Dp, theme: Theme) {
 }
 
 @Composable
-fun CommonNavigationIcon(mvvmViewModel: MvvmViewModel) {
-    IconButton(onClick = {
-        mvvmViewModel.back { }
-    }) {
-        Icon(painterResource(id = R.drawable.ic_back), "")
+fun CommonIconButton(
+    @DrawableRes resId: Int,
+    onClick: () -> Unit
+) {
+    IconButton(onClick = onClick) {
+        Icon(painterResource(id = resId), "")
     }
+}
+
+@Composable
+fun CommonBackButton(
+    mvvmViewModel: MvvmViewModel = viewModel()
+) {
+    CommonIconButton(
+        resId = R.drawable.ic_back,
+        onClick = { mvvmViewModel.back() }
+    )
 }
 
 @Composable
@@ -69,4 +81,34 @@ fun CommonSongListStub(
             color = theme.colorMain
         )
     }
+}
+
+@Composable
+fun CommonTopAppBar(
+    title: String,
+    navigationIcon: @Composable () -> Unit = { CommonBackButton() }
+) {
+    TopAppBar(
+        title = {
+            Text(text = title)
+        },
+        backgroundColor = colorDarkYellow,
+        navigationIcon = {
+            CommonBackButton()
+        }
+    )
+}
+
+@Composable
+fun CommonSideAppBar(
+    title: String,
+    navigationIcon: @Composable () -> Unit = { CommonBackButton() }
+) {
+    SideAppBar(
+        title = title,
+        backgroundColor = colorDarkYellow,
+        navigationIcon = {
+            CommonBackButton()
+        }
+    )
 }
