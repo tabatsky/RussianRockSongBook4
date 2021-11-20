@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dqt.libs.chorddroid.classes.ChordLibrary
 import jatx.clickablewordstextview.ClickableWordsTextView
 import jatx.clickablewordstextview.OnWordClickListener
@@ -40,8 +41,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+const val interval = 250L
+
 @Composable
-fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
+fun SongTextScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
     val song by mvvmViewModel.currentSong.collectAsState()
     var text by rememberSaveable { mutableStateOf("") }
     song?.apply {
@@ -52,7 +55,6 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
     val isAutoPlayMode = mvvmViewModel.isAutoPlayMode
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
-    val interval = 250L
     val dY = (10 * mvvmViewModel.settings.scrollSpeed).toInt()
 
     val onSongChanged: () -> Unit = {
@@ -154,11 +156,10 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
                         title = {},
                         backgroundColor = theme.colorCommon,
                         navigationIcon = {
-                            CommonNavigationIcon(mvvmViewModel)
+                            CommonBackButton()
                         },
                         actions = {
                             SongTextActions(
-                                mvvmViewModel = mvvmViewModel,
                                 isFavorite = this@apply.favorite,
                                 onSongChanged = onSongChanged
                             )
@@ -178,7 +179,6 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
                         modifier = Modifier
                             .weight(1.0f),
                         isAutoPlayMode = isAutoPlayMode,
-                        interval = interval,
                         dY = dY,
                         onTextChange = onTextChange,
                         onWordClick = onWordClick
@@ -212,11 +212,10 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
                     SideAppBar(
                         backgroundColor = theme.colorCommon,
                         navigationIcon = {
-                            CommonNavigationIcon(mvvmViewModel)
+                            CommonBackButton()
                         },
                         actions = {
                             SongTextActions(
-                                mvvmViewModel = mvvmViewModel,
                                 isFavorite = this@apply.favorite,
                                 onSongChanged = onSongChanged
                             )
@@ -237,7 +236,6 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
                         modifier = Modifier
                             .weight(1.0f),
                         isAutoPlayMode = isAutoPlayMode,
-                        interval = interval,
                         dY = dY,
                         onTextChange = onTextChange,
                         onWordClick = onWordClick
@@ -269,7 +267,7 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
                     showYandexDialog = false
                     mvvmViewModel.openYandexMusic(true)
                 } else {
-                    YandexMusicDialog(mvvmViewModel = mvvmViewModel) {
+                    YandexMusicDialog {
                         showYandexDialog = false
                     }
                 }
@@ -279,7 +277,7 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
                     showVkDialog = false
                     mvvmViewModel.openVkMusic(true)
                 } else {
-                    VkMusicDialog(mvvmViewModel = mvvmViewModel) {
+                    VkMusicDialog {
                         showVkDialog = false
                     }
                 }
@@ -289,14 +287,13 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
                     showYoutubeMusicDialog = false
                     mvvmViewModel.openYoutubeMusic(true)
                 } else {
-                    YoutubeMusicDialog(mvvmViewModel = mvvmViewModel) {
+                    YoutubeMusicDialog {
                         showYoutubeMusicDialog = false
                     }
                 }
             }
             if (showUploadDialog) {
                 UploadDialog(
-                    mvvmViewModel = mvvmViewModel,
                     onConfirm = {
                         mvvmViewModel.uploadCurrentToCloud()
                     },
@@ -306,13 +303,12 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
                 )
             }
             if (showDeleteToTrashDialog) {
-                DeleteToTrashDialog(mvvmViewModel = mvvmViewModel) {
+                DeleteToTrashDialog {
                     showDeleteToTrashDialog = false
                 }
             }
             if (showWarningDialog) {
                 WarningDialog(
-                    mvvmViewModel = mvvmViewModel,
                     onConfirm = { comment ->
                         mvvmViewModel.sendWarning(comment)
                     },
@@ -322,10 +318,7 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
                 )
             }
             if (showChordDialog) {
-                ChordDialog(
-                    mvvmViewModel = mvvmViewModel,
-                    chord = selectedChord
-                ) {
+                ChordDialog(chord = selectedChord) {
                     showChordDialog = false
                 }
             }
@@ -335,7 +328,7 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
 
 @Composable
 private fun SongTextActions(
-    mvvmViewModel: MvvmViewModel,
+    mvvmViewModel: MvvmViewModel = viewModel(),
     isFavorite: Boolean,
     onSongChanged: () -> Unit
 ) {
@@ -451,7 +444,6 @@ private fun SongTextBody(
     theme: Theme,
     modifier: Modifier,
     isAutoPlayMode: StateFlow<Boolean>,
-    interval: Long,
     dY: Int,
     onTextChange: (String) -> Unit,
     onWordClick: (Word) -> Unit
@@ -482,7 +474,6 @@ private fun SongTextBody(
             modifier = Modifier
                 .weight(1.0f),
             isAutoPlayMode = isAutoPlayMode,
-            interval = interval,
             dY = dY,
             onTextChange = onTextChange,
             onWordClick = onWordClick
@@ -500,7 +491,6 @@ private fun SongTextLazyColumn(
     theme: Theme,
     modifier: Modifier,
     isAutoPlayMode: StateFlow<Boolean>,
-    interval: Long,
     dY: Int,
     onTextChange: (String) -> Unit,
     onWordClick: (Word) -> Unit

@@ -9,18 +9,18 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.preferences.ScalePow
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import jatx.sideappbar.SideAppBar
 
 @Composable
-fun AddSongScreen(mvvmViewModel: MvvmViewModel) {
+fun AddSongScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
     val showUploadDialog by mvvmViewModel.showUploadDialogForSong.collectAsState()
     Log.e("show upload", showUploadDialog.toString())
 
@@ -45,10 +45,10 @@ fun AddSongScreen(mvvmViewModel: MvvmViewModel) {
                     },
                     backgroundColor = theme.colorCommon,
                     navigationIcon = {
-                        CommonNavigationIcon(mvvmViewModel)
+                        CommonBackButton()
                     }
                 )
-                AddSongBody(mvvmViewModel)
+                AddSongBody()
             }
         } else {
             Row(
@@ -60,16 +60,15 @@ fun AddSongScreen(mvvmViewModel: MvvmViewModel) {
                     title = stringResource(id = R.string.add_song),
                     backgroundColor = theme.colorCommon,
                     navigationIcon = {
-                        CommonNavigationIcon(mvvmViewModel)
+                        CommonBackButton()
                     }
                 )
-                AddSongBody(mvvmViewModel)
+                AddSongBody()
             }
         }
 
         if (showUploadDialog) {
             UploadDialog(
-                mvvmViewModel = mvvmViewModel,
                 invertColors = true,
                 onConfirm = {
                     mvvmViewModel.hideUploadOfferForSong()
@@ -87,7 +86,7 @@ fun AddSongScreen(mvvmViewModel: MvvmViewModel) {
 
 @Composable
 private fun AddSongBody(
-    mvvmViewModel: MvvmViewModel
+    mvvmViewModel: MvvmViewModel = viewModel()
 ) {
     var artist by rememberSaveable { mutableStateOf("") }
     var title by rememberSaveable { mutableStateOf("") }

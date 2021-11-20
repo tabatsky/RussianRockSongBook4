@@ -10,16 +10,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.preferences.ScalePow
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import jatx.sideappbar.SideAppBar
 
 @Composable
-fun AddArtistScreen(mvvmViewModel: MvvmViewModel) {
+fun AddArtistScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
     val theme = mvvmViewModel.settings.theme
 
     val showUploadDialog by mvvmViewModel.showUploadDialogForDir.collectAsState()
@@ -40,10 +40,10 @@ fun AddArtistScreen(mvvmViewModel: MvvmViewModel) {
                     },
                     backgroundColor = theme.colorCommon,
                     navigationIcon = {
-                        CommonNavigationIcon(mvvmViewModel)
+                        CommonBackButton()
                     }
                 )
-                AddArtistBody(mvvmViewModel)
+                AddArtistBody()
             }
         } else {
             Row {
@@ -51,16 +51,15 @@ fun AddArtistScreen(mvvmViewModel: MvvmViewModel) {
                     title = stringResource(id = R.string.add_artist),
                     backgroundColor = theme.colorCommon,
                     navigationIcon = {
-                        CommonNavigationIcon(mvvmViewModel)
+                        CommonBackButton()
                     }
                 )
-                AddArtistBody(mvvmViewModel)
+                AddArtistBody()
             }
         }
 
         if (showUploadDialog) {
             UploadDialog(
-                mvvmViewModel = mvvmViewModel,
                 onConfirm = {
                     mvvmViewModel.hideUploadOfferForDir()
                     mvvmViewModel.uploadListToCloud()
@@ -77,7 +76,7 @@ fun AddArtistScreen(mvvmViewModel: MvvmViewModel) {
 
 @Composable
 private fun AddArtistBody(
-    mvvmViewModel: MvvmViewModel
+    mvvmViewModel: MvvmViewModel = viewModel()
 ) {
     val theme = mvvmViewModel.settings.theme
 

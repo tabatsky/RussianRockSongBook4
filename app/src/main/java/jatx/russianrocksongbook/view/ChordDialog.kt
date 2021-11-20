@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dqt.libs.chorddroid.classes.ChordLibrary
 import com.dqt.libs.chorddroid.components.ChordTextureView
 import jatx.russianrocksongbook.R
@@ -19,7 +20,7 @@ import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 
 @Composable
 fun ChordDialog(
-    mvvmViewModel: MvvmViewModel,
+    mvvmViewModel: MvvmViewModel = viewModel(),
     chord: String,
     onDismiss: () -> Unit
 ) {

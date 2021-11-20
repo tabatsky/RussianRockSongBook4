@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            CurrentScreen(mvvmViewModel = mvvmViewModel)
+            CurrentScreen()
         }
 
         mvvmViewModel.onRestartApp = ::restartApp

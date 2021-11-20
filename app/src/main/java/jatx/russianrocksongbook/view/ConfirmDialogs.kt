@@ -15,13 +15,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.preferences.ScalePow
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 
 @Composable
 fun ConfirmDialog(
-    mvvmViewModel: MvvmViewModel,
+    mvvmViewModel: MvvmViewModel = viewModel(),
     @StringRes titleRes: Int,
     @StringRes messageRes: Int,
     invertColors: Boolean = false,
@@ -114,10 +115,9 @@ fun ConfirmDialog(
 
 @Composable
 fun DeleteToTrashDialog(
-    mvvmViewModel: MvvmViewModel,
+    mvvmViewModel: MvvmViewModel = viewModel(),
     onDismiss: () -> Unit
 ) = ConfirmDialog(
-    mvvmViewModel = mvvmViewModel,
     titleRes = R.string.dialog_song_to_trash_title,
     messageRes = R.string.dialog_song_to_trash_message,
     onConfirm = {
@@ -128,12 +128,10 @@ fun DeleteToTrashDialog(
 
 @Composable
 fun UploadDialog(
-    mvvmViewModel: MvvmViewModel,
     invertColors: Boolean = false,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) = ConfirmDialog(
-    mvvmViewModel = mvvmViewModel,
     invertColors =  invertColors,
     titleRes = R.string.dialog_upload_to_cloud_title,
     messageRes = R.string.dialog_upload_to_cloud_message,

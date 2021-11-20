@@ -13,12 +13,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.preferences.ScalePow
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 
 @Composable
-fun StartScreen(mvvmViewModel: MvvmViewModel) {
+fun StartScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
     val theme = mvvmViewModel.settings.theme
     val currentProgress by mvvmViewModel.stubCurrentProgress.collectAsState()
     val totalProgress by mvvmViewModel.stubTotalProgress.collectAsState()

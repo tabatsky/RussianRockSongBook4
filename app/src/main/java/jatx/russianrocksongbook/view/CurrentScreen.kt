@@ -2,36 +2,22 @@ package jatx.russianrocksongbook.view
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 
 @Composable
-fun CurrentScreen(mvvmViewModel: MvvmViewModel) {
+fun CurrentScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
     when (mvvmViewModel.currentScreenVariant.collectAsState().value) {
-        CurrentScreenVariant.START -> StartScreen(mvvmViewModel = mvvmViewModel)
-        CurrentScreenVariant.SONG_LIST, CurrentScreenVariant.FAVORITE -> SongListScreen(
-            mvvmViewModel = mvvmViewModel,
-        )
-        CurrentScreenVariant.SONG_TEXT -> SongTextScreen(
-            mvvmViewModel = mvvmViewModel
-        )
-        CurrentScreenVariant.SETTINGS -> SettingsScreen(
-            mvvmViewModel = mvvmViewModel
-        )
-        CurrentScreenVariant.CLOUD_SEARCH -> CloudSearchScreen(
-            mvvmViewModel = mvvmViewModel
-        )
-        CurrentScreenVariant.CLOUD_SONG_TEXT -> CloudSongTextScreen(
-            mvvmViewModel = mvvmViewModel
-        )
-        CurrentScreenVariant.ADD_ARTIST -> AddArtistScreen(
-            mvvmViewModel = mvvmViewModel
-        )
-        CurrentScreenVariant.ADD_SONG -> AddSongScreen(
-            mvvmViewModel = mvvmViewModel
-        )
-        CurrentScreenVariant.DONATION -> DonationScreen(
-            mvvmViewModel = mvvmViewModel
-        )
+        CurrentScreenVariant.START -> StartScreen()
+        CurrentScreenVariant.SONG_LIST, CurrentScreenVariant.FAVORITE ->
+            SongListScreen()
+        CurrentScreenVariant.SONG_TEXT -> SongTextScreen()
+        CurrentScreenVariant.SETTINGS -> SettingsScreen()
+        CurrentScreenVariant.CLOUD_SEARCH -> CloudSearchScreen()
+        CurrentScreenVariant.CLOUD_SONG_TEXT -> CloudSongTextScreen()
+        CurrentScreenVariant.ADD_ARTIST -> AddArtistScreen()
+        CurrentScreenVariant.ADD_SONG -> AddSongScreen()
+        CurrentScreenVariant.DONATION -> DonationScreen()
     }
 }
 
