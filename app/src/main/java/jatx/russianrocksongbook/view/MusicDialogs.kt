@@ -4,10 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -125,6 +122,10 @@ private fun MusicDialog(
                 }) {
                 Text(text = stringResource(id = R.string.yes))
             }
+            Divider(
+                color = theme.colorMain,
+                thickness = 2.dp
+            )
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -140,6 +141,10 @@ private fun MusicDialog(
                 }) {
                 Text(text = stringResource(id = R.string.dont_ask_more))
             }
+            Divider(
+                color = theme.colorMain,
+                thickness = 2.dp
+            )
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -154,6 +159,10 @@ private fun MusicDialog(
                 }) {
                 Text(text = stringResource(id = R.string.cancel))
             }
+            Divider(
+                color = theme.colorMain,
+                thickness = 2.dp
+            )
         }
     )
 }

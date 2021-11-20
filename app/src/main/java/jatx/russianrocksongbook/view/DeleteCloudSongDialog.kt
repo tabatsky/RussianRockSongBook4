@@ -96,6 +96,10 @@ fun DeleteCloudSongDialog(
                 }) {
                 Text(text = stringResource(id = R.string.ok))
             }
+            Divider(
+                color = theme.colorMain,
+                thickness = 2.dp
+            )
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -110,6 +114,10 @@ fun DeleteCloudSongDialog(
                 }) {
                 Text(text = stringResource(id = R.string.cancel))
             }
+            Divider(
+                color = theme.colorMain,
+                thickness = 2.dp
+            )
         }
     )
 }
