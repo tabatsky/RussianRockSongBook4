@@ -6,6 +6,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.documentfile.provider.DocumentFile
+import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -29,6 +31,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import java.io.File
 import javax.inject.Inject
 
+@HiltViewModel
 class MvvmViewModel @Inject constructor(
     @ApplicationContext val context: Context,
     val songRepo: SongRepository,
@@ -36,7 +39,7 @@ class MvvmViewModel @Inject constructor(
     val songBookAPIAdapter: SongBookAPIAdapter,
     val userInfo: UserInfo,
     val fileSystemAdapter: FileSystemAdapter
-    ) {
+): ViewModel() {
     var onOpenYandexMusic: (String) -> Unit = {}
     var onOpenVkMusic: (String) -> Unit = {}
     var onOpenYoutubeMusic: (String) -> Unit = {}

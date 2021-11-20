@@ -2,7 +2,9 @@ package jatx.russianrocksongbook.helpers
 
 import android.app.Activity
 import android.util.Log
+import androidx.activity.viewModels
 import com.android.billingclient.api.*
+import jatx.russianrocksongbook.MainActivity
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import java.util.ArrayList
@@ -21,9 +23,17 @@ val DONATIONS_LANDSCAPE = listOf(
 val SKUS_LANDSCAPE = DONATIONS_LANDSCAPE.map { "donation_$it" }
 
 class DonationHelper @Inject constructor(
-    private val activity: Activity,
-    private val mvvmViewModel: MvvmViewModel
+    private val activity: Activity
 ): PurchasesUpdatedListener {
+    private val mvvmViewModel: MvvmViewModel? by lazy {
+        if (activity is MainActivity) {
+            val viewModel: MvvmViewModel by activity.viewModels()
+            viewModel
+        } else {
+            null
+        }
+    }
+
     private var billingClient: BillingClient = BillingClient
         .newBuilder(activity)
         .enablePendingPurchases()
@@ -99,7 +109,7 @@ class DonationHelper @Inject constructor(
                 billingClient.consumeAsync(consumeParams) { responseCode, _ ->
                     Log.e("consume", responseCode.responseCode.toString())
                     activity.runOnUiThread {
-                        mvvmViewModel.showToast(R.string.thanks_for_donation)
+                        mvvmViewModel?.showToast(R.string.thanks_for_donation)
                     }
                 }
             }
