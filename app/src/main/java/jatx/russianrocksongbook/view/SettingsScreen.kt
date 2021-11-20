@@ -171,7 +171,7 @@ private fun SettingsBodyPortrait(
     onScrollSpeedValueChanged: (Float) -> Unit,
     onSaveClick: () -> Unit
 ) {
-    Column(Modifier.fillMaxSize().padding(2.dp)) {
+    Column(Modifier.fillMaxSize().padding(4.dp)) {
         ThemeRow(
             theme = theme,
             settings = settings,
@@ -288,7 +288,7 @@ private fun SettingsBodyLandscape(
     onScrollSpeedValueChanged: (Float) -> Unit,
     onSaveClick: () -> Unit
 ) {
-    Column(Modifier.fillMaxSize().padding(start = 2.dp, end = 2.dp, top = 2.dp)) {
+    Column(Modifier.fillMaxSize().padding(4.dp)) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
