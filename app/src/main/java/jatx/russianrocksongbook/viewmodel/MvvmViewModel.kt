@@ -122,7 +122,7 @@ class MvvmViewModel @Inject constructor(
         selectScreen(CurrentScreenVariant.SONG_LIST)
     }
 
-    fun back(onFinish: () -> Unit) {
+    fun back(onFinish: () -> Unit = {}) {
         Log.e("current screen", currentScreenVariant.value.toString())
         when (currentScreenVariant.value) {
             CurrentScreenVariant.START, CurrentScreenVariant.SONG_LIST -> {
