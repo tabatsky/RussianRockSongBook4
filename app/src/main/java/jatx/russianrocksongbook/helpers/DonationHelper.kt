@@ -14,6 +14,12 @@ val DONATIONS = listOf(
 
 val SKUS = DONATIONS.map { "donation_$it" }
 
+val DONATIONS_LANDSCAPE = listOf(
+    1, 5, 20, 100, 2, 10, 50, 200
+)
+
+val SKUS_LANDSCAPE = DONATIONS_LANDSCAPE.map { "donation_$it" }
+
 class DonationHelper @Inject constructor(
     private val activity: Activity,
     private val mvvmViewModel: MvvmViewModel

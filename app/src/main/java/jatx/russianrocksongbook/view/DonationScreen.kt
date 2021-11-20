@@ -1,6 +1,5 @@
 package jatx.russianrocksongbook.view
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -8,13 +7,13 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.helpers.DONATIONS
+import jatx.russianrocksongbook.helpers.DONATIONS_LANDSCAPE
 import jatx.russianrocksongbook.helpers.SKUS
+import jatx.russianrocksongbook.helpers.SKUS_LANDSCAPE
 import jatx.russianrocksongbook.preferences.Theme
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import jatx.sideappbar.SideAppBar
@@ -23,8 +22,9 @@ import jatx.sideappbar.SideAppBar
 fun DonationScreen(mvvmViewModel: MvvmViewModel) {
     val theme = mvvmViewModel.settings.theme
 
-    val onPurchaseClick: (Int) -> Unit = { index ->
-        mvvmViewModel.purchaseItem(SKUS[index])
+    val onPurchaseClick: (Int, Boolean) -> Unit = { index, isLandscape ->
+        val sku = if (!isLandscape) SKUS[index] else SKUS_LANDSCAPE[index]
+        mvvmViewModel.purchaseItem(sku)
     }
 
     BoxWithConstraints(
@@ -81,7 +81,7 @@ fun DonationScreen(mvvmViewModel: MvvmViewModel) {
 @Composable
 private fun DonationBodyPortrait(
     theme: Theme,
-    onPurchaseClick: (Int) -> Unit
+    onPurchaseClick: (Int, Boolean) -> Unit
 ) {
     Column {
         LazyColumn(
@@ -100,7 +100,7 @@ private fun DonationBodyPortrait(
                             contentColor = theme.colorMain
                         ),
                     onClick = {
-                        onPurchaseClick(index)
+                        onPurchaseClick(index, false)
                     }) {
                     Text(text = "Пожертвовать $value\$")
                 }
@@ -116,7 +116,7 @@ private fun DonationBodyPortrait(
 @Composable
 private fun DonationBodyLandscape(
     theme: Theme,
-    onPurchaseClick: (Int) -> Unit
+    onPurchaseClick: (Int, Boolean) -> Unit
 ) {
     Column(
         Modifier
@@ -131,7 +131,7 @@ private fun DonationBodyLandscape(
                     .weight(1.0f)
                     .padding(4.dp)
             ) {
-                itemsIndexed(DONATIONS.take(4)) { index, value ->
+                itemsIndexed(DONATIONS_LANDSCAPE.take(4)) { index, value ->
                     Button(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -142,7 +142,7 @@ private fun DonationBodyLandscape(
                                 contentColor = theme.colorMain
                             ),
                         onClick = {
-                            onPurchaseClick(index)
+                            onPurchaseClick(index, true)
                         }) {
                         Text(text = "Пожертвовать $value\$")
                     }
@@ -157,7 +157,7 @@ private fun DonationBodyLandscape(
                     .weight(1.0f)
                     .padding(4.dp)
             ) {
-                itemsIndexed(DONATIONS.takeLast(4)) { index, value ->
+                itemsIndexed(DONATIONS_LANDSCAPE.takeLast(4)) { index, value ->
                     Button(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -168,7 +168,7 @@ private fun DonationBodyLandscape(
                                 contentColor = theme.colorMain
                             ),
                         onClick = {
-                            onPurchaseClick(index + 4)
+                            onPurchaseClick(index + 4, true)
                         }) {
                         Text(text = "Пожертвовать $value\$")
                     }
