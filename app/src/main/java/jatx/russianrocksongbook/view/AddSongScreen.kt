@@ -45,11 +45,7 @@ fun AddSongScreen(mvvmViewModel: MvvmViewModel) {
                     },
                     backgroundColor = theme.colorCommon,
                     navigationIcon = {
-                        IconButton(onClick = {
-                            mvvmViewModel.back { }
-                        }) {
-                            Icon(painterResource(id = R.drawable.ic_back), "")
-                        }
+                        CommonNavigationIcon(mvvmViewModel)
                     }
                 )
                 AddSongBody(mvvmViewModel)
@@ -64,11 +60,7 @@ fun AddSongScreen(mvvmViewModel: MvvmViewModel) {
                     title = stringResource(id = R.string.add_song),
                     backgroundColor = theme.colorCommon,
                     navigationIcon = {
-                        IconButton(onClick = {
-                            mvvmViewModel.back { }
-                        }) {
-                            Icon(painterResource(id = R.drawable.ic_back), "")
-                        }
+                        CommonNavigationIcon(mvvmViewModel)
                     }
                 )
                 AddSongBody(mvvmViewModel)

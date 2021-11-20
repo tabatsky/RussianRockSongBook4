@@ -46,11 +46,7 @@ fun DonationScreen(mvvmViewModel: MvvmViewModel) {
                     },
                     backgroundColor = theme.colorCommon,
                     navigationIcon = {
-                        IconButton(onClick = {
-                            mvvmViewModel.back { }
-                        }) {
-                            Icon(painterResource(id = R.drawable.ic_back), "")
-                        }
+                        CommonNavigationIcon(mvvmViewModel)
                     }
                 )
                 DonationBodyPortrait(
@@ -122,7 +118,10 @@ private fun DonationBodyLandscape(
     theme: Theme,
     onPurchaseClick: (Int) -> Unit
 ) {
-    Column(Modifier.fillMaxSize().padding(end = 2.dp)) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .padding(end = 4.dp)) {
         Row(
             modifier = Modifier
                 .weight(1.0f)
