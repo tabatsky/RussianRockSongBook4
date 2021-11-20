@@ -4,8 +4,8 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
+import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
-import jatx.russianrocksongbook.MainActivity
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import java.io.UnsupportedEncodingException
@@ -16,7 +16,7 @@ class MusicHelper @Inject constructor(
     private val activity: Activity
 ) {
     private val mvvmViewModel: MvvmViewModel? by lazy {
-        if (activity is MainActivity) {
+        if (activity is ComponentActivity) {
             val viewModel: MvvmViewModel by activity.viewModels()
             viewModel
         } else {
