@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.dqt.libs.chorddroid.classes.ChordLibrary
 import com.dqt.libs.chorddroid.components.ChordTextureView
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
@@ -23,10 +24,10 @@ fun ChordDialog(
     onDismiss: () -> Unit
 ) {
     val theme = mvvmViewModel.settings.theme
-    val actualChord = chord
-        .replace("H", "A")
-        .replace("D#", "Eb")
-        .replace("A#", "Bb")
+    var actualChord = chord
+    for (key in ChordLibrary.chordMappings.keys) {
+        actualChord = actualChord.replace(key, ChordLibrary.chordMappings[key] ?: "")
+    }
 
     AlertDialog(
         onDismissRequest = {

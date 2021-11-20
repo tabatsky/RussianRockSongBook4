@@ -11,12 +11,13 @@ import android.text.style.ClickableSpan
 import android.util.AttributeSet
 import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
-import com.dqt.libs.chorddroid.classes.ChordLibrary
 
 class ClickableWordsTextView(context: Context, attrs: AttributeSet?, defStyleAttr: Int):
     AppCompatTextView(context, attrs, defStyleAttr) {
     private var txt: CharSequence? = null
     var onWordClickListener: OnWordClickListener? = null
+    var actualWordSet = setOf<String>()
+    var actualWordMappings = hashMapOf<String, String>()
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context) : this(context, null)
@@ -30,18 +31,22 @@ class ClickableWordsTextView(context: Context, attrs: AttributeSet?, defStyleAtt
         wordList.forEach { word: Word ->
             val clickableSpan = object : ClickableSpan() {
                 override fun onClick(widget: View) {
-                    //Toast.makeText(widget.context, word.toString(), Toast.LENGTH_LONG).show()
-                    onWordClickListener?.onWordClick(word)
+                    var actualWord = word.text
+                    for (key in actualWordMappings.keys) {
+                        actualWord = actualWord.replace(key, actualWordMappings[key] ?: "")
+                    }
+                    if (actualWord in actualWordSet) {
+                        onWordClickListener?.onWordClick(word)
+                    }
                 }
 
                 override fun updateDrawState(ds: TextPaint) {
                     super.updateDrawState(ds)
-                    val actualChord = word
-                        .text
-                        .replace("H", "A")
-                        .replace("D#", "Eb")
-                        .replace("A#", "Bb")
-                    if (actualChord in ChordLibrary.baseChords.keys) {
+                    var actualWord = word.text
+                    for (key in actualWordMappings.keys) {
+                        actualWord = actualWord.replace(key, actualWordMappings[key] ?: "")
+                    }
+                    if (actualWord in actualWordSet) {
                         ds.color = (background as ColorDrawable).color
                         ds.bgColor = currentTextColor
                     } else {

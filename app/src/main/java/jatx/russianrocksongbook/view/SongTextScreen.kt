@@ -1,7 +1,6 @@
 package jatx.russianrocksongbook.view
 
 import android.graphics.Typeface
-import android.util.Log
 import androidx.compose.foundation.MutatePriority
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -26,6 +25,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.dqt.libs.chorddroid.classes.ChordLibrary
 import jatx.clickablewordstextview.ClickableWordsTextView
 import jatx.clickablewordstextview.OnWordClickListener
 import jatx.clickablewordstextview.Word
@@ -56,8 +56,6 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel) {
     val dY = (10 * mvvmViewModel.settings.scrollSpeed).toInt()
 
     val onSongChanged: () -> Unit = {
-        Log.e("event", "song changed")
-
         coroutineScope.launch {
             listState.scrollToItem(
                 index = 0,
@@ -425,6 +423,8 @@ private fun SongTextViewer(
         },
         update = { view ->
             view.text = song.text
+            view.actualWordMappings = ChordLibrary.chordMappings
+            view.actualWordSet = ChordLibrary.baseChords.keys
             view.setTextColor(theme.colorMain.toArgb())
             view.setBackgroundColor(theme.colorBg.toArgb())
             view.textSize = fontSizeTextSp.value
@@ -530,8 +530,6 @@ private fun SongTextLazyColumn(
                 val needToScroll by isAutoPlayMode.collectAsState()
 
                 tailrec suspend fun autoScroll(listState: LazyListState) {
-                    Log.e("launched effect", "autoScroll")
-
                     listState.scroll(MutatePriority.PreventUserInput) {
                         scrollBy(dY.toFloat())
                     }
@@ -542,7 +540,6 @@ private fun SongTextLazyColumn(
 
                 if (needToScroll) {
                     LaunchedEffect(Unit) {
-                        Log.e("launched effect", "start")
                         autoScroll(listState)
                     }
                 }
