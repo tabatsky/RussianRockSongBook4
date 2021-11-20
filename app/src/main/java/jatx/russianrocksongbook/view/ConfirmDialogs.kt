@@ -24,6 +24,7 @@ fun ConfirmDialog(
     mvvmViewModel: MvvmViewModel,
     @StringRes titleRes: Int,
     @StringRes messageRes: Int,
+    invertColors: Boolean = false,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -34,11 +35,14 @@ fun ConfirmDialog(
         fontSizeTitleDp.toSp()
     }
 
+    val colorBg = if (!invertColors) theme.colorBg else theme.colorMain
+    val colorMain = if (!invertColors) theme.colorMain else theme.colorBg
+
     AlertDialog(
         onDismissRequest = {
             onDismiss()
         },
-        backgroundColor = theme.colorMain,
+        backgroundColor = colorMain,
         text = {
             Column(
                 modifier = Modifier
@@ -49,18 +53,18 @@ fun ConfirmDialog(
                 Text(
                     text = stringResource(id = titleRes),
                     textAlign = TextAlign.Center,
-                    color = theme.colorBg,
+                    color = colorBg,
                     fontWeight = FontWeight.W700,
                     fontSize = fontSizeTitleSp
                 )
                 Divider(
-                    color = theme.colorMain,
+                    color = colorMain,
                     thickness = 30.dp
                 )
                 Text(
                     text = stringResource(id = messageRes),
                     textAlign = TextAlign.Center,
-                    color = theme.colorBg,
+                    color = colorBg,
                     fontWeight = FontWeight.W400,
                     fontSize = fontSizeTitleSp * 0.7f
                 )
@@ -74,7 +78,7 @@ fun ConfirmDialog(
                 colors = ButtonDefaults
                     .buttonColors(
                         backgroundColor = theme.colorCommon,
-                        contentColor = theme.colorMain
+                        contentColor = colorMain
                     ),
                 onClick = {
                     onDismiss()
@@ -82,6 +86,10 @@ fun ConfirmDialog(
                 }) {
                 Text(text = stringResource(id = R.string.ok))
             }
+            Divider(
+                color = colorMain,
+                thickness = 2.dp
+            )
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -89,13 +97,17 @@ fun ConfirmDialog(
                 colors = ButtonDefaults
                     .buttonColors(
                         backgroundColor = theme.colorCommon,
-                        contentColor = theme.colorMain
+                        contentColor = colorMain
                     ),
                 onClick = {
                     onDismiss()
                 }) {
                 Text(text = stringResource(id = R.string.cancel))
             }
+            Divider(
+                color = colorMain,
+                thickness = 2.dp
+            )
         }
     )
 }
@@ -117,10 +129,12 @@ fun DeleteToTrashDialog(
 @Composable
 fun UploadDialog(
     mvvmViewModel: MvvmViewModel,
+    invertColors: Boolean = false,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) = ConfirmDialog(
     mvvmViewModel = mvvmViewModel,
+    invertColors =  invertColors,
     titleRes = R.string.dialog_upload_to_cloud_title,
     messageRes = R.string.dialog_upload_to_cloud_message,
     onConfirm = onConfirm,
