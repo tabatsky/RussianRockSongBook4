@@ -93,9 +93,7 @@ fun CommonTopAppBar(
             Text(text = title)
         },
         backgroundColor = colorDarkYellow,
-        navigationIcon = {
-            CommonBackButton()
-        }
+        navigationIcon = navigationIcon
     )
 }
 
@@ -107,8 +105,6 @@ fun CommonSideAppBar(
     SideAppBar(
         title = title,
         backgroundColor = colorDarkYellow,
-        navigationIcon = {
-            CommonBackButton()
-        }
+        navigationIcon = navigationIcon
     )
 }
