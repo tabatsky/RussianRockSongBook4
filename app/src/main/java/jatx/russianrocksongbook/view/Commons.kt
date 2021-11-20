@@ -85,26 +85,34 @@ fun CommonSongListStub(
 
 @Composable
 fun CommonTopAppBar(
-    title: String,
-    navigationIcon: @Composable () -> Unit = { CommonBackButton() }
+    title: String? = null,
+    navigationIcon: @Composable () -> Unit = { CommonBackButton() },
+    actions: @Composable RowScope.() -> Unit = {}
 ) {
     TopAppBar(
         title = {
-            Text(text = title)
+            title?.apply {
+                Text(text = this)
+            }
         },
         backgroundColor = colorDarkYellow,
-        navigationIcon = navigationIcon
+        navigationIcon = navigationIcon,
+        actions = actions
     )
 }
 
 @Composable
 fun CommonSideAppBar(
-    title: String,
-    navigationIcon: @Composable () -> Unit = { CommonBackButton() }
+    title: String? = null,
+    navigationIcon: @Composable () -> Unit = { CommonBackButton() },
+    actions: @Composable ColumnScope.() -> Unit = {},
+    appBarWidth: Dp = COMMON_APP_BAR_WIDTH
 ) {
     SideAppBar(
         title = title,
         backgroundColor = colorDarkYellow,
-        navigationIcon = navigationIcon
+        navigationIcon = navigationIcon,
+        actions = actions,
+        appBarWidth = appBarWidth
     )
 }

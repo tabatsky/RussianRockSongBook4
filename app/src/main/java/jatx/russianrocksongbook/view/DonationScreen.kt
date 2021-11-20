@@ -4,7 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Divider
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -17,7 +20,6 @@ import jatx.russianrocksongbook.helpers.SKUS
 import jatx.russianrocksongbook.helpers.SKUS_LANDSCAPE
 import jatx.russianrocksongbook.preferences.Theme
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
-import jatx.sideappbar.SideAppBar
 
 @Composable
 fun DonationScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
@@ -41,15 +43,7 @@ fun DonationScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
                     .fillMaxSize()
                     .background(color = theme.colorBg)
             ) {
-                TopAppBar(
-                    title = {
-                        Text(text = stringResource(id = R.string.donation))
-                    },
-                    backgroundColor = theme.colorCommon,
-                    navigationIcon = {
-                        CommonBackButton()
-                    }
-                )
+                CommonTopAppBar(title = stringResource(id = R.string.donation))
                 DonationBodyPortrait(
                     theme = theme,
                     onPurchaseClick = onPurchaseClick
@@ -61,13 +55,7 @@ fun DonationScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
                     .fillMaxSize()
                     .background(color = theme.colorBg)
             ) {
-                SideAppBar(
-                    title = stringResource(id = R.string.donation),
-                    backgroundColor = theme.colorCommon,
-                    navigationIcon = {
-                        CommonBackButton()
-                    }
-                )
+                CommonSideAppBar(title = stringResource(id = R.string.donation))
                 DonationBodyLandscape(
                     theme = theme,
                     onPurchaseClick = onPurchaseClick
