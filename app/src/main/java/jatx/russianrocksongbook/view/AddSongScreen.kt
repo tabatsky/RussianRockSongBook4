@@ -17,7 +17,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.preferences.ScalePow
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
-import jatx.sideappbar.SideAppBar
 
 @Composable
 fun AddSongScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
@@ -39,15 +38,7 @@ fun AddSongScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
                     .fillMaxSize()
                     .background(color = theme.colorBg)
             ) {
-                TopAppBar(
-                    title = {
-                        Text(text = stringResource(id = R.string.add_song))
-                    },
-                    backgroundColor = theme.colorCommon,
-                    navigationIcon = {
-                        CommonBackButton()
-                    }
-                )
+                CommonTopAppBar(title = stringResource(id = R.string.add_song))
                 AddSongBody()
             }
         } else {
@@ -56,13 +47,7 @@ fun AddSongScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
                     .fillMaxSize()
                     .background(color = theme.colorBg)
             ) {
-                SideAppBar(
-                    title = stringResource(id = R.string.add_song),
-                    backgroundColor = theme.colorCommon,
-                    navigationIcon = {
-                        CommonBackButton()
-                    }
-                )
+                CommonSideAppBar(title = stringResource(id = R.string.add_song))
                 AddSongBody()
             }
         }

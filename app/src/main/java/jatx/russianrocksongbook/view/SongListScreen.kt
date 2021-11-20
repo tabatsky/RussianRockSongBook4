@@ -23,7 +23,6 @@ import jatx.russianrocksongbook.domain.Song
 import jatx.russianrocksongbook.preferences.ScalePow
 import jatx.russianrocksongbook.preferences.Theme
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
-import jatx.sideappbar.SideAppBar
 import kotlinx.coroutines.launch
 
 private const val MAX_ARTIST_LENGTH = 12
@@ -81,11 +80,8 @@ private fun SongListContent(
                     .background(theme.colorBg)
                     .fillMaxSize()
             ) {
-                TopAppBar(
-                    title = {
-                        Text(text = visibleArtist)
-                    },
-                    backgroundColor = theme.colorCommon,
+                CommonTopAppBar(
+                    title = visibleArtist,
                     navigationIcon = {
                         SongListNavigationIcon(onClick = openDrawer)
                     },
@@ -104,9 +100,8 @@ private fun SongListContent(
                     .background(theme.colorBg)
                     .fillMaxSize()
             ) {
-                SideAppBar(
+                CommonSideAppBar(
                     title = visibleArtist,
-                    backgroundColor = theme.colorCommon,
                     navigationIcon = {
                         SongListNavigationIcon(onClick = openDrawer)
                     },
@@ -180,11 +175,8 @@ private fun SongListAppDrawer(
                     .background(theme.colorMain)
                     .fillMaxSize()
             ) {
-                TopAppBar(
-                    title = {
-                        Text(text = stringResource(R.string.menu))
-                    },
-                    backgroundColor = theme.colorCommon,
+                CommonTopAppBar(
+                    title = stringResource(R.string.menu),
                     navigationIcon = {
                         SongListNavigationIcon(onClick = onCloseDrawer)
                     }
@@ -197,9 +189,8 @@ private fun SongListAppDrawer(
                     .background(theme.colorMain)
                     .fillMaxSize()
             ) {
-                SideAppBar(
+                CommonSideAppBar(
                     title = stringResource(R.string.menu),
-                    backgroundColor = theme.colorCommon,
                     navigationIcon = {
                         SongListNavigationIcon(onClick = onCloseDrawer)
                     }

@@ -25,7 +25,6 @@ import jatx.russianrocksongbook.data.ARTIST_CLOUD_SONGS
 import jatx.russianrocksongbook.data.ARTIST_DONATION
 import jatx.russianrocksongbook.preferences.*
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
-import jatx.sideappbar.SideAppBar
 
 @Composable
 fun SettingsScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
@@ -98,15 +97,7 @@ fun SettingsScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
                     .fillMaxSize()
                     .background(color = theme.colorBg)
             ) {
-                TopAppBar(
-                    title = {
-                        Text(text = stringResource(id = R.string.title_settings))
-                    },
-                    backgroundColor = theme.colorCommon,
-                    navigationIcon = {
-                        CommonBackButton()
-                    }
-                )
+                CommonTopAppBar(title = stringResource(id = R.string.title_settings))
                 SettingsBodyPortrait(
                     theme = theme,
                     settings = settings,
@@ -127,13 +118,7 @@ fun SettingsScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
                     .fillMaxSize()
                     .background(color = theme.colorBg)
             ) {
-                SideAppBar(
-                    title = stringResource(id = R.string.title_settings),
-                    backgroundColor = theme.colorCommon,
-                    navigationIcon = {
-                        CommonBackButton()
-                    }
-                )
+                CommonSideAppBar(title = stringResource(id = R.string.title_settings))
                 SettingsBodyLandscape(
                     theme = theme,
                     settings = settings,

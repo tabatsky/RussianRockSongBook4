@@ -26,7 +26,6 @@ import jatx.russianrocksongbook.domain.CloudSong
 import jatx.russianrocksongbook.preferences.ScalePow
 import jatx.russianrocksongbook.preferences.Theme
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
-import jatx.sideappbar.SideAppBar
 import kotlinx.coroutines.launch
 
 @Composable
@@ -46,16 +45,7 @@ fun CloudSearchScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
                     .fillMaxSize()
                     .background(theme.colorBg)
             ) {
-                TopAppBar(
-                    title = {
-                        Text(text = stringResource(id = R.string.title_activity_cloud_search))
-                    },
-                    backgroundColor = theme.colorCommon,
-                    navigationIcon = {
-                        CommonBackButton()
-                    }
-                )
-
+                CommonTopAppBar(title = stringResource(id = R.string.title_activity_cloud_search))
                 CloudSearchBody(
                     modifier = Modifier.weight(1.0f),
                     isPortrait = true
@@ -67,14 +57,7 @@ fun CloudSearchScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
                     .fillMaxSize()
                     .background(theme.colorBg)
             ) {
-                SideAppBar(
-                    title = stringResource(id = R.string.title_activity_cloud_search),
-                    backgroundColor = theme.colorCommon,
-                    navigationIcon = {
-                        CommonBackButton()
-                    }
-                )
-
+                CommonSideAppBar(title = stringResource(id = R.string.title_activity_cloud_search))
                 CloudSearchBody(
                     modifier = Modifier.weight(1.0f),
                     isPortrait = false

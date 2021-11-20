@@ -31,7 +31,6 @@ import jatx.russianrocksongbook.preferences.ListenToMusicVariant
 import jatx.russianrocksongbook.preferences.ScalePow
 import jatx.russianrocksongbook.preferences.Theme
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
-import jatx.sideappbar.SideAppBar
 import kotlinx.coroutines.launch
 
 private val CLOUD_SONG_TEXT_APP_BAR_WIDTH = 96.dp
@@ -127,12 +126,7 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
                         .fillMaxSize()
                         .background(color = theme.colorBg)
                 ) {
-                    TopAppBar(
-                        title = {},
-                        backgroundColor = theme.colorCommon,
-                        navigationIcon = {
-                            CommonBackButton()
-                        },
+                    CommonTopAppBar(
                         actions = {
                             CloudSongTextActions(
                                 onCloudSongChanged = onCloudSongChanged
@@ -177,11 +171,7 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
                         .fillMaxSize()
                         .background(color = theme.colorBg)
                 ) {
-                    SideAppBar(
-                        backgroundColor = theme.colorCommon,
-                        navigationIcon = {
-                            CommonBackButton()
-                        },
+                    CommonSideAppBar(
                         actions = {
                             CloudSongTextActions(
                                 onCloudSongChanged = onCloudSongChanged

@@ -3,7 +3,9 @@ package jatx.russianrocksongbook.view
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -16,7 +18,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.preferences.ScalePow
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
-import jatx.sideappbar.SideAppBar
 
 @Composable
 fun AddArtistScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
@@ -34,26 +35,12 @@ fun AddArtistScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
 
         if (W < H) {
             Column {
-                TopAppBar(
-                    title = {
-                        Text(text = stringResource(id = R.string.add_artist))
-                    },
-                    backgroundColor = theme.colorCommon,
-                    navigationIcon = {
-                        CommonBackButton()
-                    }
-                )
+                CommonTopAppBar(title = stringResource(id = R.string.add_artist))
                 AddArtistBody()
             }
         } else {
             Row {
-                SideAppBar(
-                    title = stringResource(id = R.string.add_artist),
-                    backgroundColor = theme.colorCommon,
-                    navigationIcon = {
-                        CommonBackButton()
-                    }
-                )
+                CommonSideAppBar(title = stringResource(id = R.string.add_artist))
                 AddArtistBody()
             }
         }
