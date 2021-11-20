@@ -23,6 +23,10 @@ const val KEY_YANDEX_MUSIC_DONT_ASK = "yandexMusicDontAsk"
 
 const val ARTIST_KINO = "Кино"
 
+val colorLightYellow = Color(0xFFFFFFBB)
+val colorBlack = Color(0xFF000000)
+val colorDarkYellow = Color(0xFF777755)
+
 @SuppressLint("ApplySharedPref")
 class Settings @Inject constructor(
     @ApplicationContext private val context: Context
@@ -148,13 +152,13 @@ enum class Theme(
     val colorCommon: Color
 ) {
     DARK(
-        Color(0xFFFFFFBB),
-        Color(0xFF000000),
-        Color(0xFF777755)
+        colorLightYellow,
+        colorBlack,
+        colorDarkYellow
     ), LIGHT(
-        Color(0xFF000000),
-        Color(0xFFFFFFBB),
-        Color(0xFF777755)
+        colorBlack,
+        colorLightYellow,
+        colorDarkYellow
     )
 }
 
