@@ -1,6 +1,8 @@
 package jatx.russianrocksongbook.data.impl
 
+import dagger.hilt.components.SingletonComponent
 import io.reactivex.Flowable
+import it.czerwinski.android.hilt.annotations.BoundTo
 import jatx.russianrocksongbook.data.*
 import jatx.russianrocksongbook.db.dao.SongDao
 import jatx.russianrocksongbook.domain.CloudSong
@@ -17,6 +19,7 @@ val predefinedList = listOf(
     ARTIST_DONATION
 )
 
+@BoundTo(supertype = SongRepository::class, component = SingletonComponent::class)
 class SongRepositoryImpl @Inject constructor(
     private val songDao: SongDao
 ): SongRepository {

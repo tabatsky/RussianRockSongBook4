@@ -1,7 +1,9 @@
 package jatx.russianrocksongbook.data.impl
 
 import com.google.gson.Gson
+import dagger.hilt.components.SingletonComponent
 import io.reactivex.Single
+import it.czerwinski.android.hilt.annotations.BoundTo
 import jatx.russianrocksongbook.api.RetrofitClient
 import jatx.russianrocksongbook.api.gson.ResultWithAddSongListResultDataGson
 import jatx.russianrocksongbook.api.gson.ResultWithoutDataGson
@@ -14,6 +16,7 @@ import jatx.russianrocksongbook.domain.Song
 import jatx.russianrocksongbook.preferences.UserInfo
 import javax.inject.Inject
 
+@BoundTo(supertype = SongBookAPIAdapter::class, component = SingletonComponent::class)
 class SongBookAPIAdapterImpl @Inject constructor(
     private val retrofitClient: RetrofitClient
 ): SongBookAPIAdapter {

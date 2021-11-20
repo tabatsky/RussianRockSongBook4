@@ -3,6 +3,8 @@ package jatx.russianrocksongbook.data.impl
 import android.content.Context
 import androidx.documentfile.provider.DocumentFile
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import it.czerwinski.android.hilt.annotations.BoundTo
 import jatx.russianrocksongbook.data.FileSystemAdapter
 import jatx.russianrocksongbook.domain.Song
 import java.io.File
@@ -10,6 +12,7 @@ import java.io.FileNotFoundException
 import java.util.*
 import javax.inject.Inject
 
+@BoundTo(supertype = FileSystemAdapter::class, component = SingletonComponent::class)
 class FileSystemAdapterImpl @Inject constructor(
     @ApplicationContext val context: Context
 ): FileSystemAdapter {

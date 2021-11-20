@@ -58,6 +58,8 @@ dependencies {
 
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
+    implementation 'it.czerwinski.android.hilt:hilt-extensions:1.2.0'
+    kapt 'it.czerwinski.android.hilt:hilt-processor:1.2.0'
 
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-runtime:$room_version"
