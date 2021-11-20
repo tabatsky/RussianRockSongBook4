@@ -16,9 +16,69 @@ import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.preferences.ScalePow
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.sideappbar.SideAppBar
 
 @Composable
 fun AddArtistScreen(mvvmViewModel: MvvmViewModel) {
+    val theme = mvvmViewModel.settings.theme
+
+    val showUploadDialog by mvvmViewModel.showUploadDialogForDir.collectAsState()
+    val uploadArtist by mvvmViewModel.uploadArtist.collectAsState()
+
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        val W = this.maxWidth
+        val H = this.maxHeight
+
+        if (W < H) {
+            Column {
+                TopAppBar(
+                    title = {
+                        Text(text = stringResource(id = R.string.add_artist))
+                    },
+                    backgroundColor = theme.colorCommon,
+                    navigationIcon = {
+                        CommonNavigationIcon(mvvmViewModel)
+                    }
+                )
+                AddArtistBody(mvvmViewModel)
+            }
+        } else {
+            Row {
+                SideAppBar(
+                    title = stringResource(id = R.string.add_artist),
+                    backgroundColor = theme.colorCommon,
+                    navigationIcon = {
+                        CommonNavigationIcon(mvvmViewModel)
+                    }
+                )
+                AddArtistBody(mvvmViewModel)
+            }
+        }
+
+        if (showUploadDialog) {
+            UploadDialog(
+                mvvmViewModel = mvvmViewModel,
+                onConfirm = {
+                    mvvmViewModel.hideUploadOfferForDir()
+                    mvvmViewModel.uploadListToCloud()
+                },
+                onDismiss = {
+                    mvvmViewModel.hideUploadOfferForDir()
+                    mvvmViewModel.selectArtist(uploadArtist) {}
+                    mvvmViewModel.selectScreen(CurrentScreenVariant.SONG_LIST)
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun AddArtistBody(
+    mvvmViewModel: MvvmViewModel
+) {
     val theme = mvvmViewModel.settings.theme
 
     val fontScale = mvvmViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
@@ -27,72 +87,37 @@ fun AddArtistScreen(mvvmViewModel: MvvmViewModel) {
         fontSizeTextDp.toSp()
     }
 
-    val showUploadDialog by mvvmViewModel.showUploadDialogForDir.collectAsState()
-    val uploadArtist by mvvmViewModel.uploadArtist.collectAsState()
-
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(color = theme.colorBg)
+            .padding(4.dp)
     ) {
-        TopAppBar(
-            title = {
-                Text(text = stringResource(id = R.string.add_artist))
-            },
-            backgroundColor = theme.colorCommon,
-            navigationIcon = {
-                IconButton(onClick = {
-                    mvvmViewModel.back { }
-                }) {
-                    Icon(painterResource(id = R.drawable.ic_back), "")
-                }
-            }
-        )
-        Column(
+        LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(4.dp)
+                .weight(1.0f)
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .weight(1.0f)
-            ) {
-                item {
-                    Text(
-                        text = stringResource(id = R.string.add_artist_manual),
-                        color = theme.colorMain,
-                        fontSize = fontSizeTextSp
-                    )
-                }
-            }
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
-                colors = ButtonDefaults
-                    .buttonColors(
-                        backgroundColor = theme.colorCommon,
-                        contentColor = theme.colorMain
-                    ),
-                onClick = {
-                    mvvmViewModel.addSongsFromDir()
-                }) {
-                Text(text = stringResource(id = R.string.choose))
-            }
-            if (showUploadDialog) {
-                UploadDialog(
-                    mvvmViewModel = mvvmViewModel,
-                    onConfirm = {
-                        mvvmViewModel.hideUploadOfferForDir()
-                        mvvmViewModel.uploadListToCloud()
-                    },
-                    onDismiss = {
-                        mvvmViewModel.hideUploadOfferForDir()
-                        mvvmViewModel.selectArtist(uploadArtist) {}
-                        mvvmViewModel.selectScreen(CurrentScreenVariant.SONG_LIST)
-                    }
+            item {
+                Text(
+                    text = stringResource(id = R.string.add_artist_manual),
+                    color = theme.colorMain,
+                    fontSize = fontSizeTextSp
                 )
             }
+        }
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+            colors = ButtonDefaults
+                .buttonColors(
+                    backgroundColor = theme.colorCommon,
+                    contentColor = theme.colorMain
+                ),
+            onClick = {
+                mvvmViewModel.addSongsFromDir()
+            }) {
+            Text(text = stringResource(id = R.string.choose))
         }
     }
 }
