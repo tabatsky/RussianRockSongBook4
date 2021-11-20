@@ -14,13 +14,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dqt.libs.chorddroid.classes.ChordLibrary
 import jatx.clickablewordstextview.ClickableWordsTextView
 import jatx.clickablewordstextview.OnWordClickListener
@@ -37,7 +37,7 @@ import kotlinx.coroutines.launch
 private val CLOUD_SONG_TEXT_APP_BAR_WIDTH = 96.dp
 
 @Composable
-fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel) {
+fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
     val cloudSong by mvvmViewModel.cloudSong.collectAsState()
 
     val listState = rememberLazyListState()
@@ -131,11 +131,10 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel) {
                         title = {},
                         backgroundColor = theme.colorCommon,
                         navigationIcon = {
-                            CommonNavigationIcon(mvvmViewModel)
+                            CommonBackButton()
                         },
                         actions = {
                             CloudSongTextActions(
-                                mvvmViewModel = mvvmViewModel,
                                 onCloudSongChanged = onCloudSongChanged
                             )
                         }
@@ -181,11 +180,10 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel) {
                     SideAppBar(
                         backgroundColor = theme.colorCommon,
                         navigationIcon = {
-                            CommonNavigationIcon(mvvmViewModel)
+                            CommonBackButton()
                         },
                         actions = {
                             CloudSongTextActions(
-                                mvvmViewModel = mvvmViewModel,
                                 onCloudSongChanged = onCloudSongChanged
                             )
                         },
@@ -229,10 +227,7 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel) {
                     showYandexDialog = false
                     mvvmViewModel.openYandexMusicCloud(true)
                 } else {
-                    YandexMusicDialog(
-                        mvvmViewModel = mvvmViewModel,
-                        isCloudScreen = true
-                    ) {
+                    YandexMusicDialog(isCloudScreen = true) {
                         showYandexDialog = false
                     }
                 }
@@ -242,10 +237,7 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel) {
                     showVkDialog = false
                     mvvmViewModel.openVkMusicCloud(true)
                 } else {
-                    VkMusicDialog(
-                        mvvmViewModel = mvvmViewModel,
-                        isCloudScreen = true
-                    ) {
+                    VkMusicDialog(isCloudScreen = true) {
                         showVkDialog = false
                     }
                 }
@@ -255,17 +247,13 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel) {
                     showYoutubeMusicDialog = false
                     mvvmViewModel.openYoutubeMusicCloud(true)
                 } else {
-                    YoutubeMusicDialog(
-                        mvvmViewModel = mvvmViewModel,
-                        isCloudScreen = true
-                    ) {
+                    YoutubeMusicDialog(isCloudScreen = true) {
                         showYoutubeMusicDialog = false
                     }
                 }
             }
             if (showWarningDialog) {
                 WarningDialog(
-                    mvvmViewModel = mvvmViewModel,
                     onConfirm = { comment ->
                         mvvmViewModel.sendWarningCloud(comment)
                     },
@@ -276,7 +264,6 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel) {
             }
             if (showDeleteDialog) {
                 DeleteCloudSongDialog(
-                    mvvmViewModel = mvvmViewModel,
                     onConfirm = { secret1, secret2 ->
                         mvvmViewModel.deleteCurrentFromCloud(secret1, secret2)
                     },
@@ -286,10 +273,7 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel) {
                 )
             }
             if (showChordDialog) {
-                ChordDialog(
-                    mvvmViewModel = mvvmViewModel,
-                    chord = selectedChord
-                ) {
+                ChordDialog(chord = selectedChord) {
                     showChordDialog = false
                 }
             }
@@ -299,28 +283,24 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel) {
 
 @Composable
 private fun CloudSongTextActions(
-    mvvmViewModel: MvvmViewModel,
+    mvvmViewModel: MvvmViewModel = viewModel(),
     onCloudSongChanged: () -> Unit
 ) {
     val position by mvvmViewModel.cloudSongPosition.collectAsState()
     val count by mvvmViewModel.cloudSongCount.collectAsState()
 
-    IconButton(onClick = {
+    CommonIconButton(resId = R.drawable.ic_left) {
         mvvmViewModel.prevCloudSong()
         onCloudSongChanged()
-    }) {
-        Icon(painterResource(id = R.drawable.ic_left), "")
     }
     Text(
         text = "${position + 1} / $count",
         color = Color.Black,
         fontSize = 20.sp
     )
-    IconButton(onClick = {
+    CommonIconButton(resId = R.drawable.ic_right) {
         mvvmViewModel.nextCloudSong()
         onCloudSongChanged()
-    }) {
-        Icon(painterResource(id = R.drawable.ic_right), "")
     }
 }
 

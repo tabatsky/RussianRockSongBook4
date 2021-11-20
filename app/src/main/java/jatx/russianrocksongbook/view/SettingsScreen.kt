@@ -1,6 +1,5 @@
 package jatx.russianrocksongbook.view
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -8,10 +7,8 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -20,6 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.data.ARTIST_ADD_ARTIST
 import jatx.russianrocksongbook.data.ARTIST_ADD_SONG
@@ -30,7 +28,7 @@ import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import jatx.sideappbar.SideAppBar
 
 @Composable
-fun SettingsScreen(mvvmViewModel: MvvmViewModel) {
+fun SettingsScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
     val theme = mvvmViewModel.settings.theme
     val settings = mvvmViewModel.settings
 
@@ -106,13 +104,12 @@ fun SettingsScreen(mvvmViewModel: MvvmViewModel) {
                     },
                     backgroundColor = theme.colorCommon,
                     navigationIcon = {
-                        CommonNavigationIcon(mvvmViewModel)
+                        CommonBackButton()
                     }
                 )
                 SettingsBodyPortrait(
                     theme = theme,
                     settings = settings,
-                    mvvmViewModel = mvvmViewModel,
                     fontSizeLabelSp = fontSizeLabelSp,
                     fontSizeButtonSp = fontSizeButtonSp,
                     onThemePositionChanged = onThemePositionChanged,
@@ -134,13 +131,12 @@ fun SettingsScreen(mvvmViewModel: MvvmViewModel) {
                     title = stringResource(id = R.string.title_settings),
                     backgroundColor = theme.colorCommon,
                     navigationIcon = {
-                        CommonNavigationIcon(mvvmViewModel)
+                        CommonBackButton()
                     }
                 )
                 SettingsBodyLandscape(
                     theme = theme,
                     settings = settings,
-                    mvvmViewModel = mvvmViewModel,
                     fontSizeLabelSp = fontSizeLabelSp,
                     fontSizeButtonSp = fontSizeButtonSp,
                     onThemePositionChanged = onThemePositionChanged,
@@ -158,9 +154,9 @@ fun SettingsScreen(mvvmViewModel: MvvmViewModel) {
 
 @Composable
 private fun SettingsBodyPortrait(
+    mvvmViewModel: MvvmViewModel = viewModel(),
     theme: Theme,
     settings: Settings,
-    mvvmViewModel: MvvmViewModel,
     fontSizeLabelSp: TextUnit,
     fontSizeButtonSp: TextUnit,
     onThemePositionChanged: (Int) -> Unit,
@@ -171,7 +167,10 @@ private fun SettingsBodyPortrait(
     onScrollSpeedValueChanged: (Float) -> Unit,
     onSaveClick: () -> Unit
 ) {
-    Column(Modifier.fillMaxSize().padding(4.dp)) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .padding(4.dp)) {
         ThemeRow(
             theme = theme,
             settings = settings,
@@ -201,7 +200,6 @@ private fun SettingsBodyPortrait(
         DefaultArtistRow(
             theme = theme,
             settings = settings,
-            mvvmViewModel = mvvmViewModel,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(),
@@ -275,9 +273,9 @@ private fun SettingsBodyPortrait(
 
 @Composable
 private fun SettingsBodyLandscape(
+    mvvmViewModel: MvvmViewModel = viewModel(),
     theme: Theme,
     settings: Settings,
-    mvvmViewModel: MvvmViewModel,
     fontSizeLabelSp: TextUnit,
     fontSizeButtonSp: TextUnit,
     onThemePositionChanged: (Int) -> Unit,
@@ -288,7 +286,10 @@ private fun SettingsBodyLandscape(
     onScrollSpeedValueChanged: (Float) -> Unit,
     onSaveClick: () -> Unit
 ) {
-    Column(Modifier.fillMaxSize().padding(4.dp)) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .padding(4.dp)) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -327,7 +328,6 @@ private fun SettingsBodyLandscape(
             DefaultArtistRow(
                 theme = theme,
                 settings = settings,
-                mvvmViewModel = mvvmViewModel,
                 modifier = Modifier
                     .weight(1.0f)
                     .wrapContentHeight(),
@@ -476,10 +476,10 @@ private fun FontScaleRow(
 
 @Composable
 private fun DefaultArtistRow(
+    mvvmViewModel: MvvmViewModel = viewModel(),
     modifier: Modifier,
     theme: Theme,
     settings: Settings,
-    mvvmViewModel: MvvmViewModel,
     fontSize: TextUnit,
     onValueChanged: (String) -> Unit
 ) {

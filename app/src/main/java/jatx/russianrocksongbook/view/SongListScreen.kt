@@ -12,11 +12,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.data.*
 import jatx.russianrocksongbook.domain.Song
@@ -26,27 +26,24 @@ import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import jatx.sideappbar.SideAppBar
 import kotlinx.coroutines.launch
 
-private val MAX_ARTIST_LENGTH = 12
+private const val MAX_ARTIST_LENGTH = 12
 
 @Composable
-fun SongListScreen(
-    mvvmViewModel: MvvmViewModel
-) {
+fun SongListScreen() {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
     ModalDrawer(
         drawerState = drawerState,
         drawerContent = {
-            AppDrawer(mvvmViewModel) {
+            SongListAppDrawer {
                 scope.launch {
                     drawerState.close()
                 }
             }
         },
         content = {
-            Content(
-                mvvmViewModel = mvvmViewModel,
+            SongListContent(
                 openDrawer = {
                     scope.launch {
                         drawerState.open()
@@ -58,8 +55,8 @@ fun SongListScreen(
 }
 
 @Composable
-private fun Content(
-    mvvmViewModel: MvvmViewModel,
+private fun SongListContent(
+    mvvmViewModel: MvvmViewModel = viewModel(),
     openDrawer: () -> Unit
 ) {
     val theme = mvvmViewModel.settings.theme
@@ -93,13 +90,13 @@ private fun Content(
                         SongListNavigationIcon(onClick = openDrawer)
                     },
                     actions = {
-                        SongListActions(mvvmViewModel)
+                        SongListActions()
                     }
                 )
 
-                SongListBody(mvvmViewModel)
+                SongListBody()
 
-                WhatsNewDialog(mvvmViewModel)
+                WhatsNewDialog()
             }
         } else {
             Row(
@@ -114,13 +111,13 @@ private fun Content(
                         SongListNavigationIcon(onClick = openDrawer)
                     },
                     actions = {
-                        SongListActions(mvvmViewModel)
+                        SongListActions()
                     }
                 )
 
-                SongListBody(mvvmViewModel)
+                SongListBody()
 
-                WhatsNewDialog(mvvmViewModel)
+                WhatsNewDialog()
             }
         }
     }
@@ -128,7 +125,7 @@ private fun Content(
 
 @Composable
 private fun SongListBody(
-    mvvmViewModel: MvvmViewModel
+    mvvmViewModel: MvvmViewModel = viewModel()
 ) {
     val theme = mvvmViewModel.settings.theme
 
@@ -164,8 +161,8 @@ private fun SongListBody(
 }
 
 @Composable
-private fun AppDrawer(
-    mvvmViewModel: MvvmViewModel,
+private fun SongListAppDrawer(
+    mvvmViewModel: MvvmViewModel = viewModel(),
     onCloseDrawer: () -> Unit
 ) {
     val theme = mvvmViewModel.settings.theme
@@ -192,10 +189,7 @@ private fun AppDrawer(
                         SongListNavigationIcon(onClick = onCloseDrawer)
                     }
                 )
-                SongTextMenuBody(
-                    mvvmViewModel = mvvmViewModel,
-                    onCloseDrawer = onCloseDrawer
-                )
+                SongTextMenuBody(onCloseDrawer = onCloseDrawer)
             }
         } else {
             Row(
@@ -210,10 +204,7 @@ private fun AppDrawer(
                         SongListNavigationIcon(onClick = onCloseDrawer)
                     }
                 )
-                SongTextMenuBody(
-                    mvvmViewModel = mvvmViewModel,
-                    onCloseDrawer = onCloseDrawer
-                )
+                SongTextMenuBody(onCloseDrawer = onCloseDrawer)
             }
         }
     }
@@ -221,7 +212,7 @@ private fun AppDrawer(
 
 @Composable
 private fun SongTextMenuBody(
-    mvvmViewModel: MvvmViewModel,
+    mvvmViewModel: MvvmViewModel = viewModel(),
     onCloseDrawer: () -> Unit
 ) {
     val theme = mvvmViewModel.settings.theme
@@ -246,21 +237,19 @@ private fun SongTextMenuBody(
 }
 
 @Composable
-private fun SongListActions(mvvmViewModel: MvvmViewModel) {
+private fun SongListActions(
+    mvvmViewModel: MvvmViewModel = viewModel()
+) {
     val theme = mvvmViewModel.settings.theme
     var expanded by remember { mutableStateOf(false) }
 
-    IconButton(onClick = {
+    CommonIconButton(resId = R.drawable.ic_settings) {
         println("selected: settings")
         mvvmViewModel.selectScreen(CurrentScreenVariant.SETTINGS)
-    }) {
-        Icon(painterResource(id = R.drawable.ic_settings), "")
     }
-    IconButton(onClick = {
+    CommonIconButton(resId = R.drawable.ic_question) {
         println("selected: question")
         expanded = !expanded
-    }) {
-        Icon(painterResource(id = R.drawable.ic_question), "")
     }
     DropdownMenu(
         expanded = expanded,
@@ -295,9 +284,10 @@ private fun SongListActions(mvvmViewModel: MvvmViewModel) {
 private fun SongListNavigationIcon(
     onClick: () -> Unit
 ) {
-    IconButton(onClick = onClick) {
-        Icon(painterResource(id = R.drawable.ic_drawer), "")
-    }
+    CommonIconButton(
+        resId = R.drawable.ic_drawer,
+        onClick = onClick
+    )
 }
 
 @Composable

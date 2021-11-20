@@ -10,13 +10,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.preferences.ScalePow
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 
 @Composable
 fun WarningDialog(
-    mvvmViewModel: MvvmViewModel,
+    mvvmViewModel: MvvmViewModel = viewModel(),
     onConfirm: (String) -> Unit,
     onDismiss: () -> Unit
 ) {

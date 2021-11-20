@@ -1,6 +1,5 @@
 package jatx.russianrocksongbook.view
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,7 +11,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -21,6 +19,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.data.OrderBy
 import jatx.russianrocksongbook.domain.CloudSong
@@ -31,45 +30,8 @@ import jatx.sideappbar.SideAppBar
 import kotlinx.coroutines.launch
 
 @Composable
-fun CloudSearchScreen(mvvmViewModel: MvvmViewModel) {
-    var searchFor by remember { mutableStateOf("") }
-    val onSearchForValueChange: (String) -> Unit = {
-        searchFor = it
-    }
-
-    var orderBy by remember { mutableStateOf(OrderBy.BY_ID_DESC) }
-    val onOrderByValueChange: (OrderBy) -> Unit = {
-        orderBy = it
-    }
-
-    val cloudSongList by mvvmViewModel.cloudSongList.collectAsState()
-    val position by mvvmViewModel.cloudSongPosition.collectAsState()
-    val isCloudLoading by mvvmViewModel.isCloudLoading.collectAsState()
-
+fun CloudSearchScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
     val theme = mvvmViewModel.settings.theme
-    val fontScale = mvvmViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
-    val fontSizeTextDp = dimensionResource(id = R.dimen.text_size_16) * fontScale
-    val fontSizeTextSp = with(LocalDensity.current) {
-        fontSizeTextDp.toSp()
-    }
-    val fontSizeSongTitleDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
-    val fontSizeSongTitleSp = with(LocalDensity.current) {
-        fontSizeSongTitleDp.toSp()
-    }
-    val fontSizeArtistDp = dimensionResource(id = R.dimen.text_size_24) * fontScale
-    val fontSizeArtistSp = with(LocalDensity.current) {
-        fontSizeArtistDp.toSp()
-    }
-
-    val onSearchClick = {
-        mvvmViewModel.cloudSearch(searchFor, orderBy)
-    }
-
-    val onItemClick: (Int, CloudSong) -> Unit = { index, cloudSong ->
-        println("selected: ${cloudSong.artist} - ${cloudSong.title}")
-        mvvmViewModel.selectCloudSong(index)
-        mvvmViewModel.selectScreen(CurrentScreenVariant.CLOUD_SONG_TEXT)
-    }
 
     BoxWithConstraints(
         modifier = Modifier
@@ -90,25 +52,13 @@ fun CloudSearchScreen(mvvmViewModel: MvvmViewModel) {
                     },
                     backgroundColor = theme.colorCommon,
                     navigationIcon = {
-                        CommonNavigationIcon(mvvmViewModel)
+                        CommonBackButton()
                     }
                 )
 
                 CloudSearchBody(
-                    searchFor = searchFor,
-                    theme = theme,
-                    fontSizeTextSp = fontSizeTextSp,
-                    fontSizeArtistSp = fontSizeArtistSp,
-                    fontSizeSongTitleSp = fontSizeSongTitleSp,
-                    isCloudLoading = isCloudLoading,
-                    cloudSongList = cloudSongList,
-                    position = position,
                     modifier = Modifier.weight(1.0f),
-                    isPortrait = true,
-                    onSearchForValueChange = onSearchForValueChange,
-                    onOrderByValueChange = onOrderByValueChange,
-                    onSearchClick = onSearchClick,
-                    onItemClick = onItemClick
+                    isPortrait = true
                 )
             }
         } else {
@@ -121,26 +71,13 @@ fun CloudSearchScreen(mvvmViewModel: MvvmViewModel) {
                     title = stringResource(id = R.string.title_activity_cloud_search),
                     backgroundColor = theme.colorCommon,
                     navigationIcon = {
-                        CommonNavigationIcon(mvvmViewModel)
+                        CommonBackButton()
                     }
                 )
 
-
                 CloudSearchBody(
-                    searchFor = searchFor,
-                    theme = theme,
-                    fontSizeTextSp = fontSizeTextSp,
-                    fontSizeArtistSp = fontSizeArtistSp,
-                    fontSizeSongTitleSp = fontSizeSongTitleSp,
-                    isCloudLoading = isCloudLoading,
-                    cloudSongList = cloudSongList,
-                    position = position,
                     modifier = Modifier.weight(1.0f),
-                    isPortrait = false,
-                    onSearchForValueChange = onSearchForValueChange,
-                    onOrderByValueChange = onOrderByValueChange,
-                    onSearchClick = onSearchClick,
-                    onItemClick = onItemClick
+                    isPortrait = false
                 )
             }
         }
@@ -149,21 +86,50 @@ fun CloudSearchScreen(mvvmViewModel: MvvmViewModel) {
 
 @Composable
 private fun CloudSearchBody(
-    searchFor: String,
-    theme: Theme,
-    fontSizeTextSp: TextUnit,
-    fontSizeArtistSp: TextUnit,
-    fontSizeSongTitleSp: TextUnit,
-    isCloudLoading: Boolean,
-    cloudSongList: List<CloudSong>,
-    position: Int,
+    mvvmViewModel: MvvmViewModel = viewModel(),
     modifier: Modifier,
-    isPortrait: Boolean,
-    onSearchForValueChange: (String) -> Unit,
-    onOrderByValueChange: (OrderBy) -> Unit,
-    onSearchClick: () -> Unit,
-    onItemClick: (Int, CloudSong) -> Unit
+    isPortrait: Boolean
 ) {
+    val theme = mvvmViewModel.settings.theme
+
+    val cloudSongList by mvvmViewModel.cloudSongList.collectAsState()
+    val position by mvvmViewModel.cloudSongPosition.collectAsState()
+    val isCloudLoading by mvvmViewModel.isCloudLoading.collectAsState()
+
+    val fontScale = mvvmViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
+    val fontSizeTextDp = dimensionResource(id = R.dimen.text_size_16) * fontScale
+    val fontSizeTextSp = with(LocalDensity.current) {
+        fontSizeTextDp.toSp()
+    }
+    val fontSizeSongTitleDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
+    val fontSizeSongTitleSp = with(LocalDensity.current) {
+        fontSizeSongTitleDp.toSp()
+    }
+    val fontSizeArtistDp = dimensionResource(id = R.dimen.text_size_24) * fontScale
+    val fontSizeArtistSp = with(LocalDensity.current) {
+        fontSizeArtistDp.toSp()
+    }
+
+    var searchFor by remember { mutableStateOf("") }
+    val onSearchForValueChange: (String) -> Unit = {
+        searchFor = it
+    }
+
+    var orderBy by remember { mutableStateOf(OrderBy.BY_ID_DESC) }
+    val onOrderByValueChange: (OrderBy) -> Unit = {
+        orderBy = it
+    }
+
+    val onSearchClick = {
+        mvvmViewModel.cloudSearch(searchFor, orderBy)
+    }
+
+    val onItemClick: (Int, CloudSong) -> Unit = { index, cloudSong ->
+        println("selected: ${cloudSong.artist} - ${cloudSong.title}")
+        mvvmViewModel.selectCloudSong(index)
+        mvvmViewModel.selectScreen(CurrentScreenVariant.CLOUD_SONG_TEXT)
+    }
+
     Column(
         modifier = modifier
     ) {

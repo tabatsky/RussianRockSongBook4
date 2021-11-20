@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.helpers.DONATIONS
 import jatx.russianrocksongbook.helpers.DONATIONS_LANDSCAPE
@@ -19,7 +20,7 @@ import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import jatx.sideappbar.SideAppBar
 
 @Composable
-fun DonationScreen(mvvmViewModel: MvvmViewModel) {
+fun DonationScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
     val theme = mvvmViewModel.settings.theme
 
     val onPurchaseClick: (Int, Boolean) -> Unit = { index, isLandscape ->
@@ -46,7 +47,7 @@ fun DonationScreen(mvvmViewModel: MvvmViewModel) {
                     },
                     backgroundColor = theme.colorCommon,
                     navigationIcon = {
-                        CommonNavigationIcon(mvvmViewModel)
+                        CommonBackButton()
                     }
                 )
                 DonationBodyPortrait(
@@ -64,7 +65,7 @@ fun DonationScreen(mvvmViewModel: MvvmViewModel) {
                     title = stringResource(id = R.string.donation),
                     backgroundColor = theme.colorCommon,
                     navigationIcon = {
-                        CommonNavigationIcon(mvvmViewModel)
+                        CommonBackButton()
                     }
                 )
                 DonationBodyLandscape(
