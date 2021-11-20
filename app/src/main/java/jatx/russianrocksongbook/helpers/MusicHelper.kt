@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
+import androidx.activity.viewModels
+import jatx.russianrocksongbook.MainActivity
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import java.io.UnsupportedEncodingException
@@ -11,9 +13,17 @@ import java.net.URLEncoder
 import javax.inject.Inject
 
 class MusicHelper @Inject constructor(
-    private val activity: Activity,
-    private val mvvmViewModel: MvvmViewModel
+    private val activity: Activity
 ) {
+    private val mvvmViewModel: MvvmViewModel? by lazy {
+        if (activity is MainActivity) {
+            val viewModel: MvvmViewModel by activity.viewModels()
+            viewModel
+        } else {
+            null
+        }
+    }
+
     fun openYandexMusic(searchFor: String) {
         try {
             with(activity) {
@@ -27,7 +37,7 @@ class MusicHelper @Inject constructor(
                 )
             }
         } catch (e: UnsupportedEncodingException) {
-            mvvmViewModel.showToast(R.string.utf8_not_supported)
+            mvvmViewModel?.showToast(R.string.utf8_not_supported)
         }
     }
 
@@ -41,9 +51,9 @@ class MusicHelper @Inject constructor(
                 startActivity(intent)
             }
         } catch (e: UnsupportedEncodingException) {
-            mvvmViewModel.showToast(R.string.utf8_not_supported)
+            mvvmViewModel?.showToast(R.string.utf8_not_supported)
         } catch (e: ActivityNotFoundException) {
-            mvvmViewModel.showToast(R.string.vk_app_not_installed)
+            mvvmViewModel?.showToast(R.string.vk_app_not_installed)
         }
     }
 
@@ -60,7 +70,7 @@ class MusicHelper @Inject constructor(
                 )
             }
         } catch (e: UnsupportedEncodingException) {
-            mvvmViewModel.showToast(R.string.utf8_not_supported)
+            mvvmViewModel?.showToast(R.string.utf8_not_supported)
         }
     }
 }

@@ -10,9 +10,9 @@ import android.util.Log
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
-import jatx.russianrocksongbook.data.*
 import jatx.russianrocksongbook.debug.AppDebug
 import jatx.russianrocksongbook.helpers.AddSongsFromDirHelper
 import jatx.russianrocksongbook.helpers.DonationHelper
@@ -25,19 +25,18 @@ import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
-
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @Inject
     lateinit var settings: Settings
-    @Inject
-    lateinit var mvvmViewModel: MvvmViewModel
     @Inject
     lateinit var donationHelper: DonationHelper
     @Inject
     lateinit var musicHelper: MusicHelper
     @Inject
     lateinit var addSongsFromDirHelper: AddSongsFromDirHelper
+
+    private val mvvmViewModel: MvvmViewModel by viewModels()
 
     @DelicateCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,9 +71,9 @@ class MainActivity : ComponentActivity() {
     }
 
     @Inject
-    fun initAppDebug(songBookAPIAdapter: SongBookAPIAdapter) {
+    fun initAppDebug() {
         Log.e("inject init", "AppDebug")
-        AppDebug.setAppCrashHandler(songBookAPIAdapter)
+        AppDebug.setAppCrashHandler(mvvmViewModel.songBookAPIAdapter)
     }
 
     @Inject
