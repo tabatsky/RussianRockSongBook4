@@ -17,9 +17,86 @@ import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.preferences.ScalePow
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.sideappbar.SideAppBar
 
 @Composable
 fun AddSongScreen(mvvmViewModel: MvvmViewModel) {
+    val showUploadDialog by mvvmViewModel.showUploadDialogForSong.collectAsState()
+    Log.e("show upload", showUploadDialog.toString())
+
+    val theme = mvvmViewModel.settings.theme
+
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        val W = this.maxWidth
+        val H = this.maxHeight
+
+        if (W < H) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = theme.colorBg)
+            ) {
+                TopAppBar(
+                    title = {
+                        Text(text = stringResource(id = R.string.add_song))
+                    },
+                    backgroundColor = theme.colorCommon,
+                    navigationIcon = {
+                        IconButton(onClick = {
+                            mvvmViewModel.back { }
+                        }) {
+                            Icon(painterResource(id = R.drawable.ic_back), "")
+                        }
+                    }
+                )
+                AddSongBody(mvvmViewModel)
+            }
+        } else {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = theme.colorBg)
+            ) {
+                SideAppBar(
+                    title = stringResource(id = R.string.add_song),
+                    backgroundColor = theme.colorCommon,
+                    navigationIcon = {
+                        IconButton(onClick = {
+                            mvvmViewModel.back { }
+                        }) {
+                            Icon(painterResource(id = R.drawable.ic_back), "")
+                        }
+                    }
+                )
+                AddSongBody(mvvmViewModel)
+            }
+        }
+
+        if (showUploadDialog) {
+            UploadDialog(
+                mvvmViewModel = mvvmViewModel,
+                invertColors = true,
+                onConfirm = {
+                    mvvmViewModel.hideUploadOfferForSong()
+                    mvvmViewModel.uploadNewToCloud()
+                },
+                onDismiss = {
+                    Log.e("upload dialog", "on dismiss")
+                    mvvmViewModel.hideUploadOfferForSong()
+                    mvvmViewModel.showNewSong()
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun AddSongBody(
+    mvvmViewModel: MvvmViewModel
+) {
     var artist by rememberSaveable { mutableStateOf("") }
     var title by rememberSaveable { mutableStateOf("") }
     var text by rememberSaveable { mutableStateOf("") }
@@ -32,157 +109,121 @@ fun AddSongScreen(mvvmViewModel: MvvmViewModel) {
         fontSizeTextDp.toSp()
     }
 
-    val showUploadDialog by mvvmViewModel.showUploadDialogForSong.collectAsState()
-    Log.e("show upload", showUploadDialog.toString())
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = theme.colorBg)
+            .padding(4.dp)
     ) {
-        TopAppBar(
-            title = {
-                Text(text = stringResource(id = R.string.add_song))
+        TextField(
+            value = artist,
+            onValueChange = {
+                artist = it
             },
-            backgroundColor = theme.colorCommon,
-            navigationIcon = {
-                IconButton(onClick = {
-                    mvvmViewModel.back { }
-                }) {
-                    Icon(painterResource(id = R.drawable.ic_back), "")
-                }
-            }
-        )
-        Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(4.dp)
-        ) {
-            TextField(
-                value = artist,
-                onValueChange = {
-                    artist = it
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.artist),
-                        color = theme.colorBg,
-                        fontSize = fontSizeTextSp * 0.7f
-                    )
-                },
-                colors = TextFieldDefaults
-                    .textFieldColors(
-                        backgroundColor = theme.colorMain,
-                        textColor = theme.colorBg
-                    ),
-                textStyle = TextStyle(
-                    fontFamily = FontFamily.Monospace,
-                    fontSize = fontSizeTextSp
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            label = {
+                Text(
+                    text = stringResource(id = R.string.artist),
+                    color = theme.colorBg,
+                    fontSize = fontSizeTextSp * 0.7f
                 )
+            },
+            colors = TextFieldDefaults
+                .textFieldColors(
+                    backgroundColor = theme.colorMain,
+                    textColor = theme.colorBg
+                ),
+            textStyle = TextStyle(
+                fontFamily = FontFamily.Monospace,
+                fontSize = fontSizeTextSp
             )
-            Divider(
-                color = theme.colorBg,
-                thickness = 4.dp
-            )
-            TextField(
-                value = title,
-                onValueChange = {
-                    title = it
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.title),
-                        color = theme.colorBg,
-                        fontSize = fontSizeTextSp * 0.7f
-                    )
-                },
-                colors = TextFieldDefaults
-                    .textFieldColors(
-                        backgroundColor = theme.colorMain,
-                        textColor = theme.colorBg
-                    ),
-                textStyle = TextStyle(
-                    fontFamily = FontFamily.Monospace,
-                    fontSize = fontSizeTextSp
+        )
+        Divider(
+            color = theme.colorBg,
+            thickness = 4.dp
+        )
+        TextField(
+            value = title,
+            onValueChange = {
+                title = it
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            label = {
+                Text(
+                    text = stringResource(id = R.string.title),
+                    color = theme.colorBg,
+                    fontSize = fontSizeTextSp * 0.7f
                 )
+            },
+            colors = TextFieldDefaults
+                .textFieldColors(
+                    backgroundColor = theme.colorMain,
+                    textColor = theme.colorBg
+                ),
+            textStyle = TextStyle(
+                fontFamily = FontFamily.Monospace,
+                fontSize = fontSizeTextSp
             )
-            Divider(
-                color = theme.colorBg,
-                thickness = 4.dp
-            )
-            TextField(
-                value = text,
-                onValueChange = {
-                    text = it
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1.0f),
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.song_text),
-                        color = theme.colorBg,
-                        fontSize = fontSizeTextSp * 0.7f
-                    )
-                },
-                colors = TextFieldDefaults
-                    .textFieldColors(
-                        backgroundColor = theme.colorMain,
-                        textColor = theme.colorBg
-                    ),
-                textStyle = TextStyle(
-                    fontFamily = FontFamily.Monospace,
-                    fontSize = fontSizeTextSp
+        )
+        Divider(
+            color = theme.colorBg,
+            thickness = 4.dp
+        )
+        TextField(
+            value = text,
+            onValueChange = {
+                text = it
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1.0f),
+            label = {
+                Text(
+                    text = stringResource(id = R.string.song_text),
+                    color = theme.colorBg,
+                    fontSize = fontSizeTextSp * 0.7f
                 )
+            },
+            colors = TextFieldDefaults
+                .textFieldColors(
+                    backgroundColor = theme.colorMain,
+                    textColor = theme.colorBg
+                ),
+            textStyle = TextStyle(
+                fontFamily = FontFamily.Monospace,
+                fontSize = fontSizeTextSp
             )
-            Divider(
-                color = theme.colorBg,
-                thickness = 4.dp
-            )
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
-                colors = ButtonDefaults
-                    .buttonColors(
-                        backgroundColor = theme.colorCommon,
-                        contentColor = theme.colorMain
-                    ),
-                onClick = {
-                    if (
-                        artist.trim().isEmpty() ||
-                        title.trim().isEmpty() ||
-                        text.trim().isEmpty()
-                    ) {
-                        mvvmViewModel.showToast(R.string.toast_fill_all_fields)
-                    } else {
-                        mvvmViewModel.addSongToRepo(
-                            artist, title, text
-                        )
-                    }
-                }) {
-                Text(text = stringResource(id = R.string.save))
-            }
-        }
-        if (showUploadDialog) {
-            UploadDialog(
-                mvvmViewModel = mvvmViewModel,
-                onConfirm = {
-                    mvvmViewModel.hideUploadOfferForSong()
-                    mvvmViewModel.uploadNewToCloud()
-                },
-                onDismiss = {
-                    Log.e("upload dialog", "on dismiss")
-                    mvvmViewModel.hideUploadOfferForSong()
-                    mvvmViewModel.showNewSong()
+        )
+        Divider(
+            color = theme.colorBg,
+            thickness = 4.dp
+        )
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+            colors = ButtonDefaults
+                .buttonColors(
+                    backgroundColor = theme.colorCommon,
+                    contentColor = theme.colorMain
+                ),
+            onClick = {
+                if (
+                    artist.trim().isEmpty() ||
+                    title.trim().isEmpty() ||
+                    text.trim().isEmpty()
+                ) {
+                    mvvmViewModel.showToast(R.string.toast_fill_all_fields)
+                } else {
+                    mvvmViewModel.addSongToRepo(
+                        artist, title, text
+                    )
                 }
-            )
+            }) {
+            Text(text = stringResource(id = R.string.save))
         }
     }
 }
