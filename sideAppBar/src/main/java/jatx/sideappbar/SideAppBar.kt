@@ -43,8 +43,8 @@ import kotlin.math.sqrt
 
 @Composable
 fun SideAppBar(
-    title: String? = null,
     modifier: Modifier = Modifier,
+    title: String? = null,
     navigationIcon: @Composable (() -> Unit)? = null,
     actions: @Composable ColumnScope.() -> Unit = {},
     backgroundColor: Color = MaterialTheme.colors.primarySurface,
