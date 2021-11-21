@@ -15,7 +15,9 @@ import jatx.russianrocksongbook.model.domain.CloudSong
 import jatx.russianrocksongbook.model.domain.Song
 import jatx.russianrocksongbook.model.preferences.UserInfo
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 @BoundTo(supertype = SongBookAPIAdapter::class, component = SingletonComponent::class)
 class SongBookAPIAdapterImpl @Inject constructor(
     private val retrofitClient: RetrofitClient
