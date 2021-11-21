@@ -10,6 +10,7 @@ import jatx.russianrocksongbook.model.domain.Song
 import jatx.russianrocksongbook.model.domain.USER_SONG_MD5
 import jatx.russianrocksongbook.model.domain.songTextHash
 import javax.inject.Inject
+import javax.inject.Singleton
 
 val predefinedList = listOf(
     ARTIST_FAVORITE,
@@ -19,6 +20,7 @@ val predefinedList = listOf(
     ARTIST_DONATION
 )
 
+@Singleton
 @BoundTo(supertype = SongRepository::class, component = SingletonComponent::class)
 class SongRepositoryImpl @Inject constructor(
     private val songDao: SongDao

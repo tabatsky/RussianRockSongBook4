@@ -17,18 +17,22 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.model.preferences.ScalePow
+import jatx.russianrocksongbook.viewmodel.CloudViewModel
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 
 @Composable
 fun YandexMusicDialog(
-    mvvmViewModel: MvvmViewModel = viewModel(),
+    mvvmViewModel: MvvmViewModel,
     isCloudScreen: Boolean = false,
     onDismiss: () -> Unit
 ) = MusicDialog(
+    mvvmViewModel = mvvmViewModel,
     stringRes = R.string.question_search_at_yandex_music,
     onConfirm = {
         if (isCloudScreen) {
-            mvvmViewModel.openYandexMusicCloud(it)
+            if (mvvmViewModel is CloudViewModel) {
+                mvvmViewModel.openYandexMusicCloud(it)
+            }
         } else {
             mvvmViewModel.openYandexMusic(it)
         }
@@ -38,7 +42,7 @@ fun YandexMusicDialog(
 
 @Composable
 fun VkMusicDialog(
-    mvvmViewModel: MvvmViewModel = viewModel(),
+    mvvmViewModel: MvvmViewModel,
     isCloudScreen: Boolean = false,
     onDismiss: () -> Unit
 ) = MusicDialog(
@@ -46,7 +50,9 @@ fun VkMusicDialog(
     stringRes = R.string.question_search_at_vk_music,
     onConfirm = {
         if (isCloudScreen) {
-            mvvmViewModel.openVkMusicCloud(it)
+            if (mvvmViewModel is CloudViewModel) {
+                mvvmViewModel.openVkMusicCloud(it)
+            }
         } else {
             mvvmViewModel.openVkMusic(it)
         }
@@ -56,7 +62,7 @@ fun VkMusicDialog(
 
 @Composable
 fun YoutubeMusicDialog(
-    mvvmViewModel: MvvmViewModel = viewModel(),
+    mvvmViewModel: MvvmViewModel,
     isCloudScreen: Boolean = false,
     onDismiss: () -> Unit
 ) = MusicDialog(
@@ -64,7 +70,9 @@ fun YoutubeMusicDialog(
     stringRes = R.string.question_search_at_youtube_music,
     onConfirm = {
         if (isCloudScreen) {
-            mvvmViewModel.openYoutubeMusicCloud(it)
+            if (mvvmViewModel is CloudViewModel) {
+                mvvmViewModel.openYoutubeMusicCloud(it)
+            }
         } else {
             mvvmViewModel.openYoutubeMusic(it)
         }
@@ -74,7 +82,7 @@ fun YoutubeMusicDialog(
 
 @Composable
 private fun MusicDialog(
-    mvvmViewModel: MvvmViewModel = viewModel(),
+    mvvmViewModel: MvvmViewModel,
     @StringRes stringRes: Int,
     onConfirm: (Boolean) -> Unit,
     onDismiss: () -> Unit

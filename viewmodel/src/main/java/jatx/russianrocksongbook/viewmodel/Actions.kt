@@ -13,4 +13,5 @@ class Actions @Inject constructor() {
     var onRestartApp: () -> Unit = {}
     var onAddSongsFromDir: () -> Unit = {}
     var onPurchaseItem: (String) -> Unit = {}
+    var onCloudSearchScreenSelected: () -> Unit = {}
 }
