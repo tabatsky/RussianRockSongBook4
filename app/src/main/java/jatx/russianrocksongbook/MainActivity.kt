@@ -17,9 +17,9 @@ import jatx.russianrocksongbook.debug.AppDebug
 import jatx.russianrocksongbook.helpers.AddSongsFromDirHelper
 import jatx.russianrocksongbook.helpers.DonationHelper
 import jatx.russianrocksongbook.helpers.MusicHelper
-import jatx.russianrocksongbook.preferences.Orientation
-import jatx.russianrocksongbook.preferences.Settings
-import jatx.russianrocksongbook.preferences.Version
+import jatx.russianrocksongbook.model.preferences.Orientation
+import jatx.russianrocksongbook.model.preferences.Settings
+import jatx.russianrocksongbook.model.preferences.Version
 import jatx.russianrocksongbook.view.*
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import kotlinx.coroutines.*
@@ -38,7 +38,6 @@ class MainActivity : ComponentActivity() {
 
     private val mvvmViewModel: MvvmViewModel by viewModels()
 
-    @DelicateCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

@@ -15,7 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.R
-import jatx.russianrocksongbook.preferences.Theme
+import jatx.russianrocksongbook.model.preferences.Theme
 
 @Composable
 fun YandexMusicButton(size: Dp, theme: Theme, onClick: () -> Unit) =

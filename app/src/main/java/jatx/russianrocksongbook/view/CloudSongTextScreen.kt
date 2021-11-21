@@ -26,10 +26,10 @@ import jatx.clickablewordstextview.ClickableWordsTextView
 import jatx.clickablewordstextview.OnWordClickListener
 import jatx.clickablewordstextview.Word
 import jatx.russianrocksongbook.R
-import jatx.russianrocksongbook.domain.CloudSong
-import jatx.russianrocksongbook.preferences.ListenToMusicVariant
-import jatx.russianrocksongbook.preferences.ScalePow
-import jatx.russianrocksongbook.preferences.Theme
+import jatx.russianrocksongbook.model.domain.CloudSong
+import jatx.russianrocksongbook.model.preferences.ListenToMusicVariant
+import jatx.russianrocksongbook.model.preferences.ScalePow
+import jatx.russianrocksongbook.model.preferences.Theme
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import kotlinx.coroutines.launch
 

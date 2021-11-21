@@ -18,7 +18,7 @@ import jatx.russianrocksongbook.helpers.DONATIONS
 import jatx.russianrocksongbook.helpers.DONATIONS_LANDSCAPE
 import jatx.russianrocksongbook.helpers.SKUS
 import jatx.russianrocksongbook.helpers.SKUS_LANDSCAPE
-import jatx.russianrocksongbook.preferences.Theme
+import jatx.russianrocksongbook.model.preferences.Theme
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 
 @Composable

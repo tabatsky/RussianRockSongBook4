@@ -16,13 +16,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.R
-import jatx.russianrocksongbook.preferences.ScalePow
+import jatx.russianrocksongbook.model.preferences.ScalePow
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 
 @Composable
 fun AddArtistScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
-    val theme = mvvmViewModel.settings.theme
-
     val showUploadDialog by mvvmViewModel.showUploadDialogForDir.collectAsState()
     val uploadArtist by mvvmViewModel.uploadArtist.collectAsState()
 

@@ -9,4 +9,4 @@ dependencyResolutionManagement {
 rootProject.name = "RussianRockSongBook4"
 include ':clickablewordstextview', ':ChordDroidLibrary', ':app'
 include ':sideAppBar'
-include ':data'
+include ':model'
