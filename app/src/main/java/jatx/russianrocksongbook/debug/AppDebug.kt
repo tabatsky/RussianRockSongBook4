@@ -4,10 +4,9 @@ import android.annotation.SuppressLint
 import android.util.Log
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import jatx.russianrocksongbook.data.SongBookAPIAdapter
-import jatx.russianrocksongbook.domain.AppCrash
-import java.io.PrintWriter
-import java.io.StringWriter
+import jatx.russianrocksongbook.model.data.SongBookAPIAdapter
+import jatx.russianrocksongbook.model.debug.exceptionToString
+import jatx.russianrocksongbook.model.domain.AppCrash
 
 object AppDebug {
     fun setAppCrashHandler(songBookAPIAdapter: SongBookAPIAdapter) {
@@ -48,11 +47,4 @@ class AppCrashHandler(
         Thread.sleep(3000)
         oldHandler?.uncaughtException(thread, throwable)
     }
-}
-
-fun exceptionToString(e: Throwable): String {
-    val sw = StringWriter()
-    val pw = PrintWriter(sw)
-    e.printStackTrace(pw)
-    return sw.toString()
 }

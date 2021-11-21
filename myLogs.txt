@@ -1,0 +1,112 @@
+Starting a Gradle Daemon (subsequent builds will be faster)
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :ChordDroidLibrary:preBuild UP-TO-DATE
+> Task :ChordDroidLibrary:preDebugBuild UP-TO-DATE
+> Task :ChordDroidLibrary:compileDebugAidl NO-SOURCE
+> Task :clickablewordstextview:preBuild UP-TO-DATE
+> Task :clickablewordstextview:preDebugBuild UP-TO-DATE
+> Task :clickablewordstextview:compileDebugAidl NO-SOURCE
+> Task :model:preBuild UP-TO-DATE
+> Task :model:preDebugBuild UP-TO-DATE
+> Task :model:compileDebugAidl NO-SOURCE
+> Task :sideAppBar:preBuild UP-TO-DATE
+> Task :sideAppBar:preDebugBuild UP-TO-DATE
+> Task :sideAppBar:compileDebugAidl NO-SOURCE
+> Task :app:compileDebugAidl NO-SOURCE
+> Task :ChordDroidLibrary:packageDebugRenderscript NO-SOURCE
+> Task :clickablewordstextview:packageDebugRenderscript NO-SOURCE
+> Task :model:packageDebugRenderscript NO-SOURCE
+> Task :sideAppBar:packageDebugRenderscript NO-SOURCE
+> Task :app:compileDebugRenderscript NO-SOURCE
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :ChordDroidLibrary:writeDebugAarMetadata UP-TO-DATE
+> Task :clickablewordstextview:writeDebugAarMetadata UP-TO-DATE
+> Task :model:writeDebugAarMetadata UP-TO-DATE
+> Task :sideAppBar:writeDebugAarMetadata UP-TO-DATE
+> Task :app:checkDebugAarMetadata
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :ChordDroidLibrary:compileDebugRenderscript NO-SOURCE
+> Task :ChordDroidLibrary:generateDebugResValues UP-TO-DATE
+> Task :ChordDroidLibrary:generateDebugResources UP-TO-DATE
+> Task :ChordDroidLibrary:packageDebugResources UP-TO-DATE
+> Task :clickablewordstextview:compileDebugRenderscript NO-SOURCE
+> Task :clickablewordstextview:generateDebugResValues UP-TO-DATE
+> Task :clickablewordstextview:generateDebugResources UP-TO-DATE
+> Task :clickablewordstextview:packageDebugResources UP-TO-DATE
+> Task :model:compileDebugRenderscript NO-SOURCE
+> Task :model:generateDebugResValues UP-TO-DATE
+> Task :model:generateDebugResources UP-TO-DATE
+> Task :model:packageDebugResources UP-TO-DATE
+> Task :sideAppBar:compileDebugRenderscript NO-SOURCE
+> Task :sideAppBar:generateDebugResValues UP-TO-DATE
+> Task :sideAppBar:generateDebugResources UP-TO-DATE
+> Task :sideAppBar:packageDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :ChordDroidLibrary:extractDeepLinksDebug UP-TO-DATE
+> Task :ChordDroidLibrary:processDebugManifest UP-TO-DATE
+> Task :clickablewordstextview:extractDeepLinksDebug UP-TO-DATE
+> Task :clickablewordstextview:processDebugManifest UP-TO-DATE
+> Task :model:extractDeepLinksDebug UP-TO-DATE
+> Task :model:processDebugManifest UP-TO-DATE
+> Task :sideAppBar:extractDeepLinksDebug UP-TO-DATE
+> Task :sideAppBar:processDebugManifest UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :ChordDroidLibrary:compileDebugLibraryResources UP-TO-DATE
+> Task :ChordDroidLibrary:parseDebugLocalResources UP-TO-DATE
+> Task :ChordDroidLibrary:generateDebugRFile UP-TO-DATE
+> Task :clickablewordstextview:compileDebugLibraryResources UP-TO-DATE
+> Task :clickablewordstextview:parseDebugLocalResources UP-TO-DATE
+> Task :clickablewordstextview:generateDebugRFile UP-TO-DATE
+> Task :model:compileDebugLibraryResources UP-TO-DATE
+> Task :model:parseDebugLocalResources UP-TO-DATE
+> Task :model:generateDebugRFile UP-TO-DATE
+> Task :sideAppBar:compileDebugLibraryResources UP-TO-DATE
+> Task :sideAppBar:parseDebugLocalResources UP-TO-DATE
+> Task :sideAppBar:generateDebugRFile UP-TO-DATE
+> Task :ChordDroidLibrary:generateDebugBuildConfig UP-TO-DATE
+> Task :ChordDroidLibrary:javaPreCompileDebug UP-TO-DATE
+> Task :ChordDroidLibrary:compileDebugJavaWithJavac UP-TO-DATE
+> Task :ChordDroidLibrary:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :clickablewordstextview:generateDebugBuildConfig UP-TO-DATE
+> Task :clickablewordstextview:kaptGenerateStubsDebugKotlin UP-TO-DATE
+> Task :app:processDebugResources
+> Task :clickablewordstextview:kaptDebugKotlin UP-TO-DATE
+> Task :clickablewordstextview:compileDebugKotlin UP-TO-DATE
+> Task :clickablewordstextview:javaPreCompileDebug UP-TO-DATE
+> Task :clickablewordstextview:compileDebugJavaWithJavac UP-TO-DATE
+> Task :clickablewordstextview:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :model:generateDebugBuildConfig UP-TO-DATE
+> Task :model:kaptGenerateStubsDebugKotlin UP-TO-DATE
+> Task :model:kaptDebugKotlin UP-TO-DATE
+> Task :model:compileDebugKotlin UP-TO-DATE
+> Task :model:javaPreCompileDebug UP-TO-DATE
+> Task :model:compileDebugJavaWithJavac UP-TO-DATE
+> Task :model:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :sideAppBar:generateDebugBuildConfig UP-TO-DATE
+> Task :sideAppBar:kaptGenerateStubsDebugKotlin UP-TO-DATE
+> Task :sideAppBar:kaptDebugKotlin UP-TO-DATE
+
+> Task :sideAppBar:compileDebugKotlin FAILED
+w: ATTENTION!
+This build uses unsafe internal compiler arguments:
+
+-XXLanguage:+NonParenthesizedAnnotationsOnFunctionalTypes
+
+This mode is not recommended for production use,
+as no stability/compatibility guarantees are given on
+compiler or generated code. Use it at your own risk!
+
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 8.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+See https://docs.gradle.org/7.2/userguide/command_line_interface.html#sec:command_line_warnings
+64 actionable tasks: 2 executed, 62 up-to-date

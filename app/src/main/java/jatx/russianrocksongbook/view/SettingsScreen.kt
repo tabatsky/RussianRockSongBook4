@@ -19,11 +19,11 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.R
-import jatx.russianrocksongbook.data.ARTIST_ADD_ARTIST
-import jatx.russianrocksongbook.data.ARTIST_ADD_SONG
-import jatx.russianrocksongbook.data.ARTIST_CLOUD_SONGS
-import jatx.russianrocksongbook.data.ARTIST_DONATION
-import jatx.russianrocksongbook.preferences.*
+import jatx.russianrocksongbook.model.data.ARTIST_ADD_ARTIST
+import jatx.russianrocksongbook.model.data.ARTIST_ADD_SONG
+import jatx.russianrocksongbook.model.data.ARTIST_CLOUD_SONGS
+import jatx.russianrocksongbook.model.data.ARTIST_DONATION
+import jatx.russianrocksongbook.model.preferences.*
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 
 @Composable
@@ -139,7 +139,6 @@ fun SettingsScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
 
 @Composable
 private fun SettingsBodyPortrait(
-    mvvmViewModel: MvvmViewModel = viewModel(),
     theme: Theme,
     settings: Settings,
     fontSizeLabelSp: TextUnit,
@@ -258,7 +257,6 @@ private fun SettingsBodyPortrait(
 
 @Composable
 private fun SettingsBodyLandscape(
-    mvvmViewModel: MvvmViewModel = viewModel(),
     theme: Theme,
     settings: Settings,
     fontSizeLabelSp: TextUnit,

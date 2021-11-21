@@ -21,10 +21,10 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.R
-import jatx.russianrocksongbook.data.OrderBy
-import jatx.russianrocksongbook.domain.CloudSong
-import jatx.russianrocksongbook.preferences.ScalePow
-import jatx.russianrocksongbook.preferences.Theme
+import jatx.russianrocksongbook.model.data.OrderBy
+import jatx.russianrocksongbook.model.domain.CloudSong
+import jatx.russianrocksongbook.model.preferences.ScalePow
+import jatx.russianrocksongbook.model.preferences.Theme
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import kotlinx.coroutines.launch
 
