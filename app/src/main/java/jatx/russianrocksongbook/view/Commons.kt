@@ -92,7 +92,10 @@ fun CommonTopAppBar(
     TopAppBar(
         title = {
             title?.apply {
-                Text(text = this)
+                Text(
+                    text = this,
+                    softWrap = false
+                )
             }
         },
         backgroundColor = colorDarkYellow,
@@ -116,3 +119,9 @@ fun CommonSideAppBar(
         appBarWidth = appBarWidth
     )
 }
+
+fun String.crop(maxLength: Int) =
+    if (this.length <= maxLength)
+        this
+    else
+        this.take(maxLength - 1) + "…"
