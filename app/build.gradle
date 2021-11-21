@@ -91,4 +91,6 @@ dependencies {
     implementation project(':sideAppBar')
     implementation project(':clickablewordstextview')
     implementation project(':ChordDroidLibrary')
+
+    implementation project(':data')
 }
