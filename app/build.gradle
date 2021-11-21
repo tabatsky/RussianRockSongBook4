@@ -87,4 +87,6 @@ dependencies {
     implementation project(':ChordDroidLibrary')
 
     implementation project(':model')
+    implementation project(':viewmodel')
+    implementation project(':helpers')
 }

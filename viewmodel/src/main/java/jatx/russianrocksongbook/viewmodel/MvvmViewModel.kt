@@ -12,7 +12,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.model.data.*
 import jatx.russianrocksongbook.model.api.gson.STATUS_ERROR
 import jatx.russianrocksongbook.model.api.gson.STATUS_SUCCESS
@@ -25,7 +24,6 @@ import jatx.russianrocksongbook.model.domain.Song
 import jatx.russianrocksongbook.model.domain.formatRating
 import jatx.russianrocksongbook.model.preferences.Settings
 import jatx.russianrocksongbook.model.preferences.UserInfo
-import jatx.russianrocksongbook.view.CurrentScreenVariant
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.io.File
@@ -34,12 +32,12 @@ import javax.inject.Inject
 @HiltViewModel
 class MvvmViewModel @Inject constructor(
     @ApplicationContext val context: Context,
-    val songRepo: SongRepository,
     val settings: Settings,
+    val actions: Actions,
     val songBookAPIAdapter: SongBookAPIAdapter,
-    val userInfo: UserInfo,
-    val fileSystemAdapter: FileSystemAdapter,
-    val actions: Actions
+    private val songRepo: SongRepository,
+    private val userInfo: UserInfo,
+    private val fileSystemAdapter: FileSystemAdapter,
 ): ViewModel() {
     private val _currentScreenVariant = MutableStateFlow(CurrentScreenVariant.START)
     val currentScreenVariant = _currentScreenVariant.asStateFlow()
@@ -360,7 +358,7 @@ class MvvmViewModel @Inject constructor(
     fun downloadCurrent() {
         cloudSong.value?.apply {
             songRepo.addSongFromCloud(this)
-            showToast(R.string.chords_saved_and_added_to_favorite)
+            showToast(R.string.toast_chords_saved_and_added_to_favorite)
         }
     }
 
@@ -378,7 +376,10 @@ class MvvmViewModel @Inject constructor(
                         STATUS_SUCCESS -> {
                             val voteWeight = result.data?.toDouble() ?: 0.0
                             val voteWeightStr = formatRating(voteWeight)
-                            showToast("Голос засчитан. Вес голоса: $voteWeightStr")
+                            val toastText = context.getString(
+                                R.string.toast_vote_success, voteWeightStr
+                            )
+                            showToast(toastText)
                         }
                         STATUS_ERROR -> {
                             showToast(result.message ?: "")
@@ -500,7 +501,7 @@ class MvvmViewModel @Inject constructor(
                     STATUS_SUCCESS -> {
                         result.data?.apply {
                             val toastText = context.getString(
-                                R.string.upload_songs_result,
+                                R.string.toast_upload_songs_result,
                                 success, duplicate, error
                             )
                             showToast(toastText)
@@ -528,7 +529,7 @@ class MvvmViewModel @Inject constructor(
                 .subscribe({ result ->
                     when (result.status) {
                         STATUS_SUCCESS -> {
-                            showToast(R.string.upload_to_cloud_success)
+                            showToast(R.string.toast_upload_to_cloud_success)
                             showNewSong()
                         }
                         STATUS_ERROR -> showToast(result.message ?: "")
@@ -571,7 +572,7 @@ class MvvmViewModel @Inject constructor(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
                     when (result.status) {
-                        STATUS_SUCCESS -> showToast(R.string.upload_to_cloud_success)
+                        STATUS_SUCCESS -> showToast(R.string.toast_upload_to_cloud_success)
                         STATUS_ERROR -> showToast(result.message ?: "")
                     }
                     _isUploadButtonEnabled.value = true
@@ -594,7 +595,7 @@ class MvvmViewModel @Inject constructor(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
                     when (result.status) {
-                        STATUS_SUCCESS -> showToast(R.string.send_warning_success)
+                        STATUS_SUCCESS -> showToast(R.string.toast_send_warning_success)
                         STATUS_ERROR -> showToast(result.message ?: "")
                     }
                 }, { error ->
@@ -615,7 +616,7 @@ class MvvmViewModel @Inject constructor(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
                     when (result.status) {
-                        STATUS_SUCCESS -> showToast(R.string.send_warning_success)
+                        STATUS_SUCCESS -> showToast(R.string.toast_send_warning_success)
                         STATUS_ERROR -> showToast(result.message ?: "")
                     }
                 }, { error ->
@@ -627,17 +628,16 @@ class MvvmViewModel @Inject constructor(
 
     fun copySongsFromDirToRepoWithPickedDir(pickedDir: DocumentFile) {
         if (!pickedDir.exists()) {
-            val toastText = context.getString(R.string.folder_does_not_exist)
-            showToast(toastText)
+            showToast(R.string.toast_folder_does_not_exist)
         } else if (!pickedDir.isDirectory) {
-            val toastText = context.getString(R.string.this_is_not_folder)
-            showToast(toastText)
+            showToast(R.string.toast_this_is_not_folder)
         } else {
             val (artist, songs) = fileSystemAdapter.getSongsFromDir(pickedDir) {
-                showToast("Файл не найден: $it")
+                val toastText = context.getString(R.string.toast_file_not_found, it)
+                showToast(toastText)
             }
             val actualSongs = songRepo.insertReplaceUserSongs(songs)
-            val toastText = context.getString(R.string.added_songs_count, songs.size)
+            val toastText = context.getString(R.string.toast_added_songs_count, songs.size)
             showToast(toastText)
             showUploadOfferForDir(artist, actualSongs)
         }
@@ -646,17 +646,16 @@ class MvvmViewModel @Inject constructor(
     fun copySongsFromDirToRepoWithPath(path: String) {
         val dir = File(path)
         if (!dir.exists()) {
-            val toastText = context.getString(R.string.folder_does_not_exist)
-            showToast(toastText)
+            showToast(R.string.toast_folder_does_not_exist)
         } else if (!dir.isDirectory) {
-            val toastText = context.getString(R.string.this_is_not_folder)
-            showToast(toastText)
+            showToast(R.string.toast_this_is_not_folder)
         } else {
             val (artist, songs) = fileSystemAdapter.getSongsFromDir(dir) {
-                showToast("Файл не найден: $it")
+                val toastText = context.getString(R.string.toast_file_not_found, it)
+                showToast(toastText)
             }
             val actualSongs = songRepo.insertReplaceUserSongs(songs)
-            val toastText = context.getString(R.string.added_songs_count, songs.size)
+            val toastText = context.getString(R.string.toast_added_songs_count, songs.size)
             showToast(toastText)
             showUploadOfferForDir(artist, actualSongs)
         }

@@ -14,8 +14,10 @@
             <option value="$PROJECT_DIR$/ChordDroidLibrary" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/clickablewordstextview" />
+            <option value="$PROJECT_DIR$/helpers" />
             <option value="$PROJECT_DIR$/model" />
             <option value="$PROJECT_DIR$/sideAppBar" />
+            <option value="$PROJECT_DIR$/viewmodel" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
