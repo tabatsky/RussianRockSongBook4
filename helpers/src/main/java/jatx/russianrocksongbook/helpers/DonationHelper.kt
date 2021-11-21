@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import com.android.billingclient.api.*
-import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import java.util.ArrayList
 import javax.inject.Inject
