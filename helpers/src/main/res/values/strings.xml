@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_at_yandex_music">Искать в Яндекс-Музыке</string>
+    <string name="search_at_youtube_music">Искать в Youtube Music</string>
+    <string name="utf8_not_supported">Кодировка UTF-8 не поддерживается</string>
+    <string name="vk_app_not_installed">Приложение VK не установлено</string>
+    <string name="thanks_for_donation">Спасибо за Ваше пожертвование</string>
+</resources>
