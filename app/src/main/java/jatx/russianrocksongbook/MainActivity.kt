@@ -36,8 +36,7 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var addSongsFromDirHelper: AddSongsFromDirHelper
 
-    private val mvvmViewModel: MvvmViewModel by viewModels()
-
+    @DelicateCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -51,27 +50,34 @@ class MainActivity : ComponentActivity() {
             CurrentScreen()
         }
 
-        mvvmViewModel.onRestartApp = ::restartApp
-        mvvmViewModel.onReviewApp = ::reviewApp
-        mvvmViewModel.onShowDevSite = ::showDevSite
-        mvvmViewModel.onOpenYandexMusic = musicHelper::openYandexMusic
-        mvvmViewModel.onOpenVkMusic = musicHelper::openVkMusic
-        mvvmViewModel.onOpenYoutubeMusic = musicHelper::openYoutubeMusic
-        mvvmViewModel.onAddSongsFromDir = ::addSongsFromDir
-        mvvmViewModel.onPurchaseItem = donationHelper::purchaseItem
-
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
+                val mvvmViewModel: MvvmViewModel by viewModels()
                 mvvmViewModel.asyncInit()
             }
         }
     }
 
     @Inject
+    fun initActions() {
+        Log.e("inject init", "actions")
+        val mvvmViewModel: MvvmViewModel by viewModels()
+        mvvmViewModel.actions.onRestartApp = ::restartApp
+        mvvmViewModel.actions.onReviewApp = ::reviewApp
+        mvvmViewModel.actions.onShowDevSite = ::showDevSite
+        mvvmViewModel.actions.onOpenYandexMusic = musicHelper::openYandexMusic
+        mvvmViewModel.actions.onOpenVkMusic = musicHelper::openVkMusic
+        mvvmViewModel.actions.onOpenYoutubeMusic = musicHelper::openYoutubeMusic
+        mvvmViewModel.actions.onAddSongsFromDir = ::addSongsFromDir
+        mvvmViewModel.actions.onPurchaseItem = donationHelper::purchaseItem
+    }
+
+    @Inject
     fun initAppDebug() {
         Log.e("inject init", "AppDebug")
+        val mvvmViewModel: MvvmViewModel by viewModels()
         AppDebug.setAppCrashHandler(mvvmViewModel.songBookAPIAdapter)
     }
 
@@ -81,8 +87,11 @@ class MainActivity : ComponentActivity() {
         Version.init(context)
     }
 
-    override fun onBackPressed() = mvvmViewModel.back {
-        finish()
+    override fun onBackPressed() {
+        val mvvmViewModel: MvvmViewModel by viewModels()
+        mvvmViewModel.back {
+            finish()
+        }
     }
 
     private fun restartApp() {
@@ -113,8 +122,11 @@ class MainActivity : ComponentActivity() {
         )
     }
 
-    private fun addSongsFromDir() = addSongsFromDirHelper.addSongsFromDir(
-        onPickedDirReturned = mvvmViewModel::copySongsFromDirToRepoWithPickedDir,
-        onPathReturned = mvvmViewModel::copySongsFromDirToRepoWithPath
-    )
+    private fun addSongsFromDir() {
+        val mvvmViewModel: MvvmViewModel by viewModels()
+        addSongsFromDirHelper.addSongsFromDir(
+            onPickedDirReturned = mvvmViewModel::copySongsFromDirToRepoWithPickedDir,
+            onPathReturned = mvvmViewModel::copySongsFromDirToRepoWithPath
+        )
+    }
 }

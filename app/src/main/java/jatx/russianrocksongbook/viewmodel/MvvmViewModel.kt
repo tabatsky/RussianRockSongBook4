@@ -38,18 +38,9 @@ class MvvmViewModel @Inject constructor(
     val settings: Settings,
     val songBookAPIAdapter: SongBookAPIAdapter,
     val userInfo: UserInfo,
-    val fileSystemAdapter: FileSystemAdapter
+    val fileSystemAdapter: FileSystemAdapter,
+    val actions: Actions
 ): ViewModel() {
-    var onOpenYandexMusic: (String) -> Unit = {}
-    var onOpenVkMusic: (String) -> Unit = {}
-    var onOpenYoutubeMusic: (String) -> Unit = {}
-    var onShowDevSite: () -> Unit = {}
-    var onReviewApp: () -> Unit = {}
-    var onRestartApp: () -> Unit = {}
-    var onAddSongsFromDir: () -> Unit = {}
-    var onPurchaseItem: (String) -> Unit = {}
-
-
     private val _currentScreenVariant = MutableStateFlow(CurrentScreenVariant.START)
     val currentScreenVariant = _currentScreenVariant.asStateFlow()
     private val _appWasUpdated = MutableStateFlow(false)
@@ -432,47 +423,47 @@ class MvvmViewModel @Inject constructor(
     fun openYandexMusic(dontAskMore: Boolean) {
         settings.yandexMusicDontAsk = dontAskMore
         currentSong.value?.apply {
-            onOpenYandexMusic("$artist $title")
+            actions.onOpenYandexMusic("$artist $title")
         }
     }
 
     fun openVkMusic(dontAskMore: Boolean) {
         settings.vkMusicDontAsk = dontAskMore
         currentSong.value?.apply {
-            onOpenVkMusic("$artist $title")
+            actions.onOpenVkMusic("$artist $title")
         }
     }
 
     fun openYoutubeMusic(dontAskMore: Boolean) {
         settings.youtubeMusicDontAsk = dontAskMore
         currentSong.value?.apply {
-            onOpenYoutubeMusic("$artist $title")
+            actions.onOpenYoutubeMusic("$artist $title")
         }
     }
 
     fun openYandexMusicCloud(dontAskMore: Boolean) {
         settings.yandexMusicDontAsk = dontAskMore
         cloudSong.value?.apply {
-            onOpenYandexMusic("$artist $title")
+            actions.onOpenYandexMusic("$artist $title")
         }
     }
 
     fun openVkMusicCloud(dontAskMore: Boolean) {
         settings.vkMusicDontAsk = dontAskMore
         cloudSong.value?.apply {
-            onOpenVkMusic("$artist $title")
+            actions.onOpenVkMusic("$artist $title")
         }
     }
 
     fun openYoutubeMusicCloud(dontAskMore: Boolean) {
         settings.youtubeMusicDontAsk = dontAskMore
         cloudSong.value?.apply {
-            onOpenYoutubeMusic("$artist $title")
+            actions.onOpenYoutubeMusic("$artist $title")
         }
     }
 
     fun addSongsFromDir() {
-        onAddSongsFromDir()
+        actions.onAddSongsFromDir()
     }
 
     private fun showUploadOfferForDir(artist: String, songs: List<Song>) {
@@ -682,7 +673,19 @@ class MvvmViewModel @Inject constructor(
     }
 
     fun purchaseItem(sku: String) {
-        onPurchaseItem(sku)
+        actions.onPurchaseItem(sku)
+    }
+
+    fun restartApp() {
+        actions.onRestartApp()
+    }
+
+    fun reviewApp() {
+        actions.onReviewApp()
+    }
+
+    fun showDevSite() {
+        actions.onShowDevSite()
     }
 
     private fun showToast(toastText: String) {

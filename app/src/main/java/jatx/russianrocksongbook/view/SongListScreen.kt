@@ -251,7 +251,7 @@ private fun SongListActions(
     ) {
         DropdownMenuItem(onClick = {
             println("selected: review app")
-            mvvmViewModel.onReviewApp()
+            mvvmViewModel.reviewApp()
         }) {
             Text(
                 text = stringResource(id = R.string.item_review_app),
@@ -260,7 +260,7 @@ private fun SongListActions(
         }
         DropdownMenuItem(onClick = {
             println("selected: dev site")
-            mvvmViewModel.onShowDevSite()
+            mvvmViewModel.showDevSite()
         }) {
             Text(
                 text = stringResource(id = R.string.item_dev_site),
