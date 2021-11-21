@@ -69,7 +69,7 @@ fun SettingsScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
         settings.orientation = orientationToSave
         settings.listenToMusicVariant = listenToMusicVariantToSave
         settings.scrollSpeed = scrollSpeedToSave
-        mvvmViewModel.onRestartApp()
+        mvvmViewModel.restartApp()
     }
 
     val labelFontScale = settings.getSpecificFontScale(ScalePow.LABEL)
