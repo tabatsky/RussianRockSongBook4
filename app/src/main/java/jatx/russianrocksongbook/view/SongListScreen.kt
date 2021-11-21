@@ -25,7 +25,8 @@ import jatx.russianrocksongbook.preferences.Theme
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import kotlinx.coroutines.launch
 
-private const val MAX_ARTIST_LENGTH = 12
+private const val MAX_ARTIST_LENGTH_LANDSCAPE = 12
+private const val MAX_ARTIST_LENGTH_PORTRAIT = 15
 
 @Composable
 fun SongListScreen() {
@@ -61,12 +62,6 @@ private fun SongListContent(
     val theme = mvvmViewModel.settings.theme
     val artist by mvvmViewModel.currentArtist.collectAsState()
 
-    val visibleArtist =
-        if (artist.length <= MAX_ARTIST_LENGTH)
-            artist
-        else
-            artist.take(MAX_ARTIST_LENGTH - 1) + "…"
-
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
@@ -75,6 +70,8 @@ private fun SongListContent(
         val H = this.maxHeight
 
         if (W < H) {
+            val visibleArtist = artist.crop(MAX_ARTIST_LENGTH_PORTRAIT)
+
             Column(
                 modifier = Modifier
                     .background(theme.colorBg)
@@ -95,6 +92,8 @@ private fun SongListContent(
                 WhatsNewDialog()
             }
         } else {
+            val visibleArtist = artist.crop(MAX_ARTIST_LENGTH_LANDSCAPE)
+
             Row(
                 modifier = Modifier
                     .background(theme.colorBg)
