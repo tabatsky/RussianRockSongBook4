@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_in_app">Ошибка в приложении</string>
+    <string name="toast_added_to_favorite">Добавлено в избранное</string>
+    <string name="toast_removed_from_favorite">Удалено из избранного</string>
+    <string name="toast_deleted_to_trash">Удалено</string>
+    <string name="toast_chords_saved_and_added_to_favorite">Аккорды сохранены в локальной базе данных и добавлены в избранное</string>
+    <string name="toast_upload_songs_result">Добавлено: %d\nПовторов: %d\nОшибок: %d</string>
+    <string name="toast_upload_to_cloud_success">Успешно добавлено в облако</string>
+    <string name="toast_send_warning_success">Уведомление отправлено</string>
+    <string name="toast_song_added">Песня добавлена</string>
+    <string name="toast_folder_does_not_exist">Папка не существует</string>
+    <string name="toast_this_is_not_folder">Это не папка</string>
+    <string name="toast_file_not_found">Файл не найден: %s</string>
+    <string name="toast_added_songs_count">Добавлено песен: %d</string>
+    <string name="toast_vote_success">Голос засчитан. Вес голоса: %s</string>
+</resources>

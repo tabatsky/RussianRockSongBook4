@@ -185,26 +185,11 @@
     <string name="hint_comment">Комментарий</string>
     <string name="title_activity_cloud_search">Аккорды онлайн</string>
 
-    <string name="utf8_not_supported">Кодировка UTF-8 не поддерживается</string>
-    <string name="vk_app_not_installed">Приложение VK не установлено</string>
-    <string name="upload_to_cloud_success">Успешно добавлено в облако</string>
-    <string name="send_warning_success">Уведомление отправлено</string>
-    <string name="toast_added_to_favorite">Добавлено в избранное</string>
-    <string name="toast_removed_from_favorite">Удалено из избранного</string>
-    <string name="search_at_yandex_music">Искать в Яндекс-Музыке</string>
-    <string name="search_at_youtube_music">Искать в Youtube Music</string>
-    <string name="toast_deleted_to_trash">Удалено</string>
     <string name="label_placeholder">Список пуст</string>
-    <string name="error_in_app">Ошибка в приложении</string>
     <string name="dont_ask_more">Больше не спрашивать</string>
     <string name="question_search_at_yandex_music">Искать песню в Яндекс-Музыке?</string>
     <string name="question_search_at_youtube_music">Искать песню в Youtube Music?</string>
     <string name="question_search_at_vk_music">Искать песню в приложении VK?</string>
-    <string name="chords_saved_and_added_to_favorite">Аккорды сохранены в локальной базе данных и добавлены в избранное</string>
-    <string name="folder_does_not_exist">Папка не существует</string>
-    <string name="this_is_not_folder">Это не папка</string>
-    <string name="added_songs_count">Добавлено песен: %d</string>
-    <string name="upload_songs_result">Добавлено: %d\nПовторов: %d\nОшибок: %d</string>
 
     <string name="add_artist">Добавить исполнителя</string>
     <string name="donation">Пожертвования</string>
@@ -214,10 +199,8 @@
     <string name="title">Название</string>
     <string name="song_text">Текст песни</string>
     <string name="save">Сохранить</string>
-    <string name="toast_song_added">Песня добавлена</string>
     <string name="toast_fill_all_fields">Заполните все поля</string>
 
-    <string name="thanks_for_donation">Спасибо за Ваше пожертвование</string>
     <string name="comment_cannot_be_empty">Комментарий не должен быть пустым</string>
     <string name="menu">Меню</string>
 </resources>

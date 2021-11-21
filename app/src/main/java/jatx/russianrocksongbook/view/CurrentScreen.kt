@@ -3,6 +3,7 @@ package jatx.russianrocksongbook.view
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
+import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 
 @Composable
@@ -19,17 +20,4 @@ fun CurrentScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
         CurrentScreenVariant.ADD_SONG -> AddSongScreen()
         CurrentScreenVariant.DONATION -> DonationScreen()
     }
-}
-
-enum class CurrentScreenVariant {
-    START,
-    SONG_LIST,
-    FAVORITE,
-    SONG_TEXT,
-    ADD_ARTIST,
-    ADD_SONG,
-    CLOUD_SEARCH,
-    CLOUD_SONG_TEXT,
-    DONATION,
-    SETTINGS
 }

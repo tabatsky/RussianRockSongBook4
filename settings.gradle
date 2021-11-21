@@ -10,3 +10,5 @@ rootProject.name = "RussianRockSongBook4"
 include ':clickablewordstextview', ':ChordDroidLibrary', ':app'
 include ':sideAppBar'
 include ':model'
+include ':helpers'
+include ':viewmodel'
