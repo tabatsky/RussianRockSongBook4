@@ -17,10 +17,12 @@ import jatx.russianrocksongbook.debug.AppDebug
 import jatx.russianrocksongbook.helpers.AddSongsFromDirHelper
 import jatx.russianrocksongbook.helpers.DonationHelper
 import jatx.russianrocksongbook.helpers.MusicHelper
+import jatx.russianrocksongbook.model.data.OrderBy
 import jatx.russianrocksongbook.model.preferences.Orientation
 import jatx.russianrocksongbook.model.preferences.Settings
-import jatx.russianrocksongbook.model.preferences.Version
+import jatx.russianrocksongbook.model.version.Version
 import jatx.russianrocksongbook.view.*
+import jatx.russianrocksongbook.viewmodel.CloudViewModel
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import kotlinx.coroutines.*
 import javax.inject.Inject
@@ -72,6 +74,11 @@ class MainActivity : ComponentActivity() {
         mvvmViewModel.actions.onOpenYoutubeMusic = musicHelper::openYoutubeMusic
         mvvmViewModel.actions.onAddSongsFromDir = ::addSongsFromDir
         mvvmViewModel.actions.onPurchaseItem = donationHelper::purchaseItem
+        mvvmViewModel.actions.onCloudSearchScreenSelected = {
+            val cloudViewModel: CloudViewModel by viewModels()
+            cloudViewModel.cloudSearch("", OrderBy.BY_ID_DESC)
+            cloudViewModel.selectCloudSong(0)
+        }
     }
 
     @Inject

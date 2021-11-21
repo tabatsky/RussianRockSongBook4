@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.model.preferences
+package jatx.russianrocksongbook.model.version
 
 import android.content.Context
 import android.content.pm.PackageManager

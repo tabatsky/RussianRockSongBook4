@@ -26,12 +26,12 @@ import jatx.russianrocksongbook.model.domain.CloudSong
 import jatx.russianrocksongbook.model.preferences.ScalePow
 import jatx.russianrocksongbook.model.preferences.Theme
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
-import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.russianrocksongbook.viewmodel.CloudViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun CloudSearchScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
-    val theme = mvvmViewModel.settings.theme
+fun CloudSearchScreen(cloudViewModel: CloudViewModel = viewModel()) {
+    val theme = cloudViewModel.settings.theme
 
     BoxWithConstraints(
         modifier = Modifier
@@ -70,17 +70,17 @@ fun CloudSearchScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
 
 @Composable
 private fun CloudSearchBody(
-    mvvmViewModel: MvvmViewModel = viewModel(),
+    cloudViewModel: CloudViewModel = viewModel(),
     modifier: Modifier,
     isPortrait: Boolean
 ) {
-    val theme = mvvmViewModel.settings.theme
+    val theme = cloudViewModel.settings.theme
 
-    val cloudSongList by mvvmViewModel.cloudSongList.collectAsState()
-    val position by mvvmViewModel.cloudSongPosition.collectAsState()
-    val isCloudLoading by mvvmViewModel.isCloudLoading.collectAsState()
+    val cloudSongList by cloudViewModel.cloudSongList.collectAsState()
+    val position by cloudViewModel.cloudSongPosition.collectAsState()
+    val isCloudLoading by cloudViewModel.isCloudLoading.collectAsState()
 
-    val fontScale = mvvmViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
+    val fontScale = cloudViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTextDp = dimensionResource(id = R.dimen.text_size_16) * fontScale
     val fontSizeTextSp = with(LocalDensity.current) {
         fontSizeTextDp.toSp()
@@ -105,13 +105,13 @@ private fun CloudSearchBody(
     }
 
     val onSearchClick = {
-        mvvmViewModel.cloudSearch(searchFor, orderBy)
+        cloudViewModel.cloudSearch(searchFor, orderBy)
     }
 
     val onItemClick: (Int, CloudSong) -> Unit = { index, cloudSong ->
         println("selected: ${cloudSong.artist} - ${cloudSong.title}")
-        mvvmViewModel.selectCloudSong(index)
-        mvvmViewModel.selectScreen(CurrentScreenVariant.CLOUD_SONG_TEXT)
+        cloudViewModel.selectCloudSong(index)
+        cloudViewModel.selectScreen(CurrentScreenVariant.CLOUD_SONG_TEXT)
     }
 
     Column(

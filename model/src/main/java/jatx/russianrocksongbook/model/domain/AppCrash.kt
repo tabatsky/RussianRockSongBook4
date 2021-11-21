@@ -3,7 +3,7 @@ package jatx.russianrocksongbook.model.domain
 import android.os.Build
 import jatx.russianrocksongbook.model.api.gson.AppCrashGson
 import jatx.russianrocksongbook.model.debug.exceptionToString
-import jatx.russianrocksongbook.model.preferences.Version
+import jatx.russianrocksongbook.model.version.Version
 
 data class AppCrash(
     val appVersionName: String = Version.appVersionName,

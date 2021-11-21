@@ -11,7 +11,9 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 @BoundTo(supertype = FileSystemAdapter::class, component = SingletonComponent::class)
 class FileSystemAdapterImpl @Inject constructor(
     @ApplicationContext val context: Context

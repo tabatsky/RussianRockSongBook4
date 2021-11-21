@@ -256,7 +256,9 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
                     showYandexDialog = false
                     mvvmViewModel.openYandexMusic(true)
                 } else {
-                    YandexMusicDialog {
+                    YandexMusicDialog(
+                        mvvmViewModel = mvvmViewModel,
+                    ) {
                         showYandexDialog = false
                     }
                 }
@@ -266,7 +268,9 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
                     showVkDialog = false
                     mvvmViewModel.openVkMusic(true)
                 } else {
-                    VkMusicDialog {
+                    VkMusicDialog(
+                        mvvmViewModel = mvvmViewModel,
+                    ) {
                         showVkDialog = false
                     }
                 }
@@ -276,7 +280,9 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
                     showYoutubeMusicDialog = false
                     mvvmViewModel.openYoutubeMusic(true)
                 } else {
-                    YoutubeMusicDialog {
+                    YoutubeMusicDialog(
+                        mvvmViewModel = mvvmViewModel,
+                    ) {
                         showYoutubeMusicDialog = false
                     }
                 }

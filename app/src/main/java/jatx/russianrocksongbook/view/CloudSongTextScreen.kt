@@ -30,14 +30,14 @@ import jatx.russianrocksongbook.model.domain.CloudSong
 import jatx.russianrocksongbook.model.preferences.ListenToMusicVariant
 import jatx.russianrocksongbook.model.preferences.ScalePow
 import jatx.russianrocksongbook.model.preferences.Theme
-import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.russianrocksongbook.viewmodel.CloudViewModel
 import kotlinx.coroutines.launch
 
 private val CLOUD_SONG_TEXT_APP_BAR_WIDTH = 96.dp
 
 @Composable
-fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
-    val cloudSong by mvvmViewModel.cloudSong.collectAsState()
+fun CloudSongTextScreen(cloudViewModel: CloudViewModel = viewModel()) {
+    val cloudSong by cloudViewModel.cloudSong.collectAsState()
 
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -83,15 +83,15 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
     }
 
     val onDownloadClick = {
-        mvvmViewModel.downloadCurrent()
+        cloudViewModel.downloadCurrent()
     }
 
     val onLikeClick = {
-        mvvmViewModel.voteForCurrent(1)
+        cloudViewModel.voteForCurrent(1)
     }
 
     val onDislikeClick = {
-        mvvmViewModel.voteForCurrent(-1)
+        cloudViewModel.voteForCurrent(-1)
     }
 
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -100,9 +100,9 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
         showDeleteDialog = true
     }
 
-    val theme = mvvmViewModel.settings.theme
+    val theme = cloudViewModel.settings.theme
 
-    val fontScale = mvvmViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
+    val fontScale = cloudViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTitleDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
     val fontSizeTitleSp = with(LocalDensity.current) {
         fontSizeTitleDp.toSp()
@@ -152,7 +152,7 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
                         H = H,
                         theme = theme,
                         listenToMusicVariant =
-                        mvvmViewModel
+                        cloudViewModel
                             .settings
                             .listenToMusicVariant,
                         onYandexMusicClick = onYandexMusicClick,
@@ -198,7 +198,7 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
                         H = H,
                         theme = theme,
                         listenToMusicVariant =
-                        mvvmViewModel
+                        cloudViewModel
                             .settings
                             .listenToMusicVariant,
                         onYandexMusicClick = onYandexMusicClick,
@@ -213,31 +213,40 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
                 }
             }
             if (showYandexDialog) {
-                if (mvvmViewModel.settings.yandexMusicDontAsk) {
+                if (cloudViewModel.settings.yandexMusicDontAsk) {
                     showYandexDialog = false
-                    mvvmViewModel.openYandexMusicCloud(true)
+                    cloudViewModel.openYandexMusicCloud(true)
                 } else {
-                    YandexMusicDialog(isCloudScreen = true) {
+                    YandexMusicDialog(
+                        mvvmViewModel = cloudViewModel,
+                        isCloudScreen = true
+                    ) {
                         showYandexDialog = false
                     }
                 }
             }
             if (showVkDialog) {
-                if (mvvmViewModel.settings.vkMusicDontAsk) {
+                if (cloudViewModel.settings.vkMusicDontAsk) {
                     showVkDialog = false
-                    mvvmViewModel.openVkMusicCloud(true)
+                    cloudViewModel.openVkMusicCloud(true)
                 } else {
-                    VkMusicDialog(isCloudScreen = true) {
+                    VkMusicDialog(
+                        mvvmViewModel = cloudViewModel,
+                        isCloudScreen = true
+                    ) {
                         showVkDialog = false
                     }
                 }
             }
             if (showYoutubeMusicDialog) {
-                if (mvvmViewModel.settings.youtubeMusicDontAsk) {
+                if (cloudViewModel.settings.youtubeMusicDontAsk) {
                     showYoutubeMusicDialog = false
-                    mvvmViewModel.openYoutubeMusicCloud(true)
+                    cloudViewModel.openYoutubeMusicCloud(true)
                 } else {
-                    YoutubeMusicDialog(isCloudScreen = true) {
+                    YoutubeMusicDialog(
+                        mvvmViewModel = cloudViewModel,
+                        isCloudScreen = true
+                    ) {
                         showYoutubeMusicDialog = false
                     }
                 }
@@ -245,7 +254,7 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
             if (showWarningDialog) {
                 WarningDialog(
                     onConfirm = { comment ->
-                        mvvmViewModel.sendWarningCloud(comment)
+                        cloudViewModel.sendWarningCloud(comment)
                     },
                     onDismiss = {
                         showWarningDialog = false
@@ -255,7 +264,7 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
             if (showDeleteDialog) {
                 DeleteCloudSongDialog(
                     onConfirm = { secret1, secret2 ->
-                        mvvmViewModel.deleteCurrentFromCloud(secret1, secret2)
+                        cloudViewModel.deleteCurrentFromCloud(secret1, secret2)
                     },
                     onDismiss = {
                         showDeleteDialog = false
@@ -273,14 +282,14 @@ fun CloudSongTextScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
 
 @Composable
 private fun CloudSongTextActions(
-    mvvmViewModel: MvvmViewModel = viewModel(),
+    cloudViewModel: CloudViewModel = viewModel(),
     onCloudSongChanged: () -> Unit
 ) {
-    val position by mvvmViewModel.cloudSongPosition.collectAsState()
-    val count by mvvmViewModel.cloudSongCount.collectAsState()
+    val position by cloudViewModel.cloudSongPosition.collectAsState()
+    val count by cloudViewModel.cloudSongCount.collectAsState()
 
     CommonIconButton(resId = R.drawable.ic_left) {
-        mvvmViewModel.prevCloudSong()
+        cloudViewModel.prevCloudSong()
         onCloudSongChanged()
     }
     Text(
@@ -289,7 +298,7 @@ private fun CloudSongTextActions(
         fontSize = 20.sp
     )
     CommonIconButton(resId = R.drawable.ic_right) {
-        mvvmViewModel.nextCloudSong()
+        cloudViewModel.nextCloudSong()
         onCloudSongChanged()
     }
 }
