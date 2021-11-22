@@ -114,10 +114,6 @@ open class MvvmViewModel @Inject constructor(
         screenStateHolder.appWasUpdated.value = value
     }
 
-    fun purchaseItem(sku: String) {
-        callbacks.onPurchaseItem(sku)
-    }
-
     fun showToast(toastText: String) {
         Toast.makeText(context, toastText, Toast.LENGTH_LONG).show()
     }
