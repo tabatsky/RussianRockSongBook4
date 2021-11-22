@@ -14,6 +14,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.R
+import jatx.russianrocksongbook.commonview.CommonSideAppBar
+import jatx.russianrocksongbook.commonview.CommonTopAppBar
 import jatx.russianrocksongbook.helpers.DONATIONS
 import jatx.russianrocksongbook.helpers.DONATIONS_LANDSCAPE
 import jatx.russianrocksongbook.helpers.SKUS
