@@ -22,7 +22,9 @@ import jatx.russianrocksongbook.model.preferences.Orientation
 import jatx.russianrocksongbook.model.preferences.Settings
 import jatx.russianrocksongbook.model.version.Version
 import jatx.russianrocksongbook.view.*
-import jatx.russianrocksongbook.viewmodel.CloudViewModel
+import jatx.russianrocksongbook.cloudsongs.viewmodel.CloudViewModel
+import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
+import jatx.russianrocksongbook.localsongs.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import kotlinx.coroutines.*
 import javax.inject.Inject
@@ -75,9 +77,35 @@ class MainActivity : ComponentActivity() {
         mvvmViewModel.actions.onAddSongsFromDir = ::addSongsFromDir
         mvvmViewModel.actions.onPurchaseItem = donationHelper::purchaseItem
         mvvmViewModel.actions.onCloudSearchScreenSelected = {
-            val cloudViewModel: CloudViewModel by viewModels()
-            cloudViewModel.cloudSearch("", OrderBy.BY_ID_DESC)
-            cloudViewModel.selectCloudSong(0)
+            runOnUiThread {
+                val cloudViewModel: CloudViewModel by viewModels()
+                cloudViewModel.cloudSearch("", OrderBy.BY_ID_DESC)
+                cloudViewModel.selectCloudSong(0)
+            }
+        }
+        mvvmViewModel.actions.onArtistSelected = {
+            runOnUiThread {
+                val localViewModel: LocalViewModel by viewModels()
+                localViewModel.selectArtist(it)
+            }
+        }
+        mvvmViewModel.actions.onSongByArtistAndTitleSelected = { artist, title ->
+            runOnUiThread {
+                val localViewModel: LocalViewModel by viewModels()
+                localViewModel.selectArtist(
+                    artist = artist,
+                    forceOnSuccess = true,
+                    onSuccess = {
+                        val position = localViewModel
+                            .currentSongList
+                            .value
+                            .map { it.title }
+                            .indexOf(title)
+                        localViewModel.selectSong(position)
+                        localViewModel.selectScreen(CurrentScreenVariant.SONG_TEXT)
+                    }
+                )
+            }
         }
     }
 

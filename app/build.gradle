@@ -89,4 +89,8 @@ dependencies {
     implementation project(':model')
     implementation project(':viewmodel')
     implementation project(':helpers')
+
+    implementation project(':commonview')
+    implementation project(':localSongs')
+    implementation project(':cloudSongs')
 }

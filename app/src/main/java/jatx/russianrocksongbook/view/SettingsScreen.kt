@@ -19,6 +19,9 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.R
+import jatx.russianrocksongbook.commonview.CommonSideAppBar
+import jatx.russianrocksongbook.commonview.CommonTopAppBar
+import jatx.russianrocksongbook.commonview.Spinner
 import jatx.russianrocksongbook.model.data.ARTIST_ADD_ARTIST
 import jatx.russianrocksongbook.model.data.ARTIST_ADD_SONG
 import jatx.russianrocksongbook.model.data.ARTIST_CLOUD_SONGS

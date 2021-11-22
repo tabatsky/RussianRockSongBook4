@@ -3,6 +3,10 @@ package jatx.russianrocksongbook.view
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
+import jatx.russianrocksongbook.cloudsongs.view.CloudSearchScreen
+import jatx.russianrocksongbook.cloudsongs.view.CloudSongTextScreen
+import jatx.russianrocksongbook.localsongs.view.SongListScreen
+import jatx.russianrocksongbook.localsongs.view.SongTextScreen
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 
