@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.view
+package jatx.russianrocksongbook.commonview
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
@@ -14,69 +14,39 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.model.preferences.ScalePow
-import jatx.russianrocksongbook.viewmodel.CloudViewModel
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 
 @Composable
 fun YandexMusicDialog(
     mvvmViewModel: MvvmViewModel,
-    isCloudScreen: Boolean = false,
     onDismiss: () -> Unit
 ) = MusicDialog(
     mvvmViewModel = mvvmViewModel,
     stringRes = R.string.question_search_at_yandex_music,
-    onConfirm = {
-        if (isCloudScreen) {
-            if (mvvmViewModel is CloudViewModel) {
-                mvvmViewModel.openYandexMusicCloud(it)
-            }
-        } else {
-            mvvmViewModel.openYandexMusic(it)
-        }
-    },
+    onConfirm = mvvmViewModel::openYandexMusic,
     onDismiss = onDismiss
 )
 
 @Composable
 fun VkMusicDialog(
     mvvmViewModel: MvvmViewModel,
-    isCloudScreen: Boolean = false,
     onDismiss: () -> Unit
 ) = MusicDialog(
     mvvmViewModel = mvvmViewModel,
     stringRes = R.string.question_search_at_vk_music,
-    onConfirm = {
-        if (isCloudScreen) {
-            if (mvvmViewModel is CloudViewModel) {
-                mvvmViewModel.openVkMusicCloud(it)
-            }
-        } else {
-            mvvmViewModel.openVkMusic(it)
-        }
-    },
+    onConfirm = mvvmViewModel::openVkMusic,
     onDismiss = onDismiss
 )
 
 @Composable
 fun YoutubeMusicDialog(
     mvvmViewModel: MvvmViewModel,
-    isCloudScreen: Boolean = false,
     onDismiss: () -> Unit
 ) = MusicDialog(
     mvvmViewModel = mvvmViewModel,
     stringRes = R.string.question_search_at_youtube_music,
-    onConfirm = {
-        if (isCloudScreen) {
-            if (mvvmViewModel is CloudViewModel) {
-                mvvmViewModel.openYoutubeMusicCloud(it)
-            }
-        } else {
-            mvvmViewModel.openYoutubeMusic(it)
-        }
-    },
+    onConfirm = mvvmViewModel::openYoutubeMusic,
     onDismiss = onDismiss
 )
 

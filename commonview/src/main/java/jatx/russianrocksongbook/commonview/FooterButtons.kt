@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.view
+package jatx.russianrocksongbook.commonview
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
@@ -14,7 +14,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.model.preferences.Theme
 
 @Composable
