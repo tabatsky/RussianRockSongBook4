@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.view
+package jatx.russianrocksongbook.localsongs.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,25 +17,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
-import jatx.russianrocksongbook.R
+import jatx.russianrocksongbook.localsongs.viewmodel.LocalViewModel
+import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.model.preferences.ScalePow
-import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 
 
 @Composable
 fun WhatsNewDialog(
-    mvvmViewModel: MvvmViewModel = viewModel()
+    localViewModel: LocalViewModel = viewModel()
 ) {
-    val theme = mvvmViewModel.settings.theme
-    val fontScale = mvvmViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
+    val theme = localViewModel.settings.theme
+    val fontScale = localViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTitleDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
     val fontSizeTitleSp = with(LocalDensity.current) {
         fontSizeTitleDp.toSp()
     }
 
-    val appWasUpdated by mvvmViewModel.appWasUpdated.collectAsState()
+    val appWasUpdated by localViewModel.appWasUpdated.collectAsState()
     val onDismiss = {
-        mvvmViewModel.setAppWasUpdated(false)
+        localViewModel.setAppWasUpdated(false)
     }
 
     if (appWasUpdated) {
