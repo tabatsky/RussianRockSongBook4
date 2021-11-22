@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.view
+package jatx.russianrocksongbook.localsongs.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,13 +17,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import jatx.russianrocksongbook.R
+import jatx.russianrocksongbook.commonview.*
+import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.model.data.*
 import jatx.russianrocksongbook.model.domain.Song
 import jatx.russianrocksongbook.model.preferences.ScalePow
 import jatx.russianrocksongbook.model.preferences.Theme
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
-import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.russianrocksongbook.localsongs.viewmodel.LocalViewModel
 import kotlinx.coroutines.launch
 
 private const val MAX_ARTIST_LENGTH_LANDSCAPE = 12
@@ -57,11 +58,11 @@ fun SongListScreen() {
 
 @Composable
 private fun SongListContent(
-    mvvmViewModel: MvvmViewModel = viewModel(),
+    localViewModel: LocalViewModel = viewModel(),
     openDrawer: () -> Unit
 ) {
-    val theme = mvvmViewModel.settings.theme
-    val artist by mvvmViewModel.currentArtist.collectAsState()
+    val theme = localViewModel.settings.theme
+    val artist by localViewModel.currentArtist.collectAsState()
 
     BoxWithConstraints(
         modifier = Modifier
@@ -120,14 +121,14 @@ private fun SongListContent(
 
 @Composable
 private fun SongListBody(
-    mvvmViewModel: MvvmViewModel = viewModel()
+    localViewModel: LocalViewModel = viewModel()
 ) {
-    val theme = mvvmViewModel.settings.theme
+    val theme = localViewModel.settings.theme
 
-    val songList by mvvmViewModel.currentSongList.collectAsState()
-    val position by mvvmViewModel.currentSongPosition.collectAsState()
+    val songList by localViewModel.currentSongList.collectAsState()
+    val position by localViewModel.currentSongPosition.collectAsState()
 
-    val fontScale = mvvmViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
+    val fontScale = localViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
     val fontSizeSp = with(LocalDensity.current) {
         fontSizeDp.toSp()
@@ -142,8 +143,8 @@ private fun SongListBody(
             itemsIndexed(songList) { index, song ->
                 SongItem(song, theme, fontSizeSp) {
                     println("selected: ${song.artist} - ${song.title}")
-                    mvvmViewModel.selectSong(index)
-                    mvvmViewModel.selectScreen(CurrentScreenVariant.SONG_TEXT)
+                    localViewModel.selectSong(index)
+                    localViewModel.selectScreen(CurrentScreenVariant.SONG_TEXT)
                 }
             }
             coroutineScope.launch {
@@ -157,10 +158,10 @@ private fun SongListBody(
 
 @Composable
 private fun SongListAppDrawer(
-    mvvmViewModel: MvvmViewModel = viewModel(),
+    localViewModel: LocalViewModel = viewModel(),
     onCloseDrawer: () -> Unit
 ) {
-    val theme = mvvmViewModel.settings.theme
+    val theme = localViewModel.settings.theme
 
     BoxWithConstraints(
         modifier = Modifier
@@ -203,13 +204,13 @@ private fun SongListAppDrawer(
 
 @Composable
 private fun SongTextMenuBody(
-    mvvmViewModel: MvvmViewModel = viewModel(),
+    localViewModel: LocalViewModel = viewModel(),
     onCloseDrawer: () -> Unit
 ) {
-    val theme = mvvmViewModel.settings.theme
-    val artistList by mvvmViewModel.artistList.collectAsState()
+    val theme = localViewModel.settings.theme
+    val artistList by localViewModel.artistList.collectAsState()
 
-    val fontScale = mvvmViewModel.settings.getSpecificFontScale(ScalePow.MENU)
+    val fontScale = localViewModel.settings.getSpecificFontScale(ScalePow.MENU)
     val fontSizeDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
     val fontSizeSp = with(LocalDensity.current) {
         fontSizeDp.toSp()
@@ -218,8 +219,8 @@ private fun SongTextMenuBody(
     LazyColumn {
         items(artistList) { artist ->
             ArtistItem(artist, fontSizeSp, theme) {
-                mvvmViewModel.selectArtist(artist) {
-                    mvvmViewModel.selectSong(0)
+                localViewModel.selectArtist(artist) {
+                    localViewModel.selectSong(0)
                 }
                 onCloseDrawer()
             }
@@ -229,14 +230,14 @@ private fun SongTextMenuBody(
 
 @Composable
 private fun SongListActions(
-    mvvmViewModel: MvvmViewModel = viewModel()
+    localViewModel: LocalViewModel = viewModel()
 ) {
-    val theme = mvvmViewModel.settings.theme
+    val theme = localViewModel.settings.theme
     var expanded by remember { mutableStateOf(false) }
 
     CommonIconButton(resId = R.drawable.ic_settings) {
         println("selected: settings")
-        mvvmViewModel.selectScreen(CurrentScreenVariant.SETTINGS)
+        localViewModel.selectScreen(CurrentScreenVariant.SETTINGS)
     }
     CommonIconButton(resId = R.drawable.ic_question) {
         println("selected: question")
@@ -252,7 +253,7 @@ private fun SongListActions(
     ) {
         DropdownMenuItem(onClick = {
             println("selected: review app")
-            mvvmViewModel.reviewApp()
+            localViewModel.reviewApp()
         }) {
             Text(
                 text = stringResource(id = R.string.item_review_app),
@@ -261,7 +262,7 @@ private fun SongListActions(
         }
         DropdownMenuItem(onClick = {
             println("selected: dev site")
-            mvvmViewModel.showDevSite()
+            localViewModel.showDevSite()
         }) {
             Text(
                 text = stringResource(id = R.string.item_dev_site),

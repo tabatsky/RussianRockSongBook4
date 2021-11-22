@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.view
+package jatx.russianrocksongbook.localsongs.view
 
 import android.graphics.Typeface
 import androidx.compose.foundation.MutatePriority
@@ -30,12 +30,13 @@ import com.dqt.libs.chorddroid.classes.ChordLibrary
 import jatx.clickablewordstextview.ClickableWordsTextView
 import jatx.clickablewordstextview.OnWordClickListener
 import jatx.clickablewordstextview.Word
-import jatx.russianrocksongbook.R
+import jatx.russianrocksongbook.commonview.*
+import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.model.domain.Song
 import jatx.russianrocksongbook.model.preferences.ListenToMusicVariant
 import jatx.russianrocksongbook.model.preferences.ScalePow
 import jatx.russianrocksongbook.model.preferences.Theme
-import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.russianrocksongbook.localsongs.viewmodel.LocalViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -43,18 +44,18 @@ import kotlinx.coroutines.launch
 const val interval = 250L
 
 @Composable
-fun SongTextScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
-    val song by mvvmViewModel.currentSong.collectAsState()
+fun SongTextScreen(localViewModel: LocalViewModel = viewModel()) {
+    val song by localViewModel.currentSong.collectAsState()
     var text by rememberSaveable { mutableStateOf("") }
     song?.apply {
         text = this.text
     }
     val onTextChange: (String) -> Unit = { text = it }
 
-    val isAutoPlayMode = mvvmViewModel.isAutoPlayMode
+    val isAutoPlayMode = localViewModel.isAutoPlayMode
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
-    val dY = (10 * mvvmViewModel.settings.scrollSpeed).toInt()
+    val dY = (10 * localViewModel.settings.scrollSpeed).toInt()
 
     val onSongChanged: () -> Unit = {
         coroutineScope.launch {
@@ -92,11 +93,11 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
         showYoutubeMusicDialog = true
     }
 
-    val isUploadButtonEnabled by mvvmViewModel.isUploadButtonEnabled.collectAsState()
+    val isUploadButtonEnabled by localViewModel.isUploadButtonEnabled.collectAsState()
     val onUploadClick = {
         if (isUploadButtonEnabled) {
             if (song!!.outOfTheBox) {
-                mvvmViewModel.showToast(R.string.song_is_out_of_the_box)
+                localViewModel.showToast(R.string.song_is_out_of_the_box)
             } else {
                 showUploadDialog = true
             }
@@ -112,22 +113,22 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
     }
 
     val onEditClick =  {
-        mvvmViewModel.setAutoPlayMode(false)
-        mvvmViewModel.setEditorMode(true)
+        localViewModel.setAutoPlayMode(false)
+        localViewModel.setEditorMode(true)
     }
 
     val onSaveClick = {
         song?.apply {
             this.text = text
-            mvvmViewModel.saveSong(this)
+            localViewModel.saveSong(this)
         }
-        mvvmViewModel.setEditorMode(false)
+        localViewModel.setEditorMode(false)
     }
 
-    val theme = mvvmViewModel.settings.theme
-    val isEditorMode by mvvmViewModel.isEditorMode.collectAsState()
+    val theme = localViewModel.settings.theme
+    val isEditorMode by localViewModel.isEditorMode.collectAsState()
 
-    val fontScale = mvvmViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
+    val fontScale = localViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTitleDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
     val fontSizeTitleSp = with(LocalDensity.current) {
         fontSizeTitleDp.toSp()
@@ -184,7 +185,7 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
                         theme = theme,
                         isEditorMode = isEditorMode,
                         listenToMusicVariant =
-                        mvvmViewModel
+                        localViewModel
                             .settings
                             .listenToMusicVariant,
                         onYandexMusicClick = onYandexMusicClick,
@@ -236,7 +237,7 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
                         theme = theme,
                         isEditorMode = isEditorMode,
                         listenToMusicVariant =
-                        mvvmViewModel
+                        localViewModel
                             .settings
                             .listenToMusicVariant,
                         onYandexMusicClick = onYandexMusicClick,
@@ -252,36 +253,36 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
             }
 
             if (showYandexDialog) {
-                if (mvvmViewModel.settings.yandexMusicDontAsk) {
+                if (localViewModel.settings.yandexMusicDontAsk) {
                     showYandexDialog = false
-                    mvvmViewModel.openYandexMusic(true)
+                    localViewModel.openYandexMusic(true)
                 } else {
                     YandexMusicDialog(
-                        mvvmViewModel = mvvmViewModel,
+                        mvvmViewModel = localViewModel,
                     ) {
                         showYandexDialog = false
                     }
                 }
             }
             if (showVkDialog) {
-                if (mvvmViewModel.settings.vkMusicDontAsk) {
+                if (localViewModel.settings.vkMusicDontAsk) {
                     showVkDialog = false
-                    mvvmViewModel.openVkMusic(true)
+                    localViewModel.openVkMusic(true)
                 } else {
                     VkMusicDialog(
-                        mvvmViewModel = mvvmViewModel,
+                        mvvmViewModel = localViewModel,
                     ) {
                         showVkDialog = false
                     }
                 }
             }
             if (showYoutubeMusicDialog) {
-                if (mvvmViewModel.settings.youtubeMusicDontAsk) {
+                if (localViewModel.settings.youtubeMusicDontAsk) {
                     showYoutubeMusicDialog = false
-                    mvvmViewModel.openYoutubeMusic(true)
+                    localViewModel.openYoutubeMusic(true)
                 } else {
                     YoutubeMusicDialog(
-                        mvvmViewModel = mvvmViewModel,
+                        mvvmViewModel = localViewModel,
                     ) {
                         showYoutubeMusicDialog = false
                     }
@@ -290,7 +291,7 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
             if (showUploadDialog) {
                 UploadDialog(
                     onConfirm = {
-                        mvvmViewModel.uploadCurrentToCloud()
+                        localViewModel.uploadCurrentToCloud()
                     },
                     onDismiss = {
                         showUploadDialog = false
@@ -305,7 +306,7 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
             if (showWarningDialog) {
                 WarningDialog(
                     onConfirm = { comment ->
-                        mvvmViewModel.sendWarning(comment)
+                        localViewModel.sendWarning(comment)
                     },
                     onDismiss = {
                         showWarningDialog = false
@@ -323,47 +324,47 @@ fun SongTextScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
 
 @Composable
 private fun SongTextActions(
-    mvvmViewModel: MvvmViewModel = viewModel(),
+    localViewModel: LocalViewModel = viewModel(),
     isFavorite: Boolean,
     onSongChanged: () -> Unit
 ) {
-    if (mvvmViewModel.isAutoPlayMode.collectAsState().value) {
+    if (localViewModel.isAutoPlayMode.collectAsState().value) {
         IconButton(onClick = {
-            mvvmViewModel.setAutoPlayMode(false)
+            localViewModel.setAutoPlayMode(false)
         }) {
             Icon(painterResource(id = R.drawable.ic_pause), "")
         }
     } else {
-        val isEditorMode = mvvmViewModel.isEditorMode.collectAsState().value
+        val isEditorMode = localViewModel.isEditorMode.collectAsState().value
         IconButton(onClick = {
             if (!isEditorMode) {
-                mvvmViewModel.setAutoPlayMode(true)
+                localViewModel.setAutoPlayMode(true)
             }
         }) {
             Icon(painterResource(id = R.drawable.ic_play), "")
         }
     }
     IconButton(onClick = {
-        mvvmViewModel.prevSong()
+        localViewModel.prevSong()
         onSongChanged()
     }) {
         Icon(painterResource(id = R.drawable.ic_left), "")
     }
     if (isFavorite) {
         IconButton(onClick = {
-            mvvmViewModel.setFavorite(false)
+            localViewModel.setFavorite(false)
         }) {
             Icon(painterResource(id = R.drawable.ic_delete), "")
         }
     } else {
         IconButton(onClick = {
-            mvvmViewModel.setFavorite(true)
+            localViewModel.setFavorite(true)
         }) {
             Icon(painterResource(id = R.drawable.ic_star), "")
         }
     }
     IconButton(onClick = {
-        mvvmViewModel.nextSong()
+        localViewModel.nextSong()
         onSongChanged()
     }) {
         Icon(painterResource(id = R.drawable.ic_right), "")
