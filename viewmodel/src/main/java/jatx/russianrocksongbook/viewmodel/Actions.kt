@@ -14,4 +14,7 @@ class Actions @Inject constructor() {
     var onAddSongsFromDir: () -> Unit = {}
     var onPurchaseItem: (String) -> Unit = {}
     var onCloudSearchScreenSelected: () -> Unit = {}
+    var onArtistSelected: (String) -> Unit = {}
+    var onSongByArtistAndTitleSelected: (String, String) -> Unit =
+        { artist, title -> }
 }

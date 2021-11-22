@@ -18,6 +18,5 @@ class ViewModelParam @Inject constructor(
     @ApplicationContext val context: Context,
     val songRepo: SongRepository,
     val userInfo: UserInfo,
-    val fileSystemAdapter: FileSystemAdapter,
-    val currentScreenStateHolder: CurrentScreenStateHolder
+    val fileSystemAdapter: FileSystemAdapter
 )
