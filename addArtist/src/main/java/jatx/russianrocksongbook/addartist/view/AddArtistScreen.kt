@@ -55,7 +55,7 @@ fun AddArtistScreen(addArtistViewModel: AddArtistViewModel = viewModel()) {
                 },
                 onDismiss = {
                     addArtistViewModel.hideUploadOfferForDir()
-                    addArtistViewModel.actions.onArtistSelected(uploadArtist)
+                    addArtistViewModel.callbacks.onArtistSelected(uploadArtist)
                     addArtistViewModel.selectScreen(CurrentScreenVariant.SONG_LIST)
                 }
             )

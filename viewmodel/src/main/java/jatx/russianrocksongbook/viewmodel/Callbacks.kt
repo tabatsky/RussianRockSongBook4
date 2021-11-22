@@ -4,7 +4,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class Actions @Inject constructor() {
+class Callbacks @Inject constructor() {
     var onOpenYandexMusic: (String) -> Unit = {}
     var onOpenVkMusic: (String) -> Unit = {}
     var onOpenYoutubeMusic: (String) -> Unit = {}

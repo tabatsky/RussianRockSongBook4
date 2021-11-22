@@ -15,6 +15,6 @@ class SettingsViewModel @Inject constructor(
     screenStateHolder
 ) {
     fun restartApp() {
-        actions.onRestartApp()
+        callbacks.onRestartApp()
     }
 }

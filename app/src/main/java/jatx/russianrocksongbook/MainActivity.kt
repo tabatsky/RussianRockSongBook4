@@ -70,45 +70,18 @@ class MainActivity : ComponentActivity() {
     fun initActions() {
         Log.e("inject init", "actions")
         val mvvmViewModel: MvvmViewModel by viewModels()
-        mvvmViewModel.actions.onRestartApp = ::restartApp
-        mvvmViewModel.actions.onReviewApp = ::reviewApp
-        mvvmViewModel.actions.onShowDevSite = ::showDevSite
-        mvvmViewModel.actions.onOpenYandexMusic = musicHelper::openYandexMusic
-        mvvmViewModel.actions.onOpenVkMusic = musicHelper::openVkMusic
-        mvvmViewModel.actions.onOpenYoutubeMusic = musicHelper::openYoutubeMusic
-        mvvmViewModel.actions.onAddSongsFromDir = ::addSongsFromDir
-        mvvmViewModel.actions.onPurchaseItem = donationHelper::purchaseItem
-        mvvmViewModel.actions.onCloudSearchScreenSelected = {
-            runOnUiThread {
-                val cloudViewModel: CloudViewModel by viewModels()
-                cloudViewModel.cloudSearch("", OrderBy.BY_ID_DESC)
-                cloudViewModel.selectCloudSong(0)
-            }
-        }
-        mvvmViewModel.actions.onArtistSelected = {
-            runOnUiThread {
-                val localViewModel: LocalViewModel by viewModels()
-                localViewModel.selectArtist(it)
-            }
-        }
-        mvvmViewModel.actions.onSongByArtistAndTitleSelected = { artist, title ->
-            runOnUiThread {
-                val localViewModel: LocalViewModel by viewModels()
-                localViewModel.selectArtist(
-                    artist = artist,
-                    forceOnSuccess = true,
-                    onSuccess = {
-                        val position = localViewModel
-                            .currentSongList
-                            .value
-                            .map { it.title }
-                            .indexOf(title)
-                        localViewModel.selectSong(position)
-                        localViewModel.selectScreen(CurrentScreenVariant.SONG_TEXT)
-                    }
-                )
-            }
-        }
+        mvvmViewModel.callbacks.onRestartApp = ::restartApp
+        mvvmViewModel.callbacks.onReviewApp = ::reviewApp
+        mvvmViewModel.callbacks.onShowDevSite = ::showDevSite
+        mvvmViewModel.callbacks.onOpenYandexMusic = musicHelper::openYandexMusic
+        mvvmViewModel.callbacks.onOpenVkMusic = musicHelper::openVkMusic
+        mvvmViewModel.callbacks.onOpenYoutubeMusic = musicHelper::openYoutubeMusic
+        mvvmViewModel.callbacks.onAddSongsFromDir = ::addSongsFromDir
+        mvvmViewModel.callbacks.onPurchaseItem = donationHelper::purchaseItem
+        mvvmViewModel.callbacks.onCloudSearchScreenSelected = ::initCloudSearch
+        mvvmViewModel.callbacks.onArtistSelected = ::selectArtist
+        mvvmViewModel.callbacks.onSongByArtistAndTitleSelected =
+            ::selectSongByArtistAndTitle
     }
 
     @Inject
@@ -166,4 +139,33 @@ class MainActivity : ComponentActivity() {
             onPathReturned = addArtistViewModel::copySongsFromDirToRepoWithPath
         )
     }
+
+    private fun initCloudSearch() = runOnUiThread {
+        val cloudViewModel: CloudViewModel by viewModels()
+        cloudViewModel.cloudSearch("", OrderBy.BY_ID_DESC)
+        cloudViewModel.selectCloudSong(0)
+    }
+
+    private fun selectArtist(artist: String) = runOnUiThread {
+        val localViewModel: LocalViewModel by viewModels()
+        localViewModel.selectArtist(artist)
+    }
+
+    private fun selectSongByArtistAndTitle(artist: String, title: String) =
+        runOnUiThread {
+            val localViewModel: LocalViewModel by viewModels()
+            localViewModel.selectArtist(
+                artist = artist,
+                forceOnSuccess = true,
+                onSuccess = {
+                    val position = localViewModel
+                        .currentSongList
+                        .value
+                        .map { it.title }
+                        .indexOf(title)
+                    localViewModel.selectSong(position)
+                    localViewModel.selectScreen(CurrentScreenVariant.SONG_TEXT)
+                }
+            )
+        }
 }

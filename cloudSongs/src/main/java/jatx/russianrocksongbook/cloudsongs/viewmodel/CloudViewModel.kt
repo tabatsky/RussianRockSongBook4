@@ -153,21 +153,21 @@ class CloudViewModel @Inject constructor(
     override fun openYandexMusicCloud(dontAskMore: Boolean) {
         settings.yandexMusicDontAsk = dontAskMore
         cloudSong.value?.apply {
-            actions.onOpenYandexMusic("$artist $title")
+            callbacks.onOpenYandexMusic("$artist $title")
         }
     }
 
     override fun openVkMusicCloud(dontAskMore: Boolean) {
         settings.vkMusicDontAsk = dontAskMore
         cloudSong.value?.apply {
-            actions.onOpenVkMusic("$artist $title")
+            callbacks.onOpenVkMusic("$artist $title")
         }
     }
 
     override fun openYoutubeMusicCloud(dontAskMore: Boolean) {
         settings.youtubeMusicDontAsk = dontAskMore
         cloudSong.value?.apply {
-            actions.onOpenYoutubeMusic("$artist $title")
+            callbacks.onOpenYoutubeMusic("$artist $title")
         }
     }
 

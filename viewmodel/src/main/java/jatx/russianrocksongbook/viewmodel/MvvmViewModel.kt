@@ -3,7 +3,6 @@ package jatx.russianrocksongbook.viewmodel
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.StringRes
-import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -12,16 +11,11 @@ import io.reactivex.schedulers.Schedulers
 import jatx.russianrocksongbook.model.data.*
 import jatx.russianrocksongbook.model.api.gson.STATUS_ERROR
 import jatx.russianrocksongbook.model.api.gson.STATUS_SUCCESS
-import jatx.russianrocksongbook.model.db.util.applySongPatches
-import jatx.russianrocksongbook.model.db.util.deleteWrongArtists
-import jatx.russianrocksongbook.model.db.util.deleteWrongSongs
-import jatx.russianrocksongbook.model.db.util.fillDbFromJSON
 import jatx.russianrocksongbook.model.domain.Song
 import jatx.russianrocksongbook.viewmodel.interfaces.Cloud
 import jatx.russianrocksongbook.viewmodel.interfaces.Local
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,7 +25,7 @@ open class MvvmViewModel @Inject constructor(
 ): ViewModel() {
     val songBookAPIAdapter = viewModelParam.songBookAPIAdapter
     val settings = viewModelParam.settings
-    val actions = viewModelParam.actions
+    val callbacks = viewModelParam.callbacks
     val context = viewModelParam.context
     val songRepo = viewModelParam.songRepo
     val userInfo = viewModelParam.userInfo
@@ -105,7 +99,7 @@ open class MvvmViewModel @Inject constructor(
                 .subscribe {
                     screenStateHolder.artistList.value = it
                 }
-            actions.onArtistSelected(currentArtist.value)
+            callbacks.onArtistSelected(currentArtist.value)
         }
         if (screen == CurrentScreenVariant.FAVORITE) {
             getArtistsDisposable?.apply {
@@ -117,10 +111,10 @@ open class MvvmViewModel @Inject constructor(
                 .subscribe {
                     screenStateHolder.artistList.value = it
                 }
-            actions.onArtistSelected(ARTIST_FAVORITE)
+            callbacks.onArtistSelected(ARTIST_FAVORITE)
         }
         if (screen == CurrentScreenVariant.CLOUD_SEARCH && !isBackFromSong) {
-            actions.onCloudSearchScreenSelected()
+            callbacks.onCloudSearchScreenSelected()
         }
     }
 
@@ -166,7 +160,7 @@ open class MvvmViewModel @Inject constructor(
     fun showNewSong() {
         Log.e("show", "new song")
         newSong.value?.apply {
-            actions.onSongByArtistAndTitleSelected(this.artist, this.title)
+            callbacks.onSongByArtistAndTitleSelected(this.artist, this.title)
         }
     }
 
@@ -181,7 +175,7 @@ open class MvvmViewModel @Inject constructor(
     }
 
     fun purchaseItem(sku: String) {
-        actions.onPurchaseItem(sku)
+        callbacks.onPurchaseItem(sku)
     }
 
     fun showToast(toastText: String) {
