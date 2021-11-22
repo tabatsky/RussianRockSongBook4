@@ -12,4 +12,5 @@ class ScreenStateHolder @Inject constructor(
     val currentScreenVariant = MutableStateFlow(CurrentScreenVariant.START)
     val currentArtist = MutableStateFlow(settings.defaultArtist)
     val artistList = MutableStateFlow(listOf<String>())
+    val appWasUpdated = MutableStateFlow(false)
 }

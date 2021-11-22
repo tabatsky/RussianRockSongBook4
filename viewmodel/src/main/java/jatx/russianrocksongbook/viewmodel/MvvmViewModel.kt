@@ -50,13 +50,9 @@ open class MvvmViewModel @Inject constructor(
         .asStateFlow()
 
 
-    private val _appWasUpdated = MutableStateFlow(false)
-    val appWasUpdated = _appWasUpdated.asStateFlow()
-
-    private val _stubProgressCurrent = MutableStateFlow(0)
-    val stubCurrentProgress = _stubProgressCurrent.asStateFlow()
-    private val _stubTotalProgress = MutableStateFlow(100)
-    val stubTotalProgress = _stubTotalProgress.asStateFlow()
+    val appWasUpdated = screenStateHolder
+        .appWasUpdated
+        .asStateFlow()
 
     private val _showUploadDialogForDir = MutableStateFlow(false)
     val showUploadDialogForDir = _showUploadDialogForDir.asStateFlow()
@@ -72,20 +68,6 @@ open class MvvmViewModel @Inject constructor(
     private var getArtistsDisposable: Disposable? = null
     private var uploadListDisposable: Disposable? = null
     private var uploadSongDisposable: Disposable? = null
-
-    fun asyncInit() {
-        if (settings.appWasUpdated) {
-            fillDbFromJSON(songRepo, context) { current, total ->
-                updateStubProgress(current, total)
-            }
-            deleteWrongSongs(songRepo)
-            deleteWrongArtists(songRepo)
-            applySongPatches(songRepo)
-            setAppWasUpdated(true)
-        }
-        settings.confirmAppUpdate()
-        selectScreen(CurrentScreenVariant.SONG_LIST)
-    }
 
     fun back(onFinish: () -> Unit = {}) {
         Log.e("current screen", currentScreenVariant.value.toString())
@@ -149,12 +131,7 @@ open class MvvmViewModel @Inject constructor(
     }
 
     fun setAppWasUpdated(value: Boolean) {
-        _appWasUpdated.value = value
-    }
-
-    fun updateStubProgress(current: Int, total: Int) {
-        _stubProgressCurrent.value = current
-        _stubTotalProgress.value = total
+        screenStateHolder.appWasUpdated.value = value
     }
 
     fun addSongsFromDir() {

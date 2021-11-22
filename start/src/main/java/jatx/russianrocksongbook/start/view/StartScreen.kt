@@ -14,18 +14,18 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.model.preferences.ScalePow
-import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.russianrocksongbook.start.R
+import jatx.russianrocksongbook.start.viewmodel.StartViewModel
 
 @Composable
-fun StartScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
-    val theme = mvvmViewModel.settings.theme
-    val currentProgress by mvvmViewModel.stubCurrentProgress.collectAsState()
-    val totalProgress by mvvmViewModel.stubTotalProgress.collectAsState()
+fun StartScreen(startViewModel: StartViewModel = viewModel()) {
+    val theme = startViewModel.settings.theme
+    val currentProgress by startViewModel.stubCurrentProgress.collectAsState()
+    val totalProgress by startViewModel.stubTotalProgress.collectAsState()
     val progress = 1.0f * currentProgress / totalProgress
 
-    val fontScale = mvvmViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
+    val fontScale = startViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
 
     val fontSizeLabel1Dp = dimensionResource(id = R.dimen.text_size_20) * fontScale
     val fontSizeLabel1Sp = with(LocalDensity.current) {
