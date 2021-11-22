@@ -7,14 +7,9 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
-import jatx.russianrocksongbook.model.data.*
-import jatx.russianrocksongbook.model.api.gson.STATUS_ERROR
-import jatx.russianrocksongbook.model.api.gson.STATUS_SUCCESS
-import jatx.russianrocksongbook.model.domain.Song
+import jatx.russianrocksongbook.model.data.ARTIST_FAVORITE
 import jatx.russianrocksongbook.viewmodel.interfaces.Cloud
 import jatx.russianrocksongbook.viewmodel.interfaces.Local
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
