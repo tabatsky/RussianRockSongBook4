@@ -35,9 +35,6 @@
 
     <string name="save_and_restart">Сохранить и перезапустить</string>
 
-    <string name="wait_please">ПОДОЖДИТЕ…</string>
-    <string name="wait_db_init">Построение базы данных</string>
-
     <string name="theme">Тема:</string>
     <string name="text_scale">Размер шрифта:</string>
     <string name="def_artist">По умолчанию:</string>

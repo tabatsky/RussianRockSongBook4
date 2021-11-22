@@ -25,6 +25,7 @@ import jatx.russianrocksongbook.view.*
 import jatx.russianrocksongbook.cloudsongs.viewmodel.CloudViewModel
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import jatx.russianrocksongbook.localsongs.viewmodel.LocalViewModel
+import jatx.russianrocksongbook.start.viewmodel.StartViewModel
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import kotlinx.coroutines.*
 import javax.inject.Inject
@@ -57,9 +58,9 @@ class MainActivity : ComponentActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         GlobalScope.launch {
-            withContext(Dispatchers.IO) {
-                val mvvmViewModel: MvvmViewModel by viewModels()
-                mvvmViewModel.asyncInit()
+            withContext(Dispatchers.Main) {
+                val startViewModel: StartViewModel by viewModels()
+                startViewModel.asyncInit()
             }
         }
     }

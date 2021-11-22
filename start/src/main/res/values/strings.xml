@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="wait_please">ПОДОЖДИТЕ…</string>
+    <string name="wait_db_init">Построение базы данных</string>
+</resources>
