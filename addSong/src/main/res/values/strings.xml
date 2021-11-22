@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_add_song">Добавить песню</string>
+    <string name="field_artist">Исполнитель</string>
+    <string name="field_title">Название</string>
+    <string name="field_song_text">Текст песни</string>
+    <string name="save">Сохранить</string>
+    <string name="toast_fill_all_fields">Заполните все поля</string>
+</resources>

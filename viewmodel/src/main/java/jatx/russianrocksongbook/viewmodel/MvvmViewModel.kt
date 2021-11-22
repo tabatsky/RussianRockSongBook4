@@ -47,15 +47,7 @@ open class MvvmViewModel @Inject constructor(
         .appWasUpdated
         .asStateFlow()
 
-
-    private val _showUploadDialogForSong = MutableStateFlow(false)
-    val showUploadDialogForSong = _showUploadDialogForSong.asStateFlow()
-
-    private val _newSong: MutableStateFlow<Song?> = MutableStateFlow(null)
-    val newSong = _newSong.asStateFlow()
-
     private var getArtistsDisposable: Disposable? = null
-    private var uploadSongDisposable: Disposable? = null
 
     fun back(onFinish: () -> Unit = {}) {
         Log.e("current screen", currentScreenVariant.value.toString())
@@ -120,58 +112,6 @@ open class MvvmViewModel @Inject constructor(
 
     fun setAppWasUpdated(value: Boolean) {
         screenStateHolder.appWasUpdated.value = value
-    }
-
-    private fun showUploadOfferForSong(song: Song) {
-        Log.e("upload", "show offer")
-        _newSong.value = song
-        _showUploadDialogForSong.value = true
-    }
-
-    fun hideUploadOfferForSong() {
-        Log.e("upload", "hide offer")
-        _showUploadDialogForSong.value = false
-    }
-
-    fun uploadNewToCloud() {
-        newSong.value?.apply {
-            uploadSongDisposable?.apply {
-                if (!this.isDisposed) this.dispose()
-            }
-            uploadSongDisposable = songBookAPIAdapter
-                .addSong(this, userInfo)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ result ->
-                    when (result.status) {
-                        STATUS_SUCCESS -> {
-                            showToast(R.string.toast_upload_to_cloud_success)
-                            showNewSong()
-                        }
-                        STATUS_ERROR -> showToast(result.message ?: "")
-                    }
-                }, { error ->
-                    error.printStackTrace()
-                    showToast(R.string.error_in_app)
-                })
-        }
-    }
-
-    fun showNewSong() {
-        Log.e("show", "new song")
-        newSong.value?.apply {
-            callbacks.onSongByArtistAndTitleSelected(this.artist, this.title)
-        }
-    }
-
-    fun addSongToRepo(artist: String, title: String, text: String) {
-        val song = Song()
-        song.artist = artist
-        song.title = title
-        song.text = text
-        val actualSong = songRepo.insertReplaceUserSong(song)
-        showToast(R.string.toast_song_added)
-        showUploadOfferForSong(actualSong)
     }
 
     fun purchaseItem(sku: String) {
