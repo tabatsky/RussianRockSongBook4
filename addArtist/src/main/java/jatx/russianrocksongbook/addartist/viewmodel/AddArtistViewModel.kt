@@ -57,7 +57,7 @@ class AddArtistViewModel @Inject constructor(
                                 success, duplicate, error
                             )
                             showToast(toastText)
-                            actions.onArtistSelected(uploadArtist.value)
+                            callbacks.onArtistSelected(uploadArtist.value)
                             selectScreen(CurrentScreenVariant.SONG_LIST)
                         }
                     }
@@ -105,6 +105,6 @@ class AddArtistViewModel @Inject constructor(
     }
 
     fun addSongsFromDir() {
-        actions.onAddSongsFromDir()
+        callbacks.onAddSongsFromDir()
     }
 }

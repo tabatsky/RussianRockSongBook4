@@ -14,7 +14,7 @@ import javax.inject.Singleton
 class ViewModelParam @Inject constructor(
     val songBookAPIAdapter: SongBookAPIAdapter,
     val settings: Settings,
-    val actions: Actions,
+    val callbacks: Callbacks,
     @ApplicationContext val context: Context,
     val songRepo: SongRepository,
     val userInfo: UserInfo,
