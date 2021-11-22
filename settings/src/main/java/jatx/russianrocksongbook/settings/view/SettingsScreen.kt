@@ -18,7 +18,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.commonview.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.Spinner
@@ -27,12 +26,13 @@ import jatx.russianrocksongbook.model.data.ARTIST_ADD_SONG
 import jatx.russianrocksongbook.model.data.ARTIST_CLOUD_SONGS
 import jatx.russianrocksongbook.model.data.ARTIST_DONATION
 import jatx.russianrocksongbook.model.preferences.*
-import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.russianrocksongbook.settings.R
+import jatx.russianrocksongbook.settings.viewmodel.SettingsViewModel
 
 @Composable
-fun SettingsScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
-    val theme = mvvmViewModel.settings.theme
-    val settings = mvvmViewModel.settings
+fun SettingsScreen(settingsViewModel: SettingsViewModel = viewModel()) {
+    val theme = settingsViewModel.settings.theme
+    val settings = settingsViewModel.settings
 
     var themeToSave by remember { mutableStateOf(theme) }
     val onThemePositionChanged: (Int) -> Unit = {
@@ -72,7 +72,7 @@ fun SettingsScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
         settings.orientation = orientationToSave
         settings.listenToMusicVariant = listenToMusicVariantToSave
         settings.scrollSpeed = scrollSpeedToSave
-        mvvmViewModel.restartApp()
+        settingsViewModel.restartApp()
     }
 
     val labelFontScale = settings.getSpecificFontScale(ScalePow.LABEL)
@@ -462,14 +462,14 @@ private fun FontScaleRow(
 
 @Composable
 private fun DefaultArtistRow(
-    mvvmViewModel: MvvmViewModel = viewModel(),
+    settingsViewModel: SettingsViewModel = viewModel(),
     modifier: Modifier,
     theme: Theme,
     settings: Settings,
     fontSize: TextUnit,
     onValueChanged: (String) -> Unit
 ) {
-    val artistList by mvvmViewModel.artistList.collectAsState()
+    val artistList by settingsViewModel.artistList.collectAsState()
     val artists = ArrayList(artistList).apply {
         remove(ARTIST_CLOUD_SONGS)
         remove(ARTIST_ADD_SONG)

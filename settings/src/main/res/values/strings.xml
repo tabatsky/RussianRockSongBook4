@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_settings">Настройки</string>
+    <string name="save_and_restart">Сохранить и перезапустить</string>
+    <string name="theme">Тема:</string>
+    <string name="text_scale">Размер шрифта:</string>
+    <string name="def_artist">По умолчанию:</string>
+    <string name="orient_fix">Ориентация:</string>
+    <string name="listen_to_music">Слушать музыку:</string>
+    <string name="scroll_speed">Скорость прокрутки (x):</string>
+
+    <string-array name="theme_list">
+        <item>Темная</item>
+        <item>Светлая</item>
+    </string-array>
+
+    <string-array name="font_scale_list">
+        <item>Очень мелкий</item>
+        <item>Мелкий</item>
+        <item>Обычный</item>
+        <item>Крупный</item>
+        <item>Очень крупный</item>
+    </string-array>
+
+    <string-array name="orientation_list">
+        <item>Произвольная</item>
+        <item>Портретная</item>
+        <item>Ландшафтная</item>
+    </string-array>
+
+    <string-array name="listen_to_music_variants">
+        <item>Яндекс и Youtube</item>
+        <item>VK и Youtube</item>
+        <item>Яндекс и VK</item>
+    </string-array>
+</resources>

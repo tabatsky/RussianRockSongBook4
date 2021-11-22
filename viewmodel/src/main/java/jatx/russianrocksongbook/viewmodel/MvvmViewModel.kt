@@ -49,7 +49,6 @@ open class MvvmViewModel @Inject constructor(
         .artistList
         .asStateFlow()
 
-
     val appWasUpdated = screenStateHolder
         .appWasUpdated
         .asStateFlow()
@@ -266,10 +265,6 @@ open class MvvmViewModel @Inject constructor(
 
     fun purchaseItem(sku: String) {
         actions.onPurchaseItem(sku)
-    }
-
-    fun restartApp() {
-        actions.onRestartApp()
     }
 
     fun showToast(toastText: String) {
