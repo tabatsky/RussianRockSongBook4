@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.view
+package jatx.russianrocksongbook.cloudsongs.view
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,18 +14,18 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import jatx.russianrocksongbook.R
+import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.model.preferences.ScalePow
-import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.russianrocksongbook.cloudsongs.viewmodel.CloudViewModel
 
 @Composable
 fun DeleteCloudSongDialog(
-    mvvmViewModel: MvvmViewModel = viewModel(),
+    cloudViewModel: CloudViewModel = viewModel(),
     onConfirm: (String, String) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val theme = mvvmViewModel.settings.theme
-    val fontScale = mvvmViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
+    val theme = cloudViewModel.settings.theme
+    val fontScale = cloudViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTextDp = dimensionResource(id = R.dimen.text_size_12) * fontScale
     val fontSizeTextSp = with(LocalDensity.current) {
         fontSizeTextDp.toSp()
