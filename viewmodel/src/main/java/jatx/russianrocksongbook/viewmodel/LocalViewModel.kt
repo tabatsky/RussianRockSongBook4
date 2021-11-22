@@ -1,3 +1,0 @@
-package jatx.russianrocksongbook.viewmodel
-
-

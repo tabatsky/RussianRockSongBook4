@@ -17,6 +17,8 @@ import jatx.russianrocksongbook.model.db.util.deleteWrongArtists
 import jatx.russianrocksongbook.model.db.util.deleteWrongSongs
 import jatx.russianrocksongbook.model.db.util.fillDbFromJSON
 import jatx.russianrocksongbook.model.domain.Song
+import jatx.russianrocksongbook.viewmodel.interfaces.Cloud
+import jatx.russianrocksongbook.viewmodel.interfaces.Local
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.io.File
@@ -24,7 +26,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 open class MvvmViewModel @Inject constructor(
-    viewModelParam: ViewModelParam
+    viewModelParam: ViewModelParam,
+    private val screenStateHolder: ScreenStateHolder
 ): ViewModel() {
     val songBookAPIAdapter = viewModelParam.songBookAPIAdapter
     val settings = viewModelParam.settings
@@ -33,12 +36,19 @@ open class MvvmViewModel @Inject constructor(
     val songRepo = viewModelParam.songRepo
     val userInfo = viewModelParam.userInfo
     val fileSystemAdapter = viewModelParam.fileSystemAdapter
-    val currentScreenVariantStateHolder = viewModelParam.currentScreenStateHolder
 
-    val currentScreenVariant = viewModelParam
-        .currentScreenStateHolder
+    val currentScreenVariant = screenStateHolder
         .currentScreenVariant
         .asStateFlow()
+
+    val currentArtist = screenStateHolder
+        .currentArtist
+        .asStateFlow()
+
+    val artistList = screenStateHolder
+        .artistList
+        .asStateFlow()
+
 
     private val _appWasUpdated = MutableStateFlow(false)
     val appWasUpdated = _appWasUpdated.asStateFlow()
@@ -48,25 +58,6 @@ open class MvvmViewModel @Inject constructor(
     private val _stubTotalProgress = MutableStateFlow(100)
     val stubTotalProgress = _stubTotalProgress.asStateFlow()
 
-    private val _currentArtist = MutableStateFlow(settings.defaultArtist)
-    val currentArtist = _currentArtist.asStateFlow()
-    private val _artistList = MutableStateFlow(listOf<String>())
-    val artistList = _artistList.asStateFlow()
-    private val _currentSongCount = MutableStateFlow(0)
-    val currentSongCount = _currentSongCount.asStateFlow()
-    private val _currentSongList = MutableStateFlow(listOf<Song>())
-    val currentSongList = _currentSongList.asStateFlow()
-    private val _currentSongPosition = MutableStateFlow(0)
-    val currentSongPosition = _currentSongPosition.asStateFlow()
-    private val _currentSong: MutableStateFlow<Song?> = MutableStateFlow(null)
-    val currentSong = _currentSong.asStateFlow()
-
-    private val _isEditorMode = MutableStateFlow(false)
-    val isEditorMode = _isEditorMode.asStateFlow()
-    private val _isAutoPlayMode = MutableStateFlow(false)
-    val isAutoPlayMode = _isAutoPlayMode.asStateFlow()
-    private val _isUploadButtonEnabled = MutableStateFlow(true)
-    val isUploadButtonEnabled = _isUploadButtonEnabled.asStateFlow()
     private val _showUploadDialogForDir = MutableStateFlow(false)
     val showUploadDialogForDir = _showUploadDialogForDir.asStateFlow()
     private val _showUploadDialogForSong = MutableStateFlow(false)
@@ -78,12 +69,9 @@ open class MvvmViewModel @Inject constructor(
     private val _newSong: MutableStateFlow<Song?> = MutableStateFlow(null)
     val newSong = _newSong.asStateFlow()
 
-    private var showSongsDisposable: Disposable? = null
-    private var selectSongDisposable: Disposable? = null
     private var getArtistsDisposable: Disposable? = null
     private var uploadListDisposable: Disposable? = null
     private var uploadSongDisposable: Disposable? = null
-    private var sendWarningDisposable: Disposable? = null
 
     fun asyncInit() {
         if (settings.appWasUpdated) {
@@ -129,7 +117,7 @@ open class MvvmViewModel @Inject constructor(
         screen: CurrentScreenVariant,
         isBackFromSong: Boolean = false
     ) {
-        currentScreenVariantStateHolder.currentScreenVariant.value = screen
+        screenStateHolder.currentScreenVariant.value = screen
         Log.e("select screen", currentScreenVariant.value.toString())
         if (screen == CurrentScreenVariant.SONG_LIST && !isBackFromSong) {
             getArtistsDisposable?.apply {
@@ -139,9 +127,9 @@ open class MvvmViewModel @Inject constructor(
                 .getArtists()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    _artistList.value = it
+                    screenStateHolder.artistList.value = it
                 }
-            selectArtist(currentArtist.value) {}
+            actions.onArtistSelected(currentArtist.value)
         }
         if (screen == CurrentScreenVariant.FAVORITE) {
             getArtistsDisposable?.apply {
@@ -151,9 +139,9 @@ open class MvvmViewModel @Inject constructor(
                 .getArtists()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    _artistList.value = it
+                    screenStateHolder.artistList.value = it
                 }
-            selectArtist(ARTIST_FAVORITE) {}
+            actions.onArtistSelected(ARTIST_FAVORITE)
         }
         if (screen == CurrentScreenVariant.CLOUD_SEARCH && !isBackFromSong) {
             actions.onCloudSearchScreenSelected()
@@ -167,155 +155,6 @@ open class MvvmViewModel @Inject constructor(
     fun updateStubProgress(current: Int, total: Int) {
         _stubProgressCurrent.value = current
         _stubTotalProgress.value = total
-    }
-
-    fun selectArtist(
-        artist: String,
-        forceOnSuccess: Boolean = false,
-        onSuccess: () -> Unit
-    ) {
-        Log.e("select artist", artist)
-        showSongsDisposable?.apply {
-            if (!this.isDisposed) this.dispose()
-        }
-        when (artist) {
-            ARTIST_ADD_ARTIST -> {
-                selectScreen(CurrentScreenVariant.ADD_ARTIST)
-            }
-            ARTIST_ADD_SONG -> {
-                selectScreen(CurrentScreenVariant.ADD_SONG)
-            }
-            ARTIST_CLOUD_SONGS -> {
-                selectScreen(CurrentScreenVariant.CLOUD_SEARCH)
-            }
-            ARTIST_DONATION -> {
-                selectScreen(CurrentScreenVariant.DONATION)
-            }
-            else -> {
-                _currentArtist.value = artist
-                _currentSongCount.value = songRepo.getCountByArtist(artist)
-                showSongsDisposable = songRepo
-                    .getSongsByArtist(artist)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
-                        val oldArtist = currentSongList.value.getOrNull(0)?.artist
-                        val newArtist = it.getOrNull(0)?.artist
-                        _currentSongList.value = it
-                        if (oldArtist != newArtist || forceOnSuccess) {
-                            onSuccess()
-                        }
-                    }
-            }
-        }
-    }
-
-    fun selectSong(position: Int) {
-        Log.e("select song", position.toString())
-        _currentSongPosition.value = position
-        _isAutoPlayMode.value = false
-        _isEditorMode.value = false
-        selectSongDisposable?.apply {
-            if (!this.isDisposed) this.dispose()
-        }
-        selectSongDisposable = songRepo
-            .getSongByArtistAndPosition(currentArtist.value, position)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                _currentSong.value = it
-            }
-    }
-
-    fun nextSong() {
-        if (currentSongCount.value > 0) {
-            selectSong((currentSongPosition.value + 1) % currentSongCount.value)
-        }
-    }
-
-    fun prevSong() {
-        if (currentSongCount.value > 0) {
-            if (currentSongPosition.value > 0) {
-                selectSong((currentSongPosition.value - 1) % currentSongCount.value)
-            } else {
-                selectSong(currentSongCount.value - 1)
-            }
-        }
-    }
-
-    fun saveSong(song: Song) {
-        songRepo.updateSong(song)
-    }
-
-    fun setEditorMode(value: Boolean) {
-        _isEditorMode.value = value
-    }
-
-    fun setAutoPlayMode(value: Boolean) {
-        _isAutoPlayMode.value = value
-    }
-
-    fun setFavorite(value: Boolean) {
-        Log.e("set favorite", value.toString())
-        currentSong.value?.apply {
-            this.favorite = value
-            saveSong(this)
-            if (!value && currentArtist.value == ARTIST_FAVORITE) {
-                _currentSongCount.value = songRepo.getCountByArtist(ARTIST_FAVORITE)
-                if (currentSongCount.value > 0) {
-                    if (currentSongPosition.value >= currentSongCount.value) {
-                        selectSong(currentSongPosition.value - 1)
-                    } else {
-                        selectSong(currentSongPosition.value)
-                    }
-                } else {
-                    back {}
-                }
-            }
-            if (value) {
-                showToast(R.string.toast_added_to_favorite)
-            } else {
-                showToast(R.string.toast_removed_from_favorite)
-            }
-        }
-    }
-
-    fun deleteCurrentToTrash() {
-        currentSong.value?.apply {
-            songRepo.deleteSongToTrash(this)
-            _currentSongCount.value = songRepo.getCountByArtist(currentArtist.value)
-            if (currentSongCount.value > 0) {
-                if (currentSongPosition.value >= currentSongCount.value) {
-                    selectSong(currentSongPosition.value - 1)
-                } else {
-                    selectSong(currentSongPosition.value)
-                }
-            } else {
-                back {}
-            }
-        }
-        showToast(R.string.toast_deleted_to_trash)
-    }
-
-    fun openYandexMusic(dontAskMore: Boolean) {
-        settings.yandexMusicDontAsk = dontAskMore
-        currentSong.value?.apply {
-            actions.onOpenYandexMusic("$artist $title")
-        }
-    }
-
-    fun openVkMusic(dontAskMore: Boolean) {
-        settings.vkMusicDontAsk = dontAskMore
-        currentSong.value?.apply {
-            actions.onOpenVkMusic("$artist $title")
-        }
-    }
-
-    fun openYoutubeMusic(dontAskMore: Boolean) {
-        settings.youtubeMusicDontAsk = dontAskMore
-        currentSong.value?.apply {
-            actions.onOpenYoutubeMusic("$artist $title")
-        }
     }
 
     fun addSongsFromDir() {
@@ -360,7 +199,7 @@ open class MvvmViewModel @Inject constructor(
                                 success, duplicate, error
                             )
                             showToast(toastText)
-                            selectArtist(uploadArtist.value) {}
+                            actions.onArtistSelected(uploadArtist.value)
                             selectScreen(CurrentScreenVariant.SONG_LIST)
                         }
                     }
@@ -399,64 +238,7 @@ open class MvvmViewModel @Inject constructor(
     fun showNewSong() {
         Log.e("show", "new song")
         newSong.value?.apply {
-            val artist = this.artist
-            selectArtist(
-                artist = artist,
-                forceOnSuccess = true,
-                onSuccess = {
-                    val position = currentSongList
-                        .value
-                        .map { it.title }
-                        .indexOf(this.title)
-                    selectSong(position)
-                    selectScreen(CurrentScreenVariant.SONG_TEXT)
-                }
-            )
-        }
-    }
-
-    fun uploadCurrentToCloud() {
-        currentSong.value?.apply {
-            _isUploadButtonEnabled.value = false
-            uploadSongDisposable?.apply {
-                if (!this.isDisposed) this.dispose()
-            }
-            uploadSongDisposable = songBookAPIAdapter
-                .addSong(this, userInfo)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ result ->
-                    when (result.status) {
-                        STATUS_SUCCESS -> showToast(R.string.toast_upload_to_cloud_success)
-                        STATUS_ERROR -> showToast(result.message ?: "")
-                    }
-                    _isUploadButtonEnabled.value = true
-                }, { error ->
-                    error.printStackTrace()
-                    showToast(R.string.error_in_app)
-                    _isUploadButtonEnabled.value = true
-                })
-        }
-    }
-
-    fun sendWarning(comment: String) {
-        currentSong.value?.apply {
-            sendWarningDisposable?.apply {
-                if (!this.isDisposed) this.dispose()
-            }
-            sendWarningDisposable = songBookAPIAdapter
-                .addWarning(this, comment)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ result ->
-                    when (result.status) {
-                        STATUS_SUCCESS -> showToast(R.string.toast_send_warning_success)
-                        STATUS_ERROR -> showToast(result.message ?: "")
-                    }
-                }, { error ->
-                    error.printStackTrace()
-                    showToast(R.string.error_in_app)
-                })
+            actions.onSongByArtistAndTitleSelected(this.artist, this.title)
         }
     }
 
@@ -513,14 +295,6 @@ open class MvvmViewModel @Inject constructor(
         actions.onRestartApp()
     }
 
-    fun reviewApp() {
-        actions.onReviewApp()
-    }
-
-    fun showDevSite() {
-        actions.onShowDevSite()
-    }
-
     fun showToast(toastText: String) {
         Toast.makeText(context, toastText, Toast.LENGTH_LONG).show()
     }
@@ -528,5 +302,33 @@ open class MvvmViewModel @Inject constructor(
     fun showToast(@StringRes resId: Int) {
         val toastText = context.getString(resId)
         showToast(toastText)
+    }
+
+    fun openYandexMusic(dontAskMore: Boolean) {
+        when (this) {
+            is Local -> openYandexMusicLocal(dontAskMore)
+            is Cloud -> openYandexMusicCloud(dontAskMore)
+        }
+    }
+
+    fun openVkMusic(dontAskMore: Boolean) {
+        when (this) {
+            is Local -> openVkMusicLocal(dontAskMore)
+            is Cloud -> openVkMusicCloud(dontAskMore)
+        }
+    }
+
+    fun openYoutubeMusic(dontAskMore: Boolean) {
+        when (this) {
+            is Local -> openYoutubeMusicLocal(dontAskMore)
+            is Cloud -> openYoutubeMusicCloud(dontAskMore)
+        }
+    }
+
+    fun sendWarning(comment: String) {
+        when (this) {
+            is Local -> sendWarningLocal(comment)
+            is Cloud -> sendWarningCloud(comment)
+        }
     }
 }

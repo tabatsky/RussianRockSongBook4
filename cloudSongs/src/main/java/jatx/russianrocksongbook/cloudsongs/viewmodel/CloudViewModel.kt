@@ -1,48 +1,43 @@
-package jatx.russianrocksongbook.viewmodel
+package jatx.russianrocksongbook.cloudsongs.viewmodel
 
 import android.annotation.SuppressLint
-import android.content.Context
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import jatx.russianrocksongbook.model.api.gson.STATUS_ERROR
 import jatx.russianrocksongbook.model.api.gson.STATUS_SUCCESS
-import jatx.russianrocksongbook.model.data.FileSystemAdapter
 import jatx.russianrocksongbook.model.data.OrderBy
-import jatx.russianrocksongbook.model.data.SongBookAPIAdapter
-import jatx.russianrocksongbook.model.data.SongRepository
 import jatx.russianrocksongbook.model.domain.CloudSong
 import jatx.russianrocksongbook.model.domain.formatRating
-import jatx.russianrocksongbook.model.preferences.Settings
-import jatx.russianrocksongbook.model.preferences.UserInfo
-import kotlinx.coroutines.flow.MutableStateFlow
+import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.russianrocksongbook.viewmodel.R
+import jatx.russianrocksongbook.viewmodel.ViewModelParam
+import jatx.russianrocksongbook.viewmodel.interfaces.Cloud
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
 class CloudViewModel @Inject constructor(
-    viewModelParam: ViewModelParam
-): MvvmViewModel(viewModelParam) {
+    viewModelParam: ViewModelParam,
+    private val cloudScreenStateHolder: CloudScreenStateHolder
+): MvvmViewModel(
+    viewModelParam,
+    cloudScreenStateHolder.screenStateHolder
+), Cloud {
 
-    private val _isCloudLoading = MutableStateFlow(false)
-    val isCloudLoading = _isCloudLoading.asStateFlow()
-    private val _cloudSongCount = MutableStateFlow(0)
-    val cloudSongCount = _cloudSongCount.asStateFlow()
-    private val _cloudSongList = MutableStateFlow(listOf<CloudSong>())
-    val cloudSongList = _cloudSongList.asStateFlow()
-    private val _cloudSongPosition = MutableStateFlow(0)
-    val cloudSongPosition = _cloudSongPosition.asStateFlow()
-    private val _cloudSong: MutableStateFlow<CloudSong?> = MutableStateFlow(null)
-    val cloudSong = _cloudSong.asStateFlow()
+    val isCloudLoading = cloudScreenStateHolder.isCloudLoading.asStateFlow()
+    val cloudSongCount = cloudScreenStateHolder.cloudSongCount.asStateFlow()
+    val cloudSongList = cloudScreenStateHolder.cloudSongList.asStateFlow()
+    val cloudSongPosition = cloudScreenStateHolder.cloudSongPosition.asStateFlow()
+    val cloudSong = cloudScreenStateHolder.cloudSong.asStateFlow()
 
     private var cloudSearchDisposable: Disposable? = null
     private var voteDisposable: Disposable? = null
     private var sendWarningDisposable: Disposable? = null
 
     fun cloudSearch(searchFor: String, orderBy: OrderBy) {
-        _isCloudLoading.value = true
+        cloudScreenStateHolder.isCloudLoading.value = true
         cloudSearchDisposable?.apply {
             if (!this.isDisposed) this.dispose()
         }
@@ -51,26 +46,26 @@ class CloudViewModel @Inject constructor(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ result ->
-                _isCloudLoading.value = false
+                cloudScreenStateHolder.isCloudLoading.value = false
                 when (result.status) {
                     STATUS_ERROR -> showToast(result.message ?: "")
                     STATUS_SUCCESS -> {
                         result.data?.apply {
-                            _cloudSongList.value = this.map { CloudSong(it) }
-                            _cloudSongCount.value = this.size
+                            cloudScreenStateHolder.cloudSongList.value = this.map { CloudSong(it) }
+                            cloudScreenStateHolder.cloudSongCount.value = this.size
                         }
                     }
                 }
             }, { error ->
                 error.printStackTrace()
-                _isCloudLoading.value = false
+                cloudScreenStateHolder.isCloudLoading.value = false
                 showToast(R.string.error_in_app)
             })
     }
 
     fun selectCloudSong(position: Int) {
-        _cloudSongPosition.value = position
-        _cloudSong.value = cloudSongList.value.getOrNull(position)
+        cloudScreenStateHolder.cloudSongPosition.value = position
+        cloudScreenStateHolder.cloudSong.value = cloudSongList.value.getOrNull(position)
     }
 
     fun nextCloudSong() {
@@ -155,28 +150,28 @@ class CloudViewModel @Inject constructor(
         }
     }
 
-    fun openYandexMusicCloud(dontAskMore: Boolean) {
+    override fun openYandexMusicCloud(dontAskMore: Boolean) {
         settings.yandexMusicDontAsk = dontAskMore
         cloudSong.value?.apply {
             actions.onOpenYandexMusic("$artist $title")
         }
     }
 
-    fun openVkMusicCloud(dontAskMore: Boolean) {
+    override fun openVkMusicCloud(dontAskMore: Boolean) {
         settings.vkMusicDontAsk = dontAskMore
         cloudSong.value?.apply {
             actions.onOpenVkMusic("$artist $title")
         }
     }
 
-    fun openYoutubeMusicCloud(dontAskMore: Boolean) {
+    override fun openYoutubeMusicCloud(dontAskMore: Boolean) {
         settings.youtubeMusicDontAsk = dontAskMore
         cloudSong.value?.apply {
             actions.onOpenYoutubeMusic("$artist $title")
         }
     }
 
-    fun sendWarningCloud(comment: String) {
+    override fun sendWarningCloud(comment: String) {
         cloudSong.value?.apply {
             sendWarningDisposable?.apply {
                 if (!this.isDisposed) this.dispose()
