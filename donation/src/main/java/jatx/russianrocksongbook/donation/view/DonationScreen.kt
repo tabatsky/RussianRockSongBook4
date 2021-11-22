@@ -13,23 +13,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.commonview.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.CommonTopAppBar
+import jatx.russianrocksongbook.donation.R
+import jatx.russianrocksongbook.donation.viewmodel.DonationViewModel
 import jatx.russianrocksongbook.helpers.DONATIONS
 import jatx.russianrocksongbook.helpers.DONATIONS_LANDSCAPE
 import jatx.russianrocksongbook.helpers.SKUS
 import jatx.russianrocksongbook.helpers.SKUS_LANDSCAPE
 import jatx.russianrocksongbook.model.preferences.Theme
-import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 
 @Composable
-fun DonationScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
-    val theme = mvvmViewModel.settings.theme
+fun DonationScreen(donationViewModel: DonationViewModel = viewModel()) {
+    val theme = donationViewModel.settings.theme
 
     val onPurchaseClick: (Int, Boolean) -> Unit = { index, isLandscape ->
         val sku = if (!isLandscape) SKUS[index] else SKUS_LANDSCAPE[index]
-        mvvmViewModel.purchaseItem(sku)
+        donationViewModel.purchaseItem(sku)
     }
 
     BoxWithConstraints(
