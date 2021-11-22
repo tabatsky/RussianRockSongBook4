@@ -8,11 +8,4 @@
 
     <string name="title_add_artist">Добавить исполнителя</string>
     <string name="title_donation">Пожертвования</string>
-
-    <string name="add_song">Добавить песню</string>
-    <string name="artist">Исполнитель</string>
-    <string name="title">Название</string>
-    <string name="song_text">Текст песни</string>
-    <string name="save">Сохранить</string>
-    <string name="toast_fill_all_fields">Заполните все поля</string>
 </resources>

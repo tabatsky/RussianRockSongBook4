@@ -14,19 +14,19 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import jatx.russianrocksongbook.R
+import jatx.russianrocksongbook.addsong.R
+import jatx.russianrocksongbook.addsong.viewmodel.AddSongViewModel
 import jatx.russianrocksongbook.commonview.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.UploadDialog
 import jatx.russianrocksongbook.model.preferences.ScalePow
-import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 
 @Composable
-fun AddSongScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
-    val showUploadDialog by mvvmViewModel.showUploadDialogForSong.collectAsState()
+fun AddSongScreen(addSongViewModel: AddSongViewModel = viewModel()) {
+    val showUploadDialog by addSongViewModel.showUploadDialogForSong.collectAsState()
     Log.e("show upload", showUploadDialog.toString())
 
-    val theme = mvvmViewModel.settings.theme
+    val theme = addSongViewModel.settings.theme
 
     BoxWithConstraints(
         modifier = Modifier
@@ -41,7 +41,7 @@ fun AddSongScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
                     .fillMaxSize()
                     .background(color = theme.colorBg)
             ) {
-                CommonTopAppBar(title = stringResource(id = R.string.add_song))
+                CommonTopAppBar(title = stringResource(id = R.string.title_add_song))
                 AddSongBody()
             }
         } else {
@@ -50,7 +50,7 @@ fun AddSongScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
                     .fillMaxSize()
                     .background(color = theme.colorBg)
             ) {
-                CommonSideAppBar(title = stringResource(id = R.string.add_song))
+                CommonSideAppBar(title = stringResource(id = R.string.title_add_song))
                 AddSongBody()
             }
         }
@@ -59,13 +59,13 @@ fun AddSongScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
             UploadDialog(
                 invertColors = true,
                 onConfirm = {
-                    mvvmViewModel.hideUploadOfferForSong()
-                    mvvmViewModel.uploadNewToCloud()
+                    addSongViewModel.hideUploadOfferForSong()
+                    addSongViewModel.uploadNewToCloud()
                 },
                 onDismiss = {
                     Log.e("upload dialog", "on dismiss")
-                    mvvmViewModel.hideUploadOfferForSong()
-                    mvvmViewModel.showNewSong()
+                    addSongViewModel.hideUploadOfferForSong()
+                    addSongViewModel.showNewSong()
                 }
             )
         }
@@ -74,15 +74,15 @@ fun AddSongScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
 
 @Composable
 private fun AddSongBody(
-    mvvmViewModel: MvvmViewModel = viewModel()
+    addSongViewModel: AddSongViewModel = viewModel()
 ) {
     var artist by rememberSaveable { mutableStateOf("") }
     var title by rememberSaveable { mutableStateOf("") }
     var text by rememberSaveable { mutableStateOf("") }
 
-    val theme = mvvmViewModel.settings.theme
+    val theme = addSongViewModel.settings.theme
 
-    val fontScale = mvvmViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
+    val fontScale = addSongViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTextDp = dimensionResource(id = R.dimen.text_size_16) * fontScale
     val fontSizeTextSp = with(LocalDensity.current) {
         fontSizeTextDp.toSp()
@@ -103,7 +103,7 @@ private fun AddSongBody(
                 .wrapContentHeight(),
             label = {
                 Text(
-                    text = stringResource(id = R.string.artist),
+                    text = stringResource(id = R.string.field_artist),
                     color = theme.colorBg,
                     fontSize = fontSizeTextSp * 0.7f
                 )
@@ -132,7 +132,7 @@ private fun AddSongBody(
                 .wrapContentHeight(),
             label = {
                 Text(
-                    text = stringResource(id = R.string.title),
+                    text = stringResource(id = R.string.field_title),
                     color = theme.colorBg,
                     fontSize = fontSizeTextSp * 0.7f
                 )
@@ -161,7 +161,7 @@ private fun AddSongBody(
                 .weight(1.0f),
             label = {
                 Text(
-                    text = stringResource(id = R.string.song_text),
+                    text = stringResource(id = R.string.field_song_text),
                     color = theme.colorBg,
                     fontSize = fontSizeTextSp * 0.7f
                 )
@@ -195,9 +195,9 @@ private fun AddSongBody(
                     title.trim().isEmpty() ||
                     text.trim().isEmpty()
                 ) {
-                    mvvmViewModel.showToast(R.string.toast_fill_all_fields)
+                    addSongViewModel.showToast(R.string.toast_fill_all_fields)
                 } else {
-                    mvvmViewModel.addSongToRepo(
+                    addSongViewModel.addSongToRepo(
                         artist, title, text
                     )
                 }
