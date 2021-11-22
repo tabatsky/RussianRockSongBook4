@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.view
+package jatx.russianrocksongbook.cloudsongs.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,13 +20,17 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import jatx.russianrocksongbook.R
+import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.model.data.OrderBy
 import jatx.russianrocksongbook.model.domain.CloudSong
 import jatx.russianrocksongbook.model.preferences.ScalePow
 import jatx.russianrocksongbook.model.preferences.Theme
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
-import jatx.russianrocksongbook.viewmodel.CloudViewModel
+import jatx.russianrocksongbook.cloudsongs.viewmodel.CloudViewModel
+import jatx.russianrocksongbook.commonview.CommonSideAppBar
+import jatx.russianrocksongbook.commonview.CommonSongListStub
+import jatx.russianrocksongbook.commonview.CommonTopAppBar
+import jatx.russianrocksongbook.commonview.Spinner
 import kotlinx.coroutines.launch
 
 @Composable

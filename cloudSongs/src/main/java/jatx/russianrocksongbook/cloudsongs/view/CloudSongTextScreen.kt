@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.view
+package jatx.russianrocksongbook.cloudsongs.view
 
 import android.graphics.Typeface
 import android.util.Log
@@ -25,12 +25,13 @@ import com.dqt.libs.chorddroid.classes.ChordLibrary
 import jatx.clickablewordstextview.ClickableWordsTextView
 import jatx.clickablewordstextview.OnWordClickListener
 import jatx.clickablewordstextview.Word
-import jatx.russianrocksongbook.R
+import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.model.domain.CloudSong
 import jatx.russianrocksongbook.model.preferences.ListenToMusicVariant
 import jatx.russianrocksongbook.model.preferences.ScalePow
 import jatx.russianrocksongbook.model.preferences.Theme
-import jatx.russianrocksongbook.viewmodel.CloudViewModel
+import jatx.russianrocksongbook.cloudsongs.viewmodel.CloudViewModel
+import jatx.russianrocksongbook.commonview.*
 import kotlinx.coroutines.launch
 
 private val CLOUD_SONG_TEXT_APP_BAR_WIDTH = 96.dp
@@ -218,8 +219,7 @@ fun CloudSongTextScreen(cloudViewModel: CloudViewModel = viewModel()) {
                     cloudViewModel.openYandexMusicCloud(true)
                 } else {
                     YandexMusicDialog(
-                        mvvmViewModel = cloudViewModel,
-                        isCloudScreen = true
+                        mvvmViewModel = cloudViewModel
                     ) {
                         showYandexDialog = false
                     }
@@ -231,8 +231,7 @@ fun CloudSongTextScreen(cloudViewModel: CloudViewModel = viewModel()) {
                     cloudViewModel.openVkMusicCloud(true)
                 } else {
                     VkMusicDialog(
-                        mvvmViewModel = cloudViewModel,
-                        isCloudScreen = true
+                        mvvmViewModel = cloudViewModel
                     ) {
                         showVkDialog = false
                     }
@@ -244,8 +243,7 @@ fun CloudSongTextScreen(cloudViewModel: CloudViewModel = viewModel()) {
                     cloudViewModel.openYoutubeMusicCloud(true)
                 } else {
                     YoutubeMusicDialog(
-                        mvvmViewModel = cloudViewModel,
-                        isCloudScreen = true
+                        mvvmViewModel = cloudViewModel
                     ) {
                         showYoutubeMusicDialog = false
                     }
