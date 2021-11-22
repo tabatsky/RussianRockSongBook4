@@ -45,7 +45,7 @@ fun DonationScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
                     .fillMaxSize()
                     .background(color = theme.colorBg)
             ) {
-                CommonTopAppBar(title = stringResource(id = R.string.donation))
+                CommonTopAppBar(title = stringResource(id = R.string.title_donation))
                 DonationBodyPortrait(
                     theme = theme,
                     onPurchaseClick = onPurchaseClick
@@ -57,7 +57,7 @@ fun DonationScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
                     .fillMaxSize()
                     .background(color = theme.colorBg)
             ) {
-                CommonSideAppBar(title = stringResource(id = R.string.donation))
+                CommonSideAppBar(title = stringResource(id = R.string.title_donation))
                 DonationBodyLandscape(
                     theme = theme,
                     onPurchaseClick = onPurchaseClick

@@ -53,19 +53,14 @@ open class MvvmViewModel @Inject constructor(
         .appWasUpdated
         .asStateFlow()
 
-    private val _showUploadDialogForDir = MutableStateFlow(false)
-    val showUploadDialogForDir = _showUploadDialogForDir.asStateFlow()
+
     private val _showUploadDialogForSong = MutableStateFlow(false)
     val showUploadDialogForSong = _showUploadDialogForSong.asStateFlow()
-    private val _uploadArtist = MutableStateFlow("")
-    val uploadArtist = _uploadArtist.asStateFlow()
-    private val _uploadSongList = MutableStateFlow<List<Song>>(listOf())
-    val uploadSongList = _uploadSongList.asStateFlow()
+
     private val _newSong: MutableStateFlow<Song?> = MutableStateFlow(null)
     val newSong = _newSong.asStateFlow()
 
     private var getArtistsDisposable: Disposable? = null
-    private var uploadListDisposable: Disposable? = null
     private var uploadSongDisposable: Disposable? = null
 
     fun back(onFinish: () -> Unit = {}) {
@@ -133,20 +128,6 @@ open class MvvmViewModel @Inject constructor(
         screenStateHolder.appWasUpdated.value = value
     }
 
-    fun addSongsFromDir() {
-        actions.onAddSongsFromDir()
-    }
-
-    private fun showUploadOfferForDir(artist: String, songs: List<Song>) {
-        _uploadArtist.value = artist
-        _uploadSongList.value = songs
-        _showUploadDialogForDir.value = true
-    }
-
-    fun hideUploadOfferForDir() {
-        _showUploadDialogForDir.value = false
-    }
-
     private fun showUploadOfferForSong(song: Song) {
         Log.e("upload", "show offer")
         _newSong.value = song
@@ -156,35 +137,6 @@ open class MvvmViewModel @Inject constructor(
     fun hideUploadOfferForSong() {
         Log.e("upload", "hide offer")
         _showUploadDialogForSong.value = false
-    }
-
-    fun uploadListToCloud() {
-        uploadListDisposable?.apply {
-            if (!this.isDisposed) this.dispose()
-        }
-        uploadListDisposable = songBookAPIAdapter
-            .addSongList(uploadSongList.value, userInfo)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ result ->
-                when (result.status) {
-                    STATUS_SUCCESS -> {
-                        result.data?.apply {
-                            val toastText = context.getString(
-                                R.string.toast_upload_songs_result,
-                                success, duplicate, error
-                            )
-                            showToast(toastText)
-                            actions.onArtistSelected(uploadArtist.value)
-                            selectScreen(CurrentScreenVariant.SONG_LIST)
-                        }
-                    }
-                    STATUS_ERROR -> showToast(result.message ?: "")
-                }
-            }, { error ->
-                error.printStackTrace()
-                showToast(R.string.error_in_app)
-            })
     }
 
     fun uploadNewToCloud() {
@@ -215,41 +167,6 @@ open class MvvmViewModel @Inject constructor(
         Log.e("show", "new song")
         newSong.value?.apply {
             actions.onSongByArtistAndTitleSelected(this.artist, this.title)
-        }
-    }
-
-    fun copySongsFromDirToRepoWithPickedDir(pickedDir: DocumentFile) {
-        if (!pickedDir.exists()) {
-            showToast(R.string.toast_folder_does_not_exist)
-        } else if (!pickedDir.isDirectory) {
-            showToast(R.string.toast_this_is_not_folder)
-        } else {
-            val (artist, songs) = fileSystemAdapter.getSongsFromDir(pickedDir) {
-                val toastText = context.getString(R.string.toast_file_not_found, it)
-                showToast(toastText)
-            }
-            val actualSongs = songRepo.insertReplaceUserSongs(songs)
-            val toastText = context.getString(R.string.toast_added_songs_count, songs.size)
-            showToast(toastText)
-            showUploadOfferForDir(artist, actualSongs)
-        }
-    }
-
-    fun copySongsFromDirToRepoWithPath(path: String) {
-        val dir = File(path)
-        if (!dir.exists()) {
-            showToast(R.string.toast_folder_does_not_exist)
-        } else if (!dir.isDirectory) {
-            showToast(R.string.toast_this_is_not_folder)
-        } else {
-            val (artist, songs) = fileSystemAdapter.getSongsFromDir(dir) {
-                val toastText = context.getString(R.string.toast_file_not_found, it)
-                showToast(toastText)
-            }
-            val actualSongs = songRepo.insertReplaceUserSongs(songs)
-            val toastText = context.getString(R.string.toast_added_songs_count, songs.size)
-            showToast(toastText)
-            showUploadOfferForDir(artist, actualSongs)
         }
     }
 

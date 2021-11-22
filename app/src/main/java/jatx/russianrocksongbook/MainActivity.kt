@@ -13,6 +13,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
+import jatx.russianrocksongbook.addartist.viewmodel.AddArtistViewModel
 import jatx.russianrocksongbook.debug.AppDebug
 import jatx.russianrocksongbook.helpers.AddSongsFromDirHelper
 import jatx.russianrocksongbook.helpers.DonationHelper
@@ -159,10 +160,10 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun addSongsFromDir() {
-        val mvvmViewModel: MvvmViewModel by viewModels()
+        val addArtistViewModel: AddArtistViewModel by viewModels()
         addSongsFromDirHelper.addSongsFromDir(
-            onPickedDirReturned = mvvmViewModel::copySongsFromDirToRepoWithPickedDir,
-            onPathReturned = mvvmViewModel::copySongsFromDirToRepoWithPath
+            onPickedDirReturned = addArtistViewModel::copySongsFromDirToRepoWithPickedDir,
+            onPathReturned = addArtistViewModel::copySongsFromDirToRepoWithPath
         )
     }
 }
