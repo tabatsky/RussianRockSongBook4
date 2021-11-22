@@ -9,7 +9,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     viewModelParam: ViewModelParam,
-    private val screenStateHolder: ScreenStateHolder
+    screenStateHolder: ScreenStateHolder
 ): MvvmViewModel(
     viewModelParam,
     screenStateHolder

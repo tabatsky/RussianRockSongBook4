@@ -9,7 +9,10 @@ import jatx.russianrocksongbook.model.api.gson.STATUS_ERROR
 import jatx.russianrocksongbook.model.api.gson.STATUS_SUCCESS
 import jatx.russianrocksongbook.model.data.*
 import jatx.russianrocksongbook.model.domain.Song
-import jatx.russianrocksongbook.viewmodel.*
+import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
+import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.russianrocksongbook.viewmodel.R
+import jatx.russianrocksongbook.viewmodel.ViewModelParam
 import jatx.russianrocksongbook.viewmodel.interfaces.Local
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject

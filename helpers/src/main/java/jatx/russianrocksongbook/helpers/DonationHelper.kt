@@ -6,7 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import com.android.billingclient.api.*
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
-import java.util.ArrayList
+import java.util.*
 import javax.inject.Inject
 
 val DONATIONS = listOf(

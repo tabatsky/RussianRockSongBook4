@@ -1,7 +1,10 @@
 package jatx.russianrocksongbook.model.data
 
 import io.reactivex.Single
-import jatx.russianrocksongbook.model.api.gson.*
+import jatx.russianrocksongbook.model.api.gson.ResultWithAddSongListResultDataGson
+import jatx.russianrocksongbook.model.api.gson.ResultWithCloudSongListDataGson
+import jatx.russianrocksongbook.model.api.gson.ResultWithNumberGson
+import jatx.russianrocksongbook.model.api.gson.ResultWithoutDataGson
 import jatx.russianrocksongbook.model.domain.AppCrash
 import jatx.russianrocksongbook.model.domain.CloudSong
 import jatx.russianrocksongbook.model.domain.Song

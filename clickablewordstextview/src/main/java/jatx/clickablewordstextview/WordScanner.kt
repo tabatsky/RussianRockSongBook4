@@ -1,7 +1,5 @@
 package jatx.clickablewordstextview
 
-import java.lang.StringBuilder
-
 class WordScanner(private val text: String) {
     private var currentIndex: Int = 0
 

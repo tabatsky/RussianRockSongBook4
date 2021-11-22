@@ -21,16 +21,16 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.cloudsongs.R
-import jatx.russianrocksongbook.model.data.OrderBy
-import jatx.russianrocksongbook.model.domain.CloudSong
-import jatx.russianrocksongbook.model.preferences.ScalePow
-import jatx.russianrocksongbook.model.preferences.Theme
-import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import jatx.russianrocksongbook.cloudsongs.viewmodel.CloudViewModel
 import jatx.russianrocksongbook.commonview.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.CommonSongListStub
 import jatx.russianrocksongbook.commonview.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.Spinner
+import jatx.russianrocksongbook.model.data.OrderBy
+import jatx.russianrocksongbook.model.domain.CloudSong
+import jatx.russianrocksongbook.model.preferences.ScalePow
+import jatx.russianrocksongbook.model.preferences.Theme
+import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import kotlinx.coroutines.launch
 
 @Composable

@@ -19,12 +19,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.commonview.*
 import jatx.russianrocksongbook.localsongs.R
+import jatx.russianrocksongbook.localsongs.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.model.data.*
 import jatx.russianrocksongbook.model.domain.Song
 import jatx.russianrocksongbook.model.preferences.ScalePow
 import jatx.russianrocksongbook.model.preferences.Theme
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
-import jatx.russianrocksongbook.localsongs.viewmodel.LocalViewModel
 import kotlinx.coroutines.launch
 
 private const val MAX_ARTIST_LENGTH_LANDSCAPE = 12

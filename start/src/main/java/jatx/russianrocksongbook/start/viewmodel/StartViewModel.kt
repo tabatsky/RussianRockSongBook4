@@ -1,6 +1,5 @@
 package jatx.russianrocksongbook.start.viewmodel
 
-import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jatx.russianrocksongbook.model.db.util.applySongPatches
 import jatx.russianrocksongbook.model.db.util.deleteWrongArtists
