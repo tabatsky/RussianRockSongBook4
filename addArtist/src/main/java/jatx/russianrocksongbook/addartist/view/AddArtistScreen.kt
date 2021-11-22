@@ -15,18 +15,18 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import jatx.russianrocksongbook.R
+import jatx.russianrocksongbook.addartist.R
+import jatx.russianrocksongbook.addartist.viewmodel.AddArtistViewModel
 import jatx.russianrocksongbook.commonview.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.UploadDialog
 import jatx.russianrocksongbook.model.preferences.ScalePow
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
-import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 
 @Composable
-fun AddArtistScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
-    val showUploadDialog by mvvmViewModel.showUploadDialogForDir.collectAsState()
-    val uploadArtist by mvvmViewModel.uploadArtist.collectAsState()
+fun AddArtistScreen(addArtistViewModel: AddArtistViewModel = viewModel()) {
+    val showUploadDialog by addArtistViewModel.showUploadDialogForDir.collectAsState()
+    val uploadArtist by addArtistViewModel.uploadArtist.collectAsState()
 
     BoxWithConstraints(
         modifier = Modifier
@@ -37,12 +37,12 @@ fun AddArtistScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
 
         if (W < H) {
             Column {
-                CommonTopAppBar(title = stringResource(id = R.string.add_artist))
+                CommonTopAppBar(title = stringResource(id = R.string.title_add_artist))
                 AddArtistBody()
             }
         } else {
             Row {
-                CommonSideAppBar(title = stringResource(id = R.string.add_artist))
+                CommonSideAppBar(title = stringResource(id = R.string.title_add_artist))
                 AddArtistBody()
             }
         }
@@ -50,13 +50,13 @@ fun AddArtistScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
         if (showUploadDialog) {
             UploadDialog(
                 onConfirm = {
-                    mvvmViewModel.hideUploadOfferForDir()
-                    mvvmViewModel.uploadListToCloud()
+                    addArtistViewModel.hideUploadOfferForDir()
+                    addArtistViewModel.uploadListToCloud()
                 },
                 onDismiss = {
-                    mvvmViewModel.hideUploadOfferForDir()
-                    mvvmViewModel.actions.onArtistSelected(uploadArtist)
-                    mvvmViewModel.selectScreen(CurrentScreenVariant.SONG_LIST)
+                    addArtistViewModel.hideUploadOfferForDir()
+                    addArtistViewModel.actions.onArtistSelected(uploadArtist)
+                    addArtistViewModel.selectScreen(CurrentScreenVariant.SONG_LIST)
                 }
             )
         }
@@ -65,11 +65,11 @@ fun AddArtistScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
 
 @Composable
 private fun AddArtistBody(
-    mvvmViewModel: MvvmViewModel = viewModel()
+    addArtistViewModel: AddArtistViewModel = viewModel()
 ) {
-    val theme = mvvmViewModel.settings.theme
+    val theme = addArtistViewModel.settings.theme
 
-    val fontScale = mvvmViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
+    val fontScale = addArtistViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTextDp = dimensionResource(id = R.dimen.text_size_16) * fontScale
     val fontSizeTextSp = with(LocalDensity.current) {
         fontSizeTextDp.toSp()
@@ -103,7 +103,7 @@ private fun AddArtistBody(
                     contentColor = theme.colorMain
                 ),
             onClick = {
-                mvvmViewModel.addSongsFromDir()
+                addArtistViewModel.addSongsFromDir()
             }) {
             Text(text = stringResource(id = R.string.choose))
         }
