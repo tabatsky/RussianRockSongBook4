@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.view
+package jatx.russianrocksongbook.commonview
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
@@ -16,7 +16,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import jatx.russianrocksongbook.R
 import jatx.russianrocksongbook.model.preferences.ScalePow
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 
@@ -112,19 +111,6 @@ fun ConfirmDialog(
         }
     )
 }
-
-@Composable
-fun DeleteToTrashDialog(
-    mvvmViewModel: MvvmViewModel = viewModel(),
-    onDismiss: () -> Unit
-) = ConfirmDialog(
-    titleRes = R.string.dialog_song_to_trash_title,
-    messageRes = R.string.dialog_song_to_trash_message,
-    onConfirm = {
-        mvvmViewModel.deleteCurrentToTrash()
-    },
-    onDismiss = onDismiss
-)
 
 @Composable
 fun UploadDialog(
