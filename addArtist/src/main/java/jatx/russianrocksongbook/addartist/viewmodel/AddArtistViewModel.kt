@@ -8,7 +8,10 @@ import io.reactivex.schedulers.Schedulers
 import jatx.russianrocksongbook.model.api.gson.STATUS_ERROR
 import jatx.russianrocksongbook.model.api.gson.STATUS_SUCCESS
 import jatx.russianrocksongbook.model.domain.Song
-import jatx.russianrocksongbook.viewmodel.*
+import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
+import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.russianrocksongbook.viewmodel.R
+import jatx.russianrocksongbook.viewmodel.ViewModelParam
 import kotlinx.coroutines.flow.asStateFlow
 import java.io.File
 import javax.inject.Inject
