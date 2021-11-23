@@ -7,6 +7,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import jatx.russianrocksongbook.model.api.BASE_URL
+import jatx.synchronouscalladapterfactory.SynchronousCallAdapterFactory
 import jatx.russianrocksongbook.model.db.AppDatabase
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -27,6 +28,7 @@ class NetworkModule {
         .Builder()
         .baseUrl(BASE_URL)
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        .addCallAdapterFactory(SynchronousCallAdapterFactory.create())
         .addConverterFactory(GsonConverterFactory.create())
         .build()!!
 }

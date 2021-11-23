@@ -5,6 +5,7 @@
     <string name="cancel">Отмена</string>
 
     <string name="label_placeholder">Список пуст</string>
+    <string name="label_error_placeholder">Ошибка получения данных</string>
     <string name="close">Закрыть</string>
 
     <string name="dialog_upload_to_cloud_title">Отправить в облако?</string>

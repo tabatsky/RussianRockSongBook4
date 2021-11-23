@@ -143,7 +143,6 @@ class MainActivity : ComponentActivity() {
     private fun initCloudSearch() = runOnUiThread {
         val cloudViewModel: CloudViewModel by viewModels()
         cloudViewModel.cloudSearch("", OrderBy.BY_ID_DESC)
-        cloudViewModel.selectCloudSong(0)
     }
 
     private fun selectArtist(artist: String) = runOnUiThread {

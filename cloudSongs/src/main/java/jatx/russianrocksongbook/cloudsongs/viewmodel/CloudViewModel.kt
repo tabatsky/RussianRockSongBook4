@@ -1,10 +1,13 @@
 package jatx.russianrocksongbook.cloudsongs.viewmodel
 
 import android.annotation.SuppressLint
+import androidx.paging.Pager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import jatx.russianrocksongbook.cloudsongs.paging.CONFIG
+import jatx.russianrocksongbook.cloudsongs.paging.CloudSongSource
 import jatx.russianrocksongbook.model.api.gson.STATUS_ERROR
 import jatx.russianrocksongbook.model.api.gson.STATUS_SUCCESS
 import jatx.russianrocksongbook.model.data.OrderBy
@@ -28,60 +31,67 @@ class CloudViewModel @Inject constructor(
 
     val isCloudLoading = cloudScreenStateHolder.isCloudLoading.asStateFlow()
     val cloudSongCount = cloudScreenStateHolder.cloudSongCount.asStateFlow()
-    val cloudSongList = cloudScreenStateHolder.cloudSongList.asStateFlow()
     val cloudSongPosition = cloudScreenStateHolder.cloudSongPosition.asStateFlow()
     val cloudSong = cloudScreenStateHolder.cloudSong.asStateFlow()
 
-    private var cloudSearchDisposable: Disposable? = null
+    val latestPosition = cloudScreenStateHolder.latestPosition.asStateFlow()
+    val listPosition = cloudScreenStateHolder.listPosition.asStateFlow()
+
+    val cloudSongsFlow = cloudScreenStateHolder.cloudSongsFlow.asStateFlow()
+
+    val wasFetchDataError = cloudScreenStateHolder.wasFetchDataError.asStateFlow()
+
     private var voteDisposable: Disposable? = null
     private var sendWarningDisposable: Disposable? = null
 
     fun cloudSearch(searchFor: String, orderBy: OrderBy) {
-        cloudScreenStateHolder.isCloudLoading.value = true
-        cloudSearchDisposable?.apply {
-            if (!this.isDisposed) this.dispose()
-        }
-        cloudSearchDisposable = songBookAPIAdapter
-            .searchSongs(searchFor, orderBy)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ result ->
-                cloudScreenStateHolder.isCloudLoading.value = false
-                when (result.status) {
-                    STATUS_ERROR -> showToast(result.message ?: "")
-                    STATUS_SUCCESS -> {
-                        result.data?.apply {
-                            cloudScreenStateHolder.cloudSongList.value = this.map { CloudSong(it) }
-                            cloudScreenStateHolder.cloudSongCount.value = this.size
-                        }
-                    }
+        setFetchDataError(false)
+        updateListPosition(0)
+        setLatestPosition(-1)
+        cloudScreenStateHolder.cloudSongsFlow.value =
+            Pager(CONFIG) {
+                CloudSongSource(songBookAPIAdapter, searchFor, orderBy) {
+                    setFetchDataError(true)
                 }
-            }, { error ->
-                error.printStackTrace()
-                cloudScreenStateHolder.isCloudLoading.value = false
-                showToast(R.string.error_in_app)
-            })
+            }.flow
+    }
+
+    private fun setFetchDataError(value: Boolean) {
+        cloudScreenStateHolder.wasFetchDataError.value = value
+    }
+
+    fun setLoading(value: Boolean) {
+        cloudScreenStateHolder.isCloudLoading.value = value
+    }
+
+    fun setLatestPosition(position: Int) {
+        cloudScreenStateHolder.latestPosition.value = position
     }
 
     fun selectCloudSong(position: Int) {
         cloudScreenStateHolder.cloudSongPosition.value = position
-        cloudScreenStateHolder.cloudSong.value = cloudSongList.value.getOrNull(position)
+    }
+
+    fun updateListPosition(position: Int) {
+        cloudScreenStateHolder.listPosition.value = position
+    }
+
+    fun updateCloudSong(cloudSong: CloudSong?) {
+        cloudScreenStateHolder.cloudSong.value = cloudSong
+    }
+
+    fun updateCloudSongCount(count: Int) {
+        cloudScreenStateHolder.cloudSongCount.value = count
     }
 
     fun nextCloudSong() {
-        if (cloudSongCount.value > 0) {
-            selectCloudSong((cloudSongPosition.value + 1) % cloudSongCount.value)
-        }
+        if (cloudSongPosition.value + 1 < cloudSongCount.value)
+            selectCloudSong(cloudSongPosition.value + 1)
     }
 
     fun prevCloudSong() {
-        if (cloudSongCount.value > 0) {
-            if (cloudSongPosition.value > 0) {
-                selectCloudSong((cloudSongPosition.value - 1) % cloudSongCount.value)
-            } else {
-                selectCloudSong(cloudSongCount.value - 1)
-            }
-        }
+        if (cloudSongPosition.value > 0)
+            selectCloudSong(cloudSongPosition.value - 1)
     }
 
     @SuppressLint("CheckResult")

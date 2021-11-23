@@ -25,6 +25,9 @@ interface SongBookAPIAdapter {
             Single<ResultWithNumberGson>
     fun getUploadsCountForUser(userInfo: UserInfo):
             Single<ResultWithNumberGson>
+
+    fun pagedSearch(searchFor: String, orderBy: OrderBy = OrderBy.BY_ID_DESC, page: Int):
+            ResultWithCloudSongListDataGson
 }
 
 enum class OrderBy(

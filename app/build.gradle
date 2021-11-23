@@ -86,6 +86,8 @@ dependencies {
     implementation project(':clickablewordstextview')
     implementation project(':ChordDroidLibrary')
 
+    implementation project(':SynchronousCallAdapterFactory')
+
     implementation project(':model')
     implementation project(':viewmodel')
     implementation project(':helpers')

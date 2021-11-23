@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -21,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.dqt.libs.chorddroid.classes.ChordLibrary
 import jatx.clickablewordstextview.ClickableWordsTextView
 import jatx.clickablewordstextview.OnWordClickListener
@@ -38,7 +40,29 @@ private val CLOUD_SONG_TEXT_APP_BAR_WIDTH = 96.dp
 
 @Composable
 fun CloudSongTextScreen(cloudViewModel: CloudViewModel = viewModel()) {
-    val cloudSong by cloudViewModel.cloudSong.collectAsState()
+    val position by cloudViewModel.cloudSongPosition.collectAsState()
+
+    val cloudSongsFlow by cloudViewModel
+        .cloudSongsFlow.collectAsState()
+    val cloudSongItems =
+        cloudSongsFlow
+            .collectAsLazyPagingItems()
+
+    cloudViewModel.updateCloudSongCount(cloudSongItems.itemCount)
+
+    val cloudSong = when {
+        position < cloudSongItems.itemCount -> cloudSongItems[position]
+        cloudSongItems.itemCount > 0 -> {
+            cloudSongItems[cloudSongItems.itemCount - 1]
+            null
+        }
+        else -> null
+    }
+
+    cloudViewModel.updateCloudSong(cloudSong)
+    cloudViewModel.updateListPosition(position)
+
+    val count = cloudSongItems.itemCount
 
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -113,6 +137,10 @@ fun CloudSongTextScreen(cloudViewModel: CloudViewModel = viewModel()) {
         fontSizeTextDp.toSp()
     }
 
+    if (cloudSong == null) {
+        CloudSongTextProgress(theme)
+    }
+
     cloudSong?.apply {
         BoxWithConstraints(
             modifier = Modifier
@@ -130,6 +158,8 @@ fun CloudSongTextScreen(cloudViewModel: CloudViewModel = viewModel()) {
                     CommonTopAppBar(
                         actions = {
                             CloudSongTextActions(
+                                position = position,
+                                count = count,
                                 onCloudSongChanged = onCloudSongChanged
                             )
                         }
@@ -175,6 +205,8 @@ fun CloudSongTextScreen(cloudViewModel: CloudViewModel = viewModel()) {
                     CommonSideAppBar(
                         actions = {
                             CloudSongTextActions(
+                                position = position,
+                                count = count,
                                 onCloudSongChanged = onCloudSongChanged
                             )
                         },
@@ -281,10 +313,10 @@ fun CloudSongTextScreen(cloudViewModel: CloudViewModel = viewModel()) {
 @Composable
 private fun CloudSongTextActions(
     cloudViewModel: CloudViewModel = viewModel(),
+    position: Int,
+    count: Int,
     onCloudSongChanged: () -> Unit
 ) {
-    val position by cloudViewModel.cloudSongPosition.collectAsState()
-    val count by cloudViewModel.cloudSongCount.collectAsState()
 
     CommonIconButton(resId = R.drawable.ic_left) {
         cloudViewModel.prevCloudSong()
@@ -523,5 +555,25 @@ private fun CloudSongTextPanelContent(
         onClick = onDislikeClick,
         onLongClick = onDislikeLongClick
     )
+}
 
+@Composable
+private fun CloudSongTextProgress(
+    theme: Theme
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(theme.colorBg),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .width(100.dp)
+                .height(100.dp)
+                .background(theme.colorBg),
+            color = theme.colorMain
+        )
+    }
 }
