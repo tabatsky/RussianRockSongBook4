@@ -1,6 +1,7 @@
 package jatx.russianrocksongbook.cloudsongs.viewmodel
 
 import android.annotation.SuppressLint
+import androidx.paging.ItemSnapshotList
 import androidx.paging.Pager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -30,9 +31,9 @@ class CloudViewModel @Inject constructor(
 ), Cloud {
 
     val isCloudLoading = cloudScreenStateHolder.isCloudLoading.asStateFlow()
-    val cloudSongCount = cloudScreenStateHolder.cloudSongCount.asStateFlow()
+    private val cloudSongCount = cloudScreenStateHolder.cloudSongCount.asStateFlow()
     val cloudSongPosition = cloudScreenStateHolder.cloudSongPosition.asStateFlow()
-    val cloudSong = cloudScreenStateHolder.cloudSong.asStateFlow()
+    private val cloudSong = cloudScreenStateHolder.cloudSong.asStateFlow()
 
     val latestPosition = cloudScreenStateHolder.latestPosition.asStateFlow()
     val listPosition = cloudScreenStateHolder.listPosition.asStateFlow()
@@ -41,13 +42,21 @@ class CloudViewModel @Inject constructor(
 
     val wasFetchDataError = cloudScreenStateHolder.wasFetchDataError.asStateFlow()
 
+    var snapshot: ItemSnapshotList<CloudSong>?
+        get() = cloudScreenStateHolder.snapshot
+        set(value) {
+            cloudScreenStateHolder.snapshot = value
+        }
+
     private var voteDisposable: Disposable? = null
     private var sendWarningDisposable: Disposable? = null
 
     fun cloudSearch(searchFor: String, orderBy: OrderBy) {
+        snapshot = null
         setFetchDataError(false)
+        setLoading(true)
         updateListPosition(0)
-        setLatestPosition(-1)
+        updateLatestPosition(-1)
         cloudScreenStateHolder.cloudSongsFlow.value =
             Pager(CONFIG) {
                 CloudSongSource(songBookAPIAdapter, searchFor, orderBy) {
@@ -64,12 +73,12 @@ class CloudViewModel @Inject constructor(
         cloudScreenStateHolder.isCloudLoading.value = value
     }
 
-    fun setLatestPosition(position: Int) {
-        cloudScreenStateHolder.latestPosition.value = position
-    }
-
     fun selectCloudSong(position: Int) {
         cloudScreenStateHolder.cloudSongPosition.value = position
+    }
+
+    fun updateLatestPosition(position: Int) {
+        cloudScreenStateHolder.latestPosition.value = position
     }
 
     fun updateListPosition(position: Int) {

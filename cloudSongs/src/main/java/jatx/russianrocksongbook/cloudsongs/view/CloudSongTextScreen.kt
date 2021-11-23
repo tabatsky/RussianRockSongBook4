@@ -28,6 +28,7 @@ import jatx.clickablewordstextview.ClickableWordsTextView
 import jatx.clickablewordstextview.OnWordClickListener
 import jatx.clickablewordstextview.Word
 import jatx.russianrocksongbook.cloudsongs.R
+import jatx.russianrocksongbook.cloudsongs.paging.ItemsAdapter
 import jatx.russianrocksongbook.cloudsongs.viewmodel.CloudViewModel
 import jatx.russianrocksongbook.commonview.*
 import jatx.russianrocksongbook.model.domain.CloudSong
@@ -41,28 +42,21 @@ private val CLOUD_SONG_TEXT_APP_BAR_WIDTH = 96.dp
 @Composable
 fun CloudSongTextScreen(cloudViewModel: CloudViewModel = viewModel()) {
     val position by cloudViewModel.cloudSongPosition.collectAsState()
+    cloudViewModel.updateLatestPosition(-1)
 
     val cloudSongsFlow by cloudViewModel
         .cloudSongsFlow.collectAsState()
-    val cloudSongItems =
-        cloudSongsFlow
-            .collectAsLazyPagingItems()
 
-    cloudViewModel.updateCloudSongCount(cloudSongItems.itemCount)
+    val cloudSongItems = cloudSongsFlow.collectAsLazyPagingItems()
+    val itemsAdapter = ItemsAdapter(cloudViewModel, cloudSongItems)
 
-    val cloudSong = when {
-        position < cloudSongItems.itemCount -> cloudSongItems[position]
-        cloudSongItems.itemCount > 0 -> {
-            cloudSongItems[cloudSongItems.itemCount - 1]
-            null
-        }
-        else -> null
-    }
+    val cloudSong = itemsAdapter.getItem(position)
 
     cloudViewModel.updateCloudSong(cloudSong)
     cloudViewModel.updateListPosition(position)
 
-    val count = cloudSongItems.itemCount
+    val count = itemsAdapter.size
+    cloudViewModel.updateCloudSongCount(count)
 
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()

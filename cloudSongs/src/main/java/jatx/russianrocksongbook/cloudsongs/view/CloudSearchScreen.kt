@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -22,8 +21,8 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemsIndexed
 import jatx.russianrocksongbook.cloudsongs.R
+import jatx.russianrocksongbook.cloudsongs.paging.ItemsAdapter
 import jatx.russianrocksongbook.cloudsongs.viewmodel.CloudViewModel
 import jatx.russianrocksongbook.commonview.*
 import jatx.russianrocksongbook.model.data.OrderBy
@@ -84,20 +83,19 @@ private fun CloudSearchBody(
     val theme = cloudViewModel.settings.theme
 
     val position by cloudViewModel.listPosition.collectAsState()
-
     val latest by cloudViewModel.latestPosition.collectAsState()
     var latestPosition = latest
+
     val isCloudLoading by cloudViewModel.isCloudLoading.collectAsState()
     val wasFetchDataError by cloudViewModel.wasFetchDataError.collectAsState()
 
     val cloudSongsFlow by cloudViewModel
         .cloudSongsFlow.collectAsState()
 
-    val cloudSongItems =
-        cloudSongsFlow
-            .collectAsLazyPagingItems()
+    val cloudSongItems = cloudSongsFlow.collectAsLazyPagingItems()
+    val itemsAdapter = ItemsAdapter(cloudViewModel, cloudSongItems)
 
-    Log.e("itemCount", "${cloudSongItems.itemCount}")
+    Log.e("itemCount", "${itemsAdapter.size}")
     Log.e("position / latest", "$position / $latest")
     Log.e("isLoading", "$isCloudLoading")
 
@@ -162,7 +160,7 @@ private fun CloudSearchBody(
         val coroutineScope = rememberCoroutineScope()
 
         if (!isCloudLoading) {
-            if (cloudSongItems.itemCount == 0) {
+            if (itemsAdapter.size == 0) {
                 CommonSongListStub(fontSizeSongTitleSp, theme)
             } else {
                 LazyColumn(
@@ -170,7 +168,8 @@ private fun CloudSearchBody(
                         .fillMaxSize(),
                     state = listState
                 ) {
-                    itemsIndexed(cloudSongItems) { index, cloudSong ->
+                    items(itemsAdapter.size) { index ->
+                        val cloudSong = itemsAdapter.getItem(index)
                         cloudSong?.apply {
                             CloudSongItem(
                                 this, theme, fontSizeArtistSp, fontSizeSongTitleSp
@@ -180,11 +179,11 @@ private fun CloudSearchBody(
                         }
                     }
 
-                    if (position != latestPosition && position < cloudSongItems.itemCount) {
+                    if (position != latestPosition && position < itemsAdapter.size) {
                         coroutineScope.launch {
                             listState.scrollToItem(position)
                             Log.e("set latest", "$position")
-                            cloudViewModel.setLatestPosition(position)
+                            cloudViewModel.updateLatestPosition(position)
                             latestPosition = position
                         }
                     }
@@ -196,21 +195,19 @@ private fun CloudSearchBody(
             CloudSearchProgress(theme)
         }
 
-        if (position != latestPosition) {
-            when {
-                position < cloudSongItems.itemCount -> {
+        when {
+            position < itemsAdapter.size -> {
+                cloudViewModel.setLoading(false)
+            }
+            itemsAdapter.size > 0 -> {
+                cloudViewModel.setLoading(true)
+                itemsAdapter.getItem(itemsAdapter.size - 1)
+            }
+            itemsAdapter.size == 0 -> {
+                cloudViewModel.setLoading(true)
+                coroutineScope.launch {
+                    delay(10000L)
                     cloudViewModel.setLoading(false)
-                }
-                cloudSongItems.itemCount > 0 -> {
-                    cloudViewModel.setLoading(true)
-                    cloudSongItems[cloudSongItems.itemCount - 1]
-                }
-                cloudSongItems.itemCount == 0 -> {
-                    cloudViewModel.setLoading(true)
-                    coroutineScope.launch {
-                        delay(10000L)
-                        cloudViewModel.setLoading(false)
-                    }
                 }
             }
         }

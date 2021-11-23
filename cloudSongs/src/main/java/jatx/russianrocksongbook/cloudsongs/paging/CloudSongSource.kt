@@ -9,7 +9,6 @@ import jatx.russianrocksongbook.model.debug.exceptionToString
 import jatx.russianrocksongbook.model.domain.CloudSong
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.lang.RuntimeException
 
 class CloudSongSource(
     private val songBookAPIAdapter: SongBookAPIAdapter,
@@ -17,18 +16,6 @@ class CloudSongSource(
     private val orderBy: OrderBy = OrderBy.BY_ID_DESC,
     private val onFetchDataError: () -> Unit = {}
 ): PagingSource<Int, CloudSong>() {
-
-    init {
-        // TODO:
-        // try to prevent recreating
-
-        Log.e("CloudSongSource", "init")
-        try {
-            throw RuntimeException()
-        } catch (e: Exception) {
-            Log.e("exception", exceptionToString(e))
-        }
-    }
 
     private val cache = hashMapOf<Int, List<CloudSong>>()
 

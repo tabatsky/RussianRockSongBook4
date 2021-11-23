@@ -1,8 +1,8 @@
 package jatx.russianrocksongbook.cloudsongs.viewmodel
 
 import android.util.Log
+import androidx.paging.ItemSnapshotList
 import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import jatx.russianrocksongbook.cloudsongs.paging.CONFIG
 import jatx.russianrocksongbook.cloudsongs.paging.CloudSongSource
@@ -36,4 +36,6 @@ class CloudScreenStateHolder @Inject constructor(
             CloudSongSource(songBookAPIAdapter, "", OrderBy.BY_ID_DESC)
         }.flow
     )
+
+    var snapshot: ItemSnapshotList<CloudSong>? = null
 }
