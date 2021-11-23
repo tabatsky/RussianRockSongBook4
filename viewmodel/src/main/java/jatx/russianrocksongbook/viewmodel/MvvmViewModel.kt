@@ -47,7 +47,9 @@ open class MvvmViewModel @Inject constructor(
     fun back(onFinish: () -> Unit = {}) {
         Log.e("current screen", currentScreenVariant.value.toString())
         when (currentScreenVariant.value) {
-            CurrentScreenVariant.START, CurrentScreenVariant.SONG_LIST -> {
+            CurrentScreenVariant.START,
+            CurrentScreenVariant.SONG_LIST,
+            CurrentScreenVariant.FAVORITE -> {
                 onFinish()
             }
             CurrentScreenVariant.CLOUD_SONG_TEXT -> {
