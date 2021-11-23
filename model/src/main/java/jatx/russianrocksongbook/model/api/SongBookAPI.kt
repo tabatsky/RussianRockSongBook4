@@ -56,4 +56,11 @@ interface SongBookAPI {
         @Path("title") title: String,
         @Path("variant") variant: Int,
     ): Single<ResultWithNumberGson>
+
+    @GET("songs/pagedSearch/{searchFor}/{orderBy}/{page}")
+    fun pagedSearch(
+        @Path("searchFor") searchFor: String,
+        @Path("orderBy") orderBy: String,
+        @Path("page") page: Int
+    ): ResultWithCloudSongListDataGson
 }

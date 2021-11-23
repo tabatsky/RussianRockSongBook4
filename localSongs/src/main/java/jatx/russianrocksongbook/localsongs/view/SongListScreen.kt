@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
@@ -127,6 +128,8 @@ private fun SongListBody(
 
     val songList by localViewModel.currentSongList.collectAsState()
     val position by localViewModel.currentSongPosition.collectAsState()
+
+    var latestPosition by rememberSaveable { mutableStateOf(0) }
 
     val fontScale = localViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeDp = dimensionResource(id = R.dimen.text_size_20) * fontScale

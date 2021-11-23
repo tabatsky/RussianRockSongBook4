@@ -57,6 +57,8 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:2.4.0-beta02"
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
 
+    implementation "androidx.paging:paging-compose:1.0.0-alpha14"
+
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
     implementation 'it.czerwinski.android.hilt:hilt-extensions:1.2.0'
@@ -78,6 +80,8 @@ dependencies {
     implementation project(':sideAppBar')
     implementation project(':clickablewordstextview')
     implementation project(':ChordDroidLibrary')
+
+    implementation project(':SynchronousCallAdapterFactory')
 
     implementation project(':model')
     implementation project(':viewmodel')

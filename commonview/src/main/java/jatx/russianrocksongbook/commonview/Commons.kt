@@ -83,6 +83,25 @@ fun CommonSongListStub(
 }
 
 @Composable
+fun ErrorSongListStub(
+    fontSizeSp: TextUnit,
+    theme: Theme
+) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = stringResource(id = R.string.label_error_placeholder),
+            textAlign = TextAlign.Center,
+            fontSize = fontSizeSp,
+            color = theme.colorMain
+        )
+    }
+}
+
+@Composable
 fun CommonTopAppBar(
     title: String? = null,
     navigationIcon: @Composable () -> Unit = { CommonBackButton() },

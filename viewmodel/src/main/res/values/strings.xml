@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="error_in_app">Ошибка в приложении</string>
+    <string name="error_fetch_data_from_server">Ошибка получения данных</string>
+
     <string name="toast_added_to_favorite">Добавлено в избранное</string>
     <string name="toast_removed_from_favorite">Удалено из избранного</string>
     <string name="toast_deleted_to_trash">Удалено</string>

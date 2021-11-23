@@ -6,6 +6,7 @@ import io.reactivex.Single
 import it.czerwinski.android.hilt.annotations.BoundTo
 import jatx.russianrocksongbook.model.api.RetrofitClient
 import jatx.russianrocksongbook.model.api.gson.ResultWithAddSongListResultDataGson
+import jatx.russianrocksongbook.model.api.gson.ResultWithCloudSongListDataGson
 import jatx.russianrocksongbook.model.api.gson.ResultWithoutDataGson
 import jatx.russianrocksongbook.model.api.gson.WarningGson
 import jatx.russianrocksongbook.model.data.OrderBy
@@ -91,4 +92,12 @@ class SongBookAPIAdapterImpl @Inject constructor(
         userInfo.googleAccount,
         userInfo.deviceIdHash
     )
+
+    override fun pagedSearch(
+        searchFor: String,
+        orderBy: OrderBy,
+        page: Int
+    ): ResultWithCloudSongListDataGson = retrofitClient
+        .songBookAPI
+        .pagedSearch(searchFor, orderBy.orderBy, page)
 }

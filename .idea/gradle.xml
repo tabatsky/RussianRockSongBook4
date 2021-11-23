@@ -12,6 +12,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/ChordDroidLibrary" />
+            <option value="$PROJECT_DIR$/SynchronousCallAdapterFactory" />
             <option value="$PROJECT_DIR$/addArtist" />
             <option value="$PROJECT_DIR$/addSong" />
             <option value="$PROJECT_DIR$/app" />
