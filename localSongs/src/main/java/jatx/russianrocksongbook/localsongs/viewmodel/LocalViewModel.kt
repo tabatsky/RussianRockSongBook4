@@ -40,10 +40,6 @@ class LocalViewModel @Inject constructor(
     private var uploadSongDisposable: Disposable? = null
     private var sendWarningDisposable: Disposable? = null
 
-    fun updateArtistList(list: List<String>) {
-        localStateHolder.commonStateHolder.artistList.value = list
-    }
-
     fun selectArtist(
         artist: String,
         forceOnSuccess: Boolean = false,

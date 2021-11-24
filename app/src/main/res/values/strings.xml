@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Песенник русского рока</string>
-
-    <string name="yes">Да</string>
-    <string name="ok">Ок</string>
-    <string name="cancel">Отмена</string>
 </resources>
