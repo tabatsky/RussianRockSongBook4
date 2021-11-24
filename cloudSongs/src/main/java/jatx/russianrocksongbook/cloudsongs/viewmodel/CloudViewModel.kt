@@ -56,6 +56,8 @@ class CloudViewModel @Inject constructor(
         updateLoading(true)
         updateListPosition(0)
         updateLatestPosition(-1)
+        updateSearchFor(searchFor)
+        updateOrderBy(orderBy)
         snapshotHolder.flowOnEachCounter = 0
         cloudStateHolder.cloudSongsFlow.value =
             Pager(CONFIG) {
