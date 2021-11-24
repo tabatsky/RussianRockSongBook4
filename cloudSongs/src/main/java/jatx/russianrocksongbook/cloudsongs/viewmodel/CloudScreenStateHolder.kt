@@ -31,4 +31,6 @@ class CloudScreenStateHolder @Inject constructor(
             CloudSongSource(songBookAPIAdapter, "", OrderBy.BY_ID_DESC)
         }.flow
     )
+    val searchFor = MutableStateFlow("")
+    val orderBy = MutableStateFlow(OrderBy.BY_ID_DESC)
 }

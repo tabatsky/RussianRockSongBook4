@@ -45,19 +45,22 @@ class CloudViewModel @Inject constructor(
 
     val wasFetchDataError = cloudScreenStateHolder.wasFetchDataError.asStateFlow()
 
+    val searchFor = cloudScreenStateHolder.searchFor.asStateFlow()
+    val orderBy = cloudScreenStateHolder.orderBy.asStateFlow()
+
     private var voteDisposable: Disposable? = null
     private var sendWarningDisposable: Disposable? = null
 
     fun cloudSearch(searchFor: String, orderBy: OrderBy) {
-        setFetchDataError(false)
-        setLoading(true)
+        updateFetchDataError(false)
+        updateLoading(true)
         updateListPosition(0)
         updateLatestPosition(-1)
         snapshotHolder.flowOnEachCounter = 0
         cloudScreenStateHolder.cloudSongsFlow.value =
             Pager(CONFIG) {
                 CloudSongSource(songBookAPIAdapter, searchFor, orderBy) {
-                    setFetchDataError(true)
+                    updateFetchDataError(true)
                 }
             }.flow.onEach {
                 if (snapshotHolder.flowOnEachCounter == 0) {
@@ -67,16 +70,12 @@ class CloudViewModel @Inject constructor(
             }
     }
 
-    private fun setFetchDataError(value: Boolean) {
+    private fun updateFetchDataError(value: Boolean) {
         cloudScreenStateHolder.wasFetchDataError.value = value
     }
 
-    fun setLoading(value: Boolean) {
+    fun updateLoading(value: Boolean) {
         cloudScreenStateHolder.isCloudLoading.value = value
-    }
-
-    fun selectCloudSong(position: Int) {
-        cloudScreenStateHolder.cloudSongPosition.value = position
     }
 
     fun updateLatestPosition(position: Int) {
@@ -93,6 +92,18 @@ class CloudViewModel @Inject constructor(
 
     fun updateCloudSongCount(count: Int) {
         cloudScreenStateHolder.cloudSongCount.value = count
+    }
+
+    fun updateSearchFor(searchFor: String) {
+        cloudScreenStateHolder.searchFor.value = searchFor
+    }
+
+    fun updateOrderBy(orderBy: OrderBy) {
+        cloudScreenStateHolder.orderBy.value = orderBy
+    }
+
+    fun selectCloudSong(position: Int) {
+        cloudScreenStateHolder.cloudSongPosition.value = position
     }
 
     fun nextCloudSong() {
