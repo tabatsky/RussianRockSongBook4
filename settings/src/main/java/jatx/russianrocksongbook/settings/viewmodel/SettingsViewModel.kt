@@ -2,17 +2,17 @@ package jatx.russianrocksongbook.settings.viewmodel
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
-import jatx.russianrocksongbook.viewmodel.ScreenStateHolder
+import jatx.russianrocksongbook.viewmodel.CommonStateHolder
 import jatx.russianrocksongbook.viewmodel.ViewModelParam
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     viewModelParam: ViewModelParam,
-    screenStateHolder: ScreenStateHolder
+    commonStateHolder: CommonStateHolder
 ): MvvmViewModel(
     viewModelParam,
-    screenStateHolder
+    commonStateHolder
 ) {
     fun restartApp() {
         callbacks.onRestartApp()

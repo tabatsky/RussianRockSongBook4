@@ -17,27 +17,27 @@ import javax.inject.Inject
 @HiltViewModel
 class AddSongViewModel @Inject constructor(
     viewModelParam: ViewModelParam,
-    private val addSongScreenStateHolder: AddSongScreenStateHolder
+    private val addSongStateHolder: AddSongStateHolder
 ): MvvmViewModel(
     viewModelParam,
-    addSongScreenStateHolder.screenStateHolder
+    addSongStateHolder.commonStateHolder
 ) {
-    val showUploadDialogForSong = addSongScreenStateHolder
+    val showUploadDialogForSong = addSongStateHolder
         .showUploadDialogForSong.asStateFlow()
-    val newSong = addSongScreenStateHolder
+    val newSong = addSongStateHolder
         .newSong.asStateFlow()
 
     private var uploadSongDisposable: Disposable? = null
 
     private fun showUploadOfferForSong(song: Song) {
         Log.e("upload", "show offer")
-        addSongScreenStateHolder.newSong.value = song
-        addSongScreenStateHolder.showUploadDialogForSong.value = true
+        addSongStateHolder.newSong.value = song
+        addSongStateHolder.showUploadDialogForSong.value = true
     }
 
     fun hideUploadOfferForSong() {
         Log.e("upload", "hide offer")
-        addSongScreenStateHolder.showUploadDialogForSong.value = false
+        addSongStateHolder.showUploadDialogForSong.value = false
     }
 
     fun uploadNewToCloud() {

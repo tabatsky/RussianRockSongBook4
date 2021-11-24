@@ -26,27 +26,27 @@ import javax.inject.Inject
 class CloudViewModel @Inject constructor(
     viewModelParam: ViewModelParam,
     val snapshotHolder: SnapshotHolder,
-    private val cloudScreenStateHolder: CloudScreenStateHolder
+    private val cloudStateHolder: CloudStateHolder
 ): MvvmViewModel(
     viewModelParam,
-    cloudScreenStateHolder.screenStateHolder
+    cloudStateHolder.commonStateHolder
 ), Cloud {
 
-    private val cloudSongCount = cloudScreenStateHolder.cloudSongCount.asStateFlow()
-    private val cloudSong = cloudScreenStateHolder.cloudSong.asStateFlow()
+    private val cloudSongCount = cloudStateHolder.cloudSongCount.asStateFlow()
+    private val cloudSong = cloudStateHolder.cloudSong.asStateFlow()
 
-    val isCloudLoading = cloudScreenStateHolder.isCloudLoading.asStateFlow()
-    val cloudSongPosition = cloudScreenStateHolder.cloudSongPosition.asStateFlow()
+    val isCloudLoading = cloudStateHolder.isCloudLoading.asStateFlow()
+    val cloudSongPosition = cloudStateHolder.cloudSongPosition.asStateFlow()
 
-    val latestPosition = cloudScreenStateHolder.latestPosition.asStateFlow()
-    val listPosition = cloudScreenStateHolder.listPosition.asStateFlow()
+    val latestPosition = cloudStateHolder.latestPosition.asStateFlow()
+    val listPosition = cloudStateHolder.listPosition.asStateFlow()
 
-    val cloudSongsFlow = cloudScreenStateHolder.cloudSongsFlow.asStateFlow()
+    val cloudSongsFlow = cloudStateHolder.cloudSongsFlow.asStateFlow()
 
-    val wasFetchDataError = cloudScreenStateHolder.wasFetchDataError.asStateFlow()
+    val wasFetchDataError = cloudStateHolder.wasFetchDataError.asStateFlow()
 
-    val searchFor = cloudScreenStateHolder.searchFor.asStateFlow()
-    val orderBy = cloudScreenStateHolder.orderBy.asStateFlow()
+    val searchFor = cloudStateHolder.searchFor.asStateFlow()
+    val orderBy = cloudStateHolder.orderBy.asStateFlow()
 
     private var voteDisposable: Disposable? = null
     private var sendWarningDisposable: Disposable? = null
@@ -57,7 +57,7 @@ class CloudViewModel @Inject constructor(
         updateListPosition(0)
         updateLatestPosition(-1)
         snapshotHolder.flowOnEachCounter = 0
-        cloudScreenStateHolder.cloudSongsFlow.value =
+        cloudStateHolder.cloudSongsFlow.value =
             Pager(CONFIG) {
                 CloudSongSource(songBookAPIAdapter, searchFor, orderBy) {
                     updateFetchDataError(true)
@@ -71,39 +71,39 @@ class CloudViewModel @Inject constructor(
     }
 
     private fun updateFetchDataError(value: Boolean) {
-        cloudScreenStateHolder.wasFetchDataError.value = value
+        cloudStateHolder.wasFetchDataError.value = value
     }
 
     fun updateLoading(value: Boolean) {
-        cloudScreenStateHolder.isCloudLoading.value = value
+        cloudStateHolder.isCloudLoading.value = value
     }
 
     fun updateLatestPosition(position: Int) {
-        cloudScreenStateHolder.latestPosition.value = position
+        cloudStateHolder.latestPosition.value = position
     }
 
     fun updateListPosition(position: Int) {
-        cloudScreenStateHolder.listPosition.value = position
+        cloudStateHolder.listPosition.value = position
     }
 
     fun updateCloudSong(cloudSong: CloudSong?) {
-        cloudScreenStateHolder.cloudSong.value = cloudSong
+        cloudStateHolder.cloudSong.value = cloudSong
     }
 
     fun updateCloudSongCount(count: Int) {
-        cloudScreenStateHolder.cloudSongCount.value = count
+        cloudStateHolder.cloudSongCount.value = count
     }
 
     fun updateSearchFor(searchFor: String) {
-        cloudScreenStateHolder.searchFor.value = searchFor
+        cloudStateHolder.searchFor.value = searchFor
     }
 
     fun updateOrderBy(orderBy: OrderBy) {
-        cloudScreenStateHolder.orderBy.value = orderBy
+        cloudStateHolder.orderBy.value = orderBy
     }
 
     fun selectCloudSong(position: Int) {
-        cloudScreenStateHolder.cloudSongPosition.value = position
+        cloudStateHolder.cloudSongPosition.value = position
     }
 
     fun nextCloudSong() {

@@ -7,15 +7,15 @@ import jatx.russianrocksongbook.cloudsongs.paging.CloudSongSource
 import jatx.russianrocksongbook.model.data.OrderBy
 import jatx.russianrocksongbook.model.data.SongBookAPIAdapter
 import jatx.russianrocksongbook.model.domain.CloudSong
-import jatx.russianrocksongbook.viewmodel.ScreenStateHolder
+import jatx.russianrocksongbook.viewmodel.CommonStateHolder
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CloudScreenStateHolder @Inject constructor(
-    val screenStateHolder: ScreenStateHolder,
+class CloudStateHolder @Inject constructor(
+    val commonStateHolder: CommonStateHolder,
     private val songBookAPIAdapter: SongBookAPIAdapter
 ) {
 
