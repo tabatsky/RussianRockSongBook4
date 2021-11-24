@@ -26,6 +26,7 @@ import jatx.russianrocksongbook.model.domain.Song
 import jatx.russianrocksongbook.model.preferences.ScalePow
 import jatx.russianrocksongbook.model.preferences.Theme
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
+import jatx.russianrocksongbook.whatsnewdialog.view.WhatsNewDialog
 import kotlinx.coroutines.launch
 
 private const val MAX_ARTIST_LENGTH_LANDSCAPE = 12
@@ -128,8 +129,6 @@ private fun SongListBody(
 
     val songList by localViewModel.currentSongList.collectAsState()
     val position by localViewModel.currentSongPosition.collectAsState()
-
-    var latestPosition by rememberSaveable { mutableStateOf(0) }
 
     val fontScale = localViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeDp = dimensionResource(id = R.dimen.text_size_20) * fontScale

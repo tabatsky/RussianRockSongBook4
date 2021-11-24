@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="title_activity_cloud_search">Аккорды онлайн</string>
+
+    <string name="ok">Ок</string>
+    <string name="cancel">Отмена</string>
 </resources>
