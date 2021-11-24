@@ -149,6 +149,7 @@ fun CloudSongTextScreen(cloudViewModel: CloudViewModel = viewModel()) {
                     modifier = Modifier
                         .fillMaxSize()
                         .background(color = theme.colorBg)
+                        .padding(bottom = 4.dp)
                 ) {
                     CommonTopAppBar(
                         actions = {
@@ -196,6 +197,7 @@ fun CloudSongTextScreen(cloudViewModel: CloudViewModel = viewModel()) {
                     modifier = Modifier
                         .fillMaxSize()
                         .background(color = theme.colorBg)
+                        .padding(end = 4.dp)
                 ) {
                     CommonSideAppBar(
                         actions = {
