@@ -1,7 +1,6 @@
 package jatx.russianrocksongbook.cloudsongs.viewmodel
 
 import android.annotation.SuppressLint
-import androidx.paging.ItemSnapshotList
 import androidx.paging.Pager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -9,6 +8,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import jatx.russianrocksongbook.cloudsongs.paging.CONFIG
 import jatx.russianrocksongbook.cloudsongs.paging.CloudSongSource
+import jatx.russianrocksongbook.cloudsongs.paging.SnapshotHolder
 import jatx.russianrocksongbook.model.api.gson.STATUS_ERROR
 import jatx.russianrocksongbook.model.api.gson.STATUS_SUCCESS
 import jatx.russianrocksongbook.model.data.OrderBy
@@ -19,21 +19,24 @@ import jatx.russianrocksongbook.viewmodel.R
 import jatx.russianrocksongbook.viewmodel.ViewModelParam
 import jatx.russianrocksongbook.viewmodel.interfaces.Cloud
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
 class CloudViewModel @Inject constructor(
     viewModelParam: ViewModelParam,
+    val snapshotHolder: SnapshotHolder,
     private val cloudScreenStateHolder: CloudScreenStateHolder
 ): MvvmViewModel(
     viewModelParam,
     cloudScreenStateHolder.screenStateHolder
 ), Cloud {
 
-    val isCloudLoading = cloudScreenStateHolder.isCloudLoading.asStateFlow()
     private val cloudSongCount = cloudScreenStateHolder.cloudSongCount.asStateFlow()
-    val cloudSongPosition = cloudScreenStateHolder.cloudSongPosition.asStateFlow()
     private val cloudSong = cloudScreenStateHolder.cloudSong.asStateFlow()
+
+    val isCloudLoading = cloudScreenStateHolder.isCloudLoading.asStateFlow()
+    val cloudSongPosition = cloudScreenStateHolder.cloudSongPosition.asStateFlow()
 
     val latestPosition = cloudScreenStateHolder.latestPosition.asStateFlow()
     val listPosition = cloudScreenStateHolder.listPosition.asStateFlow()
@@ -42,27 +45,26 @@ class CloudViewModel @Inject constructor(
 
     val wasFetchDataError = cloudScreenStateHolder.wasFetchDataError.asStateFlow()
 
-    var snapshot: ItemSnapshotList<CloudSong>?
-        get() = cloudScreenStateHolder.snapshot
-        set(value) {
-            cloudScreenStateHolder.snapshot = value
-        }
-
     private var voteDisposable: Disposable? = null
     private var sendWarningDisposable: Disposable? = null
 
     fun cloudSearch(searchFor: String, orderBy: OrderBy) {
-        snapshot = null
         setFetchDataError(false)
         setLoading(true)
         updateListPosition(0)
         updateLatestPosition(-1)
+        snapshotHolder.flowOnEachCounter = 0
         cloudScreenStateHolder.cloudSongsFlow.value =
             Pager(CONFIG) {
                 CloudSongSource(songBookAPIAdapter, searchFor, orderBy) {
                     setFetchDataError(true)
                 }
-            }.flow
+            }.flow.onEach {
+                if (snapshotHolder.flowOnEachCounter == 0) {
+                    snapshotHolder.snapshot = null
+                }
+                snapshotHolder.flowOnEachCounter += 1
+            }
     }
 
     private fun setFetchDataError(value: Boolean) {

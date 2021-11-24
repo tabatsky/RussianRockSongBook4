@@ -48,7 +48,10 @@ fun CloudSongTextScreen(cloudViewModel: CloudViewModel = viewModel()) {
         .cloudSongsFlow.collectAsState()
 
     val cloudSongItems = cloudSongsFlow.collectAsLazyPagingItems()
-    val itemsAdapter = ItemsAdapter(cloudViewModel, cloudSongItems)
+    val itemsAdapter = ItemsAdapter(
+        cloudViewModel.snapshotHolder,
+        cloudSongItems
+    )
 
     val cloudSong = itemsAdapter.getItem(position)
 
@@ -62,8 +65,6 @@ fun CloudSongTextScreen(cloudViewModel: CloudViewModel = viewModel()) {
     val coroutineScope = rememberCoroutineScope()
 
     val onCloudSongChanged: () -> Unit = {
-        Log.e("event", "song changed")
-
         coroutineScope.launch {
             listState.scrollToItem(
                 index = 0,

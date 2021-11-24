@@ -1,7 +1,5 @@
 package jatx.russianrocksongbook.cloudsongs.viewmodel
 
-import android.util.Log
-import androidx.paging.ItemSnapshotList
 import androidx.paging.Pager
 import androidx.paging.PagingData
 import jatx.russianrocksongbook.cloudsongs.paging.CONFIG
@@ -20,9 +18,6 @@ class CloudScreenStateHolder @Inject constructor(
     val screenStateHolder: ScreenStateHolder,
     private val songBookAPIAdapter: SongBookAPIAdapter
 ) {
-    init {
-        Log.e("CloudScreenStateHolder", "init")
-    }
 
     val isCloudLoading = MutableStateFlow(false)
     val cloudSongCount = MutableStateFlow(0)
@@ -36,6 +31,4 @@ class CloudScreenStateHolder @Inject constructor(
             CloudSongSource(songBookAPIAdapter, "", OrderBy.BY_ID_DESC)
         }.flow
     )
-
-    var snapshot: ItemSnapshotList<CloudSong>? = null
 }
