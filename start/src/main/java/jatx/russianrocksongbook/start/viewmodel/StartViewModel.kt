@@ -16,15 +16,15 @@ import javax.inject.Inject
 @HiltViewModel
 class StartViewModel @Inject constructor(
     viewModelParam: ViewModelParam,
-    private val startScreenStateHolder: StartScreenStateHolder
+    private val startStateHolder: StartStateHolder
 ): MvvmViewModel(
     viewModelParam,
-    startScreenStateHolder.screenStateHolder
+    startStateHolder.commonStateHolder
 ) {
 
-    val stubCurrentProgress = startScreenStateHolder
+    val stubCurrentProgress = startStateHolder
         .stubCurrentProgress.asStateFlow()
-    val stubTotalProgress = startScreenStateHolder
+    val stubTotalProgress = startStateHolder
         .stubTotalProgress.asStateFlow()
 
     suspend fun asyncInit() {
@@ -44,7 +44,7 @@ class StartViewModel @Inject constructor(
     }
 
     fun updateStubProgress(current: Int, total: Int) {
-        startScreenStateHolder.stubCurrentProgress.value = current
-        startScreenStateHolder.stubTotalProgress.value = total
+        startStateHolder.stubCurrentProgress.value = current
+        startStateHolder.stubTotalProgress.value = total
     }
 }

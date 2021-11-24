@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 open class MvvmViewModel @Inject constructor(
     viewModelParam: ViewModelParam,
-    private val screenStateHolder: ScreenStateHolder
+    private val commonStateHolder: CommonStateHolder
 ): ViewModel() {
     val songBookAPIAdapter = viewModelParam.songBookAPIAdapter
     val settings = viewModelParam.settings
@@ -26,19 +26,19 @@ open class MvvmViewModel @Inject constructor(
     val userInfo = viewModelParam.userInfo
     val fileSystemAdapter = viewModelParam.fileSystemAdapter
 
-    val currentScreenVariant = screenStateHolder
+    val currentScreenVariant = commonStateHolder
         .currentScreenVariant
         .asStateFlow()
 
-    val currentArtist = screenStateHolder
+    val currentArtist = commonStateHolder
         .currentArtist
         .asStateFlow()
 
-    val artistList = screenStateHolder
+    val artistList = commonStateHolder
         .artistList
         .asStateFlow()
 
-    val appWasUpdated = screenStateHolder
+    val appWasUpdated = commonStateHolder
         .appWasUpdated
         .asStateFlow()
 
@@ -76,7 +76,7 @@ open class MvvmViewModel @Inject constructor(
         screen: CurrentScreenVariant,
         isBackFromSong: Boolean = false
     ) {
-        screenStateHolder.currentScreenVariant.value = screen
+        commonStateHolder.currentScreenVariant.value = screen
         Log.e("select screen", currentScreenVariant.value.toString())
         if (screen == CurrentScreenVariant.SONG_LIST && !isBackFromSong) {
             getArtistsDisposable?.apply {
@@ -86,7 +86,7 @@ open class MvvmViewModel @Inject constructor(
                 .getArtists()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    screenStateHolder.artistList.value = it
+                    commonStateHolder.artistList.value = it
                 }
             callbacks.onArtistSelected(currentArtist.value)
         }
@@ -98,7 +98,7 @@ open class MvvmViewModel @Inject constructor(
                 .getArtists()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    screenStateHolder.artistList.value = it
+                    commonStateHolder.artistList.value = it
                 }
             callbacks.onArtistSelected(ARTIST_FAVORITE)
         }
@@ -108,7 +108,7 @@ open class MvvmViewModel @Inject constructor(
     }
 
     fun setAppWasUpdated(value: Boolean) {
-        screenStateHolder.appWasUpdated.value = value
+        commonStateHolder.appWasUpdated.value = value
     }
 
     fun showToast(toastText: String) {

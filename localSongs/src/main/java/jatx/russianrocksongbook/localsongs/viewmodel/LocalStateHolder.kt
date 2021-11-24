@@ -1,14 +1,14 @@
 package jatx.russianrocksongbook.localsongs.viewmodel
 
 import jatx.russianrocksongbook.model.domain.Song
-import jatx.russianrocksongbook.viewmodel.ScreenStateHolder
+import jatx.russianrocksongbook.viewmodel.CommonStateHolder
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class LocalScreenStateHolder @Inject constructor(
-    val screenStateHolder: ScreenStateHolder
+class LocalStateHolder @Inject constructor(
+    val commonStateHolder: CommonStateHolder
 ) {
     val currentSongCount = MutableStateFlow(0)
     val currentSongList = MutableStateFlow(listOf<Song>())

@@ -6,7 +6,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ScreenStateHolder @Inject constructor(
+class CommonStateHolder @Inject constructor(
     settings: Settings
 ) {
     val currentScreenVariant = MutableStateFlow(CurrentScreenVariant.START)

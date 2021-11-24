@@ -1,13 +1,13 @@
 package jatx.russianrocksongbook.start.viewmodel
 
-import jatx.russianrocksongbook.viewmodel.ScreenStateHolder
+import jatx.russianrocksongbook.viewmodel.CommonStateHolder
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class StartScreenStateHolder @Inject constructor(
-    val screenStateHolder: ScreenStateHolder
+class StartStateHolder @Inject constructor(
+    val commonStateHolder: CommonStateHolder
 ) {
     val stubCurrentProgress = MutableStateFlow(0)
     val stubTotalProgress = MutableStateFlow(100)

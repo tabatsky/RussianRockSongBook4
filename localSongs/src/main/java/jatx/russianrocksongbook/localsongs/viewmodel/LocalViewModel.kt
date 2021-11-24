@@ -20,20 +20,20 @@ import javax.inject.Inject
 @HiltViewModel
 class LocalViewModel @Inject constructor(
     viewModelParam: ViewModelParam,
-    private val localScreenStateHolder: LocalScreenStateHolder
+    private val localStateHolder: LocalStateHolder
 ): MvvmViewModel(
     viewModelParam,
-    localScreenStateHolder.screenStateHolder
+    localStateHolder.commonStateHolder
 ), Local {
 
-    val currentSongCount = localScreenStateHolder.currentSongCount.asStateFlow()
-    val currentSongList = localScreenStateHolder.currentSongList.asStateFlow()
-    val currentSongPosition = localScreenStateHolder.currentSongPosition.asStateFlow()
-    val currentSong = localScreenStateHolder.currentSong.asStateFlow()
+    val currentSongCount = localStateHolder.currentSongCount.asStateFlow()
+    val currentSongList = localStateHolder.currentSongList.asStateFlow()
+    val currentSongPosition = localStateHolder.currentSongPosition.asStateFlow()
+    val currentSong = localStateHolder.currentSong.asStateFlow()
 
-    val isEditorMode = localScreenStateHolder.isEditorMode.asStateFlow()
-    val isAutoPlayMode = localScreenStateHolder.isAutoPlayMode.asStateFlow()
-    val isUploadButtonEnabled = localScreenStateHolder.isUploadButtonEnabled.asStateFlow()
+    val isEditorMode = localStateHolder.isEditorMode.asStateFlow()
+    val isAutoPlayMode = localStateHolder.isAutoPlayMode.asStateFlow()
+    val isUploadButtonEnabled = localStateHolder.isUploadButtonEnabled.asStateFlow()
 
     private var showSongsDisposable: Disposable? = null
     private var selectSongDisposable: Disposable? = null
@@ -41,7 +41,7 @@ class LocalViewModel @Inject constructor(
     private var sendWarningDisposable: Disposable? = null
 
     fun updateArtistList(list: List<String>) {
-        localScreenStateHolder.screenStateHolder.artistList.value = list
+        localStateHolder.commonStateHolder.artistList.value = list
     }
 
     fun selectArtist(
@@ -67,10 +67,10 @@ class LocalViewModel @Inject constructor(
                 selectScreen(CurrentScreenVariant.DONATION)
             }
             else -> {
-                localScreenStateHolder
-                    .screenStateHolder
+                localStateHolder
+                    .commonStateHolder
                     .currentArtist.value = artist
-                localScreenStateHolder.currentSongCount.value = songRepo.getCountByArtist(artist)
+                localStateHolder.currentSongCount.value = songRepo.getCountByArtist(artist)
                 showSongsDisposable = songRepo
                     .getSongsByArtist(artist)
                     .subscribeOn(Schedulers.io())
@@ -78,7 +78,7 @@ class LocalViewModel @Inject constructor(
                     .subscribe {
                         val oldArtist = currentSongList.value.getOrNull(0)?.artist
                         val newArtist = it.getOrNull(0)?.artist
-                        localScreenStateHolder.currentSongList.value = it
+                        localStateHolder.currentSongList.value = it
                         if (oldArtist != newArtist || forceOnSuccess) {
                             onSuccess()
                         }
@@ -89,9 +89,9 @@ class LocalViewModel @Inject constructor(
 
     fun selectSong(position: Int) {
         Log.e("select song", position.toString())
-        localScreenStateHolder.currentSongPosition.value = position
-        localScreenStateHolder.isAutoPlayMode.value = false
-        localScreenStateHolder.isEditorMode.value = false
+        localStateHolder.currentSongPosition.value = position
+        localStateHolder.isAutoPlayMode.value = false
+        localStateHolder.isEditorMode.value = false
         selectSongDisposable?.apply {
             if (!this.isDisposed) this.dispose()
         }
@@ -100,7 +100,7 @@ class LocalViewModel @Inject constructor(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
-                localScreenStateHolder.currentSong.value = it
+                localStateHolder.currentSong.value = it
             }
     }
 
@@ -125,11 +125,11 @@ class LocalViewModel @Inject constructor(
     }
 
     fun setEditorMode(value: Boolean) {
-        localScreenStateHolder.isEditorMode.value = value
+        localStateHolder.isEditorMode.value = value
     }
 
     fun setAutoPlayMode(value: Boolean) {
-        localScreenStateHolder.isAutoPlayMode.value = value
+        localStateHolder.isAutoPlayMode.value = value
     }
 
     fun setFavorite(value: Boolean) {
@@ -138,7 +138,7 @@ class LocalViewModel @Inject constructor(
             this.favorite = value
             saveSong(this)
             if (!value && currentArtist.value == ARTIST_FAVORITE) {
-                localScreenStateHolder.currentSongCount.value = songRepo.getCountByArtist(
+                localStateHolder.currentSongCount.value = songRepo.getCountByArtist(
                     ARTIST_FAVORITE
                 )
                 if (currentSongCount.value > 0) {
@@ -162,7 +162,7 @@ class LocalViewModel @Inject constructor(
     fun deleteCurrentToTrash() {
         currentSong.value?.apply {
             songRepo.deleteSongToTrash(this)
-            localScreenStateHolder.currentSongCount.value = songRepo.getCountByArtist(currentArtist.value)
+            localStateHolder.currentSongCount.value = songRepo.getCountByArtist(currentArtist.value)
             if (currentSongCount.value > 0) {
                 if (currentSongPosition.value >= currentSongCount.value) {
                     selectSong(currentSongPosition.value - 1)
@@ -220,7 +220,7 @@ class LocalViewModel @Inject constructor(
 
     fun uploadCurrentToCloud() {
         currentSong.value?.apply {
-            localScreenStateHolder.isUploadButtonEnabled.value = false
+            localStateHolder.isUploadButtonEnabled.value = false
             uploadSongDisposable?.apply {
                 if (!this.isDisposed) this.dispose()
             }
@@ -233,11 +233,11 @@ class LocalViewModel @Inject constructor(
                         STATUS_SUCCESS -> showToast(R.string.toast_upload_to_cloud_success)
                         STATUS_ERROR -> showToast(result.message ?: "")
                     }
-                    localScreenStateHolder.isUploadButtonEnabled.value = true
+                    localStateHolder.isUploadButtonEnabled.value = true
                 }, { error ->
                     error.printStackTrace()
                     showToast(R.string.error_in_app)
-                    localScreenStateHolder.isUploadButtonEnabled.value = true
+                    localStateHolder.isUploadButtonEnabled.value = true
                 })
         }
     }

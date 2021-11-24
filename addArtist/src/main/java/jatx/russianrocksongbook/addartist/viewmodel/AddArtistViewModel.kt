@@ -19,28 +19,28 @@ import javax.inject.Inject
 @HiltViewModel
 class AddArtistViewModel @Inject constructor(
     viewModelParam: ViewModelParam,
-    private val addArtistScreenStateHolder: AddArtistScreenStateHolder
+    private val addArtistStateHolder: AddArtistStateHolder
 ): MvvmViewModel(
     viewModelParam,
-    addArtistScreenStateHolder.screenStateHolder
+    addArtistStateHolder.commonStateHolder
 ) {
-    val showUploadDialogForDir = addArtistScreenStateHolder
+    val showUploadDialogForDir = addArtistStateHolder
         .showUploadDialogForDir.asStateFlow()
-    val uploadArtist = addArtistScreenStateHolder
+    val uploadArtist = addArtistStateHolder
         .uploadArtist.asStateFlow()
-    val uploadSongList = addArtistScreenStateHolder
+    val uploadSongList = addArtistStateHolder
         .uploadSongList.asStateFlow()
 
     private var uploadListDisposable: Disposable? = null
 
     private fun showUploadOfferForDir(artist: String, songs: List<Song>) {
-        addArtistScreenStateHolder.uploadArtist.value = artist
-        addArtistScreenStateHolder.uploadSongList.value = songs
-        addArtistScreenStateHolder.showUploadDialogForDir.value = true
+        addArtistStateHolder.uploadArtist.value = artist
+        addArtistStateHolder.uploadSongList.value = songs
+        addArtistStateHolder.showUploadDialogForDir.value = true
     }
 
     fun hideUploadOfferForDir() {
-        addArtistScreenStateHolder.showUploadDialogForDir.value = false
+        addArtistStateHolder.showUploadDialogForDir.value = false
     }
 
     fun uploadListToCloud() {
