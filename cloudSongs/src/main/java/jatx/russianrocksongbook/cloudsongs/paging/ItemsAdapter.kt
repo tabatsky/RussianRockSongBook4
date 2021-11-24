@@ -1,15 +1,14 @@
 package jatx.russianrocksongbook.cloudsongs.paging
 
 import androidx.paging.compose.LazyPagingItems
-import jatx.russianrocksongbook.cloudsongs.viewmodel.CloudViewModel
 import jatx.russianrocksongbook.model.domain.CloudSong
 
 class ItemsAdapter(
-    private val cloudViewModel: CloudViewModel,
+    private val snapshotHolder: SnapshotHolder,
     private val lazyItems: LazyPagingItems<CloudSong>
 ) {
-    val snapshotSize: Int
-        get() = cloudViewModel.snapshot?.size ?: 0
+    private val snapshotSize: Int
+        get() = snapshotHolder.snapshot?.size ?: 0
 
     val size: Int
         get() = max(snapshotSize, lazyItems.itemCount)
@@ -21,7 +20,7 @@ class ItemsAdapter(
             } else if (lazyItems.itemCount > 0)  {
                 lazyItems[lazyItems.itemCount - 1]
             }
-            return cloudViewModel.snapshot?.get(position)
+            return snapshotHolder.snapshot?.get(position)
         } else {
             val item = if (position < lazyItems.itemCount) {
                 lazyItems[position]
@@ -29,7 +28,7 @@ class ItemsAdapter(
                 lazyItems[lazyItems.itemCount - 1]
                 null
             }
-            cloudViewModel.snapshot = lazyItems.itemSnapshotList
+            snapshotHolder.snapshot = lazyItems.itemSnapshotList
             return item
         }
     }

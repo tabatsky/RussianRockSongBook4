@@ -17,8 +17,6 @@ class CloudSongSource(
     private val onFetchDataError: () -> Unit = {}
 ): PagingSource<Int, CloudSong>() {
 
-    private val cache = hashMapOf<Int, List<CloudSong>>()
-
     override val jumpingSupported = false
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CloudSong> {
@@ -26,15 +24,9 @@ class CloudSongSource(
             try {
                 val nextPage = params.key ?: 1
 
-                val data = if (cache.containsKey(nextPage))
-                    cache[nextPage] ?: listOf()
-                else {
-                    val result = songBookAPIAdapter
+                val result = songBookAPIAdapter
                         .pagedSearch(searchFor, orderBy, nextPage)
-                    val list = (result.data ?: listOf()).map { CloudSong(it) }
-                    cache[nextPage] = list
-                    list
-                }
+                val data = (result.data ?: listOf()).map { CloudSong(it) }
 
                 LoadResult.Page(
                     data = data,

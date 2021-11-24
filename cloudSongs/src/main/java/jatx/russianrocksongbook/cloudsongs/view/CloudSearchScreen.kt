@@ -1,6 +1,5 @@
 package jatx.russianrocksongbook.cloudsongs.view
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -93,11 +92,10 @@ private fun CloudSearchBody(
         .cloudSongsFlow.collectAsState()
 
     val cloudSongItems = cloudSongsFlow.collectAsLazyPagingItems()
-    val itemsAdapter = ItemsAdapter(cloudViewModel, cloudSongItems)
-
-    Log.e("itemCount", "${itemsAdapter.size}")
-    Log.e("position / latest", "$position / $latest")
-    Log.e("isLoading", "$isCloudLoading")
+    val itemsAdapter = ItemsAdapter(
+        cloudViewModel.snapshotHolder,
+        cloudSongItems
+    )
 
     val fontScale = cloudViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTextDp = dimensionResource(id = R.dimen.text_size_16) * fontScale
@@ -182,7 +180,6 @@ private fun CloudSearchBody(
                     if (position != latestPosition && position < itemsAdapter.size) {
                         coroutineScope.launch {
                             listState.scrollToItem(position)
-                            Log.e("set latest", "$position")
                             cloudViewModel.updateLatestPosition(position)
                             latestPosition = position
                         }
