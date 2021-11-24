@@ -111,14 +111,17 @@ private fun CloudSearchBody(
         fontSizeArtistDp.toSp()
     }
 
-    var searchFor by remember { mutableStateOf("") }
+    val searchFor by cloudViewModel.searchFor.collectAsState()
     val onSearchForValueChange: (String) -> Unit = {
-        searchFor = it
+        cloudViewModel.updateSearchFor(it)
     }
 
-    var orderBy by remember { mutableStateOf(OrderBy.BY_ID_DESC) }
+    val orderBy by cloudViewModel.orderBy.collectAsState()
     val onOrderByValueChange: (OrderBy) -> Unit = {
-        orderBy = it
+        if (orderBy != it) {
+            cloudViewModel.updateOrderBy(it)
+            cloudViewModel.cloudSearch(searchFor, it)
+        }
     }
 
     val onSearchClick = {
@@ -137,6 +140,7 @@ private fun CloudSearchBody(
         if (isPortrait) {
             CloudSearchPanelPortrait(
                 searchFor = searchFor,
+                orderBy = orderBy,
                 theme = theme,
                 fontSizeTextSp = fontSizeTextSp,
                 onSearchForValueChange = onSearchForValueChange,
@@ -146,6 +150,7 @@ private fun CloudSearchBody(
         } else {
             CloudSearchPanelLandscape(
                 searchFor = searchFor,
+                orderBy = orderBy,
                 theme = theme,
                 fontSizeTextSp = fontSizeTextSp,
                 onSearchForValueChange = onSearchForValueChange,
@@ -194,17 +199,17 @@ private fun CloudSearchBody(
 
         when {
             position < itemsAdapter.size -> {
-                cloudViewModel.setLoading(false)
+                cloudViewModel.updateLoading(false)
             }
             itemsAdapter.size > 0 -> {
-                cloudViewModel.setLoading(true)
+                cloudViewModel.updateLoading(true)
                 itemsAdapter.getItem(itemsAdapter.size - 1)
             }
             itemsAdapter.size == 0 -> {
-                cloudViewModel.setLoading(true)
+                cloudViewModel.updateLoading(true)
                 coroutineScope.launch {
                     delay(10000L)
-                    cloudViewModel.setLoading(false)
+                    cloudViewModel.updateLoading(false)
                 }
             }
         }
@@ -214,6 +219,7 @@ private fun CloudSearchBody(
 @Composable
 private fun CloudSearchPanelPortrait(
     searchFor: String,
+    orderBy: OrderBy,
     theme: Theme,
     fontSizeTextSp: TextUnit,
     onSearchForValueChange: (String) -> Unit,
@@ -259,7 +265,7 @@ private fun CloudSearchPanelPortrait(
                 theme = theme,
                 fontSize = fontSizeTextSp,
                 valueList = OrderBy.values().map { it.orderByRus }.toTypedArray(),
-                initialPosition = 0
+                initialPosition = orderBy.ordinal
             ) {
                 onOrderByValueChange(OrderBy.values()[it])
             }
@@ -294,6 +300,7 @@ private fun CloudSearchPanelPortrait(
 @Composable
 private fun CloudSearchPanelLandscape(
     searchFor: String,
+    orderBy: OrderBy,
     theme: Theme,
     fontSizeTextSp: TextUnit,
     onSearchForValueChange: (String) -> Unit,
@@ -332,7 +339,7 @@ private fun CloudSearchPanelLandscape(
             theme = theme,
             fontSize = fontSizeTextSp,
             valueList = OrderBy.values().map { it.orderByRus }.toTypedArray(),
-            initialPosition = 0
+            initialPosition = orderBy.ordinal
         ) {
             onOrderByValueChange(OrderBy.values()[it])
         }
