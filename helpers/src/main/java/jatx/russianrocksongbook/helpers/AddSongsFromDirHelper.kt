@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.net.Uri
 import android.os.Build
-import android.provider.DocumentsContract
+import android.os.Environment
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.documentfile.provider.DocumentFile
@@ -39,7 +39,10 @@ class AddSongsFromDirHelper @Inject constructor(
             if (Build.VERSION.SDK_INT < 29) {
                 showFileSelectDialog()
             } else {
-                openDirResultLauncher?.launch(Uri.parse(DocumentsContract.EXTRA_INITIAL_URI))
+                openDirResultLauncher?.launch(
+                    Uri.fromFile(
+                        Environment.getExternalStorageDirectory()
+                    ))
             }
         } catch (e: ActivityNotFoundException) {
             showFileSelectDialog()
@@ -49,7 +52,7 @@ class AddSongsFromDirHelper @Inject constructor(
     private fun showFileSelectDialog() {
         ChooserDialog(activity)
             .withFilter(true, false)
-            .withStartFile(activity.getExternalFilesDir(null)?.absolutePath)
+            .withStartFile(Environment.getExternalStorageDirectory().absolutePath)
             .withChosenListener { path, _ ->
                 onPathReturned(path)
             }
