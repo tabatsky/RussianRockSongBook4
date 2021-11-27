@@ -58,17 +58,17 @@ class CloudViewModel @Inject constructor(
         updateLatestPosition(-1)
         updateSearchFor(searchFor)
         updateOrderBy(orderBy)
-        snapshotHolder.flowOnEachCounter = 0
+        snapshotHolder.isFlowInitDone = false
         cloudStateHolder.cloudSongsFlow.value =
             Pager(CONFIG) {
                 CloudSongSource(songBookAPIAdapter, searchFor, orderBy) {
                     updateFetchDataError(true)
                 }
             }.flow.onEach {
-                if (snapshotHolder.flowOnEachCounter == 0) {
+                if (!snapshotHolder.isFlowInitDone) {
                     snapshotHolder.snapshot = null
+                    snapshotHolder.isFlowInitDone = true
                 }
-                snapshotHolder.flowOnEachCounter += 1
             }
     }
 
