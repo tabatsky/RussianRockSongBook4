@@ -9,13 +9,12 @@ import io.reactivex.schedulers.Schedulers
 import jatx.russianrocksongbook.cloudsongs.paging.CONFIG
 import jatx.russianrocksongbook.cloudsongs.paging.CloudSongSource
 import jatx.russianrocksongbook.cloudsongs.paging.SnapshotHolder
+import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.model.api.gson.STATUS_ERROR
 import jatx.russianrocksongbook.model.api.gson.STATUS_SUCCESS
 import jatx.russianrocksongbook.model.data.OrderBy
 import jatx.russianrocksongbook.model.domain.CloudSong
-import jatx.russianrocksongbook.model.domain.formatRating
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
-import jatx.russianrocksongbook.viewmodel.R
 import jatx.russianrocksongbook.viewmodel.ViewModelParam
 import jatx.russianrocksongbook.viewmodel.interfaces.Cloud
 import kotlinx.coroutines.flow.asStateFlow
@@ -166,12 +165,7 @@ class CloudViewModel @Inject constructor(
                 .subscribe({ result ->
                     when (result.status) {
                         STATUS_SUCCESS -> {
-                            val voteWeight = result.data?.toDouble() ?: 0.0
-                            val voteWeightStr = formatRating(voteWeight)
-                            val toastText = context.getString(
-                                R.string.toast_vote_success, voteWeightStr
-                            )
-                            showToast(toastText)
+                            showToast(R.string.toast_vote_success)
                         }
                         STATUS_ERROR -> {
                             showToast(result.message ?: "")

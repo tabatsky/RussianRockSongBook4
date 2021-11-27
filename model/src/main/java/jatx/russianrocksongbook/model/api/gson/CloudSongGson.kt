@@ -10,5 +10,7 @@ data class CloudSongGson(
     val textHash: String = "",
     val isUserSong: Boolean = false,
     val variant: Int = -1,
-    val raiting: Double = 0.0
+    val raiting: Double = 0.0,
+    val likeCount: Int = 0,
+    val dislikeCount: Int = 0
 )
