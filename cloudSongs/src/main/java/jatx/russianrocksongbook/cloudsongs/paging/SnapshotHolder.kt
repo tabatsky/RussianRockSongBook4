@@ -8,5 +8,5 @@ import javax.inject.Singleton
 @Singleton
 class SnapshotHolder @Inject constructor(){
     var snapshot: ItemSnapshotList<CloudSong>? = null
-    var flowOnEachCounter = 0
+    var isFlowInitDone = false
 }
