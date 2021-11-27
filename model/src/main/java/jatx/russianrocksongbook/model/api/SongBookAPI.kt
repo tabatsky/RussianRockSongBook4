@@ -57,7 +57,7 @@ interface SongBookAPI {
         @Path("variant") variant: Int,
     ): Single<ResultWithNumberGson>
 
-    @GET("songs/pagedSearch/{searchFor}/{orderBy}/{page}")
+    @GET("songs/pagedSearchWithLikes/{searchFor}/{orderBy}/{page}")
     fun pagedSearch(
         @Path("searchFor") searchFor: String,
         @Path("orderBy") orderBy: String,

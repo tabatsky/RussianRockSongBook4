@@ -15,5 +15,5 @@
     <string name="toast_this_is_not_folder">Это не папка</string>
     <string name="toast_file_not_found">Файл не найден: %s</string>
     <string name="toast_added_songs_count">Добавлено песен: %d</string>
-    <string name="toast_vote_success">Голос засчитан. Вес голоса: %s</string>
+    <string name="toast_vote_success">Голос засчитан</string>
 </resources>

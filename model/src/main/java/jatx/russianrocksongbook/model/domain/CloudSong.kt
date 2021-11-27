@@ -15,7 +15,9 @@ data class CloudSong(
     val textHash: String = "",
     val isUserSong: Boolean = false,
     val variant: Int = -1,
-    val raiting: Double = 0.0
+    val raiting: Double = 0.0,
+    val likeCount: Int = 0,
+    val dislikeCount: Int = 0
 ) {
     constructor(song: Song, userInfo: UserInfo): this(
         googleAccount = userInfo.googleAccount,
@@ -37,14 +39,21 @@ data class CloudSong(
         textHash = cloudSongGson.textHash,
         isUserSong = cloudSongGson.isUserSong,
         variant = cloudSongGson.variant,
-        raiting = cloudSongGson.raiting
+        raiting = cloudSongGson.raiting,
+        likeCount = cloudSongGson.likeCount,
+        dislikeCount = cloudSongGson.dislikeCount
     )
 
     val visibleTitle: String
         get() = "$title${if (variant == 0) "" else " ($variant)"}"
 
-    val formattedRating: String
-        get() = formatRating(raiting)
+//    val formattedRating: String
+//        get() = formatRating(raiting)
+
+    val thumbUp = "\uD83D\uDC4D"
+    val thumbDown = "\uD83D\uDC4E"
+
+    val formattedRating = "$thumbUp$likeCount $thumbDown$dislikeCount"
 
     val visibleTitleWithRating: String
         get() = "$visibleTitle | $formattedRating"
