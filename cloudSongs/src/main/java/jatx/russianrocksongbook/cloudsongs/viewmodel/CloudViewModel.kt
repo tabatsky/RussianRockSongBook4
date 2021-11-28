@@ -49,9 +49,6 @@ class CloudViewModel @Inject constructor(
 
     val invalidateCounter = cloudStateHolder.invalidateCounter.asStateFlow()
 
-    private var voteDisposable: Disposable? = null
-    private var sendWarningDisposable: Disposable? = null
-
     fun cloudSearch(searchFor: String, orderBy: OrderBy) {
         updateFetchDataError(false)
         updateLoading(true)
@@ -155,12 +152,10 @@ class CloudViewModel @Inject constructor(
         }
     }
 
+    @SuppressLint("CheckResult")
     fun voteForCurrent(voteValue: Int) {
         cloudSong.value?.apply {
-            voteDisposable?.apply {
-                if (!this.isDisposed) this.dispose()
-            }
-            voteDisposable = songBookAPIAdapter
+            songBookAPIAdapter
                 .vote(this, userInfo, voteValue)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -207,12 +202,10 @@ class CloudViewModel @Inject constructor(
         }
     }
 
+    @SuppressLint("CheckResult")
     override fun sendWarningCloud(comment: String) {
         cloudSong.value?.apply {
-            sendWarningDisposable?.apply {
-                if (!this.isDisposed) this.dispose()
-            }
-            sendWarningDisposable = songBookAPIAdapter
+            songBookAPIAdapter
                 .addWarning(this, comment)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
