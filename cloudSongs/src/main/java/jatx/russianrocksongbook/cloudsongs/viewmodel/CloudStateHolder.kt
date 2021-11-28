@@ -33,4 +33,5 @@ class CloudStateHolder @Inject constructor(
     )
     val searchFor = MutableStateFlow("")
     val orderBy = MutableStateFlow(OrderBy.BY_ID_DESC)
+    val invalidateCounter = MutableStateFlow(0)
 }

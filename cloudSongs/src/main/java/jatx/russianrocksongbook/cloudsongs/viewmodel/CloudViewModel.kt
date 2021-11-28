@@ -47,6 +47,8 @@ class CloudViewModel @Inject constructor(
     val searchFor = cloudStateHolder.searchFor.asStateFlow()
     val orderBy = cloudStateHolder.orderBy.asStateFlow()
 
+    val invalidateCounter = cloudStateHolder.invalidateCounter.asStateFlow()
+
     private var voteDisposable: Disposable? = null
     private var sendWarningDisposable: Disposable? = null
 
@@ -165,6 +167,12 @@ class CloudViewModel @Inject constructor(
                 .subscribe({ result ->
                     when (result.status) {
                         STATUS_SUCCESS -> {
+                            if (voteValue == 1) {
+                                this@apply.likeCount += 1
+                            } else if (voteValue == -1) {
+                                this@apply.dislikeCount += 1
+                            }
+                            cloudStateHolder.invalidateCounter.value += 1
                             showToast(R.string.toast_vote_success)
                         }
                         STATUS_ERROR -> {
