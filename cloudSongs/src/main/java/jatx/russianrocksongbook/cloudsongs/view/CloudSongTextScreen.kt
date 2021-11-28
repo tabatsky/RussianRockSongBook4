@@ -54,6 +54,7 @@ fun CloudSongTextScreen(cloudViewModel: CloudViewModel = viewModel()) {
     )
 
     val cloudSong = itemsAdapter.getItem(position)
+    val invalidateCounter by cloudViewModel.invalidateCounter.collectAsState()
 
     cloudViewModel.updateCloudSong(cloudSong)
     cloudViewModel.updateListPosition(position)
@@ -165,6 +166,7 @@ fun CloudSongTextScreen(cloudViewModel: CloudViewModel = viewModel()) {
                         W = W,
                         H = H,
                         cloudSong = this@apply,
+                        invalidateCounter = invalidateCounter,
                         listState = listState,
                         fontSizeTextSp = fontSizeTextSp,
                         fontSizeTitleSp = fontSizeTitleSp,
@@ -214,6 +216,7 @@ fun CloudSongTextScreen(cloudViewModel: CloudViewModel = viewModel()) {
                         W = W,
                         H = H,
                         cloudSong = this@apply,
+                        invalidateCounter = invalidateCounter,
                         listState = listState,
                         fontSizeTextSp = fontSizeTextSp,
                         fontSizeTitleSp = fontSizeTitleSp,
@@ -363,6 +366,7 @@ private fun CloudSongTextBody(
     W: Dp,
     H: Dp,
     cloudSong: CloudSong,
+    invalidateCounter: Int,
     listState: LazyListState,
     fontSizeTextSp: TextUnit,
     fontSizeTitleSp: TextUnit,
@@ -372,12 +376,14 @@ private fun CloudSongTextBody(
 ) {
     val paddingStart = if (W > H) 20.dp else 0.dp
 
+    Log.e("invalidateCounter", invalidateCounter.toString())
+
     Column(
         modifier = modifier
             .padding(start = paddingStart)
     ) {
         Text(
-            text = "${cloudSong.title} (${cloudSong.artist})",
+            text = cloudSong.visibleTitleWithArtistAndRating,
             color = theme.colorMain,
             fontWeight = FontWeight.W700,
             fontSize = fontSizeTitleSp
