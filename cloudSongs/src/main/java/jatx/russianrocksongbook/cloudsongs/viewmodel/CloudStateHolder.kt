@@ -2,6 +2,7 @@ package jatx.russianrocksongbook.cloudsongs.viewmodel
 
 import androidx.paging.Pager
 import androidx.paging.PagingData
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import jatx.russianrocksongbook.cloudsongs.paging.CONFIG
 import jatx.russianrocksongbook.cloudsongs.paging.CloudSongSource
 import jatx.russianrocksongbook.model.data.OrderBy
@@ -11,9 +12,8 @@ import jatx.russianrocksongbook.viewmodel.CommonStateHolder
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@ActivityRetainedScoped
 class CloudStateHolder @Inject constructor(
     val commonStateHolder: CommonStateHolder,
     private val songBookAPIAdapter: SongBookAPIAdapter
