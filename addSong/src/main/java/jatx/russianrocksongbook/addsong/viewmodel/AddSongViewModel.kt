@@ -72,10 +72,11 @@ class AddSongViewModel @Inject constructor(
     }
 
     fun addSongToRepo(artist: String, title: String, text: String) {
-        val song = Song()
-        song.artist = artist
-        song.title = title
-        song.text = text
+        val song = Song().apply {
+            this.artist = artist
+            this.title = title
+            this.text = text
+        }
         val actualSong = songRepo.insertReplaceUserSong(song)
         showToast(R.string.toast_song_added)
         showUploadOfferForSong(actualSong)

@@ -82,13 +82,14 @@ class SongRepositoryImpl @Inject constructor(
     override fun deleteSongToTrash(song: Song) = songDao.setDeleted(true, song.artist, song.title)
 
     override fun addSongFromCloud(cloudSong: CloudSong) {
-        val song = Song()
-        song.artist = cloudSong.artist
-        song.title = cloudSong.title
-        song.text = cloudSong.text
-        song.favorite = true
-        song.outOfTheBox = true
-        song.origTextMD5 = songTextHash(cloudSong.text)
+        val song = Song().apply {
+            artist = cloudSong.artist
+            title = cloudSong.title
+            text = cloudSong.text
+            favorite = true
+            outOfTheBox = true
+            origTextMD5 = songTextHash(cloudSong.text)
+        }
 
         if (songDao.getSongByArtistAndTitle(cloudSong.artist, cloudSong.visibleTitle) == null) {
             songDao.insertReplaceSong(song.toSongEntity())

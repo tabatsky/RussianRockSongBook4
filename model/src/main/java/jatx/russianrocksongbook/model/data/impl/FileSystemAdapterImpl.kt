@@ -36,10 +36,11 @@ class FileSystemAdapterImpl @Inject constructor(
                 val sc = Scanner(context.contentResolver.openInputStream(file.uri))
                 val text = sc.useDelimiter("\\A").next()
                 val title = file.name?.replace("\\.txt$".toRegex(), "")?.trim() ?: ""
-                val song = Song()
-                song.artist = artist
-                song.title = title
-                song.text = text
+                val song = Song().apply {
+                    this.artist = artist
+                    this.title = title
+                    this.text = text
+                }
                 songs.add(song)
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()
@@ -68,10 +69,11 @@ class FileSystemAdapterImpl @Inject constructor(
                 val sc = Scanner(file.inputStream())
                 val text = sc.useDelimiter("\\A").next()
                 val title = file.name.replace("\\.txt$".toRegex(), "").trim()
-                val song = Song()
-                song.artist = artist
-                song.title = title
-                song.text = text
+                val song = Song().apply {
+                    this.artist = artist
+                    this.title = title
+                    this.text = text
+                }
                 songs.add(song)
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()

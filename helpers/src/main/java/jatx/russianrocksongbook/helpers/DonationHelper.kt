@@ -24,13 +24,9 @@ val SKUS_LANDSCAPE = DONATIONS_LANDSCAPE.map { "donation_$it" }
 class DonationHelper @Inject constructor(
     private val activity: Activity
 ): PurchasesUpdatedListener {
-    private val mvvmViewModel: MvvmViewModel? by lazy {
-        if (activity is ComponentActivity) {
-            val viewModel: MvvmViewModel by activity.viewModels()
-            viewModel
-        } else {
-            null
-        }
+    private val mvvmViewModel = (activity as? ComponentActivity)?.let {
+        val mvvmViewModel: MvvmViewModel by it.viewModels()
+        mvvmViewModel
     }
 
     private var billingClient: BillingClient = BillingClient

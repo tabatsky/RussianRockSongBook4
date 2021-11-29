@@ -17,16 +17,17 @@ class AddSongsFromDirHelper @Inject constructor(
     private var onPickedDirReturned: (DocumentFile) -> Unit = {}
     private var onPathReturned: (String) -> Unit = {}
 
-    private val openDirResultLauncher = if (activity is ComponentActivity) activity.registerForActivityResult(
-        ActivityResultContracts.OpenDocumentTree()
-    ) { uri ->
-        uri?.apply {
-            val pickedDir = DocumentFile.fromTreeUri(activity, this)
-            pickedDir?.apply {
-                onPickedDirReturned(this)
+    private val openDirResultLauncher =
+        (activity as? ComponentActivity)?.registerForActivityResult(
+            ActivityResultContracts.OpenDocumentTree()
+        ) { uri ->
+            uri?.apply {
+                val pickedDir = DocumentFile.fromTreeUri(activity, this)
+                pickedDir?.apply {
+                    onPickedDirReturned(this)
+                }
             }
         }
-    } else null
 
     fun addSongsFromDir(
         onPickedDirReturned: (DocumentFile) -> Unit,
