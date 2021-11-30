@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
@@ -75,6 +74,13 @@ private fun SongListContent(
 
         if (W < H) {
             val visibleArtist = artist.crop(MAX_ARTIST_LENGTH_PORTRAIT)
+            val isPortrait = true
+            val isLastOrientationPortrait by localViewModel
+                .isLastOrientationPortrait.collectAsState()
+            localViewModel.updateOrientationWasChanged(
+                isPortrait != isLastOrientationPortrait
+            )
+            localViewModel.updateLastOrientationIsPortrait(true)
 
             Column(
                 modifier = Modifier
@@ -97,6 +103,13 @@ private fun SongListContent(
             }
         } else {
             val visibleArtist = artist.crop(MAX_ARTIST_LENGTH_LANDSCAPE)
+            val isPortrait = false
+            val isLastOrientationPortrait by localViewModel
+                .isLastOrientationPortrait.collectAsState()
+            localViewModel.updateOrientationWasChanged(
+                isPortrait != isLastOrientationPortrait
+            )
+            localViewModel.updateLastOrientationIsPortrait(false)
 
             Row(
                 modifier = Modifier
@@ -128,7 +141,6 @@ private fun SongListBody(
     val theme = localViewModel.settings.theme
 
     val songList by localViewModel.currentSongList.collectAsState()
-    val position by localViewModel.currentSongPosition.collectAsState()
 
     val fontScale = localViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
@@ -138,7 +150,8 @@ private fun SongListBody(
 
     if (songList.isNotEmpty()) {
         val listState = rememberLazyListState()
-        val coroutineScope = rememberCoroutineScope()
+        val wasOrientationChanged by localViewModel.wasOrientationChanged.collectAsState()
+        val needScroll by localViewModel.needScroll.collectAsState()
         LazyColumn(
             state = listState
         ) {
@@ -149,8 +162,15 @@ private fun SongListBody(
                     localViewModel.selectScreen(CurrentScreenVariant.SONG_TEXT)
                 }
             }
-            coroutineScope.launch {
-                listState.scrollToItem(position)
+            if (!wasOrientationChanged && !needScroll) {
+                localViewModel.updateScrollPosition(listState.firstVisibleItemIndex)
+            }
+        }
+        if (wasOrientationChanged || needScroll) {
+            val scrollPosition by localViewModel.scrollPosition.collectAsState()
+            LaunchedEffect(Unit) {
+                listState.scrollToItem(scrollPosition)
+                localViewModel.updateNeedScroll(false)
             }
         }
     } else {
