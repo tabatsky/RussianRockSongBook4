@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import androidx.paging.Pager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import jatx.russianrocksongbook.cloudsongs.paging.CONFIG
 import jatx.russianrocksongbook.cloudsongs.paging.CloudSongSource
@@ -35,10 +34,13 @@ class CloudViewModel @Inject constructor(
     private val cloudSong = cloudStateHolder.cloudSong.asStateFlow()
 
     val isCloudLoading = cloudStateHolder.isCloudLoading.asStateFlow()
+    val isListEmpty = cloudStateHolder.isListEmpty.asStateFlow()
     val cloudSongPosition = cloudStateHolder.cloudSongPosition.asStateFlow()
 
-    val latestPosition = cloudStateHolder.latestPosition.asStateFlow()
-    val listPosition = cloudStateHolder.listPosition.asStateFlow()
+    val scrollPosition = cloudStateHolder.scrollPosition.asStateFlow()
+    var isLastOrientationPortrait = cloudStateHolder.isLastOrientationPortrait.asStateFlow()
+    val wasOrientationChanged = cloudStateHolder.wasOrientationChanged.asStateFlow()
+    val needScroll = cloudStateHolder.needScroll.asStateFlow()
 
     val cloudSongsFlow = cloudStateHolder.cloudSongsFlow.asStateFlow()
 
@@ -52,8 +54,9 @@ class CloudViewModel @Inject constructor(
     fun cloudSearch(searchFor: String, orderBy: OrderBy) {
         updateFetchDataError(false)
         updateLoading(true)
-        updateListPosition(0)
-        updateLatestPosition(-1)
+        updateListIsEmpty(false)
+        updateScrollPosition(0)
+        updateNeedScroll(true)
         updateSearchFor(searchFor)
         updateOrderBy(orderBy)
         snapshotHolder.isFlowInitDone = false
@@ -78,12 +81,24 @@ class CloudViewModel @Inject constructor(
         cloudStateHolder.isCloudLoading.value = value
     }
 
-    fun updateLatestPosition(position: Int) {
-        cloudStateHolder.latestPosition.value = position
+    fun updateListIsEmpty(value: Boolean) {
+        cloudStateHolder.isListEmpty.value = value
     }
 
-    fun updateListPosition(position: Int) {
-        cloudStateHolder.listPosition.value = position
+    fun updateScrollPosition(position: Int) {
+        cloudStateHolder.scrollPosition.value = position
+    }
+
+    fun updateOrientationWasChanged(value: Boolean) {
+        cloudStateHolder.wasOrientationChanged.value = value
+    }
+
+    fun updateNeedScroll(value: Boolean) {
+        cloudStateHolder.needScroll.value = value
+    }
+
+    fun updateLastOrientationIsPortrait(value: Boolean) {
+        cloudStateHolder.isLastOrientationPortrait.value = value
     }
 
     fun updateCloudSong(cloudSong: CloudSong?) {
@@ -104,6 +119,8 @@ class CloudViewModel @Inject constructor(
 
     fun selectCloudSong(position: Int) {
         cloudStateHolder.cloudSongPosition.value = position
+        updateScrollPosition(position)
+        updateNeedScroll(true)
     }
 
     fun nextCloudSong() {

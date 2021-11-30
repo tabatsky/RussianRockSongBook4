@@ -42,7 +42,6 @@ private val CLOUD_SONG_TEXT_APP_BAR_WIDTH = 96.dp
 @Composable
 fun CloudSongTextScreen(cloudViewModel: CloudViewModel = viewModel()) {
     val position by cloudViewModel.cloudSongPosition.collectAsState()
-    cloudViewModel.updateLatestPosition(-1)
 
     val cloudSongsFlow by cloudViewModel
         .cloudSongsFlow.collectAsState()
@@ -57,7 +56,6 @@ fun CloudSongTextScreen(cloudViewModel: CloudViewModel = viewModel()) {
     val invalidateCounter by cloudViewModel.invalidateCounter.collectAsState()
 
     cloudViewModel.updateCloudSong(cloudSong)
-    cloudViewModel.updateListPosition(position)
 
     val count = itemsAdapter.size
     cloudViewModel.updateCloudSongCount(count)
