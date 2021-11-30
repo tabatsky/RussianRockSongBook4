@@ -22,8 +22,6 @@ object AppDebug {
     }
 }
 
-//@EntryPoint
-//@InstallIn(SingletonComponent::class)
 class AppCrashHandler(
     private val oldHandler: Thread.UncaughtExceptionHandler?,
     private val songBookAPIAdapter: SongBookAPIAdapter

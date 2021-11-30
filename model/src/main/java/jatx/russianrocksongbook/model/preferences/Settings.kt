@@ -5,8 +5,8 @@ import android.content.Context
 import android.os.Build
 import androidx.compose.ui.graphics.Color
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.pow
 
 const val PREFS_NAME = "RussianRockPreferences"
@@ -28,7 +28,7 @@ val colorLightYellow = Color(0xFFFFFFBB)
 val colorBlack = Color(0xFF000000)
 val colorDarkYellow = Color(0xFF777755)
 
-@Singleton
+@ActivityRetainedScoped
 @SuppressLint("ApplySharedPref")
 class Settings @Inject constructor(
     @ApplicationContext private val context: Context

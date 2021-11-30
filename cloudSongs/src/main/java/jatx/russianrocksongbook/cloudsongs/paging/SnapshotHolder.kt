@@ -1,11 +1,11 @@
 package jatx.russianrocksongbook.cloudsongs.paging
 
 import androidx.paging.ItemSnapshotList
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import jatx.russianrocksongbook.model.domain.CloudSong
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@ActivityRetainedScoped
 class SnapshotHolder @Inject constructor(){
     var snapshot: ItemSnapshotList<CloudSong>? = null
     var isFlowInitDone = false
