@@ -1,9 +1,9 @@
 package jatx.russianrocksongbook.viewmodel
 
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@ActivityRetainedScoped
 class Callbacks @Inject constructor() {
     var onOpenYandexMusic: (String) -> Unit = {}
     var onOpenVkMusic: (String) -> Unit = {}
