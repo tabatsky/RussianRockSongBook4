@@ -35,6 +35,11 @@ class LocalViewModel @Inject constructor(
     val isAutoPlayMode = localStateHolder.isAutoPlayMode.asStateFlow()
     val isUploadButtonEnabled = localStateHolder.isUploadButtonEnabled.asStateFlow()
 
+    val scrollPosition = localStateHolder.scrollPosition.asStateFlow()
+    var isLastOrientationPortrait = localStateHolder.isLastOrientationPortrait.asStateFlow()
+    val wasOrientationChanged = localStateHolder.wasOrientationChanged.asStateFlow()
+    val needScroll = localStateHolder.needScroll.asStateFlow()
+
     private var showSongsDisposable: Disposable? = null
     private var selectSongDisposable: Disposable? = null
     private var uploadSongDisposable: Disposable? = null
@@ -85,6 +90,8 @@ class LocalViewModel @Inject constructor(
 
     fun selectSong(position: Int) {
         Log.e("select song", position.toString())
+        updateScrollPosition(position)
+        updateNeedScroll(true)
         localStateHolder.currentSongPosition.value = position
         localStateHolder.isAutoPlayMode.value = false
         localStateHolder.isEditorMode.value = false
@@ -153,6 +160,22 @@ class LocalViewModel @Inject constructor(
                 showToast(R.string.toast_removed_from_favorite)
             }
         }
+    }
+
+    fun updateScrollPosition(position: Int) {
+        localStateHolder.scrollPosition.value = position
+    }
+
+    fun updateOrientationWasChanged(value: Boolean) {
+        localStateHolder.wasOrientationChanged.value = value
+    }
+
+    fun updateNeedScroll(value: Boolean) {
+        localStateHolder.needScroll.value = value
+    }
+
+    fun updateLastOrientationIsPortrait(value: Boolean) {
+        localStateHolder.isLastOrientationPortrait.value = value
     }
 
     fun deleteCurrentToTrash() {
