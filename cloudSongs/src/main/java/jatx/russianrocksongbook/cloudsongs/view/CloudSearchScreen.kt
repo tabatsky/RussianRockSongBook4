@@ -44,6 +44,14 @@ fun CloudSearchScreen(cloudViewModel: CloudViewModel = viewModel()) {
         val H = this.maxHeight
 
         if (W < H) {
+            val isPortrait = true
+            val isLastOrientationPortrait by cloudViewModel
+                .isLastOrientationPortrait.collectAsState()
+            cloudViewModel.updateOrientationWasChanged(
+                isPortrait != isLastOrientationPortrait
+            )
+            cloudViewModel.updateLastOrientationIsPortrait(true)
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -57,6 +65,14 @@ fun CloudSearchScreen(cloudViewModel: CloudViewModel = viewModel()) {
                 )
             }
         } else {
+            val isPortrait = false
+            val isLastOrientationPortrait by cloudViewModel
+                .isLastOrientationPortrait.collectAsState()
+            cloudViewModel.updateOrientationWasChanged(
+                isPortrait != isLastOrientationPortrait
+            )
+            cloudViewModel.updateLastOrientationIsPortrait(false)
+
             Row(
                 modifier = Modifier
                     .fillMaxSize()
@@ -81,11 +97,9 @@ private fun CloudSearchBody(
 ) {
     val theme = cloudViewModel.settings.theme
 
-    val position by cloudViewModel.listPosition.collectAsState()
-    val latest by cloudViewModel.latestPosition.collectAsState()
-    var latestPosition = latest
-
+    val scrollPosition by cloudViewModel.scrollPosition.collectAsState()
     val isCloudLoading by cloudViewModel.isCloudLoading.collectAsState()
+    val isListEmpty by cloudViewModel.isListEmpty.collectAsState()
     val wasFetchDataError by cloudViewModel.wasFetchDataError.collectAsState()
 
     val cloudSongsFlow by cloudViewModel
@@ -162,10 +176,13 @@ private fun CloudSearchBody(
         val listState = rememberLazyListState()
         val coroutineScope = rememberCoroutineScope()
 
-        if (!isCloudLoading) {
-            if (itemsAdapter.size == 0) {
+        if (!isCloudLoading || isListEmpty) {
+            if (isListEmpty) {
                 CommonSongListStub(fontSizeSongTitleSp, theme)
             } else {
+                val wasOrientationChanged by cloudViewModel.wasOrientationChanged.collectAsState()
+                val needScroll by cloudViewModel.needScroll.collectAsState()
+
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize(),
@@ -181,35 +198,47 @@ private fun CloudSearchBody(
                             }
                         }
                     }
-
-                    if (position != latestPosition && position < itemsAdapter.size) {
-                        coroutineScope.launch {
-                            listState.scrollToItem(position)
-                            cloudViewModel.updateLatestPosition(position)
-                            latestPosition = position
+                    if (!wasOrientationChanged && !needScroll) {
+                        cloudViewModel.updateScrollPosition(listState.firstVisibleItemIndex)
+                    }
+                }
+                if (wasOrientationChanged || needScroll) {
+                    LaunchedEffect(Unit) {
+                        if (scrollPosition < itemsAdapter.size) {
+                            listState.scrollToItem(scrollPosition)
                         }
+                        cloudViewModel.updateNeedScroll(false)
                     }
                 }
             }
         } else if (wasFetchDataError) {
             ErrorSongListStub(fontSizeSongTitleSp, theme)
-        } else {
+        } else if (isCloudLoading) {
             CloudSearchProgress(theme)
         }
 
         when {
-            position < itemsAdapter.size -> {
+            scrollPosition < itemsAdapter.size -> {
                 cloudViewModel.updateLoading(false)
+                cloudViewModel.updateListIsEmpty(false)
             }
             itemsAdapter.size > 0 -> {
                 cloudViewModel.updateLoading(true)
+                cloudViewModel.updateListIsEmpty(false)
                 itemsAdapter.getItem(itemsAdapter.size - 1)
             }
             itemsAdapter.size == 0 -> {
                 cloudViewModel.updateLoading(true)
-                coroutineScope.launch {
-                    delay(10000L)
-                    cloudViewModel.updateLoading(false)
+                var isLaunched by remember { mutableStateOf(false) }
+                if (!isLaunched) {
+                    coroutineScope.launch {
+                        isLaunched = true
+                        delay(5000L)
+                        if (itemsAdapter.size == 0) {
+                            cloudViewModel.updateListIsEmpty(true)
+                        }
+                        isLaunched = false
+                    }
                 }
             }
         }

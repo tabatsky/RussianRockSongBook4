@@ -20,10 +20,9 @@ class CloudStateHolder @Inject constructor(
 ) {
 
     val isCloudLoading = MutableStateFlow(false)
+    val isListEmpty = MutableStateFlow(false)
     val cloudSongCount = MutableStateFlow(0)
     val cloudSongPosition = MutableStateFlow(0)
-    var listPosition = MutableStateFlow(0)
-    var latestPosition = MutableStateFlow(-1)
     var wasFetchDataError = MutableStateFlow(false)
     val cloudSong: MutableStateFlow<CloudSong?> = MutableStateFlow(null)
     val cloudSongsFlow: MutableStateFlow<Flow<PagingData<CloudSong>>> = MutableStateFlow(
@@ -34,4 +33,9 @@ class CloudStateHolder @Inject constructor(
     val searchFor = MutableStateFlow("")
     val orderBy = MutableStateFlow(OrderBy.BY_ID_DESC)
     val invalidateCounter = MutableStateFlow(0)
+
+    val scrollPosition = MutableStateFlow(0)
+    val isLastOrientationPortrait = MutableStateFlow(true)
+    val wasOrientationChanged = MutableStateFlow(false)
+    val needScroll = MutableStateFlow(false)
 }
