@@ -107,6 +107,7 @@ val artistMap = mapOf(
     "Пикник" to R.raw.piknik,
     "Пилот" to R.raw.pilot,
     "Порнофильмы" to R.raw.pornofilmy,
+    "Северный Флот" to R.raw.severnyi_flot,
     "Сектор Газа" to R.raw.sektor,
     "СерьГа" to R.raw.serga,
     "Смысловые Галлюцинации" to R.raw.smislovie,
