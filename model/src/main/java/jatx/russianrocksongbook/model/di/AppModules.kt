@@ -12,10 +12,12 @@ import jatx.russianrocksongbook.model.db.AppDatabase
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 class DbModule {
+    @Singleton
     @Provides
     fun provideSongDao(@ApplicationContext context: Context) = AppDatabase.invoke(context).songDao()
 }
@@ -23,6 +25,7 @@ class DbModule {
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
+    @Singleton
     @Provides
     fun provideRetrofit(): Retrofit = Retrofit
         .Builder()

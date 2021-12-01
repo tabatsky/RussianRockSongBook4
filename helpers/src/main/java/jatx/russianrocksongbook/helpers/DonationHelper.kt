@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import com.android.billingclient.api.*
+import dagger.hilt.android.scopes.ActivityScoped
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import java.util.*
 import javax.inject.Inject
@@ -21,6 +22,7 @@ val DONATIONS_LANDSCAPE = listOf(
 
 val SKUS_LANDSCAPE = DONATIONS_LANDSCAPE.map { "donation_$it" }
 
+@ActivityScoped
 class DonationHelper @Inject constructor(
     private val activity: Activity
 ): PurchasesUpdatedListener {
