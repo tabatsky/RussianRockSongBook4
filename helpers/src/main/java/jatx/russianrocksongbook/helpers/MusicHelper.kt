@@ -6,11 +6,13 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
+import dagger.hilt.android.scopes.ActivityScoped
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 import javax.inject.Inject
 
+@ActivityScoped
 class MusicHelper @Inject constructor(
     private val activity: Activity
 ) {

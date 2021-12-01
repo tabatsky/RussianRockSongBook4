@@ -9,8 +9,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.documentfile.provider.DocumentFile
 import com.obsez.android.lib.filechooser.ChooserDialog
+import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
 
+@ActivityScoped
 class AddSongsFromDirHelper @Inject constructor(
     private val activity: Activity
 ) {
