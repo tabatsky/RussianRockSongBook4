@@ -77,4 +77,5 @@ dependencies {
 
     implementation project(':model')
     implementation project(':viewmodel')
+    implementation project(':commonview')
 }
