@@ -11,6 +11,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -119,7 +120,9 @@ private fun SongListContent(
                 CommonSideAppBar(
                     title = visibleArtist,
                     navigationIcon = {
-                        SongListNavigationIcon(onClick = openDrawer)
+                        SongListNavigationIcon(
+                            onClick = openDrawer
+                        )
                     },
                     actions = {
                         SongListActions()
@@ -201,7 +204,10 @@ private fun SongListAppDrawer(
                 CommonTopAppBar(
                     title = stringResource(R.string.menu),
                     navigationIcon = {
-                        SongListNavigationIcon(onClick = onCloseDrawer)
+                        SongListNavigationIcon(
+                            onClick = onCloseDrawer,
+                            testTag = "drawerButtonMenu"
+                        )
                     }
                 )
                 SongTextMenuBody(onCloseDrawer = onCloseDrawer)
@@ -215,7 +221,10 @@ private fun SongListAppDrawer(
                 CommonSideAppBar(
                     title = stringResource(R.string.menu),
                     navigationIcon = {
-                        SongListNavigationIcon(onClick = onCloseDrawer)
+                        SongListNavigationIcon(
+                            onClick = onCloseDrawer,
+                            testTag = "drawerButtonMenu"
+                        )
                     }
                 )
                 SongTextMenuBody(onCloseDrawer = onCloseDrawer)
@@ -238,7 +247,9 @@ private fun SongTextMenuBody(
         fontSizeDp.toSp()
     }
 
-    LazyColumn {
+    LazyColumn(
+        modifier = Modifier.testTag("menuLazyColumn")
+    ) {
         items(artistList) { artist ->
             ArtistItem(artist, fontSizeSp, theme) {
                 localViewModel.selectArtist(artist) {
@@ -296,10 +307,12 @@ private fun SongListActions(
 
 @Composable
 private fun SongListNavigationIcon(
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    testTag: String? = null
 ) {
     CommonIconButton(
         resId = R.drawable.ic_drawer,
+        testTag = testTag ?: "drawerButtonMain",
         onClick = onClick
     )
 }
