@@ -27,7 +27,7 @@ class SongRepositoryImpl @Inject constructor(
 ): SongRepository {
     override fun getArtists(): Flowable<List<String>> {
         return songDao
-            .getArtistsFlowable()
+            .getArtists()
             .map {
                 val arrayList = arrayListOf<String>()
                 arrayList.addAll(predefinedList)
@@ -40,7 +40,7 @@ class SongRepositoryImpl @Inject constructor(
     override fun getArtistsAsList(): List<String> {
         val arrayList = arrayListOf<String>()
         arrayList.addAll(predefinedList)
-        arrayList.addAll(songDao.getArtists().filter { !predefinedList.contains(it) })
+        arrayList.addAll(songDao.getArtistsAsList().filter { !predefinedList.contains(it) })
         return arrayList
     }
 
@@ -58,6 +58,13 @@ class SongRepositoryImpl @Inject constructor(
             .map { list ->
                 list.map { Song(it) }
             }
+
+    override fun getSongsByArtistAsList(artist: String) =
+        (if (artist == ARTIST_FAVORITE)
+            songDao.getSongsFavoriteAsList()
+        else
+            songDao.getSongsByArtistAsList(artist))
+            .map { Song(it) }
 
     override fun getSongByArtistAndPosition(artist: String, position: Int) =
         (if (artist == ARTIST_FAVORITE)

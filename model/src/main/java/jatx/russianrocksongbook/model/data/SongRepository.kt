@@ -15,6 +15,7 @@ interface SongRepository {
     fun getArtistsAsList(): List<String>
     fun getCountByArtist(artist: String): Int
     fun getSongsByArtist(artist: String): Flowable<List<Song>>
+    fun getSongsByArtistAsList(artist: String): List<Song>
     fun getSongByArtistAndPosition(artist: String, position: Int): Flowable<Song>
     fun getSongByArtistAndTitle(artist: String, title: String): Song?
     fun setFavorite(favorite: Boolean, artist: String, title: String)
