@@ -42,10 +42,38 @@ class MusicHelper @Inject constructor(
         try {
             with(activity) {
                 val searchForEncoded = URLEncoder.encode(searchFor, "UTF-8")
-                val uri = "https://vk.com/audio?q=$searchForEncoded"
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
-                intent.setPackage("com.vkontakte.android")
-                startActivity(intent)
+                val uriApp = "https://vk.com/audio?q=$searchForEncoded"
+                val uriBrowser = "https://m.vk.com/audio?q=$searchForEncoded"
+                val intentList = arrayListOf<Intent>()
+                listOf(
+                    "com.android.chrome",
+                    "com.yandex.browser",
+                    "com.opera.browser",
+                    "org.mozilla.firefox"
+                ).forEach {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uriBrowser))
+                    intent.setPackage(it)
+                    intentList.add(intent)
+                }
+                listOf(
+                    "com.uma.musicvk",
+                    "com.vkontakte.android"
+                ).forEach {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uriApp))
+                    intent.setPackage(it)
+                    intentList.add(intent)
+                }
+
+                val chooserIntent = Intent
+                    .createChooser(
+                        intentList.removeAt(intentList.size - 1),
+                        getString(R.string.vk_music_chooser)
+                    )
+                chooserIntent.putExtra(
+                    Intent.EXTRA_INITIAL_INTENTS,
+                    intentList.toTypedArray()
+                )
+                startActivity(chooserIntent)
             }
         } catch (e: UnsupportedEncodingException) {
             mvvmViewModel?.showToast(R.string.utf8_not_supported)
