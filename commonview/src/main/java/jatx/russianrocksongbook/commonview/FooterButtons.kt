@@ -11,6 +11,7 @@ import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -22,6 +23,7 @@ fun YandexMusicButton(size: Dp, theme: Theme, onClick: () -> Unit) =
         size = size,
         theme = theme,
         resId = R.drawable.ic_yandex,
+        testTag = "musicButton",
         onClick = onClick
     )
 
@@ -31,6 +33,7 @@ fun VkMusicButton(size: Dp, theme: Theme, onClick: () -> Unit) =
         size = size,
         theme = theme,
         resId = R.drawable.ic_vk,
+        testTag = "musicButton",
         onClick = onClick
     )
 
@@ -40,6 +43,7 @@ fun YoutubeMusicButton(size: Dp, theme: Theme, onClick: () -> Unit) =
         size = size,
         theme = theme,
         resId = R.drawable.ic_youtube,
+        testTag = "musicButton",
         onClick = onClick
     )
 
@@ -49,6 +53,7 @@ fun UploadButton(size: Dp, theme: Theme, onClick: () -> Unit) =
         size = size,
         theme = theme,
         resId = R.drawable.ic_upload,
+        testTag = "uploadButton",
         onClick = onClick
     )
 
@@ -58,6 +63,7 @@ fun WarningButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
         size = size,
         theme = theme,
         resId = R.drawable.ic_warning,
+        testTag = "warningButton",
         onClick = onClick
     )
 
@@ -67,6 +73,7 @@ fun TrashButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
         size = size,
         theme = theme,
         resId = R.drawable.ic_trash,
+        testTag = "trashButton",
         onClick = onClick
     )
 
@@ -76,6 +83,7 @@ fun EditButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
         size = size,
         theme = theme,
         resId = R.drawable.ic_edit,
+        testTag = "editButton",
         onClick = onClick
     )
 
@@ -85,6 +93,7 @@ fun SaveButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
         size = size,
         theme = theme,
         resId = R.drawable.ic_save,
+        testTag = "saveButton",
         onClick = onClick
     )
 
@@ -126,11 +135,15 @@ private fun FooterButton(
     size: Dp,
     theme: Theme,
     @DrawableRes resId: Int,
+    testTag: String? = null,
     onClick: () -> Unit,
     onLongClick: () -> Unit = {}
 ) {
+    val modifier = testTag?.let {
+        Modifier.testTag(it)
+    } ?: Modifier
     Box(
-        modifier = Modifier
+        modifier = modifier
             .background(theme.colorCommon)
             .width(size)
             .height(size)

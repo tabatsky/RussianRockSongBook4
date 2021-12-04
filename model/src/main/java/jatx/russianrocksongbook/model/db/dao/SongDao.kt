@@ -7,10 +7,10 @@ import jatx.russianrocksongbook.model.db.entities.SongEntity
 @Dao
 interface SongDao {
     @Query("SELECT DISTINCT artist FROM songs WHERE deleted=0 ORDER BY artist")
-    fun getArtistsFlowable(): Flowable<List<String>>
+    fun getArtists(): Flowable<List<String>>
 
     @Query("SELECT DISTINCT artist FROM songs WHERE deleted=0 ORDER BY artist")
-    fun getArtists(): List<String>
+    fun getArtistsAsList(): List<String>
 
     @Query("SELECT COUNT(*) AS count FROM songs WHERE favorite=1 AND deleted=0")
     fun getCountFavorite(): Int
@@ -23,6 +23,12 @@ interface SongDao {
 
     @Query("SELECT * FROM songs WHERE artist=:artist AND deleted=0")
     fun getSongsByArtist(artist: String): Flowable<List<SongEntity>>
+
+    @Query("SELECT * FROM songs WHERE favorite=1 AND deleted=0")
+    fun getSongsFavoriteAsList(): List<SongEntity>
+
+    @Query("SELECT * FROM songs WHERE artist=:artist AND deleted=0")
+    fun getSongsByArtistAsList(artist: String): List<SongEntity>
 
     @Query("""
         SELECT * FROM songs WHERE favorite=1 AND deleted=0 

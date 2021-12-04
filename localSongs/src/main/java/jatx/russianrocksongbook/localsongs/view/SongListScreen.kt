@@ -156,6 +156,7 @@ private fun SongListBody(
         val wasOrientationChanged by localViewModel.wasOrientationChanged.collectAsState()
         val needScroll by localViewModel.needScroll.collectAsState()
         LazyColumn(
+            modifier = Modifier.testTag("songListLazyColumn"),
             state = listState
         ) {
             itemsIndexed(songList) { index, song ->
@@ -268,7 +269,10 @@ private fun SongListActions(
     val theme = localViewModel.settings.theme
     var expanded by remember { mutableStateOf(false) }
 
-    CommonIconButton(resId = R.drawable.ic_settings) {
+    CommonIconButton(
+        testTag = "settingsButton",
+        resId = R.drawable.ic_settings
+    ) {
         println("selected: settings")
         localViewModel.selectScreen(CurrentScreenVariant.SETTINGS)
     }

@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -331,45 +332,49 @@ private fun SongTextActions(
     onSongChanged: () -> Unit
 ) {
     if (localViewModel.isAutoPlayMode.collectAsState().value) {
-        IconButton(onClick = {
+        CommonIconButton(
+            resId = R.drawable.ic_pause,
+        ) {
             localViewModel.setAutoPlayMode(false)
-        }) {
-            Icon(painterResource(id = R.drawable.ic_pause), "")
         }
     } else {
         val isEditorMode = localViewModel.isEditorMode.collectAsState().value
-        IconButton(onClick = {
+        CommonIconButton(
+            resId = R.drawable.ic_play,
+        ) {
             if (!isEditorMode) {
                 localViewModel.setAutoPlayMode(true)
             }
-        }) {
-            Icon(painterResource(id = R.drawable.ic_play), "")
         }
     }
-    IconButton(onClick = {
+    CommonIconButton(
+        resId = R.drawable.ic_left,
+        testTag = "leftButton"
+    ) {
         localViewModel.prevSong()
         onSongChanged()
-    }) {
-        Icon(painterResource(id = R.drawable.ic_left), "")
     }
     if (isFavorite) {
-        IconButton(onClick = {
+        CommonIconButton(
+            resId = R.drawable.ic_delete,
+            testTag = "deleteFromFavoriteButton"
+        ) {
             localViewModel.setFavorite(false)
-        }) {
-            Icon(painterResource(id = R.drawable.ic_delete), "")
         }
     } else {
-        IconButton(onClick = {
+        CommonIconButton(
+            resId = R.drawable.ic_star,
+            testTag = "addToFavoriteButton"
+        ) {
             localViewModel.setFavorite(true)
-        }) {
-            Icon(painterResource(id = R.drawable.ic_star), "")
         }
     }
-    IconButton(onClick = {
+    CommonIconButton(
+        resId = R.drawable.ic_right,
+        testTag = "rightButton"
+    ) {
         localViewModel.nextSong()
         onSongChanged()
-    }) {
-        Icon(painterResource(id = R.drawable.ic_right), "")
     }
 }
 
@@ -381,7 +386,9 @@ private fun SongTextEditor(
     onTextChange: (String) -> Unit
 ) {
     BasicTextField(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .testTag("songTextEditor")
+            .fillMaxWidth(),
         value = text,
         onValueChange = onTextChange,
         textStyle = TextStyle(
@@ -409,6 +416,7 @@ private fun SongTextViewer(
     onWordClick: (Word) -> Unit
 ) {
     AndroidView(
+        modifier = Modifier.testTag("songTextViewer"),
         factory = { context ->
             ClickableWordsTextView(context)
         },
