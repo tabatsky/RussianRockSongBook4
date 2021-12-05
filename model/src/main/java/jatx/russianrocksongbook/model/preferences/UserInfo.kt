@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.provider.Settings
 import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.android.scopes.ActivityRetainedScoped
 import jatx.russianrocksongbook.model.domain.util.HashingUtil
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -13,7 +12,7 @@ const val USER_PREFS_NAME = "RussianRockUserPrefs"
 
 const val KEY_GOOGLE_ACCOUNT = "googleAccount"
 
-@ActivityRetainedScoped
+@Singleton
 class UserInfo @Inject constructor(
     @ApplicationContext private val context: Context) {
 

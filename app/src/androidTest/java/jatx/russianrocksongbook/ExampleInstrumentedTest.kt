@@ -3,17 +3,23 @@ package jatx.russianrocksongbook
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.*
+import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.runner.AndroidJUnitRunner
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import jatx.russianrocksongbook.model.data.*
+import jatx.russianrocksongbook.model.data.impl.TestAPIAdapterImpl
+import jatx.russianrocksongbook.model.preferences.ARTIST_KINO
+import jatx.russianrocksongbook.model.preferences.Settings
 import jatx.russianrocksongbook.view.CurrentScreen
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TestRule
 import javax.inject.Inject
 
 
@@ -45,9 +51,16 @@ class ExampleInstrumentedTest {
     @Inject
     lateinit var songRepo: SongRepository
 
+    @Inject
+    lateinit var songBookAPIAdapter: SongBookAPIAdapter
+
+    @Inject
+    lateinit var settings: Settings
+
     @Before
     fun init() {
         hiltRule.inject()
+        settings.defaultArtist = ARTIST_KINO
         composeTestRule.setContent {
             CurrentScreen()
         }
@@ -61,6 +74,7 @@ class ExampleInstrumentedTest {
             .onNodeWithTag("drawerButtonMain")
             .performClick()
         Log.e("test click", "drawerButtonMain")
+        composeTestRule.waitFor(500)
         composeTestRule
             .onNodeWithText(ARTIST_FAVORITE)
             .assertIsDisplayed()
@@ -91,6 +105,7 @@ class ExampleInstrumentedTest {
             .onNodeWithTag("menuLazyColumn")
             .performScrollToIndex(index1)
         Log.e("test scroll", "menu to index $index1")
+        composeTestRule.waitFor(500)
         composeTestRule
             .onNodeWithText("Немного Нервно")
             .assertIsDisplayed()
@@ -98,6 +113,7 @@ class ExampleInstrumentedTest {
         composeTestRule
             .onNodeWithText("Немного Нервно")
             .performClick()
+        composeTestRule.waitFor(500)
         composeTestRule
             .onNodeWithText("Santa Maria")
             .assertIsDisplayed()
@@ -110,12 +126,14 @@ class ExampleInstrumentedTest {
         composeTestRule
             .onNodeWithTag("drawerButtonMain")
             .performClick()
+        composeTestRule.waitFor(500)
         Log.e("test click", "drawerButtonMain")
         val index2 = artists.indexOf("Чайф") - 3
         composeTestRule
             .onNodeWithTag("menuLazyColumn")
             .performScrollToIndex(index2)
         Log.e("test scroll", "menu to index $index2")
+        composeTestRule.waitFor(500)
         composeTestRule
             .onNodeWithText("Чайф")
             .assertIsDisplayed()
@@ -123,6 +141,7 @@ class ExampleInstrumentedTest {
         composeTestRule
             .onNodeWithText("Чайф")
             .performClick()
+        composeTestRule.waitFor(500)
         composeTestRule
             .onNodeWithText("17 лет")
             .assertIsDisplayed()
@@ -134,37 +153,39 @@ class ExampleInstrumentedTest {
     }
 
     @Test
-    fun songListAndSongTextTest() {
+    fun songTextTest() {
         val artists = songRepo.getArtistsAsList()
 
-        composeTestRule.onNodeWithTag("drawerButtonMain").performClick()
+        composeTestRule
+            .onNodeWithTag("drawerButtonMain")
+            .performClick()
         Log.e("test click", "drawerButtonMain")
+        composeTestRule.waitFor(500)
 
         val index1 = artists.indexOf("Немного Нервно") - 3
-        composeTestRule.onNodeWithText("Немного Нервно").assertDoesNotExist()
-        Log.e("test assert", "Немного Нервно does not exist")
-        composeTestRule.onNodeWithTag("menuLazyColumn").performScrollToIndex(index1)
+        composeTestRule
+            .onNodeWithTag("menuLazyColumn")
+            .performScrollToIndex(index1)
         Log.e("test scroll", "menu to index $index1")
-        composeTestRule.onNodeWithText("Немного Нервно").assertIsDisplayed()
+        composeTestRule.waitFor(500)
+        composeTestRule
+            .onNodeWithText("Немного Нервно")
+            .assertIsDisplayed()
         Log.e("test assert", "Немного Нервно is displayed")
-        composeTestRule.onNodeWithText("Немного Нервно").performClick()
+        composeTestRule
+            .onNodeWithText("Немного Нервно")
+            .performClick()
         Log.e("test click", "Немного Нервно")
+        composeTestRule.waitFor(500)
 
         val songs = songRepo.getSongsByArtistAsList("Немного Нервно")
-        composeTestRule
-            .onNodeWithText("Santa Maria")
-            .assertIsDisplayed()
-        Log.e("test assert", "Santa Maria is displayed")
-        composeTestRule
-            .onNodeWithText("Над мертвым городом сон")
-            .assertDoesNotExist()
-        Log.e("test assert", "Над мертвым городом сон does not exist")
         val songIndex1 = songs.indexOfFirst { it.title == "Над мертвым городом сон" }
         val song1 = songs[songIndex1]
         composeTestRule
             .onNodeWithTag("songListLazyColumn")
             .performScrollToIndex(songIndex1 - 3)
         Log.e("test scroll", "songList to index $songIndex1 - 3")
+        composeTestRule.waitFor(500)
 
         composeTestRule
             .onNodeWithText("Над мертвым городом сон")
@@ -173,6 +194,7 @@ class ExampleInstrumentedTest {
         composeTestRule
             .onNodeWithText("Над мертвым городом сон")
             .performClick()
+        composeTestRule.waitFor(500)
         Log.e("test click", "Над мертвым городом сон")
 
         composeTestRule
@@ -199,6 +221,7 @@ class ExampleInstrumentedTest {
             .onNodeWithTag("editButton")
             .performClick()
         Log.e("test click", "editButton click")
+        composeTestRule.waitFor(500)
 
         composeTestRule
             .onNodeWithTag("songTextEditor")
@@ -224,6 +247,7 @@ class ExampleInstrumentedTest {
             .onNodeWithTag("saveButton")
             .performClick()
         Log.e("test click", "saveButton click")
+        composeTestRule.waitFor(500)
 
         composeTestRule
             .onNodeWithTag("songTextViewer")
@@ -253,6 +277,7 @@ class ExampleInstrumentedTest {
             .onNodeWithTag("rightButton")
             .performClick()
         Log.e("test click", "rightButton click")
+        composeTestRule.waitFor(500)
         composeTestRule
             .onNodeWithText("${song2.title} (${song2.artist})")
             .assertIsDisplayed()
@@ -262,6 +287,7 @@ class ExampleInstrumentedTest {
             .onNodeWithTag("leftButton")
             .performClick()
         Log.e("test click", "leftButton click")
+        composeTestRule.waitFor(500)
         composeTestRule
             .onNodeWithText("${song1.title} (${song1.artist})")
             .assertIsDisplayed()
@@ -273,7 +299,7 @@ class ExampleInstrumentedTest {
                 .performClick()
             Log.e("test click", "deleteFromFavoriteButton click")
         }
-
+        composeTestRule.waitFor(500)
         composeTestRule
             .onNodeWithTag("deleteFromFavoriteButton")
             .assertDoesNotExist()
@@ -286,6 +312,7 @@ class ExampleInstrumentedTest {
             .onNodeWithTag("addToFavoriteButton")
             .performClick()
         Log.e("test click", "addToFavoriteButton click")
+        composeTestRule.waitFor(500)
 
         composeTestRule
             .onNodeWithTag("addToFavoriteButton")
@@ -299,6 +326,7 @@ class ExampleInstrumentedTest {
             .onNodeWithTag("deleteFromFavoriteButton")
             .performClick()
         Log.e("test click", "deleteFromFavoriteButton click")
+        composeTestRule.waitFor(500)
 
         composeTestRule
             .onNodeWithTag("deleteFromFavoriteButton")
@@ -322,6 +350,7 @@ class ExampleInstrumentedTest {
             .onNodeWithTag("warningButton")
             .performClick()
         Log.e("test click", "warningButton")
+        composeTestRule.waitFor(500)
 
         composeTestRule
             .onNodeWithText("Ок")
@@ -335,6 +364,7 @@ class ExampleInstrumentedTest {
             .onNodeWithText("Отмена")
             .performClick()
         Log.e("test click", "Отмена")
+        composeTestRule.waitFor(500)
 
         composeTestRule
             .onNodeWithTag("trashButton")
@@ -344,6 +374,7 @@ class ExampleInstrumentedTest {
             .onNodeWithTag("trashButton")
             .performClick()
         Log.e("test click", "trashButton")
+        composeTestRule.waitFor(500)
 
         composeTestRule
             .onNodeWithText("Ок")
@@ -357,5 +388,56 @@ class ExampleInstrumentedTest {
             .onNodeWithText("Отмена")
             .performClick()
         Log.e("test click", "Отмена")
+    }
+
+    @Test
+    fun cloudSongsTest() {
+        (songBookAPIAdapter as? TestAPIAdapterImpl)?.apply {
+            val list = search("", OrderBy.BY_ID_DESC)
+
+            val titleList = list.map { "${it.artist} - ${it.title}" }
+            Log.e("test list", titleList.toString())
+
+            composeTestRule
+                .onNodeWithTag("drawerButtonMain")
+                .performClick()
+            Log.e("test click", "drawerButtonMain")
+            composeTestRule.waitFor(500)
+            composeTestRule
+                .onNodeWithText(ARTIST_CLOUD_SONGS)
+                .assertIsDisplayed()
+            Log.e("test assert", "$ARTIST_CLOUD_SONGS is displayed")
+            composeTestRule
+                .onNodeWithText(ARTIST_CLOUD_SONGS)
+                .performClick()
+            Log.e("test click", ARTIST_CLOUD_SONGS)
+            composeTestRule.waitFor(500)
+            composeTestRule
+                .onNodeWithText("Последние добавленные")
+                .assertIsDisplayed()
+            Log.e("test assert", "Последние добавленные is displayed")
+            composeTestRule
+                .onNodeWithText(list[2].visibleTitleWithRating)
+                .assertIsDisplayed()
+            Log.e("test assert", "${list[2].visibleTitleWithRating} is displayed")
+            composeTestRule
+                .onNodeWithText(list[2].visibleTitleWithRating)
+                .performClick()
+            Log.e("test click", list[2].visibleTitleWithRating)
+            composeTestRule.waitFor(500)
+            composeTestRule
+                .onNodeWithText(list[2].visibleTitleWithArtistAndRating)
+                .assertIsDisplayed()
+            Log.e("test assert", "${list[2].visibleTitleWithArtistAndRating} is displayed")
+
+        }
+    }
+}
+
+fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.waitFor(time: Long) {
+    try {
+        waitUntil(time) { false }
+    } catch (e: ComposeTimeoutException) {
+        Log.e("test wait", "timeout")
     }
 }
