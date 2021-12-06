@@ -82,9 +82,13 @@ class TestAPIAdapterImpl @Inject constructor(
         cloudSong: CloudSong,
         userInfo: UserInfo,
         voteValue: Int
-    ): Single<ResultWithNumberGson> {
-        TODO("Not yet implemented")
-    }
+    ): Single<ResultWithNumberGson> = Single.just(
+        ResultWithNumberGson(
+            status = STATUS_SUCCESS,
+            message = null,
+            data = 1.0f
+        )
+    )
 
     override fun delete(
         secret1: String,
@@ -103,9 +107,10 @@ class TestAPIAdapterImpl @Inject constructor(
         orderBy: OrderBy,
         page: Int
     ): ResultWithCloudSongListDataGson {
+        Thread.sleep(100)
         return if (isOnline) {
             val list = search(searchFor, orderBy)
-                .subList((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+                .safeSublist((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
                 .map {
                     it.toCloudSongGson()
                 }
@@ -121,5 +126,13 @@ class TestAPIAdapterImpl @Inject constructor(
                 data = null
             )
         }
+    }
+}
+
+fun <T: Any> List<T>.safeSublist(fromIndex: Int, toIndex: Int): List<T> {
+    return when {
+        fromIndex >= size -> listOf()
+        toIndex >= size -> subList(fromIndex, size - 1)
+        else -> subList(fromIndex, toIndex)
     }
 }

@@ -103,6 +103,7 @@ fun DownloadButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
         size = size,
         theme = theme,
         resId = R.drawable.ic_download,
+        testTag = "downloadButton",
         onClick = onClick
     )
 
@@ -112,6 +113,7 @@ fun LikeButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
         size = size,
         theme = theme,
         resId = R.drawable.ic_like,
+        testTag = "likeButton",
         onClick = onClick
     )
 
@@ -126,6 +128,7 @@ fun DislikeButton(
         size = size,
         theme = theme,
         resId = R.drawable.ic_dislike,
+        testTag = "dislikeButton",
         onClick = onClick,
         onLongClick = onLongClick
     )
