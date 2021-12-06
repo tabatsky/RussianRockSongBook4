@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -316,16 +317,23 @@ private fun CloudSongTextActions(
     onCloudSongChanged: () -> Unit
 ) {
 
-    CommonIconButton(resId = R.drawable.ic_left) {
+    CommonIconButton(
+        resId = R.drawable.ic_left,
+        testTag = "leftButton"
+    ) {
         cloudViewModel.prevCloudSong()
         onCloudSongChanged()
     }
     Text(
+        modifier = Modifier.testTag("numberLabel"),
         text = "${position + 1} / $count",
         color = Color.Black,
         fontSize = 20.sp
     )
-    CommonIconButton(resId = R.drawable.ic_right) {
+    CommonIconButton(
+        resId = R.drawable.ic_right,
+        testTag = "rightButton"
+    ) {
         cloudViewModel.nextCloudSong()
         onCloudSongChanged()
     }
@@ -339,6 +347,7 @@ private fun CloudSongTextViewer(
     onWordClick: (Word) -> Unit
 ) {
     AndroidView(
+        modifier = Modifier.testTag("cloudSongTextViewer"),
         factory = { context ->
             ClickableWordsTextView(context)
         },
