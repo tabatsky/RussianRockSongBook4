@@ -29,7 +29,7 @@ import jatx.russianrocksongbook.model.data.OrderBy
 import jatx.russianrocksongbook.model.domain.CloudSong
 import jatx.russianrocksongbook.model.preferences.ScalePow
 import jatx.russianrocksongbook.model.preferences.Theme
-import jatx.russianrocksongbook.model.version.Version
+import jatx.russianrocksongbook.testing.*
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -207,8 +207,8 @@ private fun CloudSearchBody(
                 if (wasOrientationChanged || needScroll) {
                     LaunchedEffect(Unit) {
                         if (scrollPosition < itemsAdapter.size) {
-                            if (Version.isTesting) {
-                                delay(100)
+                            if (TestingConfig.isTesting) {
+                                delay(100L)
                             }
                             listState.scrollToItem(scrollPosition)
                         }
@@ -278,7 +278,7 @@ private fun CloudSearchPanelPortrait(
             TextField(
                 value = searchFor,
                 modifier = Modifier
-                    .testTag("searchForTextField")
+                    .testTag(TEXT_FIELD_SEARCH_FOR)
                     .fillMaxWidth()
                     .height(size2 - padding)
                     .padding(padding),
@@ -313,7 +313,7 @@ private fun CloudSearchPanelPortrait(
         ) {
             OutlinedButton(
                 modifier = Modifier
-                    .testTag("searchButton")
+                    .testTag(SEARCH_BUTTON)
                     .fillMaxSize(),
                 shape = RoundedCornerShape(size3 * 0.1f),
                 contentPadding = PaddingValues(10.dp),
@@ -354,7 +354,7 @@ private fun CloudSearchPanelLandscape(
         TextField(
             value = searchFor,
             modifier = Modifier
-                .testTag("searchForTextField")
+                .testTag(TEXT_FIELD_SEARCH_FOR)
                 .weight(1.0f)
                 .fillMaxHeight()
                 .padding(padding),
@@ -388,7 +388,7 @@ private fun CloudSearchPanelLandscape(
         ) {
             OutlinedButton(
                 modifier = Modifier
-                    .testTag("searchButton")
+                    .testTag(SEARCH_BUTTON)
                     .fillMaxSize(),
                 shape = RoundedCornerShape(size * 0.1f),
                 contentPadding = PaddingValues(10.dp),
@@ -465,7 +465,7 @@ private fun CloudSearchProgress(
     ) {
         CircularProgressIndicator(
             modifier = Modifier
-                .testTag("searchProgress")
+                .testTag(SEARCH_PROGRESS)
                 .width(100.dp)
                 .height(100.dp)
                 .background(theme.colorBg),

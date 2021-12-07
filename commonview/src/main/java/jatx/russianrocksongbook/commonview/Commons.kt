@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.model.preferences.Theme
 import jatx.russianrocksongbook.model.preferences.colorDarkYellow
+import jatx.russianrocksongbook.testing.BACK_BUTTON
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import jatx.sideappbar.SideAppBar
 
@@ -67,7 +68,7 @@ fun CommonBackButton(
 ) {
     CommonIconButton(
         resId = R.drawable.ic_back,
-        testTag = "backButton",
+        testTag = BACK_BUTTON,
         onClick = { mvvmViewModel.back() }
     )
 }

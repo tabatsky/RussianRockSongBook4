@@ -16,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.model.preferences.Theme
+import jatx.russianrocksongbook.testing.*
 
 @Composable
 fun YandexMusicButton(size: Dp, theme: Theme, onClick: () -> Unit) =
@@ -23,7 +24,7 @@ fun YandexMusicButton(size: Dp, theme: Theme, onClick: () -> Unit) =
         size = size,
         theme = theme,
         resId = R.drawable.ic_yandex,
-        testTag = "musicButton",
+        testTag = MUSIC_BUTTON,
         onClick = onClick
     )
 
@@ -33,7 +34,7 @@ fun VkMusicButton(size: Dp, theme: Theme, onClick: () -> Unit) =
         size = size,
         theme = theme,
         resId = R.drawable.ic_vk,
-        testTag = "musicButton",
+        testTag = MUSIC_BUTTON,
         onClick = onClick
     )
 
@@ -43,7 +44,7 @@ fun YoutubeMusicButton(size: Dp, theme: Theme, onClick: () -> Unit) =
         size = size,
         theme = theme,
         resId = R.drawable.ic_youtube,
-        testTag = "musicButton",
+        testTag = MUSIC_BUTTON,
         onClick = onClick
     )
 
@@ -53,7 +54,7 @@ fun UploadButton(size: Dp, theme: Theme, onClick: () -> Unit) =
         size = size,
         theme = theme,
         resId = R.drawable.ic_upload,
-        testTag = "uploadButton",
+        testTag = UPLOAD_BUTTON,
         onClick = onClick
     )
 
@@ -63,7 +64,7 @@ fun WarningButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
         size = size,
         theme = theme,
         resId = R.drawable.ic_warning,
-        testTag = "warningButton",
+        testTag = WARNING_BUTTON,
         onClick = onClick
     )
 
@@ -73,7 +74,7 @@ fun TrashButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
         size = size,
         theme = theme,
         resId = R.drawable.ic_trash,
-        testTag = "trashButton",
+        testTag = TRASH_BUTTON,
         onClick = onClick
     )
 
@@ -83,7 +84,7 @@ fun EditButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
         size = size,
         theme = theme,
         resId = R.drawable.ic_edit,
-        testTag = "editButton",
+        testTag = EDIT_BUTTON,
         onClick = onClick
     )
 
@@ -93,7 +94,7 @@ fun SaveButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
         size = size,
         theme = theme,
         resId = R.drawable.ic_save,
-        testTag = "saveButton",
+        testTag = SAVE_BUTTON,
         onClick = onClick
     )
 
@@ -103,7 +104,7 @@ fun DownloadButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
         size = size,
         theme = theme,
         resId = R.drawable.ic_download,
-        testTag = "downloadButton",
+        testTag = DOWNLOAD_BUTTON,
         onClick = onClick
     )
 
@@ -113,7 +114,7 @@ fun LikeButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
         size = size,
         theme = theme,
         resId = R.drawable.ic_like,
-        testTag = "likeButton",
+        testTag = LIKE_BUTTON,
         onClick = onClick
     )
 
@@ -128,7 +129,7 @@ fun DislikeButton(
         size = size,
         theme = theme,
         resId = R.drawable.ic_dislike,
-        testTag = "dislikeButton",
+        testTag = DISLIKE_BUTTON,
         onClick = onClick,
         onLongClick = onLongClick
     )

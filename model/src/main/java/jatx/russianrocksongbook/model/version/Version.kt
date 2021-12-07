@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 object Version {
     var appVersionName = "undefined"
     var appVersionCode = 0
-    var isTesting = false
 
     fun init(context: Context) {
         try {

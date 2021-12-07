@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -20,6 +21,9 @@ import jatx.russianrocksongbook.commonview.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.UploadDialog
 import jatx.russianrocksongbook.model.preferences.ScalePow
+import jatx.russianrocksongbook.testing.TEXT_FIELD_ARTIST
+import jatx.russianrocksongbook.testing.TEXT_FIELD_TEXT
+import jatx.russianrocksongbook.testing.TEXT_FIELD_TITLE
 
 @Composable
 fun AddSongScreen(addSongViewModel: AddSongViewModel = viewModel()) {
@@ -99,6 +103,7 @@ private fun AddSongBody(
                 artist = it
             },
             modifier = Modifier
+                .testTag(TEXT_FIELD_ARTIST)
                 .fillMaxWidth()
                 .wrapContentHeight(),
             label = {
@@ -128,6 +133,7 @@ private fun AddSongBody(
                 title = it
             },
             modifier = Modifier
+                .testTag(TEXT_FIELD_TITLE)
                 .fillMaxWidth()
                 .wrapContentHeight(),
             label = {
@@ -157,6 +163,7 @@ private fun AddSongBody(
                 text = it
             },
             modifier = Modifier
+                .testTag(TEXT_FIELD_TEXT)
                 .fillMaxWidth()
                 .weight(1.0f),
             label = {

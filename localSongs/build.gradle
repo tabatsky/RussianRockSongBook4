@@ -83,4 +83,6 @@ dependencies {
     implementation project(':viewmodel')
     implementation project(':commonview')
     implementation project(':whatsNewDialog')
+
+    implementation project(':testing')
 }

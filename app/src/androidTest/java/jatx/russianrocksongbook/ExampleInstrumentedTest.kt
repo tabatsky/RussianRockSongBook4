@@ -8,6 +8,7 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.runner.AndroidJUnitRunner
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
@@ -15,12 +16,14 @@ import jatx.russianrocksongbook.model.data.*
 import jatx.russianrocksongbook.model.data.impl.TestAPIAdapterImpl
 import jatx.russianrocksongbook.model.preferences.ARTIST_KINO
 import jatx.russianrocksongbook.model.preferences.Settings
-import jatx.russianrocksongbook.model.version.Version
+import jatx.russianrocksongbook.testing.*
 import jatx.russianrocksongbook.view.CurrentScreen
 import org.junit.Before
+import org.junit.FixMethodOrder
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
+import org.junit.runners.MethodSorters
 import javax.inject.Inject
 
 
@@ -29,6 +32,15 @@ import javax.inject.Inject
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
+
+const val ARTIST_1 = "Немного Нервно"
+const val ARTIST_2 = "Чайф"
+
+const val TITLE_1 = "Santa Maria"
+const val TITLE_2 = "Яблочный остров"
+const val TITLE_3 = "17 лет"
+const val TITLE_4 = "Поплачь о нем"
+const val TITLE_5 = "Над мертвым городом сон"
 
 class HiltTestRunner : AndroidJUnitRunner() {
     override fun newApplication(
@@ -42,6 +54,7 @@ class HiltTestRunner : AndroidJUnitRunner() {
 
 @ExperimentalTestApi
 @HiltAndroidTest
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class ExampleInstrumentedTest {
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -58,11 +71,17 @@ class ExampleInstrumentedTest {
     @Inject
     lateinit var settings: Settings
 
+    @Inject
+    lateinit var stringConst: StringConst
+
     @Before
     fun init() {
-        Version.isTesting = true
+        TestingConfig.isTesting = true
+
         hiltRule.inject()
+
         settings.defaultArtist = ARTIST_KINO
+
         composeTestRule.setContent {
             CurrentScreen()
         }
@@ -75,9 +94,9 @@ class ExampleInstrumentedTest {
         val artists = songRepo.getArtistsAsList()
 
         composeTestRule
-            .onNodeWithTag("drawerButtonMain")
+            .onNodeWithTag(DRAWER_BUTTON_MAIN)
             .performClick()
-        Log.e("test $testNumber click", "drawerButtonMain")
+        Log.e("test $testNumber click", DRAWER_BUTTON_MAIN)
         composeTestRule.waitFor(timeout)
         composeTestRule
             .onNodeWithText(ARTIST_FAVORITE)
@@ -100,60 +119,60 @@ class ExampleInstrumentedTest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "$ARTIST_DONATION is displayed")
 
-        val index1 = artists.indexOf("Немного Нервно") - 3
+        val index1 = artists.indexOf(ARTIST_1) - 3
         composeTestRule
-            .onNodeWithText("Немного Нервно")
+            .onNodeWithText(ARTIST_1)
             .assertDoesNotExist()
-        Log.e("test $testNumber assert", "Немного Нервно does not exist")
+        Log.e("test $testNumber assert", "$ARTIST_1 does not exist")
         composeTestRule
-            .onNodeWithTag("menuLazyColumn")
+            .onNodeWithTag(MENU_LAZY_COLUMN)
             .performScrollToIndex(index1)
         Log.e("test $testNumber scroll", "menu to index $index1")
         composeTestRule.waitFor(timeout)
         composeTestRule
-            .onNodeWithText("Немного Нервно")
+            .onNodeWithText(ARTIST_1)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "Немного Нервно is displayed")
+        Log.e("test $testNumber assert", "$ARTIST_1 is displayed")
         composeTestRule
-            .onNodeWithText("Немного Нервно")
+            .onNodeWithText(ARTIST_1)
             .performClick()
         composeTestRule.waitFor(timeout)
         composeTestRule
-            .onNodeWithText("Santa Maria")
+            .onNodeWithText(TITLE_1)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "Santa Maria is displayed")
+        Log.e("test $testNumber assert", "$TITLE_1 is displayed")
         composeTestRule
-            .onNodeWithText("Яблочный остров")
+            .onNodeWithText(TITLE_2)
             .assertDoesNotExist()
-        Log.e("test $testNumber assert", "Яблочный остров does not exist")
+        Log.e("test $testNumber assert", "$TITLE_2 does not exist")
 
         composeTestRule
-            .onNodeWithTag("drawerButtonMain")
+            .onNodeWithTag(DRAWER_BUTTON_MAIN)
             .performClick()
         composeTestRule.waitFor(timeout)
-        Log.e("test $testNumber click", "drawerButtonMain")
-        val index2 = artists.indexOf("Чайф") - 3
+        Log.e("test $testNumber click", DRAWER_BUTTON_MAIN)
+        val index2 = artists.indexOf(ARTIST_2) - 3
         composeTestRule
-            .onNodeWithTag("menuLazyColumn")
+            .onNodeWithTag(MENU_LAZY_COLUMN)
             .performScrollToIndex(index2)
         Log.e("test $testNumber scroll", "menu to index $index2")
         composeTestRule.waitFor(timeout)
         composeTestRule
-            .onNodeWithText("Чайф")
+            .onNodeWithText(ARTIST_2)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "Чайф is displayed")
+        Log.e("test $testNumber assert", "$ARTIST_2 is displayed")
         composeTestRule
-            .onNodeWithText("Чайф")
+            .onNodeWithText(ARTIST_2)
             .performClick()
         composeTestRule.waitFor(timeout)
         composeTestRule
-            .onNodeWithText("17 лет")
+            .onNodeWithText(TITLE_3)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "17 лет is displayed")
+        Log.e("test $testNumber assert", "$TITLE_3 is displayed")
         composeTestRule
-            .onNodeWithText("Поплачь о нем")
+            .onNodeWithText(TITLE_4)
             .assertDoesNotExist()
-        Log.e("test $testNumber assert", "Поплачь о нем does not exist")
+        Log.e("test $testNumber assert", "$TITLE_4 does not exist")
     }
 
     @Test
@@ -163,126 +182,126 @@ class ExampleInstrumentedTest {
         val artists = songRepo.getArtistsAsList()
 
         composeTestRule
-            .onNodeWithTag("drawerButtonMain")
+            .onNodeWithTag(DRAWER_BUTTON_MAIN)
             .performClick()
-        Log.e("test $testNumber click", "drawerButtonMain")
+        Log.e("test $testNumber click", DRAWER_BUTTON_MAIN)
         composeTestRule.waitFor(timeout)
 
-        val index1 = artists.indexOf("Немного Нервно") - 3
+        val index1 = artists.indexOf(ARTIST_1) - 3
         composeTestRule
-            .onNodeWithTag("menuLazyColumn")
+            .onNodeWithTag(MENU_LAZY_COLUMN)
             .performScrollToIndex(index1)
         Log.e("test $testNumber scroll", "menu to index $index1")
         composeTestRule.waitFor(timeout)
         composeTestRule
-            .onNodeWithText("Немного Нервно")
+            .onNodeWithText(ARTIST_1)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "Немного Нервно is displayed")
+        Log.e("test $testNumber assert", "$ARTIST_1 is displayed")
         composeTestRule
-            .onNodeWithText("Немного Нервно")
+            .onNodeWithText(ARTIST_1)
             .performClick()
-        Log.e("test $testNumber click", "Немного Нервно")
+        Log.e("test $testNumber click", ARTIST_1)
         composeTestRule.waitFor(timeout)
 
-        val songs = songRepo.getSongsByArtistAsList("Немного Нервно")
-        val songIndex1 = songs.indexOfFirst { it.title == "Над мертвым городом сон" }
+        val songs = songRepo.getSongsByArtistAsList(ARTIST_1)
+        val songIndex1 = songs.indexOfFirst { it.title == TITLE_5 }
         val song1 = songs[songIndex1]
         composeTestRule
-            .onNodeWithTag("songListLazyColumn")
+            .onNodeWithTag(SONG_LIST_LAZY_COLUMN)
             .performScrollToIndex(songIndex1 - 3)
         Log.e("test $testNumber scroll", "songList to index $songIndex1 - 3")
         composeTestRule.waitFor(timeout)
 
         composeTestRule
-            .onNodeWithText("Над мертвым городом сон")
+            .onNodeWithText(TITLE_5)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "Над мертвым городом сон is displayed")
+        Log.e("test $testNumber assert", "$TITLE_5 is displayed")
         composeTestRule
-            .onNodeWithText("Над мертвым городом сон")
+            .onNodeWithText(TITLE_5)
             .performClick()
         composeTestRule.waitFor(timeout)
-        Log.e("test $testNumber click", "Над мертвым городом сон")
+        Log.e("test $testNumber click", TITLE_5)
 
         composeTestRule
             .onNodeWithText("${song1.title} (${song1.artist})")
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song title with artist is displayed")
         composeTestRule
-            .onNodeWithTag("songTextViewer")
+            .onNodeWithTag(SONG_TEXT_VIEWER)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "viewer is displayed")
+        Log.e("test $testNumber assert", "$SONG_TEXT_VIEWER is displayed")
         composeTestRule
-            .onNodeWithTag("songTextEditor")
+            .onNodeWithTag(SONG_TEXT_EDITOR)
             .assertDoesNotExist()
-        Log.e("test $testNumber assert", "editor does not exist")
+        Log.e("test $testNumber assert", "$SONG_TEXT_EDITOR does not exist")
         composeTestRule
-            .onNodeWithTag("editButton")
+            .onNodeWithTag(EDIT_BUTTON)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "editButton is displayed")
+        Log.e("test $testNumber assert", "$EDIT_BUTTON is displayed")
         composeTestRule
-            .onNodeWithTag("saveButton")
+            .onNodeWithTag(SAVE_BUTTON)
             .assertDoesNotExist()
-        Log.e("test $testNumber assert", "saveButton does not exist")
+        Log.e("test $testNumber assert", "$SAVE_BUTTON does not exist")
         composeTestRule
-            .onNodeWithTag("editButton")
+            .onNodeWithTag(EDIT_BUTTON)
             .performClick()
-        Log.e("test $testNumber click", "editButton click")
+        Log.e("test $testNumber click", "$EDIT_BUTTON click")
         composeTestRule.waitFor(timeout)
 
         composeTestRule
-            .onNodeWithTag("songTextEditor")
+            .onNodeWithTag(SONG_TEXT_EDITOR)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "editor is displayed")
+        Log.e("test $testNumber assert", "$SONG_TEXT_EDITOR is displayed")
         composeTestRule
-            .onNodeWithTag("songTextViewer")
+            .onNodeWithTag(SONG_TEXT_VIEWER)
             .assertDoesNotExist()
-        Log.e("test $testNumber assert", "viewer does not exist")
+        Log.e("test $testNumber assert", "$SONG_TEXT_VIEWER does not exist")
         composeTestRule
-            .onNodeWithTag("songTextEditor")
+            .onNodeWithTag(SONG_TEXT_EDITOR)
             .assertTextEquals(song1.text)
-        Log.e("test $testNumber assert", "song text is displayed")
+        Log.e("test $testNumber assert", "$SONG_TEXT_EDITOR is displayed")
         composeTestRule
-            .onNodeWithTag("saveButton")
+            .onNodeWithTag(SAVE_BUTTON)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "saveButton is displayed")
+        Log.e("test $testNumber assert", "$SAVE_BUTTON is displayed")
         composeTestRule
-            .onNodeWithTag("editButton")
+            .onNodeWithTag(EDIT_BUTTON)
             .assertDoesNotExist()
-        Log.e("test $testNumber assert", "editButton does not exist")
+        Log.e("test $testNumber assert", "$EDIT_BUTTON does not exist")
         composeTestRule
-            .onNodeWithTag("saveButton")
+            .onNodeWithTag(SAVE_BUTTON)
             .performClick()
-        Log.e("test $testNumber click", "saveButton click")
+        Log.e("test $testNumber click", "$SAVE_BUTTON click")
         composeTestRule.waitFor(timeout)
 
         composeTestRule
-            .onNodeWithTag("songTextViewer")
+            .onNodeWithTag(SONG_TEXT_VIEWER)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "viewer is displayed")
+        Log.e("test $testNumber assert", "$SONG_TEXT_VIEWER is displayed")
         composeTestRule
-            .onNodeWithTag("songTextEditor")
+            .onNodeWithTag(SONG_TEXT_EDITOR)
             .assertDoesNotExist()
-        Log.e("test $testNumber assert", "editor does not exist")
+        Log.e("test $testNumber assert", "$SONG_TEXT_EDITOR does not exist")
         composeTestRule
-            .onNodeWithTag("editButton")
+            .onNodeWithTag(EDIT_BUTTON)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "editButton is displayed")
+        Log.e("test $testNumber assert", "$EDIT_BUTTON is displayed")
         composeTestRule
-            .onNodeWithTag("saveButton")
+            .onNodeWithTag(SAVE_BUTTON)
             .assertDoesNotExist()
-        Log.e("test $testNumber assert", "saveButton does not exist")
+        Log.e("test $testNumber assert", "$SAVE_BUTTON does not exist")
 
         composeTestRule
-            .onAllNodesWithTag("musicButton")
+            .onAllNodesWithTag(MUSIC_BUTTON)
             .assertCountEquals(2)
-        Log.e("test $testNumber assert", "musicButton count is 2")
+        Log.e("test $testNumber assert", "$MUSIC_BUTTON count is 2")
 
         val song2 = songs[songIndex1 + 1]
 
         composeTestRule
-            .onNodeWithTag("rightButton")
+            .onNodeWithTag(RIGHT_BUTTON)
             .performClick()
-        Log.e("test $testNumber click", "rightButton click")
+        Log.e("test $testNumber click", RIGHT_BUTTON)
         composeTestRule.waitFor(timeout)
         composeTestRule
             .onNodeWithText("${song2.title} (${song2.artist})")
@@ -290,9 +309,9 @@ class ExampleInstrumentedTest {
         Log.e("test $testNumber assert", "song2 title with artist is displayed")
 
         composeTestRule
-            .onNodeWithTag("leftButton")
+            .onNodeWithTag(LEFT_BUTTON)
             .performClick()
-        Log.e("test $testNumber click", "leftButton click")
+        Log.e("test $testNumber click", LEFT_BUTTON)
         composeTestRule.waitFor(timeout)
         composeTestRule
             .onNodeWithText("${song1.title} (${song1.artist})")
@@ -301,99 +320,111 @@ class ExampleInstrumentedTest {
 
         if (song1.favorite) {
             composeTestRule
-                .onNodeWithTag("deleteFromFavoriteButton")
+                .onNodeWithTag(DELETE_FROM_FAVORITE_BUTTON)
                 .performClick()
-            Log.e("test $testNumber click", "deleteFromFavoriteButton click")
+            Log.e("test $testNumber click", "$DELETE_FROM_FAVORITE_BUTTON click")
         }
         composeTestRule.waitFor(timeout)
         composeTestRule
-            .onNodeWithTag("deleteFromFavoriteButton")
+            .onNodeWithTag(DELETE_FROM_FAVORITE_BUTTON)
             .assertDoesNotExist()
-        Log.e("test $testNumber assert", "deleteFromFavoriteButton does not exist")
+        Log.e("test $testNumber assert", "$DELETE_FROM_FAVORITE_BUTTON does not exist")
         composeTestRule
-            .onNodeWithTag("addToFavoriteButton")
+            .onNodeWithTag(ADD_TO_FAVORITE_BUTTON)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "addToFavoriteButton is displayed")
+        Log.e("test $testNumber assert", "$ADD_TO_FAVORITE_BUTTON is displayed")
         composeTestRule
-            .onNodeWithTag("addToFavoriteButton")
+            .onNodeWithTag(ADD_TO_FAVORITE_BUTTON)
             .performClick()
-        Log.e("test $testNumber click", "addToFavoriteButton click")
+        Log.e("test $testNumber click", ADD_TO_FAVORITE_BUTTON)
         composeTestRule.waitFor(timeout)
 
         composeTestRule
-            .onNodeWithTag("addToFavoriteButton")
+            .onNodeWithTag(ADD_TO_FAVORITE_BUTTON)
             .assertDoesNotExist()
-        Log.e("test $testNumber assert", "addToFavoriteButton does not exist")
+        Log.e("test $testNumber assert", "$ADD_TO_FAVORITE_BUTTON does not exist")
         composeTestRule
-            .onNodeWithTag("deleteFromFavoriteButton")
+            .onNodeWithTag(DELETE_FROM_FAVORITE_BUTTON)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "deleteFromFavoriteButton is displayed")
+        Log.e("test $testNumber assert", "$DELETE_FROM_FAVORITE_BUTTON is displayed")
         composeTestRule
-            .onNodeWithTag("deleteFromFavoriteButton")
+            .onNodeWithTag(DELETE_FROM_FAVORITE_BUTTON)
             .performClick()
-        Log.e("test $testNumber click", "deleteFromFavoriteButton click")
+        Log.e("test $testNumber click", DELETE_FROM_FAVORITE_BUTTON)
         composeTestRule.waitFor(timeout)
 
         composeTestRule
-            .onNodeWithTag("deleteFromFavoriteButton")
+            .onNodeWithTag(DELETE_FROM_FAVORITE_BUTTON)
             .assertDoesNotExist()
-        Log.e("test $testNumber assert", "deleteFromFavoriteButton does not exist")
+        Log.e("test $testNumber assert", "$DELETE_FROM_FAVORITE_BUTTON does not exist")
         composeTestRule
-            .onNodeWithTag("addToFavoriteButton")
+            .onNodeWithTag(ADD_TO_FAVORITE_BUTTON)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "addToFavoriteButton is displayed")
+        Log.e("test $testNumber assert", "$ADD_TO_FAVORITE_BUTTON is displayed")
 
         composeTestRule
-            .onNodeWithTag("uploadButton")
+            .onNodeWithTag(UPLOAD_BUTTON)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "uploadButton is displayed")
+        Log.e("test $testNumber assert", "$UPLOAD_BUTTON is displayed")
 
         composeTestRule
-            .onNodeWithTag("warningButton")
+            .onNodeWithTag(WARNING_BUTTON)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "warningButton is displayed")
+        Log.e("test $testNumber assert", "$WARNING_BUTTON is displayed")
         composeTestRule
-            .onNodeWithTag("warningButton")
+            .onNodeWithTag(WARNING_BUTTON)
             .performClick()
-        Log.e("test $testNumber click", "warningButton")
+        Log.e("test $testNumber click", WARNING_BUTTON)
         composeTestRule.waitFor(timeout)
 
         composeTestRule
-            .onNodeWithText("Ок")
+            .onNodeWithText(stringConst.sendWarningText)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "Ок is displayed")
+        Log.e("test $testNumber assert", "${stringConst.sendWarningText} is displayed")
         composeTestRule
-            .onNodeWithText("Отмена")
+            .onNodeWithText(stringConst.ok)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "Отмена is displayed")
+        Log.e("test $testNumber assert", "${stringConst.ok} is displayed")
         composeTestRule
-            .onNodeWithText("Отмена")
+            .onNodeWithText(stringConst.cancel)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$stringConst.cancel is displayed")
+        composeTestRule
+            .onNodeWithText(stringConst.cancel)
             .performClick()
-        Log.e("test $testNumber click", "Отмена")
+        Log.e("test $testNumber click", stringConst.cancel)
         composeTestRule.waitFor(timeout)
 
         composeTestRule
-            .onNodeWithTag("trashButton")
+            .onNodeWithTag(TRASH_BUTTON)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "trashButton is displayed")
+        Log.e("test $testNumber assert", "$TRASH_BUTTON is displayed")
         composeTestRule
-            .onNodeWithTag("trashButton")
+            .onNodeWithTag(TRASH_BUTTON)
             .performClick()
-        Log.e("test $testNumber click", "trashButton")
+        Log.e("test $testNumber click", TRASH_BUTTON)
         composeTestRule.waitFor(timeout)
 
         composeTestRule
-            .onNodeWithText("Ок")
+            .onNodeWithText(stringConst.songToTrashTitle)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "Ок is displayed")
+        Log.e("test $testNumber assert", "${stringConst.songToTrashTitle} is displayed")
         composeTestRule
-            .onNodeWithText("Отмена")
+            .onNodeWithText(stringConst.songToTrashMessage)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "Отмена is displayed")
+        Log.e("test $testNumber assert", "${stringConst.songToTrashMessage} is displayed")
         composeTestRule
-            .onNodeWithText("Отмена")
+            .onNodeWithText(stringConst.ok)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.ok} is displayed")
+        composeTestRule
+            .onNodeWithText(stringConst.cancel)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.cancel} is displayed")
+        composeTestRule
+            .onNodeWithText(stringConst.cancel)
             .performClick()
-        Log.e("test $testNumber click", "Отмена")
+        Log.e("test $testNumber click", stringConst.cancel)
     }
 
     @Test
@@ -406,9 +437,9 @@ class ExampleInstrumentedTest {
             Log.e("test $testNumber list", titleList.toString())
 
             composeTestRule
-                .onNodeWithTag("drawerButtonMain")
+                .onNodeWithTag(DRAWER_BUTTON_MAIN)
                 .performClick()
-            Log.e("test $testNumber click", "drawerButtonMain")
+            Log.e("test $testNumber click", DRAWER_BUTTON_MAIN)
             composeTestRule.waitFor(timeout)
             composeTestRule
                 .onNodeWithText(ARTIST_CLOUD_SONGS)
@@ -420,32 +451,32 @@ class ExampleInstrumentedTest {
             Log.e("test $testNumber click", ARTIST_CLOUD_SONGS)
             composeTestRule.waitFor(timeout)
             composeTestRule
-                .onNodeWithText("Последние добавленные")
+                .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
                 .assertIsDisplayed()
-            Log.e("test $testNumber assert", "Последние добавленные is displayed")
+            Log.e("test $testNumber assert", "${OrderBy.BY_ID_DESC.orderByRus} is displayed")
             composeTestRule
                 .onNodeWithText(list[2].visibleTitleWithRating)
                 .assertIsDisplayed()
             Log.e("test $testNumber assert", "${list[2].visibleTitleWithRating} is displayed")
             isOnline = false
             composeTestRule
-                .onNodeWithTag("searchButton")
+                .onNodeWithTag(SEARCH_BUTTON)
                 .performClick()
-            Log.e("test $testNumber click", "searchButton")
+            Log.e("test $testNumber click", SEARCH_BUTTON)
             composeTestRule.waitFor(timeout)
             composeTestRule
-                .onNodeWithText("Ошибка получения данных")
+                .onNodeWithText(stringConst.fetchDataError)
                 .assertIsDisplayed()
-            Log.e("test $testNumber assert", "Ошибка получения данных is displayed")
+            Log.e("test $testNumber assert", "${stringConst.fetchDataError} получения данных is displayed")
             isOnline = true
             composeTestRule
-                .onNodeWithTag("searchForTextField")
+                .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
                 .performTextReplacement("Ло")
             Log.e("test $testNumber input", "Ло")
             composeTestRule
-                .onNodeWithTag("searchButton")
+                .onNodeWithTag(SEARCH_BUTTON)
                 .performClick()
-            Log.e("test $testNumber click", "searchButton")
+            Log.e("test $testNumber click", SEARCH_BUTTON)
             composeTestRule.waitFor(timeout)
 
             list = search("Ло", OrderBy.BY_ID_DESC)
@@ -457,22 +488,22 @@ class ExampleInstrumentedTest {
                 .assertIsDisplayed()
             Log.e("test $testNumber assert", "${list[2].visibleTitleWithRating} is displayed")
             composeTestRule
-                .onNodeWithText("Последние добавленные")
+                .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
                 .performClick()
-            Log.e("test $testNumber click", "Последние добавленные")
+            Log.e("test $testNumber click", OrderBy.BY_ID_DESC.orderByRus)
             composeTestRule.waitFor(timeout)
             composeTestRule
-                .onNodeWithText("По исполнителю")
-                .assertIsDisplayed()
-            Log.e("test $testNumber assert", "По исполнителю is displayed")
+                .onAllNodesWithText(OrderBy.BY_ID_DESC.orderByRus)
+                .assertCountEquals(2)
+            Log.e("test $testNumber assert", "${OrderBy.BY_ID_DESC.orderByRus} count is 2")
             composeTestRule
-                .onNodeWithText("По названию")
+                .onNodeWithText(OrderBy.BY_ARTIST.orderByRus)
                 .assertIsDisplayed()
-            Log.e("test $testNumber assert", "По названию is displayed")
+            Log.e("test $testNumber assert", "${OrderBy.BY_ARTIST.orderByRus} is displayed")
             composeTestRule
-                .onNodeWithText("По названию")
+                .onNodeWithText(OrderBy.BY_TITLE.orderByRus)
                 .performClick()
-            Log.e("test $testNumber click", "По названию")
+            Log.e("test $testNumber click", OrderBy.BY_TITLE.orderByRus)
             composeTestRule.waitFor(timeout)
 
             list = search("Ло", OrderBy.BY_TITLE)
@@ -484,24 +515,53 @@ class ExampleInstrumentedTest {
                 .assertIsDisplayed()
             Log.e("test $testNumber assert", "${list[2].visibleTitleWithRating} is displayed")
 
+            Log.e("test $testNumber assert", "${list[2].visibleTitleWithRating} is displayed")
             composeTestRule
-                .onNodeWithTag("searchForTextField")
+                .onNodeWithText(OrderBy.BY_TITLE.orderByRus)
+                .performClick()
+            Log.e("test $testNumber click", OrderBy.BY_ID_DESC.orderByRus)
+            composeTestRule.waitFor(timeout)
+            composeTestRule
+                .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
+                .assertIsDisplayed()
+            Log.e("test $testNumber assert", "${OrderBy.BY_ID_DESC.orderByRus} is displayed")
+            composeTestRule
+                .onAllNodesWithText(OrderBy.BY_TITLE.orderByRus)
+                .assertCountEquals(2)
+            Log.e("test $testNumber assert", "${OrderBy.BY_TITLE.orderByRus} count is 2")
+            composeTestRule
+                .onNodeWithText(OrderBy.BY_ARTIST.orderByRus)
+                .performClick()
+            Log.e("test $testNumber click", OrderBy.BY_ARTIST.orderByRus)
+            composeTestRule.waitFor(timeout)
+
+            list = search("Ло", OrderBy.BY_ARTIST)
+            titleList = list.map { "${it.artist} - ${it.title}" }
+            Log.e("test $testNumber list", titleList.toString())
+
+            composeTestRule
+                .onNodeWithText(list[2].visibleTitleWithRating)
+                .assertIsDisplayed()
+            Log.e("test $testNumber assert", "${list[2].visibleTitleWithRating} is displayed")
+
+            composeTestRule
+                .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
                 .performTextReplacement("Хзщшг")
             Log.e("test $testNumber input", "Хзщшг")
             composeTestRule
-                .onNodeWithTag("searchButton")
+                .onNodeWithTag(SEARCH_BUTTON)
                 .performClick()
-            Log.e("test $testNumber click", "searchButton")
+            Log.e("test $testNumber click", SEARCH_BUTTON)
             composeTestRule.waitFor(timeout)
             composeTestRule
-                .onNodeWithTag("searchProgress")
+                .onNodeWithTag(SEARCH_PROGRESS)
                 .assertIsDisplayed()
-            Log.e("test $testNumber assert", "searchProgress is displayed")
+            Log.e("test $testNumber assert", "$SEARCH_PROGRESS is displayed")
             composeTestRule.waitFor(8000L)
             composeTestRule
-                .onNodeWithText("Список пуст")
+                .onNodeWithText(stringConst.listIsEmpty)
                 .assertIsDisplayed()
-            Log.e("test $testNumber assert", "Список пуст is displayed")
+            Log.e("test $testNumber assert", "${stringConst.listIsEmpty} is displayed")
         }
     }
 
@@ -515,9 +575,9 @@ class ExampleInstrumentedTest {
             Log.e("test $testNumber list", titleList.toString())
 
             composeTestRule
-                .onNodeWithTag("drawerButtonMain")
+                .onNodeWithTag(DRAWER_BUTTON_MAIN)
                 .performClick()
-            Log.e("test $testNumber click", "drawerButtonMain")
+            Log.e("test $testNumber click", DRAWER_BUTTON_MAIN)
             composeTestRule.waitFor(timeout)
             composeTestRule
                 .onNodeWithText(ARTIST_CLOUD_SONGS)
@@ -539,55 +599,78 @@ class ExampleInstrumentedTest {
                 .assertIsDisplayed()
             Log.e("test $testNumber assert", "${list[2].visibleTitleWithArtistAndRating} is displayed")
             composeTestRule
-                .onNodeWithTag("cloudSongTextViewer")
+                .onNodeWithTag(CLOUD_SONG_TEXT_VIEWER)
                 .assertIsDisplayed()
-            Log.e("test $testNumber assert", "cloud viewer is displayed")
+            Log.e("test $testNumber assert", "$CLOUD_SONG_TEXT_VIEWER is displayed")
 
             composeTestRule
-                .onAllNodesWithTag("musicButton")
+                .onAllNodesWithTag(MUSIC_BUTTON)
                 .assertCountEquals(2)
-            Log.e("test $testNumber assert", "musicButton count is 2")
+            Log.e("test $testNumber assert", "$MUSIC_BUTTON count is 2")
 
             composeTestRule
-                .onNodeWithTag("downloadButton")
+                .onNodeWithTag(DOWNLOAD_BUTTON)
                 .assertIsDisplayed()
-            Log.e("test $testNumber assert", "downloadButton is displayed")
-
+            Log.e("test $testNumber assert", "$DOWNLOAD_BUTTON is displayed")
             composeTestRule
-                .onNodeWithTag("warningButton")
-                .assertIsDisplayed()
-            Log.e("test $testNumber assert", "warningButton is displayed")
-            composeTestRule
-                .onNodeWithTag("warningButton")
+                .onNodeWithTag(DOWNLOAD_BUTTON)
                 .performClick()
-            Log.e("test $testNumber click", "warningButton")
+            Log.e("test $testNumber click", DOWNLOAD_BUTTON)
+            composeTestRule.waitFor(timeout)
+            assert(
+                songRepo
+                    .getSongsByArtistAsList(list[2].artist)
+                    .map { it.title }
+                    .contains(list[2].title)
+            )
+            Log.e("test $testNumber assert", "${list[2].artist} contains ${list[2].title}")
+            assert(
+                songRepo
+                    .getSongsByArtistAsList(ARTIST_FAVORITE)
+                    .map { it.title }
+                    .contains(list[2].title)
+            )
+            Log.e("test $testNumber assert", "$ARTIST_FAVORITE contains ${list[2].title}")
+
+            composeTestRule
+                .onNodeWithTag(WARNING_BUTTON)
+                .assertIsDisplayed()
+            Log.e("test $testNumber assert", "$WARNING_BUTTON is displayed")
+            composeTestRule
+                .onNodeWithTag(WARNING_BUTTON)
+                .performClick()
+            Log.e("test $testNumber click", WARNING_BUTTON)
             composeTestRule.waitFor(timeout)
 
             composeTestRule
-                .onNodeWithText("Ок")
+                .onNodeWithText(stringConst.sendWarningText)
                 .assertIsDisplayed()
-            Log.e("test $testNumber assert", "Ок is displayed")
+            Log.e("test $testNumber assert", "${stringConst.sendWarningText} is displayed")
             composeTestRule
-                .onNodeWithText("Отмена")
+                .onNodeWithText(stringConst.ok)
                 .assertIsDisplayed()
-            Log.e("test $testNumber assert", "Отмена is displayed")
+            Log.e("test $testNumber assert", "${stringConst.ok} is displayed")
             composeTestRule
-                .onNodeWithText("Отмена")
+                .onNodeWithText(stringConst.cancel)
+                .assertIsDisplayed()
+            Log.e("test $testNumber assert", "${stringConst.cancel} is displayed")
+            composeTestRule
+                .onNodeWithText(stringConst.cancel)
                 .performClick()
-            Log.e("test $testNumber click", "Отмена")
+            Log.e("test $testNumber click", stringConst.cancel)
             composeTestRule.waitFor(timeout)
 
             var cloudSong = list[2]
             cloudSong.likeCount += 1
 
             composeTestRule
-                .onNodeWithTag("likeButton")
+                .onNodeWithTag(LIKE_BUTTON)
                 .assertIsDisplayed()
-            Log.e("test $testNumber assert", "likeButton is displayed")
+            Log.e("test $testNumber assert", "$LIKE_BUTTON is displayed")
             composeTestRule
-                .onNodeWithTag("likeButton")
+                .onNodeWithTag(LIKE_BUTTON)
                 .performClick()
-            Log.e("test $testNumber click", "likeButton")
+            Log.e("test $testNumber click", LIKE_BUTTON)
             composeTestRule.waitFor(timeout)
             composeTestRule
                 .onNodeWithText(cloudSong.visibleTitleWithArtistAndRating)
@@ -595,14 +678,14 @@ class ExampleInstrumentedTest {
             Log.e("test $testNumber assert", "${cloudSong.visibleTitleWithArtistAndRating} is displayed")
 
             composeTestRule
-                .onNodeWithTag("numberLabel")
+                .onNodeWithTag(NUMBER_LABEL)
                 .assertTextContains("3 /", substring = true)
-            Log.e("test $testNumber assert", "numberLabel starts with 3 /")
+            Log.e("test $testNumber assert", "$NUMBER_LABEL contains '3 /'")
 
             composeTestRule
-                .onNodeWithTag("rightButton")
+                .onNodeWithTag(RIGHT_BUTTON)
                 .performClick()
-            Log.e("test $testNumber click", "rightButton")
+            Log.e("test $testNumber click", RIGHT_BUTTON)
             composeTestRule.waitFor(timeout)
 
             composeTestRule
@@ -610,21 +693,21 @@ class ExampleInstrumentedTest {
                 .assertIsDisplayed()
             Log.e("test $testNumber assert", "${list[3].visibleTitleWithArtistAndRating} is displayed")
             composeTestRule
-                .onNodeWithTag("numberLabel")
+                .onNodeWithTag(NUMBER_LABEL)
                 .assertTextContains("4 /", substring = true)
-            Log.e("test $testNumber assert", "numberLabel starts with 4 /")
+            Log.e("test $testNumber assert", "$NUMBER_LABEL contains '4 /'")
 
             cloudSong = list[3]
             cloudSong.dislikeCount += 1
 
             composeTestRule
-                .onNodeWithTag("dislikeButton")
+                .onNodeWithTag(DISLIKE_BUTTON)
                 .assertIsDisplayed()
-            Log.e("test $testNumber assert", "dislikeButton is displayed")
+            Log.e("test $testNumber assert", "$DISLIKE_BUTTON is displayed")
             composeTestRule
-                .onNodeWithTag("dislikeButton")
+                .onNodeWithTag(DISLIKE_BUTTON)
                 .performClick()
-            Log.e("test $testNumber click", "dislikeButton")
+            Log.e("test $testNumber click", DISLIKE_BUTTON)
             composeTestRule.waitFor(timeout)
             composeTestRule
                 .onNodeWithText(cloudSong.visibleTitleWithArtistAndRating)
@@ -632,9 +715,9 @@ class ExampleInstrumentedTest {
             Log.e("test $testNumber assert", "${cloudSong.visibleTitleWithArtistAndRating} is displayed")
 
             composeTestRule
-                .onNodeWithTag("leftButton")
+                .onNodeWithTag(LEFT_BUTTON)
                 .performClick()
-            Log.e("test $testNumber click", "leftButton")
+            Log.e("test $testNumber click", LEFT_BUTTON)
             composeTestRule.waitFor(timeout)
 
             composeTestRule
@@ -642,14 +725,14 @@ class ExampleInstrumentedTest {
                 .assertIsDisplayed()
             Log.e("test $testNumber assert", "${list[2].visibleTitleWithArtistAndRating} is displayed")
             composeTestRule
-                .onNodeWithTag("numberLabel")
+                .onNodeWithTag(NUMBER_LABEL)
                 .assertTextContains("3 /", substring = true)
-            Log.e("test $testNumber assert", "numberLabel starts with 3 /")
+            Log.e("test $testNumber assert", "$NUMBER_LABEL contains '3 /'")
 
             composeTestRule
-                .onNodeWithTag("backButton")
+                .onNodeWithTag(BACK_BUTTON)
                 .performClick()
-            Log.e("test $testNumber click", "backButton")
+            Log.e("test $testNumber click", BACK_BUTTON)
             composeTestRule.waitFor(5000)
 
             composeTestRule
@@ -657,6 +740,131 @@ class ExampleInstrumentedTest {
                 .assertIsDisplayed()
             Log.e("test $testNumber assert", "${list[2].visibleTitleWithRating} is displayed")
         }
+    }
+
+    @Test
+    fun test5_addSong() {
+        val testNumber = 5
+
+        composeTestRule
+            .onNodeWithTag(DRAWER_BUTTON_MAIN)
+            .performClick()
+        Log.e("test $testNumber click", DRAWER_BUTTON_MAIN)
+        composeTestRule.waitFor(timeout)
+        composeTestRule
+            .onNodeWithText(ARTIST_ADD_SONG)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$ARTIST_ADD_SONG is displayed")
+        composeTestRule
+            .onNodeWithText(ARTIST_ADD_SONG)
+            .performClick()
+        Log.e("test $testNumber click", ARTIST_ADD_SONG)
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule
+            .onNodeWithText(stringConst.save)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.save} is displayed")
+
+        composeTestRule
+            .onNodeWithTag(TEXT_FIELD_ARTIST)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$TEXT_FIELD_ARTIST is displayed")
+        composeTestRule
+            .onNodeWithTag(TEXT_FIELD_ARTIST)
+            .performTextReplacement("Artist")
+        Log.e("test $testNumber input", "Artist")
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule
+            .onNodeWithTag(TEXT_FIELD_TITLE)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$TEXT_FIELD_TITLE is displayed")
+        composeTestRule
+            .onNodeWithTag(TEXT_FIELD_TITLE)
+            .performTextReplacement("Title")
+        Log.e("test $testNumber input", "Title")
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule
+            .onNodeWithTag(TEXT_FIELD_TEXT)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$TEXT_FIELD_TEXT is displayed")
+        composeTestRule
+            .onNodeWithTag(TEXT_FIELD_TEXT)
+            .performTextReplacement("Text")
+        Log.e("test $testNumber input", "Text")
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule
+            .onNodeWithText(stringConst.save)
+            .performClick()
+        Log.e("test $testNumber click", stringConst.save)
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule
+            .onNodeWithText(stringConst.uploadToCloudTitle)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.uploadToCloudTitle} is displayed")
+        composeTestRule
+            .onNodeWithText(stringConst.uploadToCloudMessage)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.uploadToCloudMessage} is displayed")
+        composeTestRule
+            .onNodeWithText(stringConst.ok)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.ok} is displayed")
+        composeTestRule
+            .onNodeWithText(stringConst.cancel)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.cancel} is displayed")
+        composeTestRule
+            .onNodeWithText(stringConst.cancel)
+            .performClick()
+        Log.e("test $testNumber click", stringConst.cancel)
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule
+            .onNodeWithText("Title (Artist)")
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "'Title (Artist)' is displayed")
+        composeTestRule
+            .onNodeWithTag(SONG_TEXT_VIEWER)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$SONG_TEXT_VIEWER is displayed")
+
+        composeTestRule
+            .onNodeWithTag(TRASH_BUTTON)
+            .performClick()
+        Log.e("test $testNumber click", TRASH_BUTTON)
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule
+            .onNodeWithText(stringConst.songToTrashTitle)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.songToTrashTitle} is displayed")
+        composeTestRule
+            .onNodeWithText(stringConst.songToTrashMessage)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.songToTrashMessage} is displayed")
+        composeTestRule
+            .onNodeWithText(stringConst.ok)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.ok} is displayed")
+        composeTestRule
+            .onNodeWithText(stringConst.cancel)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.cancel} is displayed")
+        composeTestRule
+            .onNodeWithText(stringConst.ok)
+            .performClick()
+        Log.e("test $testNumber click", stringConst.ok)
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule
+            .onNodeWithText(stringConst.listIsEmpty)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.listIsEmpty} is displayed")
     }
 }
 
@@ -668,4 +876,19 @@ fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.waitFor(time: Lo
     } catch (e: ComposeTimeoutException) {
         Log.e("test wait", "timeout")
     }
+}
+
+class StringConst @Inject constructor(
+    @ApplicationContext context: Context
+) {
+    val ok = context.getString(R.string.ok)
+    val cancel = context.getString(R.string.cancel)
+    val listIsEmpty = context.getString(R.string.label_placeholder)
+    val fetchDataError = context.getString(R.string.label_error_placeholder)
+    val sendWarningText = context.getString(R.string.send_warning_text)
+    val songToTrashTitle = context.getString(R.string.dialog_song_to_trash_title)
+    val songToTrashMessage = context.getString(R.string.dialog_song_to_trash_message)
+    val save = context.getString(R.string.save)
+    val uploadToCloudTitle = context.getString(R.string.dialog_upload_to_cloud_title)
+    val uploadToCloudMessage = context.getString(R.string.dialog_upload_to_cloud_message)
 }
