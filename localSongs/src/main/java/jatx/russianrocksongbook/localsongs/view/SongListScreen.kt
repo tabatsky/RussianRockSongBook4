@@ -25,8 +25,10 @@ import jatx.russianrocksongbook.model.data.*
 import jatx.russianrocksongbook.model.domain.Song
 import jatx.russianrocksongbook.model.preferences.ScalePow
 import jatx.russianrocksongbook.model.preferences.Theme
+import jatx.russianrocksongbook.testing.*
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import jatx.russianrocksongbook.whatsnewdialog.view.WhatsNewDialog
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 private const val MAX_ARTIST_LENGTH_LANDSCAPE = 12
@@ -156,7 +158,7 @@ private fun SongListBody(
         val wasOrientationChanged by localViewModel.wasOrientationChanged.collectAsState()
         val needScroll by localViewModel.needScroll.collectAsState()
         LazyColumn(
-            modifier = Modifier.testTag("songListLazyColumn"),
+            modifier = Modifier.testTag(SONG_LIST_LAZY_COLUMN),
             state = listState
         ) {
             itemsIndexed(songList) { index, song ->
@@ -173,6 +175,9 @@ private fun SongListBody(
         if (wasOrientationChanged || needScroll) {
             val scrollPosition by localViewModel.scrollPosition.collectAsState()
             LaunchedEffect(Unit) {
+                if (TestingConfig.isTesting) {
+                    delay(100L)
+                }
                 listState.scrollToItem(scrollPosition)
                 localViewModel.updateNeedScroll(false)
             }
@@ -249,7 +254,7 @@ private fun SongTextMenuBody(
     }
 
     LazyColumn(
-        modifier = Modifier.testTag("menuLazyColumn")
+        modifier = Modifier.testTag(MENU_LAZY_COLUMN)
     ) {
         items(artistList) { artist ->
             ArtistItem(artist, fontSizeSp, theme) {
@@ -316,7 +321,7 @@ private fun SongListNavigationIcon(
 ) {
     CommonIconButton(
         resId = R.drawable.ic_drawer,
-        testTag = testTag ?: "drawerButtonMain",
+        testTag = testTag ?: DRAWER_BUTTON_MAIN,
         onClick = onClick
     )
 }

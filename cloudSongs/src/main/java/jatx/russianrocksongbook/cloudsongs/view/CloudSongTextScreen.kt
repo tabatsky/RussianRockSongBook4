@@ -36,6 +36,7 @@ import jatx.russianrocksongbook.model.domain.CloudSong
 import jatx.russianrocksongbook.model.preferences.ListenToMusicVariant
 import jatx.russianrocksongbook.model.preferences.ScalePow
 import jatx.russianrocksongbook.model.preferences.Theme
+import jatx.russianrocksongbook.testing.*
 import kotlinx.coroutines.launch
 
 private val CLOUD_SONG_TEXT_APP_BAR_WIDTH = 96.dp
@@ -319,20 +320,20 @@ private fun CloudSongTextActions(
 
     CommonIconButton(
         resId = R.drawable.ic_left,
-        testTag = "leftButton"
+        testTag = LEFT_BUTTON
     ) {
         cloudViewModel.prevCloudSong()
         onCloudSongChanged()
     }
     Text(
-        modifier = Modifier.testTag("numberLabel"),
+        modifier = Modifier.testTag(NUMBER_LABEL),
         text = "${position + 1} / $count",
         color = Color.Black,
         fontSize = 20.sp
     )
     CommonIconButton(
         resId = R.drawable.ic_right,
-        testTag = "rightButton"
+        testTag = RIGHT_BUTTON
     ) {
         cloudViewModel.nextCloudSong()
         onCloudSongChanged()
@@ -347,7 +348,7 @@ private fun CloudSongTextViewer(
     onWordClick: (Word) -> Unit
 ) {
     AndroidView(
-        modifier = Modifier.testTag("cloudSongTextViewer"),
+        modifier = Modifier.testTag(CLOUD_SONG_TEXT_VIEWER),
         factory = { context ->
             ClickableWordsTextView(context)
         },

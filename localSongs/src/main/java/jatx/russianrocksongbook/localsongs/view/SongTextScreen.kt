@@ -18,7 +18,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -38,6 +37,7 @@ import jatx.russianrocksongbook.model.domain.Song
 import jatx.russianrocksongbook.model.preferences.ListenToMusicVariant
 import jatx.russianrocksongbook.model.preferences.ScalePow
 import jatx.russianrocksongbook.model.preferences.Theme
+import jatx.russianrocksongbook.testing.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -349,7 +349,7 @@ private fun SongTextActions(
     }
     CommonIconButton(
         resId = R.drawable.ic_left,
-        testTag = "leftButton"
+        testTag = LEFT_BUTTON
     ) {
         localViewModel.prevSong()
         onSongChanged()
@@ -357,21 +357,21 @@ private fun SongTextActions(
     if (isFavorite) {
         CommonIconButton(
             resId = R.drawable.ic_delete,
-            testTag = "deleteFromFavoriteButton"
+            testTag = DELETE_FROM_FAVORITE_BUTTON
         ) {
             localViewModel.setFavorite(false)
         }
     } else {
         CommonIconButton(
             resId = R.drawable.ic_star,
-            testTag = "addToFavoriteButton"
+            testTag = ADD_TO_FAVORITE_BUTTON
         ) {
             localViewModel.setFavorite(true)
         }
     }
     CommonIconButton(
         resId = R.drawable.ic_right,
-        testTag = "rightButton"
+        testTag = RIGHT_BUTTON
     ) {
         localViewModel.nextSong()
         onSongChanged()
@@ -387,7 +387,7 @@ private fun SongTextEditor(
 ) {
     BasicTextField(
         modifier = Modifier
-            .testTag("songTextEditor")
+            .testTag(SONG_TEXT_EDITOR)
             .fillMaxWidth(),
         value = text,
         onValueChange = onTextChange,
@@ -416,7 +416,7 @@ private fun SongTextViewer(
     onWordClick: (Word) -> Unit
 ) {
     AndroidView(
-        modifier = Modifier.testTag("songTextViewer"),
+        modifier = Modifier.testTag(SONG_TEXT_VIEWER),
         factory = { context ->
             ClickableWordsTextView(context)
         },

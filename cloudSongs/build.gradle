@@ -83,6 +83,7 @@ dependencies {
     implementation project(':viewmodel')
     implementation project(':commonview')
 
+    implementation project(':testing')
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
