@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -28,6 +29,7 @@ import jatx.russianrocksongbook.model.data.ARTIST_DONATION
 import jatx.russianrocksongbook.model.preferences.*
 import jatx.russianrocksongbook.settings.R
 import jatx.russianrocksongbook.settings.viewmodel.SettingsViewModel
+import jatx.russianrocksongbook.testing.*
 
 @Composable
 fun SettingsScreen(settingsViewModel: SettingsViewModel = viewModel()) {
@@ -414,6 +416,7 @@ private fun ThemeRow(
                 .weight(1.0f)
                 .height(60.dp),
             theme = theme,
+            testTag = THEME_SPINNER,
             fontSize = fontSize,
             valueList = valueList,
             initialPosition = settings.theme.ordinal,
@@ -436,7 +439,7 @@ private fun FontScaleRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = stringResource(id = R.string.text_scale),
+            text = stringResource(id = R.string.font_scale),
             modifier = Modifier
                 .weight(1.0f)
                 .padding(10.dp),
@@ -451,6 +454,7 @@ private fun FontScaleRow(
                 .weight(1.0f)
                 .height(60.dp),
             theme = theme,
+            testTag = FONT_SCALE_SPINNER,
             fontSize = fontSize,
             valueList = valueList,
             initialPosition = settings.commonFontScaleEnum.ordinal,
@@ -498,6 +502,7 @@ private fun DefaultArtistRow(
                 .weight(1.0f)
                 .height(60.dp),
             theme = theme,
+            testTag = DEFAULT_ARTIST_SPINNER,
             fontSize = fontSize,
             valueList = valueList,
             initialPosition = initialPosition,
@@ -537,6 +542,7 @@ private fun OrientationRow(
                 .weight(1.0f)
                 .height(60.dp),
             theme = theme,
+            testTag = ORIENTATION_SPINNER,
             fontSize = fontSize,
             valueList = valueList,
             initialPosition = settings.orientation.ordinal,
@@ -574,6 +580,7 @@ private fun ListenToMusicVariantRow(
                 .weight(1.0f)
                 .height(60.dp),
             theme = theme,
+            testTag = LISTEN_TO_MUSIC_VARIANT_SPINNER,
             fontSize = fontSize,
             valueList = valueList,
             initialPosition = settings.listenToMusicVariant.ordinal,
@@ -608,6 +615,7 @@ private fun ScrollSpeedRow(
         TextField(
             value = text,
             modifier = Modifier
+                .testTag(TEXT_FIELD_SCROLL_SPEED)
                 .weight(1.0f)
                 .height(60.dp),
             colors = TextFieldDefaults

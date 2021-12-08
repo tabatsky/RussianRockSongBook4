@@ -42,6 +42,15 @@ const val TITLE_3 = "17 лет"
 const val TITLE_4 = "Поплачь о нем"
 const val TITLE_5 = "Над мертвым городом сон"
 
+const val ARTIST_NEW = "Новый исполнитель"
+const val TITLE_NEW = "Новая песня"
+val TEXT_NEW = """
+    Какой-то
+    Текст песни
+    С какими-то
+    Аккордами
+""".trimIndent()
+
 class HiltTestRunner : AndroidJUnitRunner() {
     override fun newApplication(
         cl: ClassLoader?,
@@ -772,8 +781,8 @@ class ExampleInstrumentedTest {
         Log.e("test $testNumber assert", "$TEXT_FIELD_ARTIST is displayed")
         composeTestRule
             .onNodeWithTag(TEXT_FIELD_ARTIST)
-            .performTextReplacement("Artist")
-        Log.e("test $testNumber input", "Artist")
+            .performTextReplacement(ARTIST_NEW)
+        Log.e("test $testNumber input", ARTIST_NEW)
         composeTestRule.waitFor(timeout)
 
         composeTestRule
@@ -782,8 +791,8 @@ class ExampleInstrumentedTest {
         Log.e("test $testNumber assert", "$TEXT_FIELD_TITLE is displayed")
         composeTestRule
             .onNodeWithTag(TEXT_FIELD_TITLE)
-            .performTextReplacement("Title")
-        Log.e("test $testNumber input", "Title")
+            .performTextReplacement(TITLE_NEW)
+        Log.e("test $testNumber input", TITLE_NEW)
         composeTestRule.waitFor(timeout)
 
         composeTestRule
@@ -792,8 +801,8 @@ class ExampleInstrumentedTest {
         Log.e("test $testNumber assert", "$TEXT_FIELD_TEXT is displayed")
         composeTestRule
             .onNodeWithTag(TEXT_FIELD_TEXT)
-            .performTextReplacement("Text")
-        Log.e("test $testNumber input", "Text")
+            .performTextReplacement(TEXT_NEW)
+        Log.e("test $testNumber input", TEXT_NEW)
         composeTestRule.waitFor(timeout)
 
         composeTestRule
@@ -825,13 +834,20 @@ class ExampleInstrumentedTest {
         composeTestRule.waitFor(timeout)
 
         composeTestRule
-            .onNodeWithText("Title (Artist)")
+            .onNodeWithText("$TITLE_NEW ($ARTIST_NEW)")
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "'Title (Artist)' is displayed")
         composeTestRule
             .onNodeWithTag(SONG_TEXT_VIEWER)
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "$SONG_TEXT_VIEWER is displayed")
+
+        val song = songRepo.getSongByArtistAndTitle(ARTIST_NEW, TITLE_NEW)
+        assert(song != null)
+        song!!.apply {
+            assert(text == TEXT_NEW)
+        }
+        Log.e("test $testNumber assert", "new song exists and text matches")
 
         composeTestRule
             .onNodeWithTag(TRASH_BUTTON)
@@ -865,6 +881,130 @@ class ExampleInstrumentedTest {
             .onNodeWithText(stringConst.listIsEmpty)
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "${stringConst.listIsEmpty} is displayed")
+        val artists = songRepo.getArtistsAsList()
+        assert(!artists.contains(ARTIST_NEW))
+        Log.e("test $testNumber assert", "new artist deleted")
+    }
+
+    @Test
+    fun test6_settings() {
+        val testNumber = 6
+
+        composeTestRule
+            .onNodeWithTag(SETTINGS_BUTTON)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$SETTINGS_BUTTON is displayed")
+        composeTestRule
+            .onNodeWithTag(SETTINGS_BUTTON)
+            .performClick()
+        Log.e("test $testNumber click", SETTINGS_BUTTON)
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule
+            .onNodeWithText(stringConst.saveAndRestart)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.saveAndRestart} is displayed")
+
+        composeTestRule
+            .onNodeWithText(stringConst.theme)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.theme} is displayed")
+        composeTestRule
+            .onNodeWithTag(THEME_SPINNER)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$THEME_SPINNER is displayed")
+        composeTestRule
+            .onNodeWithTag(THEME_SPINNER)
+            .assertTextEquals(stringConst.themeList[settings.theme.ordinal])
+        Log.e(
+            "test $testNumber assert",
+            "$THEME_SPINNER text is ${stringConst.themeList[settings.theme.ordinal]}"
+        )
+
+        composeTestRule
+            .onNodeWithText(stringConst.fontScale)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.fontScale} is displayed")
+        composeTestRule
+            .onNodeWithTag(FONT_SCALE_SPINNER)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$FONT_SCALE_SPINNER is displayed")
+        composeTestRule
+            .onNodeWithTag(FONT_SCALE_SPINNER)
+            .assertTextEquals(stringConst.fontScaleList[settings.commonFontScaleEnum.ordinal])
+        Log.e(
+            "test $testNumber assert",
+            "$FONT_SCALE_SPINNER text is " +
+                    "${stringConst.fontScaleList[settings.commonFontScaleEnum.ordinal]}"
+        )
+
+        composeTestRule
+            .onNodeWithText(stringConst.defArtist)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.defArtist} is displayed")
+        composeTestRule
+            .onNodeWithTag(DEFAULT_ARTIST_SPINNER)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$DEFAULT_ARTIST_SPINNER is displayed")
+        composeTestRule
+            .onNodeWithTag(DEFAULT_ARTIST_SPINNER)
+            .assertTextEquals(settings.defaultArtist)
+        Log.e(
+            "test $testNumber assert",
+            "$DEFAULT_ARTIST_SPINNER text is ${settings.defaultArtist}"
+        )
+
+        composeTestRule
+            .onNodeWithText(stringConst.orientFix)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.orientFix} is displayed")
+        composeTestRule
+            .onNodeWithTag(ORIENTATION_SPINNER)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$ORIENTATION_SPINNER is displayed")
+        composeTestRule
+            .onNodeWithTag(ORIENTATION_SPINNER)
+            .assertTextEquals(stringConst.orientationList[settings.orientation.ordinal])
+        Log.e(
+            "test $testNumber assert",
+            "$ORIENTATION_SPINNER text is " +
+                    "${stringConst.orientationList[settings.orientation.ordinal]}"
+        )
+
+        composeTestRule
+            .onNodeWithText(stringConst.listenToMusic)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.listenToMusic} is displayed")
+        composeTestRule
+            .onNodeWithTag(LISTEN_TO_MUSIC_VARIANT_SPINNER)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$LISTEN_TO_MUSIC_VARIANT_SPINNER is displayed")
+        composeTestRule
+            .onNodeWithTag(LISTEN_TO_MUSIC_VARIANT_SPINNER)
+            .assertTextEquals(
+                stringConst.listenToMusicVariants[settings.listenToMusicVariant.ordinal]
+            )
+        Log.e(
+            "test $testNumber assert",
+            "$LISTEN_TO_MUSIC_VARIANT_SPINNER text is " +
+                    "${stringConst.listenToMusicVariants[settings.listenToMusicVariant.ordinal]}"
+        )
+
+        composeTestRule
+            .onNodeWithText(stringConst.scrollSpeed)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.scrollSpeed} is displayed")
+        composeTestRule
+            .onNodeWithTag(TEXT_FIELD_SCROLL_SPEED)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$TEXT_FIELD_SCROLL_SPEED is displayed")
+        composeTestRule
+            .onNodeWithTag(TEXT_FIELD_SCROLL_SPEED)
+            .assertTextEquals(settings.scrollSpeed.toString())
+        Log.e(
+            "test $testNumber assert",
+            "$TEXT_FIELD_SCROLL_SPEED text is ${settings.scrollSpeed}"
+        )
     }
 }
 
@@ -891,4 +1031,16 @@ class StringConst @Inject constructor(
     val save = context.getString(R.string.save)
     val uploadToCloudTitle = context.getString(R.string.dialog_upload_to_cloud_title)
     val uploadToCloudMessage = context.getString(R.string.dialog_upload_to_cloud_message)
+    val theme = context.getString(R.string.theme)
+    val fontScale = context.getString(R.string.font_scale)
+    val defArtist = context.getString(R.string.def_artist)
+    val orientFix = context.getString(R.string.orient_fix)
+    val listenToMusic = context.getString(R.string.listen_to_music)
+    val scrollSpeed = context.getString(R.string.scroll_speed)
+    val saveAndRestart = context.getString(R.string.save_and_restart)
+
+    val themeList = context.resources.getStringArray(R.array.theme_list)
+    val fontScaleList = context.resources.getStringArray(R.array.font_scale_list)
+    val orientationList = context.resources.getStringArray(R.array.orientation_list)
+    val listenToMusicVariants = context.resources.getStringArray(R.array.listen_to_music_variants)
 }
