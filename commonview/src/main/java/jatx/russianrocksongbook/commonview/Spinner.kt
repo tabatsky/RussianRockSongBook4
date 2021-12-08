@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import jatx.russianrocksongbook.model.preferences.Theme
@@ -15,6 +16,7 @@ import jatx.russianrocksongbook.model.preferences.Theme
 fun Spinner(
     modifier: Modifier,
     theme: Theme,
+    testTag: String? = null,
     fontSize: TextUnit,
     valueList: Array<String>,
     initialPosition: Int,
@@ -27,8 +29,12 @@ fun Spinner(
         modifier = modifier,
         verticalArrangement = Arrangement.Center
     ) {
+        val modifier = testTag?.let {
+            Modifier.testTag(it)
+        } ?: Modifier
+
         Button(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize(),
             colors = ButtonDefaults
                 .buttonColors(

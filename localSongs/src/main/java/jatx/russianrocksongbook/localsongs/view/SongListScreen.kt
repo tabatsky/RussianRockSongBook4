@@ -275,7 +275,7 @@ private fun SongListActions(
     var expanded by remember { mutableStateOf(false) }
 
     CommonIconButton(
-        testTag = "settingsButton",
+        testTag = SETTINGS_BUTTON,
         resId = R.drawable.ic_settings
     ) {
         println("selected: settings")
