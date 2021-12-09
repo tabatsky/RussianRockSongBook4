@@ -34,6 +34,8 @@ import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+const val EMPTY_LIST_DELAY = 5000L
+
 @Composable
 fun CloudSearchScreen(cloudViewModel: CloudViewModel = viewModel()) {
     val theme = cloudViewModel.settings.theme
@@ -238,7 +240,7 @@ private fun CloudSearchBody(
                 if (!isLaunched) {
                     coroutineScope.launch {
                         isLaunched = true
-                        delay(5000L)
+                        delay(EMPTY_LIST_DELAY)
                         if (itemsAdapter.size == 0) {
                             cloudViewModel.updateListIsEmpty(true)
                         }

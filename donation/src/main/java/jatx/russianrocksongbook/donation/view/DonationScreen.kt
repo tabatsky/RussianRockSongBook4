@@ -93,7 +93,7 @@ private fun DonationBodyPortrait(
                     onClick = {
                         onPurchaseClick(index, false)
                     }) {
-                    Text(text = "Пожертвовать $value\$")
+                    Text(text = donationLabel(value))
                 }
                 Divider(
                     color = theme.colorBg,
@@ -135,7 +135,7 @@ private fun DonationBodyLandscape(
                         onClick = {
                             onPurchaseClick(index, true)
                         }) {
-                        Text(text = "Пожертвовать $value\$")
+                        Text(text = donationLabel(value))
                     }
                     Divider(
                         color = theme.colorBg,
@@ -161,7 +161,7 @@ private fun DonationBodyLandscape(
                         onClick = {
                             onPurchaseClick(index + 4, true)
                         }) {
-                        Text(text = "Пожертвовать $value\$")
+                        Text(text = donationLabel(value))
                     }
                     Divider(
                         color = theme.colorBg,
@@ -172,3 +172,5 @@ private fun DonationBodyLandscape(
         }
     }
 }
+
+fun donationLabel(value: Int) = "Пожертвовать $value\$"

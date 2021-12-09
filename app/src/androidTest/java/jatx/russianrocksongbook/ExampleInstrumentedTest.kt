@@ -12,12 +12,16 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
+import jatx.russianrocksongbook.cloudsongs.view.EMPTY_LIST_DELAY
+import jatx.russianrocksongbook.helpers.DONATIONS
 import jatx.russianrocksongbook.model.data.*
 import jatx.russianrocksongbook.model.data.impl.TestAPIAdapterImpl
 import jatx.russianrocksongbook.model.preferences.ARTIST_KINO
+import jatx.russianrocksongbook.model.preferences.Orientation
 import jatx.russianrocksongbook.model.preferences.Settings
 import jatx.russianrocksongbook.testing.*
 import jatx.russianrocksongbook.view.CurrentScreen
+import jatx.russianrocksongbook.view.donationLabel
 import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Rule
@@ -89,7 +93,10 @@ class ExampleInstrumentedTest {
 
         hiltRule.inject()
 
+        settings.orientation = Orientation.RANDOM
         settings.defaultArtist = ARTIST_KINO
+
+        composeTestRule.activityRule.scenario.recreate()
 
         composeTestRule.setContent {
             CurrentScreen()
@@ -154,6 +161,19 @@ class ExampleInstrumentedTest {
             .onNodeWithText(TITLE_2)
             .assertDoesNotExist()
         Log.e("test $testNumber assert", "$TITLE_2 does not exist")
+        val indexSong2 = songRepo
+            .getSongsByArtistAsList(ARTIST_1)
+            .map { it.title }
+            .indexOf(TITLE_2) - 3
+        composeTestRule
+            .onNodeWithTag(SONG_LIST_LAZY_COLUMN)
+            .performScrollToIndex(indexSong2)
+        Log.e("test $testNumber scroll", "songList to index $indexSong2")
+        composeTestRule.waitFor(timeout)
+        composeTestRule
+            .onNodeWithText(TITLE_2)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$TITLE_2 is displayed")
 
         composeTestRule
             .onNodeWithTag(DRAWER_BUTTON_MAIN)
@@ -182,6 +202,19 @@ class ExampleInstrumentedTest {
             .onNodeWithText(TITLE_4)
             .assertDoesNotExist()
         Log.e("test $testNumber assert", "$TITLE_4 does not exist")
+        val indexSong4 = songRepo
+            .getSongsByArtistAsList(ARTIST_2)
+            .map { it.title }
+            .indexOf(TITLE_4) - 3
+        composeTestRule
+            .onNodeWithTag(SONG_LIST_LAZY_COLUMN)
+            .performScrollToIndex(indexSong4)
+        Log.e("test $testNumber scroll", "songList to index $indexSong4")
+        composeTestRule.waitFor(timeout)
+        composeTestRule
+            .onNodeWithText(TITLE_4)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$TITLE_4 is displayed")
     }
 
     @Test
@@ -566,7 +599,7 @@ class ExampleInstrumentedTest {
                 .onNodeWithTag(SEARCH_PROGRESS)
                 .assertIsDisplayed()
             Log.e("test $testNumber assert", "$SEARCH_PROGRESS is displayed")
-            composeTestRule.waitFor(8000L)
+            composeTestRule.waitFor(EMPTY_LIST_DELAY)
             composeTestRule
                 .onNodeWithText(stringConst.listIsEmpty)
                 .assertIsDisplayed()
@@ -918,7 +951,8 @@ class ExampleInstrumentedTest {
             .assertTextEquals(stringConst.themeList[settings.theme.ordinal])
         Log.e(
             "test $testNumber assert",
-            "$THEME_SPINNER text is ${stringConst.themeList[settings.theme.ordinal]}"
+            "$THEME_SPINNER text is " +
+                    stringConst.themeList[settings.theme.ordinal]
         )
 
         composeTestRule
@@ -935,7 +969,7 @@ class ExampleInstrumentedTest {
         Log.e(
             "test $testNumber assert",
             "$FONT_SCALE_SPINNER text is " +
-                    "${stringConst.fontScaleList[settings.commonFontScaleEnum.ordinal]}"
+                    stringConst.fontScaleList[settings.commonFontScaleEnum.ordinal]
         )
 
         composeTestRule
@@ -968,7 +1002,7 @@ class ExampleInstrumentedTest {
         Log.e(
             "test $testNumber assert",
             "$ORIENTATION_SPINNER text is " +
-                    "${stringConst.orientationList[settings.orientation.ordinal]}"
+                    stringConst.orientationList[settings.orientation.ordinal]
         )
 
         composeTestRule
@@ -987,7 +1021,7 @@ class ExampleInstrumentedTest {
         Log.e(
             "test $testNumber assert",
             "$LISTEN_TO_MUSIC_VARIANT_SPINNER text is " +
-                    "${stringConst.listenToMusicVariants[settings.listenToMusicVariant.ordinal]}"
+                    stringConst.listenToMusicVariants[settings.listenToMusicVariant.ordinal]
         )
 
         composeTestRule
@@ -1005,6 +1039,64 @@ class ExampleInstrumentedTest {
             "test $testNumber assert",
             "$TEXT_FIELD_SCROLL_SPEED text is ${settings.scrollSpeed}"
         )
+    }
+
+    @Test
+    fun test7_donation() {
+        val testNumber = 7
+
+        composeTestRule
+            .onNodeWithTag(DRAWER_BUTTON_MAIN)
+            .performClick()
+        Log.e("test $testNumber click", DRAWER_BUTTON_MAIN)
+        composeTestRule.waitFor(timeout)
+        composeTestRule
+            .onNodeWithText(ARTIST_DONATION)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$ARTIST_DONATION is displayed")
+        composeTestRule
+            .onNodeWithText(ARTIST_DONATION)
+            .performClick()
+        Log.e("test $testNumber click", ARTIST_DONATION)
+        composeTestRule.waitFor(timeout)
+
+        DONATIONS
+            .map { donationLabel(it) }
+            .forEach {
+            composeTestRule
+                .onNodeWithText(it)
+                .assertIsDisplayed()
+            Log.e("test $testNumber assert", "$it is displayed")
+        }
+    }
+
+    @Test
+    fun test8_addArtist() {
+        val testNumber = 8
+
+        composeTestRule
+            .onNodeWithTag(DRAWER_BUTTON_MAIN)
+            .performClick()
+        Log.e("test $testNumber click", DRAWER_BUTTON_MAIN)
+        composeTestRule.waitFor(timeout)
+        composeTestRule
+            .onNodeWithText(ARTIST_ADD_ARTIST)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$ARTIST_ADD_ARTIST is displayed")
+        composeTestRule
+            .onNodeWithText(ARTIST_ADD_ARTIST)
+            .performClick()
+        Log.e("test $testNumber click", ARTIST_ADD_ARTIST)
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule
+            .onNodeWithText(stringConst.addArtistManual)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.addArtistManual} is displayed")
+        composeTestRule
+            .onNodeWithText(stringConst.choose)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.choose} is displayed")
     }
 }
 
@@ -1038,6 +1130,8 @@ class StringConst @Inject constructor(
     val listenToMusic = context.getString(R.string.listen_to_music)
     val scrollSpeed = context.getString(R.string.scroll_speed)
     val saveAndRestart = context.getString(R.string.save_and_restart)
+    val addArtistManual = context.getString(R.string.add_artist_manual)
+    val choose = context.getString(R.string.choose)
 
     val themeList = context.resources.getStringArray(R.array.theme_list)
     val fontScaleList = context.resources.getStringArray(R.array.font_scale_list)
