@@ -9,10 +9,12 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
@@ -25,6 +27,7 @@ import jatx.russianrocksongbook.model.data.*
 import jatx.russianrocksongbook.model.domain.Song
 import jatx.russianrocksongbook.model.preferences.ScalePow
 import jatx.russianrocksongbook.model.preferences.Theme
+import jatx.russianrocksongbook.model.preferences.colorBlack
 import jatx.russianrocksongbook.testing.*
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import jatx.russianrocksongbook.whatsnewdialog.view.WhatsNewDialog
@@ -134,6 +137,34 @@ private fun SongListContent(
                 SongListBody()
 
                 WhatsNewDialog()
+            }
+        }
+
+        var showVoiceHelpDialog by remember { mutableStateOf(false) }
+        val onVoiceButtonClick = {
+            showVoiceHelpDialog = true
+        }
+
+        VoiceButton(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(20.dp),
+            theme = theme,
+            onClick = onVoiceButtonClick
+        )
+
+        if (showVoiceHelpDialog) {
+            if (localViewModel.settings.voiceHelpDontAsk) {
+                showVoiceHelpDialog = false
+                localViewModel.speechRecognize(true)
+            } else {
+                VoiceHelpDialog(
+                    localViewModel = localViewModel,
+                    onConfirm = localViewModel::speechRecognize,
+                    onDismiss = {
+                        showVoiceHelpDialog = false
+                    }
+                )
             }
         }
     }
@@ -375,4 +406,22 @@ private fun ArtistItem(
         color = theme.colorBg
     )
     Divider(color = theme.colorCommon, thickness = 1.dp)
+}
+
+@Composable
+private fun VoiceButton(modifier: Modifier, theme: Theme, onClick: () -> Unit) {
+    FloatingActionButton(
+        modifier = modifier,
+        backgroundColor = theme.colorCommon,
+        contentColor = colorBlack,
+        onClick = onClick
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_voice),
+            contentDescription = "",
+            modifier = Modifier
+                .size(80.dp)
+                .padding(20.dp)
+        )
+    }
 }

@@ -66,6 +66,11 @@ class SongRepositoryImpl @Inject constructor(
             songDao.getSongsByArtistAsList(artist))
             .map { Song(it) }
 
+    override fun getSongsByVoiceSearch(voiceSearch: String) =
+        songDao
+            .getSongsByVoiceSearch(voiceSearch)
+            .map { Song(it) }
+
     override fun getSongByArtistAndPosition(artist: String, position: Int) =
         (if (artist == ARTIST_FAVORITE)
             songDao.getSongByPositionFavorite(position)

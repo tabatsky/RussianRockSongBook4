@@ -17,4 +17,5 @@ class Callbacks @Inject constructor() {
     var onArtistSelected: (String) -> Unit = {}
     var onSongByArtistAndTitleSelected: (String, String) -> Unit =
         { artist, title -> }
+    var onSpeechRecognize: () -> Unit = {}
 }
