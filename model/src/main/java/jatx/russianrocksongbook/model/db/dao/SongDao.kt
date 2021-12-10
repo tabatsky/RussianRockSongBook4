@@ -31,6 +31,26 @@ interface SongDao {
     fun getSongsByArtistAsList(artist: String): List<SongEntity>
 
     @Query("""
+        SELECT * FROM songs WHERE
+        REPLACE(
+            REPLACE(
+                REPLACE(
+                    REPLACE(LOWER(artist || title), ' ', '')
+                , '.', '')
+            , ',', '')
+        , '-', '') = :voiceSearch
+        OR 
+        REPLACE(
+            REPLACE(
+                REPLACE(
+                    REPLACE(LOWER(title), ' ', '')
+                , '.', '')
+            , ',', '')
+        , '-', '') = :voiceSearch
+    """)
+    fun getSongsByVoiceSearch(voiceSearch: String): List<SongEntity>
+
+    @Query("""
         SELECT * FROM songs WHERE favorite=1 AND deleted=0 
         ORDER BY artist||title LIMIT 1 OFFSET :position
         """)

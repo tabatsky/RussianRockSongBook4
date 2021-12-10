@@ -9,4 +9,19 @@
     <string name="dialog_song_to_trash_message">Песня будет удалена из локальной базы данных</string>
 
     <string name="song_is_out_of_the_box">Нельзя залить в облако: данный вариант аккордов поставляется вместе с приложением либо был сохранен из облака</string>
+
+    <string name="dialog_voice_help">
+        Примеры голосовых команд:
+        \n
+        \nОткрой группу \"Наутилус Помпилиус\".
+        \nОткрой песню \"Звезда по имени Солнце\".
+        \nОткрой песню \"Чайф - Белая ворона\".
+        \nОткрой раздел \"Аккорды онлайн\".
+        \n
+    </string>
+    <string name="accept">Продолжить</string>
+
+    <string name="toast_artist_not_found">Группа не найдена</string>
+    <string name="toast_song_not_found">Песня не найдена</string>
+    <string name="toast_unknown_command">Неизвестная команда</string>
 </resources>

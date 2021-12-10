@@ -21,6 +21,7 @@ const val KEY_SCROLL_SPEED = "scrollSpeed"
 const val KEY_YOUTUBE_MUSIC_DONT_ASK = "youtubeMusicDontAsk"
 const val KEY_VK_MUSIC_DONT_ASK = "vkMusicDontAsk"
 const val KEY_YANDEX_MUSIC_DONT_ASK = "yandexMusicDontAsk"
+const val KEY_VOICE_HELP_DONT_ASK = "voiceHelpDontAsk"
 
 const val ARTIST_KINO = "Кино"
 
@@ -125,7 +126,6 @@ class Settings @Inject constructor(
             editor.commit()
         }
 
-
     var yandexMusicDontAsk: Boolean
         get() = sp.getBoolean(KEY_YANDEX_MUSIC_DONT_ASK, false)
         set(value) {
@@ -133,7 +133,16 @@ class Settings @Inject constructor(
             editor.putBoolean(KEY_YANDEX_MUSIC_DONT_ASK, value)
             editor.commit()
         }
-    
+
+    var voiceHelpDontAsk: Boolean
+        get() = sp.getBoolean(KEY_VOICE_HELP_DONT_ASK, false)
+        set(value) {
+            val editor = sp.edit()
+            editor.putBoolean(KEY_VOICE_HELP_DONT_ASK, value)
+            editor.commit()
+        }
+
+
     var commonFontScale: Float
         get() = sp.getFloat(KEY_FONT_SCALE, 1.0f)
         set(value) {

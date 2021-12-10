@@ -1,6 +1,7 @@
 package jatx.russianrocksongbook.model.data
 
 import io.reactivex.Flowable
+import jatx.russianrocksongbook.model.db.entities.SongEntity
 import jatx.russianrocksongbook.model.domain.CloudSong
 import jatx.russianrocksongbook.model.domain.Song
 
@@ -16,6 +17,7 @@ interface SongRepository {
     fun getCountByArtist(artist: String): Int
     fun getSongsByArtist(artist: String): Flowable<List<Song>>
     fun getSongsByArtistAsList(artist: String): List<Song>
+    fun getSongsByVoiceSearch(voiceSearch: String): List<Song>
     fun getSongByArtistAndPosition(artist: String, position: Int): Flowable<Song>
     fun getSongByArtistAndTitle(artist: String, title: String): Song?
     fun setFavorite(favorite: Boolean, artist: String, title: String)

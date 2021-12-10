@@ -5,14 +5,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.model.api.gson.STATUS_ERROR
 import jatx.russianrocksongbook.model.api.gson.STATUS_SUCCESS
 import jatx.russianrocksongbook.model.data.*
 import jatx.russianrocksongbook.model.domain.Song
-import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
-import jatx.russianrocksongbook.viewmodel.MvvmViewModel
-import jatx.russianrocksongbook.viewmodel.R
-import jatx.russianrocksongbook.viewmodel.ViewModelParam
+import jatx.russianrocksongbook.viewmodel.*
 import jatx.russianrocksongbook.viewmodel.interfaces.Local
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
@@ -216,6 +214,11 @@ class LocalViewModel @Inject constructor(
         }
     }
 
+    fun speechRecognize(dontAskMore: Boolean) {
+        settings.voiceHelpDontAsk = dontAskMore
+        callbacks.onSpeechRecognize()
+    }
+
     override fun sendWarningLocal(comment: String) {
         currentSong.value?.apply {
             sendWarningDisposable?.apply {
@@ -268,4 +271,58 @@ class LocalViewModel @Inject constructor(
     fun showDevSite() {
         callbacks.onShowDevSite()
     }
+
+    fun parseVoiceCommand(command: String) {
+        Log.e("voice command", command)
+
+        if (command.lowercase().startsWith("открой группу ")
+                .or(command.lowercase().startsWith("открой раздел "))
+        ) {
+            val voiceArtist = command
+                .lowercase()
+                .replace("открой группу ", "")
+                .replace("открой раздел ", "")
+                .voiceFilter()
+            val allArtists = songRepo.getArtistsAsList()
+            val index = allArtists
+                .map { it.voiceFilter() }
+                .indexOf(voiceArtist)
+            if (index < 0) {
+                showToast(R.string.toast_artist_not_found)
+            } else {
+                selectArtist(allArtists[index]) { selectSong(0) }
+            }
+        } else if (command.lowercase().startsWith("открой песню ")) {
+            val voiceSearch = command
+                .lowercase()
+                .replace("открой песню ", "")
+                .voiceFilter()
+            val songList = songRepo.getSongsByVoiceSearch(voiceSearch)
+            if (songList.isEmpty()) {
+                showToast(R.string.toast_song_not_found)
+            } else {
+                val currentArtist = localStateHolder.commonStateHolder.currentArtist.value
+                val currentIndex = songList
+                    .map { it.artist.voiceFilter() }
+                    .indexOf(currentArtist.voiceFilter())
+                val index = if (currentIndex < 0) 0 else currentIndex
+
+                callbacks.onSongByArtistAndTitleSelected(songList[index].artist, songList[index].title)
+            }
+        } else {
+            showToast(R.string.toast_unknown_command)
+        }
+    }
 }
+
+fun String.voiceFilter() = lowercase()
+    .filter {
+        (it in 'а'..'я')
+            .or(it == 'ё')
+            .or(it in 'a'..'z')
+            .or(it in '0'..'9')
+    }
+    .replace("fleur", "flёur")
+    .replace("знаки", "znaki")
+    .replace("мультфильмы", "мультfильмы")
+    .replace("пожертвование", "пожертвования")

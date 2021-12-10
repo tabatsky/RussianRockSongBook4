@@ -16,9 +16,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import jatx.russianrocksongbook.addartist.viewmodel.AddArtistViewModel
 import jatx.russianrocksongbook.cloudsongs.viewmodel.CloudViewModel
 import jatx.russianrocksongbook.debug.AppDebug
-import jatx.russianrocksongbook.helpers.AddSongsFromDirHelper
-import jatx.russianrocksongbook.helpers.DonationHelper
-import jatx.russianrocksongbook.helpers.MusicHelper
+import jatx.russianrocksongbook.helpers.*
 import jatx.russianrocksongbook.localsongs.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.model.data.OrderBy
 import jatx.russianrocksongbook.model.preferences.Orientation
@@ -41,6 +39,8 @@ class MainActivity : ComponentActivity() {
     lateinit var musicHelper: MusicHelper
     @Inject
     lateinit var addSongsFromDirHelper: AddSongsFromDirHelper
+    @Inject
+    lateinit var voiceCommandHelper: VoiceCommandHelper
 
     @DelicateCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,6 +82,7 @@ class MainActivity : ComponentActivity() {
         mvvmViewModel.callbacks.onArtistSelected = ::selectArtist
         mvvmViewModel.callbacks.onSongByArtistAndTitleSelected =
             ::selectSongByArtistAndTitle
+        mvvmViewModel.callbacks.onSpeechRecognize = ::speechRecognize
     }
 
     @Inject
@@ -113,12 +114,18 @@ class MainActivity : ComponentActivity() {
         Runtime.getRuntime().exit(0)
     }
 
+    private fun speechRecognize() {
+        val localViewModel: LocalViewModel by viewModels()
+        voiceCommandHelper.recognizeVoiceCommand {
+            localViewModel.parseVoiceCommand(it)
+        }
+    }
+
     private fun showDevSite() {
         startActivity(
             Intent(
                 Intent.ACTION_VIEW,
-                Uri.parse("http://tabatsky.ru"
-                )
+                Uri.parse("http://tabatsky.ru")
             )
         )
     }
