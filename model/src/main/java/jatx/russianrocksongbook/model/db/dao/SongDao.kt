@@ -1,6 +1,7 @@
 package jatx.russianrocksongbook.model.db.dao
 
 import androidx.room.*
+import androidx.sqlite.db.SupportSQLiteQuery
 import io.reactivex.Flowable
 import jatx.russianrocksongbook.model.db.entities.SongEntity
 
@@ -30,25 +31,8 @@ interface SongDao {
     @Query("SELECT * FROM songs WHERE artist=:artist AND deleted=0")
     fun getSongsByArtistAsList(artist: String): List<SongEntity>
 
-    @Query("""
-        SELECT * FROM songs WHERE
-        REPLACE(
-            REPLACE(
-                REPLACE(
-                    REPLACE(LOWER(artist || title), ' ', '')
-                , '.', '')
-            , ',', '')
-        , '-', '') = :voiceSearch
-        OR 
-        REPLACE(
-            REPLACE(
-                REPLACE(
-                    REPLACE(LOWER(title), ' ', '')
-                , '.', '')
-            , ',', '')
-        , '-', '') = :voiceSearch
-    """)
-    fun getSongsByVoiceSearch(voiceSearch: String): List<SongEntity>
+    @RawQuery
+    fun getSongsRawQuery(query: SupportSQLiteQuery): List<SongEntity>
 
     @Query("""
         SELECT * FROM songs WHERE favorite=1 AND deleted=0 

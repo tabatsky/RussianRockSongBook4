@@ -1,5 +1,6 @@
 package jatx.russianrocksongbook.model.data.impl
 
+import androidx.sqlite.db.SimpleSQLiteQuery
 import dagger.hilt.components.SingletonComponent
 import io.reactivex.Flowable
 import it.czerwinski.android.hilt.annotations.BoundTo
@@ -19,6 +20,20 @@ val predefinedList = listOf(
     ARTIST_CLOUD_SONGS,
     ARTIST_DONATION
 )
+
+private val voiceSearchQuery: String
+    get() {
+        val symbolList = listOf(" ", "(", ")", "!", ".", ",", "-")
+        var replacement1 = "LOWER(artist || title)"
+        var replacement2 = "LOWER(title)"
+        symbolList.forEach {
+            replacement1 = "REPLACE($replacement1, '$it', '')"
+            replacement2 = "REPLACE($replacement2, '$it', '')"
+        }
+        return "SELECT * FROM songs WHERE $replacement1 = ? OR $replacement2 = ?"
+    }
+
+private val voiceSearchQueryCached = voiceSearchQuery
 
 @Singleton
 @BoundTo(supertype = SongRepository::class, component = SingletonComponent::class)
@@ -66,10 +81,12 @@ class SongRepositoryImpl @Inject constructor(
             songDao.getSongsByArtistAsList(artist))
             .map { Song(it) }
 
-    override fun getSongsByVoiceSearch(voiceSearch: String) =
-        songDao
-            .getSongsByVoiceSearch(voiceSearch)
+    override fun getSongsByVoiceSearch(voiceSearch: String): List<Song> {
+        val query = SimpleSQLiteQuery(voiceSearchQueryCached, arrayOf(voiceSearch, voiceSearch))
+        return songDao
+            .getSongsRawQuery(query)
             .map { Song(it) }
+    }
 
     override fun getSongByArtistAndPosition(artist: String, position: Int) =
         (if (artist == ARTIST_FAVORITE)

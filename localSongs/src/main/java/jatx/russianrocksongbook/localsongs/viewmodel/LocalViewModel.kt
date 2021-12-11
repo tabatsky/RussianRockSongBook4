@@ -6,6 +6,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import jatx.russianrocksongbook.localsongs.R
+import jatx.russianrocksongbook.localsongs.util.aliases
+import jatx.russianrocksongbook.localsongs.util.voiceFilter
 import jatx.russianrocksongbook.model.api.gson.STATUS_ERROR
 import jatx.russianrocksongbook.model.api.gson.STATUS_SUCCESS
 import jatx.russianrocksongbook.model.data.*
@@ -285,8 +287,7 @@ class LocalViewModel @Inject constructor(
                 .voiceFilter()
             val allArtists = songRepo.getArtistsAsList()
             val index = allArtists
-                .map { it.voiceFilter() }
-                .indexOf(voiceArtist)
+                .indexOfFirst { voiceArtist.aliases().contains(it.voiceFilter()) }
             if (index < 0) {
                 showToast(R.string.toast_artist_not_found)
             } else {
@@ -297,14 +298,16 @@ class LocalViewModel @Inject constructor(
                 .lowercase()
                 .replace("открой песню ", "")
                 .voiceFilter()
-            val songList = songRepo.getSongsByVoiceSearch(voiceSearch)
+            val songList = arrayListOf<Song>()
+            voiceSearch.aliases().forEach {
+                songList.addAll(songRepo.getSongsByVoiceSearch(it))
+            }
             if (songList.isEmpty()) {
                 showToast(R.string.toast_song_not_found)
             } else {
                 val currentArtist = localStateHolder.commonStateHolder.currentArtist.value
                 val currentIndex = songList
-                    .map { it.artist.voiceFilter() }
-                    .indexOf(currentArtist.voiceFilter())
+                    .indexOfFirst { it.artist.voiceFilter() == currentArtist.voiceFilter() }
                 val index = if (currentIndex < 0) 0 else currentIndex
 
                 callbacks.onSongByArtistAndTitleSelected(songList[index].artist, songList[index].title)
@@ -315,14 +318,3 @@ class LocalViewModel @Inject constructor(
     }
 }
 
-fun String.voiceFilter() = lowercase()
-    .filter {
-        (it in 'а'..'я')
-            .or(it == 'ё')
-            .or(it in 'a'..'z')
-            .or(it in '0'..'9')
-    }
-    .replace("fleur", "flёur")
-    .replace("знаки", "znaki")
-    .replace("мультфильмы", "мультfильмы")
-    .replace("пожертвование", "пожертвования")
