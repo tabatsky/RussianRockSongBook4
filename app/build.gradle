@@ -88,6 +88,7 @@ dependencies {
     implementation project(':model')
     implementation project(':viewmodel')
     implementation project(':helpers')
+    implementation project(':voiceCommands')
 
     implementation project(':commonview')
     implementation project(':whatsNewDialog')

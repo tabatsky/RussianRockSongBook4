@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.localsongs.util
+package jatx.russianrocksongbook.voicecommands.util
 
 fun String.voiceFilter() = lowercase()
     .replace("ё", "е")
@@ -25,5 +25,6 @@ private val artistAliases = hashMapOf (
     "мультфильмы" to listOf("мультfильмы", "мультфильмы"),
     "князь" to listOf("княzz", "князь"),
     "люмен" to listOf("lumen", "люмен"),
+    "черный" to listOf("черный", "чёрный"),
     "пожертвование" to listOf("пожертвования", "пожертвование")
 )

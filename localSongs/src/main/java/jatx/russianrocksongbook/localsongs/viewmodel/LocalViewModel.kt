@@ -6,14 +6,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import jatx.russianrocksongbook.localsongs.R
-import jatx.russianrocksongbook.localsongs.util.aliases
-import jatx.russianrocksongbook.localsongs.util.voiceFilter
 import jatx.russianrocksongbook.model.api.gson.STATUS_ERROR
 import jatx.russianrocksongbook.model.api.gson.STATUS_SUCCESS
 import jatx.russianrocksongbook.model.data.*
 import jatx.russianrocksongbook.model.domain.Song
 import jatx.russianrocksongbook.viewmodel.*
 import jatx.russianrocksongbook.viewmodel.interfaces.Local
+import jatx.russianrocksongbook.voicecommands.util.aliases
+import jatx.russianrocksongbook.voicecommands.util.voiceFilter
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 

@@ -28,6 +28,7 @@
             <option value="$PROJECT_DIR$/start" />
             <option value="$PROJECT_DIR$/testing" />
             <option value="$PROJECT_DIR$/viewmodel" />
+            <option value="$PROJECT_DIR$/voiceCommands" />
             <option value="$PROJECT_DIR$/whatsNewDialog" />
           </set>
         </option>
