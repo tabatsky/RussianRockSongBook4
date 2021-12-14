@@ -156,6 +156,9 @@ class SongRepositoryImpl @Inject constructor(
 
     override fun deleteWrongArtist(artist: String) = songDao.deleteWrongArtist(artist)
 
+    override fun patchWrongArtist(wrongArtist: String, actualArtist: String) =
+        songDao.patchWrongArtist(wrongArtist, actualArtist)
+
     private fun updateSongText(song: Song) {
         songDao.updateSongText(song.artist, song.title, song.text, song.outOfTheBox)
     }

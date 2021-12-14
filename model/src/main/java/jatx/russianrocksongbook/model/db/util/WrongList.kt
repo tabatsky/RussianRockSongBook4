@@ -17,7 +17,11 @@ val wrongSongs = listOf(
 
 val wrongArtists = listOf(
     "Аккорды от пользователей",
-    "Люмен"
+)
+
+val wrongArtistsPatch = mapOf(
+    "Люмен" to "Lumen",
+    "Черный кофе" to "Чёрный Кофе"
 )
 
 fun deleteWrongSongs(songRepo: SongRepository) {
@@ -29,5 +33,11 @@ fun deleteWrongSongs(songRepo: SongRepository) {
 fun deleteWrongArtists(songRepo: SongRepository) {
     wrongArtists.forEach {
         songRepo.deleteWrongArtist(it)
+    }
+}
+
+fun patchWrongArtists(songRepo: SongRepository) {
+    wrongArtistsPatch.keys.forEach { key ->
+        songRepo.patchWrongArtist(key, wrongArtistsPatch[key]!!)
     }
 }
