@@ -76,7 +76,10 @@ interface SongDao {
     @Query("DELETE FROM songs WHERE artist=:artist AND favorite=0 AND outOfTheBox=1")
     fun deleteWrongArtist(artist: String)
 
-    @Query("UPDATE songs SET artist=:actualArtist WHERE artist=:wrongArtist AND outOfTheBox=1")
+    @Query("""
+        UPDATE OR REPLACE songs SET artist=:actualArtist
+        WHERE artist=:wrongArtist AND outOfTheBox=1
+    """)
     fun patchWrongArtist(wrongArtist: String, actualArtist: String)
 
     @Update
