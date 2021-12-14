@@ -1,10 +1,7 @@
 package jatx.russianrocksongbook.start.viewmodel
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jatx.russianrocksongbook.model.db.util.applySongPatches
-import jatx.russianrocksongbook.model.db.util.deleteWrongArtists
-import jatx.russianrocksongbook.model.db.util.deleteWrongSongs
-import jatx.russianrocksongbook.model.db.util.fillDbFromJSON
+import jatx.russianrocksongbook.model.db.util.*
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import jatx.russianrocksongbook.viewmodel.ViewModelParam
@@ -35,6 +32,7 @@ class StartViewModel @Inject constructor(
                 }
                 deleteWrongSongs(songRepo)
                 deleteWrongArtists(songRepo)
+                patchWrongArtists(songRepo)
                 applySongPatches(songRepo)
             }
             setAppWasUpdated(true)

@@ -30,5 +30,6 @@ interface SongRepository {
     fun insertReplaceUserSong(song: Song): Song
     fun deleteWrongSong(artist: String, title: String)
     fun deleteWrongArtist(artist: String)
+    fun patchWrongArtist(wrongArtist: String, actualArtist: String)
 }
 
