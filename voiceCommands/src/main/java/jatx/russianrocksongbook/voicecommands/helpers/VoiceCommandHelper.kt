@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.helpers
+package jatx.russianrocksongbook.voicecommands.helpers
 
 import android.app.Activity
 import android.content.Context
