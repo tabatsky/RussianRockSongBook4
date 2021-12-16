@@ -1,6 +1,6 @@
 package jatx.russianrocksongbook.model.domain
 
-import jatx.russianrocksongbook.model.api.gson.JsonSong
+import jatx.russianrocksongbook.model.api.gson.SongGson
 import jatx.russianrocksongbook.model.db.entities.SongEntity
 import jatx.russianrocksongbook.model.domain.util.HashingUtil
 
@@ -16,12 +16,12 @@ data class Song(
     var outOfTheBox: Boolean = true,
     var origTextMD5: String = ""
 ) {
-    constructor(artist: String, jsonSong: JsonSong):
+    constructor(artist: String, songGson: SongGson):
             this(
                 artist = artist,
-                title = jsonSong.title,
-                text = jsonSong.text,
-                origTextMD5 = songTextHash(jsonSong.text)
+                title = songGson.title,
+                text = songGson.text,
+                origTextMD5 = songTextHash(songGson.text)
             )
 
     constructor(songEntity: SongEntity):
