@@ -31,9 +31,9 @@ import jatx.clickablewordstextview.ClickableWordsTextView
 import jatx.clickablewordstextview.OnWordClickListener
 import jatx.clickablewordstextview.Word
 import jatx.russianrocksongbook.commonview.*
+import jatx.russianrocksongbook.domain.Song
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.viewmodel.LocalViewModel
-import jatx.russianrocksongbook.model.domain.Song
 import jatx.russianrocksongbook.model.preferences.ListenToMusicVariant
 import jatx.russianrocksongbook.model.preferences.ScalePow
 import jatx.russianrocksongbook.model.preferences.Theme

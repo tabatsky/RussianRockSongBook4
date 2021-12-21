@@ -5,11 +5,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import jatx.russianrocksongbook.data.*
 import jatx.russianrocksongbook.localsongs.R
-import jatx.russianrocksongbook.model.api.gson.STATUS_ERROR
-import jatx.russianrocksongbook.model.api.gson.STATUS_SUCCESS
-import jatx.russianrocksongbook.model.data.*
-import jatx.russianrocksongbook.model.domain.Song
+import jatx.russianrocksongbook.data.result.STATUS_ERROR
+import jatx.russianrocksongbook.data.result.STATUS_SUCCESS
+import jatx.russianrocksongbook.domain.Song
 import jatx.russianrocksongbook.viewmodel.*
 import jatx.russianrocksongbook.viewmodel.interfaces.Local
 import jatx.russianrocksongbook.voicecommands.util.aliases
@@ -95,9 +95,7 @@ class LocalViewModel @Inject constructor(
         localStateHolder.currentSongPosition.value = position
         localStateHolder.isAutoPlayMode.value = false
         localStateHolder.isEditorMode.value = false
-        selectSongDisposable?.apply {
-            if (!this.isDisposed) this.dispose()
-        }
+
         selectSongDisposable = songRepo
             .getSongByArtistAndPosition(currentArtist.value, position)
             .subscribeOn(Schedulers.io())

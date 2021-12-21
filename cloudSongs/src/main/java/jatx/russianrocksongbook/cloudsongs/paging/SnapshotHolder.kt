@@ -2,7 +2,7 @@ package jatx.russianrocksongbook.cloudsongs.paging
 
 import androidx.paging.ItemSnapshotList
 import dagger.hilt.android.scopes.ActivityRetainedScoped
-import jatx.russianrocksongbook.model.domain.CloudSong
+import jatx.russianrocksongbook.domain.CloudSong
 import javax.inject.Inject
 
 @ActivityRetainedScoped

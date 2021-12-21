@@ -1,7 +1,7 @@
 package jatx.russianrocksongbook.cloudsongs.paging
 
 import androidx.paging.compose.LazyPagingItems
-import jatx.russianrocksongbook.model.domain.CloudSong
+import jatx.russianrocksongbook.domain.CloudSong
 
 class ItemsAdapter(
     private val snapshotHolder: SnapshotHolder,

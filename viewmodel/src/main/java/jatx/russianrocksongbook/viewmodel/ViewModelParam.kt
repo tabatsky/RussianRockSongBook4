@@ -3,11 +3,11 @@ package jatx.russianrocksongbook.viewmodel
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityRetainedScoped
-import jatx.russianrocksongbook.model.data.FileSystemAdapter
-import jatx.russianrocksongbook.model.data.SongBookAPIAdapter
-import jatx.russianrocksongbook.model.data.SongRepository
+import jatx.russianrocksongbook.data.SongBookAPIAdapter
+import jatx.russianrocksongbook.data.SongRepository
+import jatx.russianrocksongbook.filesystem.data.FileSystemAdapter
 import jatx.russianrocksongbook.model.preferences.Settings
-import jatx.russianrocksongbook.model.preferences.UserInfo
+import jatx.russianrocksongbook.preferences.UserInfo
 import javax.inject.Inject
 
 @ActivityRetainedScoped
