@@ -1,7 +1,7 @@
 package jatx.russianrocksongbook.domain
 
-import java.text.DecimalFormat
-import java.text.NumberFormat
+const val thumbUp = "\uD83D\uDC4D"
+const val thumbDown = "\uD83D\uDC4E"
 
 data class CloudSong(
     val songId: Int = -1,
@@ -20,13 +20,7 @@ data class CloudSong(
 
     val visibleTitle = "$title${if (variant == 0) "" else " ($variant)"}"
 
-//    val formattedRating: String
-//        get() = formatRating(raiting)
-
-    val thumbUp = "\uD83D\uDC4D"
-    val thumbDown = "\uD83D\uDC4E"
-
-    val formattedRating: String
+    private val formattedRating: String
         get() = "$thumbUp$likeCount $thumbDown$dislikeCount"
 
     val visibleTitleWithRating: String
@@ -34,9 +28,4 @@ data class CloudSong(
 
     val visibleTitleWithArtistAndRating: String
         get() = "$visibleTitle | $artist | $formattedRating"
-}
-
-fun formatRating(rating: Double): String {
-    val formatter: NumberFormat = DecimalFormat("###0.000")
-    return formatter.format(rating)
 }
