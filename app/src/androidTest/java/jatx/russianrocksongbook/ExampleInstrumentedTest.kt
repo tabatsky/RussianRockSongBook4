@@ -13,12 +13,12 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import jatx.russianrocksongbook.cloudsongs.view.EMPTY_LIST_DELAY
+import jatx.russianrocksongbook.data.*
 import jatx.russianrocksongbook.helpers.DONATIONS
-import jatx.russianrocksongbook.model.data.*
-import jatx.russianrocksongbook.model.data.impl.TestAPIAdapterImpl
 import jatx.russianrocksongbook.model.preferences.ARTIST_KINO
 import jatx.russianrocksongbook.model.preferences.Orientation
 import jatx.russianrocksongbook.model.preferences.Settings
+import jatx.russianrocksongbook.networking.data.impl.TestAPIAdapterImpl
 import jatx.russianrocksongbook.testing.*
 import jatx.russianrocksongbook.view.CurrentScreen
 import jatx.russianrocksongbook.view.donationLabel

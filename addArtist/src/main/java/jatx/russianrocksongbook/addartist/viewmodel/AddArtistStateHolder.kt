@@ -1,7 +1,7 @@
 package jatx.russianrocksongbook.addartist.viewmodel
 
 import dagger.hilt.android.scopes.ActivityRetainedScoped
-import jatx.russianrocksongbook.model.domain.Song
+import jatx.russianrocksongbook.domain.Song
 import jatx.russianrocksongbook.viewmodel.CommonStateHolder
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject

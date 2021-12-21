@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import android.util.Log
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import jatx.russianrocksongbook.model.data.SongBookAPIAdapter
-import jatx.russianrocksongbook.model.debug.exceptionToString
-import jatx.russianrocksongbook.model.domain.AppCrash
+import jatx.russianrocksongbook.data.SongBookAPIAdapter
+import jatx.russianrocksongbook.debug.debug.exceptionToString
+import jatx.russianrocksongbook.debug.domain.AppCrash
 
 object AppDebug {
     fun setAppCrashHandler(songBookAPIAdapter: SongBookAPIAdapter) {

@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import jatx.russianrocksongbook.model.data.ARTIST_FAVORITE
+import jatx.russianrocksongbook.data.ARTIST_FAVORITE
 import jatx.russianrocksongbook.viewmodel.interfaces.Cloud
 import jatx.russianrocksongbook.viewmodel.interfaces.Local
 import kotlinx.coroutines.flow.asStateFlow
@@ -82,6 +82,7 @@ open class MvvmViewModel @Inject constructor(
             getArtistsDisposable?.apply {
                 if (!this.isDisposed) this.dispose()
             }
+            songRepo
             getArtistsDisposable = songRepo
                 .getArtists()
                 .observeOn(AndroidSchedulers.mainThread())

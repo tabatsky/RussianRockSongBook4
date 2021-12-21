@@ -3,11 +3,11 @@ package jatx.russianrocksongbook.cloudsongs.paging
 import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import jatx.russianrocksongbook.model.api.gson.STATUS_SUCCESS
-import jatx.russianrocksongbook.model.data.OrderBy
-import jatx.russianrocksongbook.model.data.SongBookAPIAdapter
-import jatx.russianrocksongbook.model.debug.exceptionToString
-import jatx.russianrocksongbook.model.domain.CloudSong
+import jatx.russianrocksongbook.data.OrderBy
+import jatx.russianrocksongbook.data.SongBookAPIAdapter
+import jatx.russianrocksongbook.data.result.STATUS_SUCCESS
+import jatx.russianrocksongbook.debug.debug.exceptionToString
+import jatx.russianrocksongbook.domain.CloudSong
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -29,7 +29,7 @@ class CloudSongSource(
                         .pagedSearch(searchFor, orderBy, nextPage)
 
                 if (result.status == STATUS_SUCCESS) {
-                    val data = (result.data ?: listOf()).map { CloudSong(it) }
+                    val data = (result.data ?: listOf())
 
                     LoadResult.Page(
                         data = data,

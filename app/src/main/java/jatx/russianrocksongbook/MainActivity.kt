@@ -15,13 +15,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jatx.russianrocksongbook.addartist.viewmodel.AddArtistViewModel
 import jatx.russianrocksongbook.cloudsongs.viewmodel.CloudViewModel
+import jatx.russianrocksongbook.data.OrderBy
 import jatx.russianrocksongbook.debug.AppDebug
 import jatx.russianrocksongbook.helpers.*
 import jatx.russianrocksongbook.localsongs.viewmodel.LocalViewModel
-import jatx.russianrocksongbook.model.data.OrderBy
 import jatx.russianrocksongbook.model.preferences.Orientation
 import jatx.russianrocksongbook.model.preferences.Settings
-import jatx.russianrocksongbook.model.version.Version
+import jatx.russianrocksongbook.preferences.Version
 import jatx.russianrocksongbook.start.viewmodel.StartViewModel
 import jatx.russianrocksongbook.view.CurrentScreen
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant

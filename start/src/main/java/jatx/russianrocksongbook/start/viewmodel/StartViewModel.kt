@@ -1,7 +1,7 @@
 package jatx.russianrocksongbook.start.viewmodel
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jatx.russianrocksongbook.model.db.util.*
+import jatx.russianrocksongbook.database.db.util.*
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import jatx.russianrocksongbook.viewmodel.ViewModelParam

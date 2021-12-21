@@ -19,10 +19,16 @@
             <option value="$PROJECT_DIR$/clickablewordstextview" />
             <option value="$PROJECT_DIR$/cloudSongs" />
             <option value="$PROJECT_DIR$/commonview" />
+            <option value="$PROJECT_DIR$/data" />
+            <option value="$PROJECT_DIR$/database" />
+            <option value="$PROJECT_DIR$/debug" />
+            <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/donation" />
+            <option value="$PROJECT_DIR$/filesystem" />
             <option value="$PROJECT_DIR$/helpers" />
             <option value="$PROJECT_DIR$/localSongs" />
-            <option value="$PROJECT_DIR$/model" />
+            <option value="$PROJECT_DIR$/networking" />
+            <option value="$PROJECT_DIR$/preferences" />
             <option value="$PROJECT_DIR$/settings" />
             <option value="$PROJECT_DIR$/sideAppBar" />
             <option value="$PROJECT_DIR$/start" />

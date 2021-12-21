@@ -5,9 +5,9 @@ import androidx.paging.PagingData
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import jatx.russianrocksongbook.cloudsongs.paging.CONFIG
 import jatx.russianrocksongbook.cloudsongs.paging.CloudSongSource
-import jatx.russianrocksongbook.model.data.OrderBy
-import jatx.russianrocksongbook.model.data.SongBookAPIAdapter
-import jatx.russianrocksongbook.model.domain.CloudSong
+import jatx.russianrocksongbook.data.OrderBy
+import jatx.russianrocksongbook.data.SongBookAPIAdapter
+import jatx.russianrocksongbook.domain.CloudSong
 import jatx.russianrocksongbook.viewmodel.CommonStateHolder
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

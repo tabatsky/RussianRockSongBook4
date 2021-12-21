@@ -21,10 +21,10 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.commonview.*
+import jatx.russianrocksongbook.data.*
+import jatx.russianrocksongbook.domain.Song
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.viewmodel.LocalViewModel
-import jatx.russianrocksongbook.model.data.*
-import jatx.russianrocksongbook.model.domain.Song
 import jatx.russianrocksongbook.model.preferences.ScalePow
 import jatx.russianrocksongbook.model.preferences.Theme
 import jatx.russianrocksongbook.model.preferences.colorBlack
