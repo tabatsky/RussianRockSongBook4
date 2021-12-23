@@ -1,6 +1,7 @@
 package jatx.russianrocksongbook.localsongs.view
 
 import android.graphics.Typeface
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.MutatePriority
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -44,6 +45,7 @@ import kotlinx.coroutines.launch
 
 const val interval = 250L
 
+@ExperimentalFoundationApi
 @Composable
 fun SongTextScreen(localViewModel: LocalViewModel = viewModel()) {
     val song by localViewModel.currentSong.collectAsState()
@@ -545,6 +547,7 @@ private fun SongTextLazyColumn(
 }
 
 
+@ExperimentalFoundationApi
 @Composable
 private fun SongTextPanel(
     W: Dp,
@@ -612,6 +615,7 @@ private fun SongTextPanel(
     }
 }
 
+@ExperimentalFoundationApi
 @Composable
 private fun SongTextPanelContent(
     W: Dp,

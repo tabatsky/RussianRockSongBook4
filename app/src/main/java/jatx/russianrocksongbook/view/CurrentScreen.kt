@@ -1,5 +1,6 @@
 package jatx.russianrocksongbook.view
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -10,6 +11,7 @@ import jatx.russianrocksongbook.localsongs.view.SongTextScreen
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 
+@ExperimentalFoundationApi
 @Composable
 fun CurrentScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
     when (mvvmViewModel.currentScreenVariant.collectAsState().value) {

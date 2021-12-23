@@ -1,8 +1,9 @@
 package jatx.russianrocksongbook.commonview
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -10,7 +11,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.model.preferences.Theme
 import jatx.russianrocksongbook.testing.*
 
+@ExperimentalFoundationApi
 @Composable
 fun YandexMusicButton(size: Dp, theme: Theme, onClick: () -> Unit) =
     FooterButton(
@@ -28,6 +29,7 @@ fun YandexMusicButton(size: Dp, theme: Theme, onClick: () -> Unit) =
         onClick = onClick
     )
 
+@ExperimentalFoundationApi
 @Composable
 fun VkMusicButton(size: Dp, theme: Theme, onClick: () -> Unit) =
     FooterButton(
@@ -38,6 +40,7 @@ fun VkMusicButton(size: Dp, theme: Theme, onClick: () -> Unit) =
         onClick = onClick
     )
 
+@ExperimentalFoundationApi
 @Composable
 fun YoutubeMusicButton(size: Dp, theme: Theme, onClick: () -> Unit) =
     FooterButton(
@@ -48,6 +51,7 @@ fun YoutubeMusicButton(size: Dp, theme: Theme, onClick: () -> Unit) =
         onClick = onClick
     )
 
+@ExperimentalFoundationApi
 @Composable
 fun UploadButton(size: Dp, theme: Theme, onClick: () -> Unit) =
     FooterButton(
@@ -58,6 +62,7 @@ fun UploadButton(size: Dp, theme: Theme, onClick: () -> Unit) =
         onClick = onClick
     )
 
+@ExperimentalFoundationApi
 @Composable
 fun WarningButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
     FooterButton(
@@ -68,6 +73,7 @@ fun WarningButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
         onClick = onClick
     )
 
+@ExperimentalFoundationApi
 @Composable
 fun TrashButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
     FooterButton(
@@ -78,6 +84,7 @@ fun TrashButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
         onClick = onClick
     )
 
+@ExperimentalFoundationApi
 @Composable
 fun EditButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
     FooterButton(
@@ -88,6 +95,7 @@ fun EditButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
         onClick = onClick
     )
 
+@ExperimentalFoundationApi
 @Composable
 fun SaveButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
     FooterButton(
@@ -98,6 +106,7 @@ fun SaveButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
         onClick = onClick
     )
 
+@ExperimentalFoundationApi
 @Composable
 fun DownloadButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
     FooterButton(
@@ -108,6 +117,7 @@ fun DownloadButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
         onClick = onClick
     )
 
+@ExperimentalFoundationApi
 @Composable
 fun LikeButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
     FooterButton(
@@ -118,6 +128,7 @@ fun LikeButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
         onClick = onClick
     )
 
+@ExperimentalFoundationApi
 @Composable
 fun DislikeButton(
     size: Dp,
@@ -134,6 +145,7 @@ fun DislikeButton(
         onLongClick = onLongClick
     )
 
+@ExperimentalFoundationApi
 @Composable
 private fun FooterButton(
     size: Dp,
@@ -151,12 +163,10 @@ private fun FooterButton(
             .background(theme.colorCommon)
             .width(size)
             .height(size)
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onTap = { onClick() },
-                    onLongPress = { onLongClick() }
-                )
-            }
+            .combinedClickable(
+                onClick = { onClick() },
+                onLongClick = { onLongClick() }
+            )
     ) {
         Icon(
             painter = painterResource(id = resId),

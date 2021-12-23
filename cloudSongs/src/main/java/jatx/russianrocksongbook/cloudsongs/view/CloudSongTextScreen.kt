@@ -2,6 +2,7 @@ package jatx.russianrocksongbook.cloudsongs.view
 
 import android.graphics.Typeface
 import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -41,6 +42,7 @@ import kotlinx.coroutines.launch
 
 private val CLOUD_SONG_TEXT_APP_BAR_WIDTH = 96.dp
 
+@ExperimentalFoundationApi
 @Composable
 fun CloudSongTextScreen(cloudViewModel: CloudViewModel = viewModel()) {
     val position by cloudViewModel.cloudSongPosition.collectAsState()
@@ -437,6 +439,7 @@ private fun CloudSongTextLazyColumn(
 }
 
 
+@ExperimentalFoundationApi
 @Composable
 private fun CloudSongTextPanel(
     W: Dp,
@@ -501,6 +504,7 @@ private fun CloudSongTextPanel(
     }
 }
 
+@ExperimentalFoundationApi
 @Composable
 private fun CloudSongTextPanelContent(
     W: Dp,
