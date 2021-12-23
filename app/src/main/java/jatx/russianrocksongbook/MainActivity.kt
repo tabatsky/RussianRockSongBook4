@@ -11,6 +11,7 @@ import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.ExperimentalFoundationApi
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jatx.russianrocksongbook.addartist.viewmodel.AddArtistViewModel
@@ -43,6 +44,7 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var voiceCommandHelper: VoiceCommandHelper
 
+    @ExperimentalFoundationApi
     @DelicateCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

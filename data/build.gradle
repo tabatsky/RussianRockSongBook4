@@ -43,11 +43,6 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
-    implementation project(path: ':domain')
-    implementation project(path: ':debug')
-    implementation project(path: ':debug')
-    implementation project(path: ':debug')
-    implementation project(path: ':preferences')
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-rxjava2:$room_version"
@@ -61,6 +56,8 @@ dependencies {
     implementation "androidx.documentfile:documentfile:1.0.1"
     implementation 'org.apache.commons:commons-lang3:3.3.2'
 
+    implementation project(':debug')
+    implementation project(':preferences')
     implementation project(':domain')
 
     implementation "com.google.dagger:hilt-android-testing:$hilt_version"
