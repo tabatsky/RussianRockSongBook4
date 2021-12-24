@@ -58,7 +58,6 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
 
     implementation "com.google.dagger:hilt-android:$hilt_version"
-    implementation project(path: ':preferences')
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
     implementation 'it.czerwinski.android.hilt:hilt-extensions:1.2.0'
     kapt 'it.czerwinski.android.hilt:hilt-processor:1.2.0'
@@ -66,13 +65,8 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.9'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
 
-    implementation 'com.google.code.gson:gson:2.8.6'
-
-    implementation project(':preferences')
-    implementation project(':viewmodel')
-    implementation project(':commonview')
+    api project(':preferences')
+    api project(':viewmodel')
+    api project(':commonview')
 }

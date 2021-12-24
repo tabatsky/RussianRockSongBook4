@@ -61,15 +61,10 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.9'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
 
-    implementation 'com.google.code.gson:gson:2.8.6'
-
-    implementation project(':sideAppBar')
-    implementation project(':preferences')
-    implementation project(':viewmodel')
-    implementation project(':commonview')
-    implementation project(':helpers')
+    api project(':sideAppBar')
+    api project(':preferences')
+    api project(':viewmodel')
+    api project(':commonview')
+    api project(':helpers')
 }
