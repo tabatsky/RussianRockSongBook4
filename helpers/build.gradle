@@ -53,5 +53,5 @@ dependencies {
     implementation 'com.android.billingclient:billing:4.0.0'
     implementation 'com.android.billingclient:billing-ktx:4.0.0'
 
-    implementation project(':viewmodel')
+    api project(':viewmodel')
 }

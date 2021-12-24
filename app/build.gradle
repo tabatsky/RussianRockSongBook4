@@ -65,47 +65,17 @@ dependencies {
     implementation 'it.czerwinski.android.hilt:hilt-extensions:1.2.0'
     kapt 'it.czerwinski.android.hilt:hilt-processor:1.2.0'
 
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.9'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    api project(':helpers')
 
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
+    api project(':localSongs')
+    api project(':cloudSongs')
+    api project(':addArtist')
+    api project(':addSong')
+    api project(':donation')
+    api project(':settings')
+    api project(':start')
 
-    implementation 'com.google.code.gson:gson:2.8.6'
-
-    implementation 'com.obsez.android.lib.filechooser:filechooser:1.1.19'
-
-    implementation 'com.android.billingclient:billing:4.0.0'
-    implementation 'com.android.billingclient:billing-ktx:4.0.0'
-
-    implementation project(':sideAppBar')
-    implementation project(':clickablewordstextview')
-    implementation project(':ChordDroidLibrary')
-
-    implementation project(':SynchronousCallAdapterFactory')
-
-    implementation project(':debug')
-    implementation project(':domain')
-    implementation project(':data')
-    implementation project(':database')
-    implementation project(':networking')
-    implementation project(':viewmodel')
-    implementation project(':preferences')
-    implementation project(':helpers')
-    implementation project(':voiceCommands')
-
-    implementation project(':commonview')
-    implementation project(':whatsNewDialog')
-    implementation project(':localSongs')
-    implementation project(':cloudSongs')
-    implementation project(':addArtist')
-    implementation project(':addSong')
-    implementation project(':donation')
-    implementation project(':settings')
-    implementation project(':start')
-
-    implementation project(':testing')
+    api project(':testing')
 
     // testing
 
