@@ -35,9 +35,9 @@ import jatx.russianrocksongbook.commonview.*
 import jatx.russianrocksongbook.domain.Song
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.viewmodel.LocalViewModel
-import jatx.russianrocksongbook.model.preferences.ListenToMusicVariant
-import jatx.russianrocksongbook.model.preferences.ScalePow
-import jatx.russianrocksongbook.model.preferences.Theme
+import jatx.russianrocksongbook.preferences.api.ListenToMusicVariant
+import jatx.russianrocksongbook.preferences.api.ScalePow
+import jatx.russianrocksongbook.preferences.api.Theme
 import jatx.russianrocksongbook.testing.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow

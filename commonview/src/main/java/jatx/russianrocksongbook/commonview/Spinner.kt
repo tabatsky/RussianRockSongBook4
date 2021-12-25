@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
-import jatx.russianrocksongbook.model.preferences.Theme
+import jatx.russianrocksongbook.preferences.api.Theme
 
 @Composable
 fun Spinner(

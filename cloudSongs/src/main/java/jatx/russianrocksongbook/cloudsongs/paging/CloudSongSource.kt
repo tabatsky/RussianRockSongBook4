@@ -3,11 +3,11 @@ package jatx.russianrocksongbook.cloudsongs.paging
 import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import jatx.russianrocksongbook.data.OrderBy
-import jatx.russianrocksongbook.data.SongBookAPIAdapter
-import jatx.russianrocksongbook.data.result.STATUS_SUCCESS
+import jatx.russianrocksongbook.networking.api.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.debug.debug.exceptionToString
 import jatx.russianrocksongbook.domain.CloudSong
+import jatx.russianrocksongbook.networking.api.OrderBy
+import jatx.russianrocksongbook.networking.api.SongBookAPIAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

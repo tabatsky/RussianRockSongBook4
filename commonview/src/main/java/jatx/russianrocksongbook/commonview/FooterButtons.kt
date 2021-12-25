@@ -15,7 +15,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import jatx.russianrocksongbook.model.preferences.Theme
+import jatx.russianrocksongbook.preferences.api.Theme
 import jatx.russianrocksongbook.testing.*
 
 @ExperimentalFoundationApi

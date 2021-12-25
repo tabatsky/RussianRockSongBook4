@@ -3,11 +3,12 @@ package jatx.russianrocksongbook.viewmodel
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityRetainedScoped
-import jatx.russianrocksongbook.data.SongBookAPIAdapter
-import jatx.russianrocksongbook.data.SongRepository
-import jatx.russianrocksongbook.filesystem.data.FileSystemAdapter
-import jatx.russianrocksongbook.model.preferences.Settings
-import jatx.russianrocksongbook.preferences.UserInfo
+import jatx.russianrocksongbook.database.api.SongRepository
+import jatx.russianrocksongbook.filesystem.data.api.FileSystemAdapter
+import jatx.russianrocksongbook.preferences.api.Settings
+import jatx.russianrocksongbook.networking.api.SongBookAPIAdapter
+import jatx.russianrocksongbook.preferences.api.UserInfo
+import jatx.russianrocksongbook.preferences.api.Version
 import javax.inject.Inject
 
 @ActivityRetainedScoped
@@ -18,5 +19,6 @@ class ViewModelParam @Inject constructor(
     @ApplicationContext val context: Context,
     val songRepo: SongRepository,
     val userInfo: UserInfo,
+    val version: Version,
     val fileSystemAdapter: FileSystemAdapter
 )

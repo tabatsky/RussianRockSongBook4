@@ -13,7 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.viewmodel.LocalViewModel
-import jatx.russianrocksongbook.model.preferences.ScalePow
+import jatx.russianrocksongbook.preferences.api.ScalePow
 
 @Composable
 fun VoiceHelpDialog(

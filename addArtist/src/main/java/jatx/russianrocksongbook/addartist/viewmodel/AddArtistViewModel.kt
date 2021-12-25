@@ -5,8 +5,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import jatx.russianrocksongbook.data.result.STATUS_ERROR
-import jatx.russianrocksongbook.data.result.STATUS_SUCCESS
+import jatx.russianrocksongbook.networking.api.result.STATUS_ERROR
+import jatx.russianrocksongbook.networking.api.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.domain.Song
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel

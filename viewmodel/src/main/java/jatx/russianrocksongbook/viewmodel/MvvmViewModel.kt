@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import jatx.russianrocksongbook.data.ARTIST_FAVORITE
+import jatx.russianrocksongbook.database.api.ARTIST_FAVORITE
 import jatx.russianrocksongbook.viewmodel.interfaces.Cloud
 import jatx.russianrocksongbook.viewmodel.interfaces.Local
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,6 +24,7 @@ open class MvvmViewModel @Inject constructor(
     val context = viewModelParam.context
     val songRepo = viewModelParam.songRepo
     val userInfo = viewModelParam.userInfo
+    val version = viewModelParam.version
     val fileSystemAdapter = viewModelParam.fileSystemAdapter
 
     val currentScreenVariant = commonStateHolder

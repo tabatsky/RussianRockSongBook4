@@ -22,11 +22,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.commonview.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.Spinner
-import jatx.russianrocksongbook.data.ARTIST_ADD_ARTIST
-import jatx.russianrocksongbook.data.ARTIST_ADD_SONG
-import jatx.russianrocksongbook.data.ARTIST_CLOUD_SONGS
-import jatx.russianrocksongbook.data.ARTIST_DONATION
-import jatx.russianrocksongbook.model.preferences.*
+import jatx.russianrocksongbook.database.api.*
+import jatx.russianrocksongbook.preferences.api.*
 import jatx.russianrocksongbook.settings.R
 import jatx.russianrocksongbook.settings.viewmodel.SettingsViewModel
 import jatx.russianrocksongbook.testing.*

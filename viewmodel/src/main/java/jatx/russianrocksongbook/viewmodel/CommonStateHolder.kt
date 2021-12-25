@@ -1,7 +1,7 @@
 package jatx.russianrocksongbook.viewmodel
 
 import dagger.hilt.android.scopes.ActivityRetainedScoped
-import jatx.russianrocksongbook.model.preferences.Settings
+import jatx.russianrocksongbook.preferences.api.Settings
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 

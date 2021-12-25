@@ -58,12 +58,7 @@ dependencies {
     implementation 'it.czerwinski.android.hilt:hilt-extensions:1.2.0'
     kapt 'it.czerwinski.android.hilt:hilt-processor:1.2.0'
 
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.9'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-
-
     api project(':domain')
-    api project(':data')
     api project(':database')
     api project(':preferences')
     api project(':viewmodel')
