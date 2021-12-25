@@ -9,10 +9,10 @@ import jatx.russianrocksongbook.cloudsongs.paging.CONFIG
 import jatx.russianrocksongbook.cloudsongs.paging.CloudSongSource
 import jatx.russianrocksongbook.cloudsongs.paging.SnapshotHolder
 import jatx.russianrocksongbook.cloudsongs.R
-import jatx.russianrocksongbook.data.OrderBy
-import jatx.russianrocksongbook.data.result.STATUS_ERROR
-import jatx.russianrocksongbook.data.result.STATUS_SUCCESS
+import jatx.russianrocksongbook.networking.api.result.STATUS_ERROR
+import jatx.russianrocksongbook.networking.api.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.domain.CloudSong
+import jatx.russianrocksongbook.networking.api.OrderBy
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import jatx.russianrocksongbook.viewmodel.ViewModelParam
 import jatx.russianrocksongbook.viewmodel.interfaces.Cloud

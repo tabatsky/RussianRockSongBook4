@@ -1,6 +1,5 @@
 package jatx.russianrocksongbook
 
-import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
@@ -13,16 +12,16 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.qualifiers.ApplicationContext
 import jatx.russianrocksongbook.addartist.viewmodel.AddArtistViewModel
 import jatx.russianrocksongbook.cloudsongs.viewmodel.CloudViewModel
-import jatx.russianrocksongbook.data.OrderBy
 import jatx.russianrocksongbook.debug.AppDebug
-import jatx.russianrocksongbook.helpers.*
+import jatx.russianrocksongbook.filesystem.data.api.AddSongsFromDirHelper
+import jatx.russianrocksongbook.helpers.api.DonationHelper
+import jatx.russianrocksongbook.helpers.api.MusicHelper
 import jatx.russianrocksongbook.localsongs.viewmodel.LocalViewModel
-import jatx.russianrocksongbook.model.preferences.Orientation
-import jatx.russianrocksongbook.model.preferences.Settings
-import jatx.russianrocksongbook.preferences.Version
+import jatx.russianrocksongbook.preferences.api.Orientation
+import jatx.russianrocksongbook.preferences.api.Settings
+import jatx.russianrocksongbook.networking.api.OrderBy
 import jatx.russianrocksongbook.start.viewmodel.StartViewModel
 import jatx.russianrocksongbook.view.CurrentScreen
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
@@ -92,13 +91,7 @@ class MainActivity : ComponentActivity() {
     fun initAppDebug() {
         Log.e("inject init", "AppDebug")
         val mvvmViewModel: MvvmViewModel by viewModels()
-        AppDebug.setAppCrashHandler(mvvmViewModel.songBookAPIAdapter)
-    }
-
-    @Inject
-    fun initVersion(@ApplicationContext context: Context) {
-        Log.e("inject init", "Version")
-        Version.init(context)
+        AppDebug.setAppCrashHandler(mvvmViewModel.songBookAPIAdapter, mvvmViewModel.version)
     }
 
     override fun onBackPressed() {

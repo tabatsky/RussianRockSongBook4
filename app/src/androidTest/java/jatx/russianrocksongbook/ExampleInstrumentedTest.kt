@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -13,12 +14,13 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import jatx.russianrocksongbook.cloudsongs.view.EMPTY_LIST_DELAY
-import jatx.russianrocksongbook.data.*
-import jatx.russianrocksongbook.helpers.DONATIONS
-import jatx.russianrocksongbook.model.preferences.ARTIST_KINO
-import jatx.russianrocksongbook.model.preferences.Orientation
-import jatx.russianrocksongbook.model.preferences.Settings
-import jatx.russianrocksongbook.networking.data.impl.TestAPIAdapterImpl
+import jatx.russianrocksongbook.database.api.*
+import jatx.russianrocksongbook.helpers.api.DONATIONS
+import jatx.russianrocksongbook.preferences.api.ARTIST_KINO
+import jatx.russianrocksongbook.preferences.api.Orientation
+import jatx.russianrocksongbook.preferences.api.Settings
+import jatx.russianrocksongbook.networking.api.OrderBy
+import jatx.russianrocksongbook.networking.api.SongBookAPIAdapter
 import jatx.russianrocksongbook.testing.*
 import jatx.russianrocksongbook.view.CurrentScreen
 import jatx.russianrocksongbook.view.donationLabel
@@ -87,6 +89,7 @@ class ExampleInstrumentedTest {
     @Inject
     lateinit var stringConst: StringConst
 
+    @ExperimentalFoundationApi
     @Before
     fun init() {
         TestingConfig.isTesting = true
@@ -473,7 +476,7 @@ class ExampleInstrumentedTest {
     fun test3_cloudSearch() {
         val testNumber = 3
 
-        (songBookAPIAdapter as? TestAPIAdapterImpl)?.apply {
+        songBookAPIAdapter.apply {
             var list = search("", OrderBy.BY_ID_DESC)
             var titleList = list.map { "${it.artist} - ${it.title}" }
             Log.e("test $testNumber list", titleList.toString())
@@ -611,7 +614,7 @@ class ExampleInstrumentedTest {
     fun test4_cloudSongText() {
         val testNumber = 4
 
-        (songBookAPIAdapter as? TestAPIAdapterImpl)?.apply {
+        songBookAPIAdapter.apply {
             var list = search("", OrderBy.BY_ID_DESC)
             var titleList = list.map { "${it.artist} - ${it.title}" }
             Log.e("test $testNumber list", titleList.toString())

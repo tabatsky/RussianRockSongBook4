@@ -38,10 +38,6 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.4.0'
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.9'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-
-
 
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
@@ -50,8 +46,8 @@ dependencies {
 
     implementation "androidx.documentfile:documentfile:1.0.1"
     implementation 'org.apache.commons:commons-lang3:3.3.2'
-
-
+    
+    implementation 'com.obsez.android.lib.filechooser:filechooser:1.1.19'
 
     api project(':domain')
 }

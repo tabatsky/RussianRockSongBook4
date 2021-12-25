@@ -20,7 +20,7 @@ import jatx.russianrocksongbook.addsong.viewmodel.AddSongViewModel
 import jatx.russianrocksongbook.commonview.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.UploadDialog
-import jatx.russianrocksongbook.model.preferences.ScalePow
+import jatx.russianrocksongbook.preferences.api.ScalePow
 import jatx.russianrocksongbook.testing.TEXT_FIELD_ARTIST
 import jatx.russianrocksongbook.testing.TEXT_FIELD_TEXT
 import jatx.russianrocksongbook.testing.TEXT_FIELD_TITLE

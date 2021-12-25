@@ -4,12 +4,17 @@ import android.annotation.SuppressLint
 import android.util.Log
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import jatx.russianrocksongbook.data.SongBookAPIAdapter
 import jatx.russianrocksongbook.debug.debug.exceptionToString
 import jatx.russianrocksongbook.debug.domain.AppCrash
+import jatx.russianrocksongbook.networking.api.SongBookAPIAdapter
+import jatx.russianrocksongbook.preferences.api.Version
 
 object AppDebug {
-    fun setAppCrashHandler(songBookAPIAdapter: SongBookAPIAdapter) {
+    fun setAppCrashHandler(
+        songBookAPIAdapter: SongBookAPIAdapter,
+        version: Version
+    ) {
+
         val oldHandler =
             Thread.getDefaultUncaughtExceptionHandler()
         if (oldHandler is AppCrashHandler) {
@@ -18,13 +23,14 @@ object AppDebug {
         }
         Thread
             .setDefaultUncaughtExceptionHandler(
-                AppCrashHandler(oldHandler, songBookAPIAdapter))
+                AppCrashHandler(oldHandler, songBookAPIAdapter, version))
     }
 }
 
 class AppCrashHandler(
     private val oldHandler: Thread.UncaughtExceptionHandler?,
-    private val songBookAPIAdapter: SongBookAPIAdapter
+    private val songBookAPIAdapter: SongBookAPIAdapter,
+    private val version: Version
     ) : Thread.UncaughtExceptionHandler {
 
     @SuppressLint("CheckResult")
@@ -34,7 +40,7 @@ class AppCrashHandler(
     ) {
         Log.e("app crash", exceptionToString(throwable))
         songBookAPIAdapter
-            .sendCrash(AppCrash(throwable))
+            .sendCrash(AppCrash(version, throwable))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ result ->

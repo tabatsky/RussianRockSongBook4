@@ -25,10 +25,10 @@ import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.paging.ItemsAdapter
 import jatx.russianrocksongbook.cloudsongs.viewmodel.CloudViewModel
 import jatx.russianrocksongbook.commonview.*
-import jatx.russianrocksongbook.data.OrderBy
 import jatx.russianrocksongbook.domain.CloudSong
-import jatx.russianrocksongbook.model.preferences.ScalePow
-import jatx.russianrocksongbook.model.preferences.Theme
+import jatx.russianrocksongbook.preferences.api.ScalePow
+import jatx.russianrocksongbook.preferences.api.Theme
+import jatx.russianrocksongbook.networking.api.OrderBy
 import jatx.russianrocksongbook.testing.*
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import kotlinx.coroutines.delay

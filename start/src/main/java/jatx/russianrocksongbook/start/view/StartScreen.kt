@@ -14,7 +14,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import jatx.russianrocksongbook.model.preferences.ScalePow
+import jatx.russianrocksongbook.preferences.api.ScalePow
 import jatx.russianrocksongbook.start.R
 import jatx.russianrocksongbook.start.viewmodel.StartViewModel
 

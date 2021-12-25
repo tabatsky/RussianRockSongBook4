@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.viewmodel.CloudViewModel
-import jatx.russianrocksongbook.model.preferences.ScalePow
+import jatx.russianrocksongbook.preferences.api.ScalePow
 
 @Composable
 fun DeleteCloudSongDialog(

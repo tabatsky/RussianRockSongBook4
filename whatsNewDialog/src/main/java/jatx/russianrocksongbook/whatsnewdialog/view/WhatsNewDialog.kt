@@ -17,7 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
-import jatx.russianrocksongbook.model.preferences.ScalePow
+import jatx.russianrocksongbook.preferences.api.ScalePow
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import jatx.russianrocksongbook.whatsnewdialog.R
 
