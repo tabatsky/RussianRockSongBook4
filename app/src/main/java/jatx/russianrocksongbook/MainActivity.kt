@@ -12,21 +12,22 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
 import dagger.hilt.android.AndroidEntryPoint
-import jatx.russianrocksongbook.addartist.viewmodel.AddArtistViewModel
-import jatx.russianrocksongbook.cloudsongs.viewmodel.CloudViewModel
+import jatx.russianrocksongbook.addartist.api.ext.copySongsFromDirToRepoWithPath
+import jatx.russianrocksongbook.addartist.api.ext.copySongsFromDirToRepoWithPickedDir
+import jatx.russianrocksongbook.cloudsongs.api.ext.initCloudSearch
 import jatx.russianrocksongbook.debug.AppDebug
 import jatx.russianrocksongbook.filesystem.data.api.AddSongsFromDirHelper
 import jatx.russianrocksongbook.helpers.api.DonationHelper
 import jatx.russianrocksongbook.helpers.api.MusicHelper
-import jatx.russianrocksongbook.localsongs.viewmodel.LocalViewModel
+import jatx.russianrocksongbook.localsongs.api.ext.parseVoiceCommand
+import jatx.russianrocksongbook.localsongs.api.ext.selectArtist
+import jatx.russianrocksongbook.localsongs.api.ext.selectSongByArtistAndTitle
 import jatx.russianrocksongbook.preferences.api.Orientation
 import jatx.russianrocksongbook.preferences.api.Settings
-import jatx.russianrocksongbook.networking.api.OrderBy
-import jatx.russianrocksongbook.start.viewmodel.StartViewModel
+import jatx.russianrocksongbook.start.api.ext.asyncInit
 import jatx.russianrocksongbook.view.CurrentScreen
-import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
-import jatx.russianrocksongbook.voicecommands.helpers.VoiceCommandHelper
+import jatx.russianrocksongbook.voicecommands.api.VoiceCommandHelper
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
@@ -60,12 +61,7 @@ class MainActivity : ComponentActivity() {
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        GlobalScope.launch {
-            withContext(Dispatchers.Main) {
-                val startViewModel: StartViewModel by viewModels()
-                startViewModel.asyncInit()
-            }
-        }
+        asyncInit()
     }
 
     @Inject
@@ -103,18 +99,11 @@ class MainActivity : ComponentActivity() {
 
     private fun restartApp() {
         val packageManager: PackageManager = packageManager
-        val intent = packageManager.getLaunchIntentForPackage(getPackageName())
+        val intent = packageManager.getLaunchIntentForPackage(packageName)
         val componentName = intent!!.component
         val mainIntent = Intent.makeRestartActivityTask(componentName)
         startActivity(mainIntent)
         Runtime.getRuntime().exit(0)
-    }
-
-    private fun speechRecognize() {
-        val localViewModel: LocalViewModel by viewModels()
-        voiceCommandHelper.recognizeVoiceCommand {
-            localViewModel.parseVoiceCommand(it)
-        }
     }
 
     private fun showDevSite() {
@@ -136,38 +125,16 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun addSongsFromDir() {
-        val addArtistViewModel: AddArtistViewModel by viewModels()
         addSongsFromDirHelper.addSongsFromDir(
-            onPickedDirReturned = addArtistViewModel::copySongsFromDirToRepoWithPickedDir,
-            onPathReturned = addArtistViewModel::copySongsFromDirToRepoWithPath
+            onPickedDirReturned = ::copySongsFromDirToRepoWithPickedDir,
+            onPathReturned = ::copySongsFromDirToRepoWithPath
         )
     }
 
-    private fun initCloudSearch() = runOnUiThread {
-        val cloudViewModel: CloudViewModel by viewModels()
-        cloudViewModel.cloudSearch("", OrderBy.BY_ID_DESC)
-    }
-
-    private fun selectArtist(artist: String) = runOnUiThread {
-        val localViewModel: LocalViewModel by viewModels()
-        localViewModel.selectArtist(artist)
-    }
-
-    private fun selectSongByArtistAndTitle(artist: String, title: String) =
-        runOnUiThread {
-            val localViewModel: LocalViewModel by viewModels()
-            localViewModel.selectArtist(
-                artist = artist,
-                forceOnSuccess = true,
-                onSuccess = {
-                    val position = localViewModel
-                        .currentSongList
-                        .value
-                        .map { it.title }
-                        .indexOf(title)
-                    localViewModel.selectSong(position)
-                    localViewModel.selectScreen(CurrentScreenVariant.SONG_TEXT)
-                }
-            )
+    private fun speechRecognize() {
+        voiceCommandHelper.recognizeVoiceCommand {
+            parseVoiceCommand(it)
         }
+    }
+
 }
