@@ -4,10 +4,15 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
-import jatx.russianrocksongbook.cloudsongs.view.CloudSearchScreen
-import jatx.russianrocksongbook.cloudsongs.view.CloudSongTextScreen
-import jatx.russianrocksongbook.localsongs.view.SongListScreen
-import jatx.russianrocksongbook.localsongs.view.SongTextScreen
+import jatx.russianrocksongbook.addartist.api.view.AddArtistScreen
+import jatx.russianrocksongbook.addsong.api.view.AddSongScreen
+import jatx.russianrocksongbook.cloudsongs.api.view.CloudSearchScreen
+import jatx.russianrocksongbook.cloudsongs.api.view.CloudSongTextScreen
+import jatx.russianrocksongbook.donation.api.view.DonationScreen
+import jatx.russianrocksongbook.localsongs.api.view.SongListScreen
+import jatx.russianrocksongbook.localsongs.api.view.SongTextScreen
+import jatx.russianrocksongbook.settings.api.view.SettingsScreen
+import jatx.russianrocksongbook.start.api.view.StartScreen
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 

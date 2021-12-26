@@ -15,17 +15,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 open class MvvmViewModel @Inject constructor(
-    viewModelParam: ViewModelParam,
+    viewModelDeps: ViewModelDeps,
     private val commonStateHolder: CommonStateHolder
 ): ViewModel() {
-    val songBookAPIAdapter = viewModelParam.songBookAPIAdapter
-    val settings = viewModelParam.settings
-    val callbacks = viewModelParam.callbacks
-    val context = viewModelParam.context
-    val songRepo = viewModelParam.songRepo
-    val userInfo = viewModelParam.userInfo
-    val version = viewModelParam.version
-    val fileSystemAdapter = viewModelParam.fileSystemAdapter
+    val songBookAPIAdapter = viewModelDeps.songBookAPIAdapter
+    val settings = viewModelDeps.settings
+    val callbacks = viewModelDeps.callbacks
+    val context = viewModelDeps.context
+    val songRepo = viewModelDeps.songRepo
+    val userInfo = viewModelDeps.userInfo
+    val version = viewModelDeps.version
+    val fileSystemAdapter = viewModelDeps.fileSystemAdapter
 
     val currentScreenVariant = commonStateHolder
         .currentScreenVariant

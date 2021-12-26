@@ -13,8 +13,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
-import jatx.russianrocksongbook.cloudsongs.view.EMPTY_LIST_DELAY
+import jatx.russianrocksongbook.cloudsongs.api.view.EMPTY_LIST_DELAY
 import jatx.russianrocksongbook.database.api.*
+import jatx.russianrocksongbook.donation.api.view.donationLabel
 import jatx.russianrocksongbook.helpers.api.DONATIONS
 import jatx.russianrocksongbook.preferences.api.ARTIST_KINO
 import jatx.russianrocksongbook.preferences.api.Orientation
@@ -23,7 +24,6 @@ import jatx.russianrocksongbook.networking.api.OrderBy
 import jatx.russianrocksongbook.networking.api.SongBookAPIAdapter
 import jatx.russianrocksongbook.testing.*
 import jatx.russianrocksongbook.view.CurrentScreen
-import jatx.russianrocksongbook.view.donationLabel
 import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Rule
