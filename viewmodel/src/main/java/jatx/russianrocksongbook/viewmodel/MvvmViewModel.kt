@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import jatx.russianrocksongbook.database.api.ARTIST_FAVORITE
+import jatx.russianrocksongbook.domain.repository.ARTIST_FAVORITE
 import jatx.russianrocksongbook.viewmodel.interfaces.Cloud
 import jatx.russianrocksongbook.viewmodel.interfaces.Local
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,14 +18,11 @@ open class MvvmViewModel @Inject constructor(
     viewModelDeps: ViewModelDeps,
     private val commonStateHolder: CommonStateHolder
 ): ViewModel() {
-    val songBookAPIAdapter = viewModelDeps.songBookAPIAdapter
-    val settings = viewModelDeps.settings
+    val settings = viewModelDeps.settingsRepository
     val callbacks = viewModelDeps.callbacks
     val context = viewModelDeps.context
-    val songRepo = viewModelDeps.songRepo
-    val userInfo = viewModelDeps.userInfo
-    val version = viewModelDeps.version
-    val fileSystemAdapter = viewModelDeps.fileSystemAdapter
+
+    private val getArtistsUseCase = viewModelDeps.getArtistsUseCase
 
     val currentScreenVariant = commonStateHolder
         .currentScreenVariant
@@ -83,9 +80,8 @@ open class MvvmViewModel @Inject constructor(
             getArtistsDisposable?.apply {
                 if (!this.isDisposed) this.dispose()
             }
-            songRepo
-            getArtistsDisposable = songRepo
-                .getArtists()
+            getArtistsDisposable = getArtistsUseCase
+                .execute()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     commonStateHolder.artistList.value = it
@@ -96,8 +92,8 @@ open class MvvmViewModel @Inject constructor(
             getArtistsDisposable?.apply {
                 if (!this.isDisposed) this.dispose()
             }
-            getArtistsDisposable = songRepo
-                .getArtists()
+            getArtistsDisposable = getArtistsUseCase
+                .execute()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     commonStateHolder.artistList.value = it

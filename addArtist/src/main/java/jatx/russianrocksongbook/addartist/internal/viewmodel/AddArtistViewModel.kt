@@ -5,30 +5,36 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import jatx.russianrocksongbook.networking.api.result.STATUS_ERROR
-import jatx.russianrocksongbook.networking.api.result.STATUS_SUCCESS
-import jatx.russianrocksongbook.domain.Song
+import jatx.russianrocksongbook.domain.repository.result.STATUS_ERROR
+import jatx.russianrocksongbook.domain.repository.result.STATUS_SUCCESS
+import jatx.russianrocksongbook.domain.models.Song
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import jatx.russianrocksongbook.viewmodel.R
-import jatx.russianrocksongbook.viewmodel.ViewModelDeps
 import kotlinx.coroutines.flow.asStateFlow
 import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
 internal class AddArtistViewModel @Inject constructor(
-    viewModelDeps: ViewModelDeps,
+    addArtistViewModelDeps: AddArtistViewModelDeps,
     private val addArtistStateHolder: AddArtistStateHolder
 ): MvvmViewModel(
-    viewModelDeps,
+    addArtistViewModelDeps,
     addArtistStateHolder.commonStateHolder
 ) {
+    private val insertReplaceUserSongsUseCase = addArtistViewModelDeps
+        .insertReplaceUserSongsUseCase
+    private val addSongListToCloudUseCase = addArtistViewModelDeps
+        .addSongListToCloudUseCase
+
+    private val fileSystemAdapter = addArtistViewModelDeps.fileSystemRepository
+
     val showUploadDialogForDir = addArtistStateHolder
         .showUploadDialogForDir.asStateFlow()
     val uploadArtist = addArtistStateHolder
         .uploadArtist.asStateFlow()
-    val uploadSongList = addArtistStateHolder
+    private val uploadSongList = addArtistStateHolder
         .uploadSongList.asStateFlow()
 
     private var uploadListDisposable: Disposable? = null
@@ -47,8 +53,8 @@ internal class AddArtistViewModel @Inject constructor(
         uploadListDisposable?.apply {
             if (!this.isDisposed) this.dispose()
         }
-        uploadListDisposable = songBookAPIAdapter
-            .addSongList(uploadSongList.value, userInfo)
+        uploadListDisposable = addSongListToCloudUseCase
+            .execute(uploadSongList.value)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ result ->
@@ -82,7 +88,7 @@ internal class AddArtistViewModel @Inject constructor(
                 val toastText = context.getString(R.string.toast_file_not_found, it)
                 showToast(toastText)
             }
-            val actualSongs = songRepo.insertReplaceUserSongs(songs)
+            val actualSongs = insertReplaceUserSongsUseCase.execute(songs)
             val toastText = context.getString(R.string.toast_added_songs_count, songs.size)
             showToast(toastText)
             showUploadOfferForDir(artist, actualSongs)
@@ -100,7 +106,7 @@ internal class AddArtistViewModel @Inject constructor(
                 val toastText = context.getString(R.string.toast_file_not_found, it)
                 showToast(toastText)
             }
-            val actualSongs = songRepo.insertReplaceUserSongs(songs)
+            val actualSongs = insertReplaceUserSongsUseCase.execute(songs)
             val toastText = context.getString(R.string.toast_added_songs_count, songs.size)
             showToast(toastText)
             showUploadOfferForDir(artist, actualSongs)

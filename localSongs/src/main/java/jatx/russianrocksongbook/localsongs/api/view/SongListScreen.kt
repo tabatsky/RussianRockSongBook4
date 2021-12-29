@@ -21,8 +21,8 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.commonview.*
-import jatx.russianrocksongbook.database.api.*
-import jatx.russianrocksongbook.domain.Song
+import jatx.russianrocksongbook.domain.models.Song
+import jatx.russianrocksongbook.domain.repository.*
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.preferences.api.ScalePow

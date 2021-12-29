@@ -22,7 +22,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.commonview.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.Spinner
-import jatx.russianrocksongbook.database.api.*
+import jatx.russianrocksongbook.domain.repository.*
 import jatx.russianrocksongbook.preferences.api.*
 import jatx.russianrocksongbook.settings.R
 import jatx.russianrocksongbook.settings.internal.viewmodel.SettingsViewModel
@@ -104,7 +104,7 @@ fun SettingsScreen() {
                 CommonTopAppBar(title = stringResource(id = R.string.title_settings))
                 SettingsBodyPortrait(
                     theme = theme,
-                    settings = settings,
+                    settingsRepository = settings,
                     fontSizeLabelSp = fontSizeLabelSp,
                     fontSizeButtonSp = fontSizeButtonSp,
                     onThemePositionChanged = onThemePositionChanged,
@@ -125,7 +125,7 @@ fun SettingsScreen() {
                 CommonSideAppBar(title = stringResource(id = R.string.title_settings))
                 SettingsBodyLandscape(
                     theme = theme,
-                    settings = settings,
+                    settingsRepository = settings,
                     fontSizeLabelSp = fontSizeLabelSp,
                     fontSizeButtonSp = fontSizeButtonSp,
                     onThemePositionChanged = onThemePositionChanged,
@@ -144,7 +144,7 @@ fun SettingsScreen() {
 @Composable
 private fun SettingsBodyPortrait(
     theme: Theme,
-    settings: Settings,
+    settingsRepository: SettingsRepository,
     fontSizeLabelSp: TextUnit,
     fontSizeButtonSp: TextUnit,
     onThemePositionChanged: (Int) -> Unit,
@@ -161,7 +161,7 @@ private fun SettingsBodyPortrait(
             .padding(4.dp)) {
         ThemeRow(
             theme = theme,
-            settings = settings,
+            settingsRepository = settingsRepository,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(),
@@ -174,7 +174,7 @@ private fun SettingsBodyPortrait(
         )
         FontScaleRow(
             theme = theme,
-            settings = settings,
+            settingsRepository = settingsRepository,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(),
@@ -187,7 +187,7 @@ private fun SettingsBodyPortrait(
         )
         DefaultArtistRow(
             theme = theme,
-            settings = settings,
+            settingsRepository = settingsRepository,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(),
@@ -200,7 +200,7 @@ private fun SettingsBodyPortrait(
         )
         OrientationRow(
             theme = theme,
-            settings = settings,
+            settingsRepository = settingsRepository,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(),
@@ -213,7 +213,7 @@ private fun SettingsBodyPortrait(
         )
         ListenToMusicVariantRow(
             theme = theme,
-            settings = settings,
+            settingsRepository = settingsRepository,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(),
@@ -226,7 +226,7 @@ private fun SettingsBodyPortrait(
         )
         ScrollSpeedRow(
             theme = theme,
-            settings = settings,
+            settingsRepository = settingsRepository,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(),
@@ -262,7 +262,7 @@ private fun SettingsBodyPortrait(
 @Composable
 private fun SettingsBodyLandscape(
     theme: Theme,
-    settings: Settings,
+    settingsRepository: SettingsRepository,
     fontSizeLabelSp: TextUnit,
     fontSizeButtonSp: TextUnit,
     onThemePositionChanged: (Int) -> Unit,
@@ -285,7 +285,7 @@ private fun SettingsBodyLandscape(
         ) {
             ThemeRow(
                 theme = theme,
-                settings = settings,
+                settingsRepository = settingsRepository,
                 modifier = Modifier
                     .weight(1.0f)
                     .wrapContentHeight(),
@@ -294,7 +294,7 @@ private fun SettingsBodyLandscape(
             )
             FontScaleRow(
                 theme = theme,
-                settings = settings,
+                settingsRepository = settingsRepository,
                 modifier = Modifier
                     .weight(1.0f)
                     .wrapContentHeight(),
@@ -314,7 +314,7 @@ private fun SettingsBodyLandscape(
         ) {
             DefaultArtistRow(
                 theme = theme,
-                settings = settings,
+                settingsRepository = settingsRepository,
                 modifier = Modifier
                     .weight(1.0f)
                     .wrapContentHeight(),
@@ -323,7 +323,7 @@ private fun SettingsBodyLandscape(
             )
             OrientationRow(
                 theme = theme,
-                settings = settings,
+                settingsRepository = settingsRepository,
                 modifier = Modifier
                     .weight(1.0f)
                     .wrapContentHeight(),
@@ -343,7 +343,7 @@ private fun SettingsBodyLandscape(
         ) {
             ListenToMusicVariantRow(
                 theme = theme,
-                settings = settings,
+                settingsRepository = settingsRepository,
                 modifier = Modifier
                     .weight(1.0f)
                     .wrapContentHeight(),
@@ -352,7 +352,7 @@ private fun SettingsBodyLandscape(
             )
             ScrollSpeedRow(
                 theme = theme,
-                settings = settings,
+                settingsRepository = settingsRepository,
                 modifier = Modifier
                     .weight(1.0f)
                     .wrapContentHeight(),
@@ -391,7 +391,7 @@ private fun SettingsBodyLandscape(
 private fun ThemeRow(
     modifier: Modifier,
     theme: Theme,
-    settings: Settings,
+    settingsRepository: SettingsRepository,
     fontSize: TextUnit,
     onPositionChanged: (Int) -> Unit
 ) {
@@ -418,7 +418,7 @@ private fun ThemeRow(
             testTag = THEME_SPINNER,
             fontSize = fontSize,
             valueList = valueList,
-            initialPosition = settings.theme.ordinal,
+            initialPosition = settingsRepository.theme.ordinal,
             onPositionChanged = onPositionChanged
         )
 
@@ -429,7 +429,7 @@ private fun ThemeRow(
 private fun FontScaleRow(
     modifier: Modifier,
     theme: Theme,
-    settings: Settings,
+    settingsRepository: SettingsRepository,
     fontSize: TextUnit,
     onPositionChanged: (Int) -> Unit
 ) {
@@ -456,7 +456,7 @@ private fun FontScaleRow(
             testTag = FONT_SCALE_SPINNER,
             fontSize = fontSize,
             valueList = valueList,
-            initialPosition = settings.commonFontScaleEnum.ordinal,
+            initialPosition = settingsRepository.commonFontScaleEnum.ordinal,
             onPositionChanged = onPositionChanged
         )
 
@@ -467,7 +467,7 @@ private fun FontScaleRow(
 private fun DefaultArtistRow(
     modifier: Modifier,
     theme: Theme,
-    settings: Settings,
+    settingsRepository: SettingsRepository,
     fontSize: TextUnit,
     onValueChanged: (String) -> Unit
 ) {
@@ -480,7 +480,7 @@ private fun DefaultArtistRow(
         remove(ARTIST_ADD_ARTIST)
         remove(ARTIST_DONATION)
     }
-    val initialPosition = artists.indexOf(settings.defaultArtist)
+    val initialPosition = artists.indexOf(settingsRepository.defaultArtist)
 
     Row(
         modifier = modifier,
@@ -518,7 +518,7 @@ private fun DefaultArtistRow(
 private fun OrientationRow(
     modifier: Modifier,
     theme: Theme,
-    settings: Settings,
+    settingsRepository: SettingsRepository,
     fontSize: TextUnit,
     onPositionChanged: (Int) -> Unit
 ) {
@@ -545,7 +545,7 @@ private fun OrientationRow(
             testTag = ORIENTATION_SPINNER,
             fontSize = fontSize,
             valueList = valueList,
-            initialPosition = settings.orientation.ordinal,
+            initialPosition = settingsRepository.orientation.ordinal,
             onPositionChanged = onPositionChanged
         )
 
@@ -556,7 +556,7 @@ private fun OrientationRow(
 private fun ListenToMusicVariantRow(
     modifier: Modifier,
     theme: Theme,
-    settings: Settings,
+    settingsRepository: SettingsRepository,
     fontSize: TextUnit,
     onPositionChanged: (Int) -> Unit
 ) {
@@ -583,7 +583,7 @@ private fun ListenToMusicVariantRow(
             testTag = LISTEN_TO_MUSIC_VARIANT_SPINNER,
             fontSize = fontSize,
             valueList = valueList,
-            initialPosition = settings.listenToMusicVariant.ordinal,
+            initialPosition = settingsRepository.listenToMusicVariant.ordinal,
             onPositionChanged = onPositionChanged
         )
     }
@@ -593,7 +593,7 @@ private fun ListenToMusicVariantRow(
 private fun ScrollSpeedRow(
     modifier: Modifier,
     theme: Theme,
-    settings: Settings,
+    settingsRepository: SettingsRepository,
     fontSize: TextUnit,
     onValueChanged: (Float) -> Unit
 ) {
@@ -601,7 +601,7 @@ private fun ScrollSpeedRow(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        var text by remember { mutableStateOf(settings.scrollSpeed.toString()) }
+        var text by remember { mutableStateOf(settingsRepository.scrollSpeed.toString()) }
         Text(
             text = stringResource(id = R.string.scroll_speed),
             modifier = Modifier

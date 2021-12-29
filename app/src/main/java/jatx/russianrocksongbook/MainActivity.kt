@@ -16,25 +16,28 @@ import jatx.russianrocksongbook.addartist.api.ext.copySongsFromDirToRepoWithPath
 import jatx.russianrocksongbook.addartist.api.ext.copySongsFromDirToRepoWithPickedDir
 import jatx.russianrocksongbook.cloudsongs.api.ext.initCloudSearch
 import jatx.russianrocksongbook.debug.AppDebug
-import jatx.russianrocksongbook.filesystem.data.api.AddSongsFromDirHelper
+import jatx.russianrocksongbook.domain.usecase.SendCrashUseCase
+import jatx.russianrocksongbook.helpers.api.AddSongsFromDirHelper
 import jatx.russianrocksongbook.helpers.api.DonationHelper
 import jatx.russianrocksongbook.helpers.api.MusicHelper
 import jatx.russianrocksongbook.localsongs.api.ext.parseVoiceCommand
 import jatx.russianrocksongbook.localsongs.api.ext.selectArtist
 import jatx.russianrocksongbook.localsongs.api.ext.selectSongByArtistAndTitle
 import jatx.russianrocksongbook.preferences.api.Orientation
-import jatx.russianrocksongbook.preferences.api.Settings
+import jatx.russianrocksongbook.preferences.api.SettingsRepository
+import jatx.russianrocksongbook.domain.models.interfaces.Version
 import jatx.russianrocksongbook.start.api.ext.asyncInit
 import jatx.russianrocksongbook.view.CurrentScreen
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import jatx.russianrocksongbook.voicecommands.api.VoiceCommandHelper
 import kotlinx.coroutines.*
+import java.lang.NullPointerException
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @Inject
-    lateinit var settings: Settings
+    lateinit var settingsRepository: SettingsRepository
     @Inject
     lateinit var donationHelper: DonationHelper
     @Inject
@@ -43,13 +46,17 @@ class MainActivity : ComponentActivity() {
     lateinit var addSongsFromDirHelper: AddSongsFromDirHelper
     @Inject
     lateinit var voiceCommandHelper: VoiceCommandHelper
+    @Inject
+    lateinit var sendCrashUseCase: SendCrashUseCase
+    @Inject
+    lateinit var version: Version
 
     @ExperimentalFoundationApi
     @DelicateCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        requestedOrientation = when (settings.orientation) {
+        requestedOrientation = when (settingsRepository.orientation) {
             Orientation.PORTRAIT -> ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             Orientation.LANDSCAPE -> ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
             else -> ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
@@ -86,8 +93,7 @@ class MainActivity : ComponentActivity() {
     @Inject
     fun initAppDebug() {
         Log.e("inject init", "AppDebug")
-        val mvvmViewModel: MvvmViewModel by viewModels()
-        AppDebug.setAppCrashHandler(mvvmViewModel.songBookAPIAdapter, mvvmViewModel.version)
+        AppDebug.setAppCrashHandler(sendCrashUseCase, version)
     }
 
     override fun onBackPressed() {

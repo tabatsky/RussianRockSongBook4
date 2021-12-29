@@ -1,16 +1,16 @@
 package jatx.russianrocksongbook.viewmodel
 
 import dagger.hilt.android.scopes.ActivityRetainedScoped
-import jatx.russianrocksongbook.preferences.api.Settings
+import jatx.russianrocksongbook.preferences.api.SettingsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 @ActivityRetainedScoped
 class CommonStateHolder @Inject constructor(
-    settings: Settings
+    settingsRepository: SettingsRepository
 ) {
     val currentScreenVariant = MutableStateFlow(CurrentScreenVariant.START)
-    val currentArtist = MutableStateFlow(settings.defaultArtist)
+    val currentArtist = MutableStateFlow(settingsRepository.defaultArtist)
     val artistList = MutableStateFlow(listOf<String>())
     val appWasUpdated = MutableStateFlow(false)
 }

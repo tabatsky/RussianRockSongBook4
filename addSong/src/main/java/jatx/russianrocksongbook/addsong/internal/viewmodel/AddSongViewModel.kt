@@ -5,9 +5,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import jatx.russianrocksongbook.networking.api.result.STATUS_ERROR
-import jatx.russianrocksongbook.networking.api.result.STATUS_SUCCESS
-import jatx.russianrocksongbook.domain.Song
+import jatx.russianrocksongbook.domain.repository.result.STATUS_ERROR
+import jatx.russianrocksongbook.domain.repository.result.STATUS_SUCCESS
+import jatx.russianrocksongbook.domain.models.Song
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import jatx.russianrocksongbook.viewmodel.R
 import jatx.russianrocksongbook.viewmodel.ViewModelDeps
@@ -16,15 +16,20 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class AddSongViewModel @Inject constructor(
-    viewModelDeps: ViewModelDeps,
+    addSongViewModelDeps: AddSongViewModelDeps,
     private val addSongStateHolder: AddSongStateHolder
 ): MvvmViewModel(
-    viewModelDeps,
+    addSongViewModelDeps,
     addSongStateHolder.commonStateHolder
 ) {
+    private val insertReplaceUserSongUseCase = addSongViewModelDeps
+        .insertReplaceUserSongUseCase
+    private val addSongToCloudUseCase = addSongViewModelDeps
+        .addSongToCloudUseCase
+
     val showUploadDialogForSong = addSongStateHolder
         .showUploadDialogForSong.asStateFlow()
-    val newSong = addSongStateHolder
+    private val newSong = addSongStateHolder
         .newSong.asStateFlow()
 
     private var uploadSongDisposable: Disposable? = null
@@ -45,8 +50,8 @@ internal class AddSongViewModel @Inject constructor(
             uploadSongDisposable?.apply {
                 if (!this.isDisposed) this.dispose()
             }
-            uploadSongDisposable = songBookAPIAdapter
-                .addSong(this, userInfo)
+            uploadSongDisposable = addSongToCloudUseCase
+                .execute(this)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
@@ -77,7 +82,7 @@ internal class AddSongViewModel @Inject constructor(
             this.title = title
             this.text = text
         }
-        val actualSong = songRepo.insertReplaceUserSong(song)
+        val actualSong = insertReplaceUserSongUseCase.execute(song)
         showToast(R.string.toast_song_added)
         showUploadOfferForSong(actualSong)
     }

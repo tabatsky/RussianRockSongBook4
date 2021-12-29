@@ -5,9 +5,10 @@ import androidx.paging.PagingData
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import jatx.russianrocksongbook.cloudsongs.internal.paging.CONFIG
 import jatx.russianrocksongbook.cloudsongs.internal.paging.CloudSongSource
-import jatx.russianrocksongbook.domain.CloudSong
-import jatx.russianrocksongbook.networking.api.OrderBy
-import jatx.russianrocksongbook.networking.api.SongBookAPIAdapter
+import jatx.russianrocksongbook.domain.models.CloudSong
+import jatx.russianrocksongbook.domain.repository.OrderBy
+import jatx.russianrocksongbook.domain.repository.CloudSongRepository
+import jatx.russianrocksongbook.domain.usecase.PagedSearchUseCase
 import jatx.russianrocksongbook.viewmodel.CommonStateHolder
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +17,7 @@ import javax.inject.Inject
 @ActivityRetainedScoped
 internal class CloudStateHolder @Inject constructor(
     val commonStateHolder: CommonStateHolder,
-    private val songBookAPIAdapter: SongBookAPIAdapter
+    private val pagedSearchUseCase: PagedSearchUseCase
 ) {
 
     val isCloudLoading = MutableStateFlow(false)
@@ -27,7 +28,7 @@ internal class CloudStateHolder @Inject constructor(
     val cloudSong: MutableStateFlow<CloudSong?> = MutableStateFlow(null)
     val cloudSongsFlow: MutableStateFlow<Flow<PagingData<CloudSong>>> = MutableStateFlow(
         Pager(CONFIG) {
-            CloudSongSource(songBookAPIAdapter, "", OrderBy.BY_ID_DESC)
+            CloudSongSource(pagedSearchUseCase, "", OrderBy.BY_ID_DESC)
         }.flow
     )
     val searchFor = MutableStateFlow("")
