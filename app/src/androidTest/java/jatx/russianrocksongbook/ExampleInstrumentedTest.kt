@@ -14,14 +14,12 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import jatx.russianrocksongbook.cloudsongs.api.view.EMPTY_LIST_DELAY
-import jatx.russianrocksongbook.database.api.*
+import jatx.russianrocksongbook.domain.repository.*
 import jatx.russianrocksongbook.donation.api.view.donationLabel
 import jatx.russianrocksongbook.helpers.api.DONATIONS
 import jatx.russianrocksongbook.preferences.api.ARTIST_KINO
 import jatx.russianrocksongbook.preferences.api.Orientation
-import jatx.russianrocksongbook.preferences.api.Settings
-import jatx.russianrocksongbook.networking.api.OrderBy
-import jatx.russianrocksongbook.networking.api.SongBookAPIAdapter
+import jatx.russianrocksongbook.preferences.api.SettingsRepository
 import jatx.russianrocksongbook.testing.*
 import jatx.russianrocksongbook.view.CurrentScreen
 import org.junit.Before
@@ -81,10 +79,10 @@ class ExampleInstrumentedTest {
     lateinit var songRepo: SongRepository
 
     @Inject
-    lateinit var songBookAPIAdapter: SongBookAPIAdapter
+    lateinit var cloudSongRepository: CloudSongRepository
 
     @Inject
-    lateinit var settings: Settings
+    lateinit var settingsRepository: SettingsRepository
 
     @Inject
     lateinit var stringConst: StringConst
@@ -96,8 +94,8 @@ class ExampleInstrumentedTest {
 
         hiltRule.inject()
 
-        settings.orientation = Orientation.RANDOM
-        settings.defaultArtist = ARTIST_KINO
+        settingsRepository.orientation = Orientation.RANDOM
+        settingsRepository.defaultArtist = ARTIST_KINO
 
         composeTestRule.activityRule.scenario.recreate()
 
@@ -476,7 +474,7 @@ class ExampleInstrumentedTest {
     fun test3_cloudSearch() {
         val testNumber = 3
 
-        songBookAPIAdapter.apply {
+        cloudSongRepository.apply {
             var list = search("", OrderBy.BY_ID_DESC)
             var titleList = list.map { "${it.artist} - ${it.title}" }
             Log.e("test $testNumber list", titleList.toString())
@@ -614,7 +612,7 @@ class ExampleInstrumentedTest {
     fun test4_cloudSongText() {
         val testNumber = 4
 
-        songBookAPIAdapter.apply {
+        cloudSongRepository.apply {
             var list = search("", OrderBy.BY_ID_DESC)
             var titleList = list.map { "${it.artist} - ${it.title}" }
             Log.e("test $testNumber list", titleList.toString())
@@ -951,11 +949,11 @@ class ExampleInstrumentedTest {
         Log.e("test $testNumber assert", "$THEME_SPINNER is displayed")
         composeTestRule
             .onNodeWithTag(THEME_SPINNER)
-            .assertTextEquals(stringConst.themeList[settings.theme.ordinal])
+            .assertTextEquals(stringConst.themeList[settingsRepository.theme.ordinal])
         Log.e(
             "test $testNumber assert",
             "$THEME_SPINNER text is " +
-                    stringConst.themeList[settings.theme.ordinal]
+                    stringConst.themeList[settingsRepository.theme.ordinal]
         )
 
         composeTestRule
@@ -968,11 +966,11 @@ class ExampleInstrumentedTest {
         Log.e("test $testNumber assert", "$FONT_SCALE_SPINNER is displayed")
         composeTestRule
             .onNodeWithTag(FONT_SCALE_SPINNER)
-            .assertTextEquals(stringConst.fontScaleList[settings.commonFontScaleEnum.ordinal])
+            .assertTextEquals(stringConst.fontScaleList[settingsRepository.commonFontScaleEnum.ordinal])
         Log.e(
             "test $testNumber assert",
             "$FONT_SCALE_SPINNER text is " +
-                    stringConst.fontScaleList[settings.commonFontScaleEnum.ordinal]
+                    stringConst.fontScaleList[settingsRepository.commonFontScaleEnum.ordinal]
         )
 
         composeTestRule
@@ -985,10 +983,10 @@ class ExampleInstrumentedTest {
         Log.e("test $testNumber assert", "$DEFAULT_ARTIST_SPINNER is displayed")
         composeTestRule
             .onNodeWithTag(DEFAULT_ARTIST_SPINNER)
-            .assertTextEquals(settings.defaultArtist)
+            .assertTextEquals(settingsRepository.defaultArtist)
         Log.e(
             "test $testNumber assert",
-            "$DEFAULT_ARTIST_SPINNER text is ${settings.defaultArtist}"
+            "$DEFAULT_ARTIST_SPINNER text is ${settingsRepository.defaultArtist}"
         )
 
         composeTestRule
@@ -1001,11 +999,11 @@ class ExampleInstrumentedTest {
         Log.e("test $testNumber assert", "$ORIENTATION_SPINNER is displayed")
         composeTestRule
             .onNodeWithTag(ORIENTATION_SPINNER)
-            .assertTextEquals(stringConst.orientationList[settings.orientation.ordinal])
+            .assertTextEquals(stringConst.orientationList[settingsRepository.orientation.ordinal])
         Log.e(
             "test $testNumber assert",
             "$ORIENTATION_SPINNER text is " +
-                    stringConst.orientationList[settings.orientation.ordinal]
+                    stringConst.orientationList[settingsRepository.orientation.ordinal]
         )
 
         composeTestRule
@@ -1019,12 +1017,12 @@ class ExampleInstrumentedTest {
         composeTestRule
             .onNodeWithTag(LISTEN_TO_MUSIC_VARIANT_SPINNER)
             .assertTextEquals(
-                stringConst.listenToMusicVariants[settings.listenToMusicVariant.ordinal]
+                stringConst.listenToMusicVariants[settingsRepository.listenToMusicVariant.ordinal]
             )
         Log.e(
             "test $testNumber assert",
             "$LISTEN_TO_MUSIC_VARIANT_SPINNER text is " +
-                    stringConst.listenToMusicVariants[settings.listenToMusicVariant.ordinal]
+                    stringConst.listenToMusicVariants[settingsRepository.listenToMusicVariant.ordinal]
         )
 
         composeTestRule
@@ -1037,10 +1035,10 @@ class ExampleInstrumentedTest {
         Log.e("test $testNumber assert", "$TEXT_FIELD_SCROLL_SPEED is displayed")
         composeTestRule
             .onNodeWithTag(TEXT_FIELD_SCROLL_SPEED)
-            .assertTextEquals(settings.scrollSpeed.toString())
+            .assertTextEquals(settingsRepository.scrollSpeed.toString())
         Log.e(
             "test $testNumber assert",
-            "$TEXT_FIELD_SCROLL_SPEED text is ${settings.scrollSpeed}"
+            "$TEXT_FIELD_SCROLL_SPEED text is ${settingsRepository.scrollSpeed}"
         )
     }
 

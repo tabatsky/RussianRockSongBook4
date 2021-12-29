@@ -5,30 +5,37 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import jatx.russianrocksongbook.database.api.*
+import jatx.russianrocksongbook.domain.models.Song
+import jatx.russianrocksongbook.domain.repository.*
 import jatx.russianrocksongbook.localsongs.R
-import jatx.russianrocksongbook.networking.api.result.STATUS_ERROR
-import jatx.russianrocksongbook.networking.api.result.STATUS_SUCCESS
-import jatx.russianrocksongbook.domain.Song
+import jatx.russianrocksongbook.domain.repository.result.STATUS_ERROR
+import jatx.russianrocksongbook.domain.repository.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.viewmodel.*
 import jatx.russianrocksongbook.viewmodel.interfaces.Local
-import jatx.russianrocksongbook.voicecommands.api.aliases
-import jatx.russianrocksongbook.voicecommands.api.voiceFilter
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
 internal open class LocalViewModel @Inject constructor(
-    viewModelDeps: ViewModelDeps,
+    localViewModelDeps: LocalViewModelDeps,
     private val localStateHolder: LocalStateHolder
 ): MvvmViewModel(
-    viewModelDeps,
+    localViewModelDeps,
     localStateHolder.commonStateHolder
 ), Local {
 
-    val currentSongCount = localStateHolder.currentSongCount.asStateFlow()
+    private val getSongsByArtistUseCase = localViewModelDeps.getSongsByArtistUseCase
+    private val getCountByArtistUseCase = localViewModelDeps.getCountByArtistUseCase
+    private val getSongByArtistAndPositionUseCase =
+        localViewModelDeps.getSongByArtistAndPositionUseCase
+    private val updateSongUseCase = localViewModelDeps.updateSongUseCase
+    private val deleteSongToTrashUseCase = localViewModelDeps.deleteSongToTrashUseCase
+    private val addWarningLocalUseCase = localViewModelDeps.addWarningLocalUseCase
+    private val addSongToCloudUseCase = localViewModelDeps.addSongToCloudUseCase
+
+    private val currentSongCount = localStateHolder.currentSongCount.asStateFlow()
     val currentSongList = localStateHolder.currentSongList.asStateFlow()
-    val currentSongPosition = localStateHolder.currentSongPosition.asStateFlow()
+    private val currentSongPosition = localStateHolder.currentSongPosition.asStateFlow()
     val currentSong = localStateHolder.currentSong.asStateFlow()
 
     val isEditorMode = localStateHolder.isEditorMode.asStateFlow()
@@ -71,9 +78,10 @@ internal open class LocalViewModel @Inject constructor(
                 localStateHolder
                     .commonStateHolder
                     .currentArtist.value = artist
-                localStateHolder.currentSongCount.value = songRepo.getCountByArtist(artist)
-                showSongsDisposable = songRepo
-                    .getSongsByArtist(artist)
+                localStateHolder.currentSongCount.value =
+                    getCountByArtistUseCase.execute(artist)
+                showSongsDisposable = getSongsByArtistUseCase
+                    .execute(artist)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
@@ -96,8 +104,8 @@ internal open class LocalViewModel @Inject constructor(
         localStateHolder.isAutoPlayMode.value = false
         localStateHolder.isEditorMode.value = false
 
-        selectSongDisposable = songRepo
-            .getSongByArtistAndPosition(currentArtist.value, position)
+        selectSongDisposable = getSongByArtistAndPositionUseCase
+            .execute(currentArtist.value, position)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
@@ -122,7 +130,7 @@ internal open class LocalViewModel @Inject constructor(
     }
 
     fun saveSong(song: Song) {
-        songRepo.updateSong(song)
+        updateSongUseCase.execute(song)
     }
 
     fun setEditorMode(value: Boolean) {
@@ -139,7 +147,7 @@ internal open class LocalViewModel @Inject constructor(
             this.favorite = value
             saveSong(this)
             if (!value && currentArtist.value == ARTIST_FAVORITE) {
-                localStateHolder.currentSongCount.value = songRepo.getCountByArtist(
+                localStateHolder.currentSongCount.value = getCountByArtistUseCase.execute(
                     ARTIST_FAVORITE
                 )
                 if (currentSongCount.value > 0) {
@@ -178,8 +186,9 @@ internal open class LocalViewModel @Inject constructor(
 
     fun deleteCurrentToTrash() {
         currentSong.value?.apply {
-            songRepo.deleteSongToTrash(this)
-            localStateHolder.currentSongCount.value = songRepo.getCountByArtist(currentArtist.value)
+            deleteSongToTrashUseCase.execute(this)
+            localStateHolder.currentSongCount.value = getCountByArtistUseCase
+                .execute(currentArtist.value)
             if (currentSongCount.value > 0) {
                 if (currentSongPosition.value >= currentSongCount.value) {
                     selectSong(currentSongPosition.value - 1)
@@ -224,8 +233,8 @@ internal open class LocalViewModel @Inject constructor(
             sendWarningDisposable?.apply {
                 if (!this.isDisposed) this.dispose()
             }
-            sendWarningDisposable = songBookAPIAdapter
-                .addWarning(this, comment)
+            sendWarningDisposable = addWarningLocalUseCase
+                .execute(this, comment)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
@@ -246,8 +255,8 @@ internal open class LocalViewModel @Inject constructor(
             uploadSongDisposable?.apply {
                 if (!this.isDisposed) this.dispose()
             }
-            uploadSongDisposable = songBookAPIAdapter
-                .addSong(this, userInfo)
+            uploadSongDisposable = addSongToCloudUseCase
+                .execute(this)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->

@@ -9,10 +9,10 @@ import jatx.russianrocksongbook.cloudsongs.internal.paging.CONFIG
 import jatx.russianrocksongbook.cloudsongs.internal.paging.CloudSongSource
 import jatx.russianrocksongbook.cloudsongs.internal.paging.SnapshotHolder
 import jatx.russianrocksongbook.cloudsongs.R
-import jatx.russianrocksongbook.networking.api.result.STATUS_ERROR
-import jatx.russianrocksongbook.networking.api.result.STATUS_SUCCESS
-import jatx.russianrocksongbook.domain.CloudSong
-import jatx.russianrocksongbook.networking.api.OrderBy
+import jatx.russianrocksongbook.domain.repository.result.STATUS_ERROR
+import jatx.russianrocksongbook.domain.repository.result.STATUS_SUCCESS
+import jatx.russianrocksongbook.domain.models.CloudSong
+import jatx.russianrocksongbook.domain.repository.OrderBy
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import jatx.russianrocksongbook.viewmodel.ViewModelDeps
 import jatx.russianrocksongbook.viewmodel.interfaces.Cloud
@@ -22,13 +22,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class CloudViewModel @Inject constructor(
-    viewModelDeps: ViewModelDeps,
+    cloudViewModelDeps: CloudViewModelDeps,
     val snapshotHolder: SnapshotHolder,
     private val cloudStateHolder: CloudStateHolder
 ): MvvmViewModel(
-    viewModelDeps,
+    cloudViewModelDeps,
     cloudStateHolder.commonStateHolder
 ), Cloud {
+    private val addSongFromCloudUseCase = cloudViewModelDeps.addSongFromCloudUseCase
+    private val pagedSearchUseCase = cloudViewModelDeps.pagedSearchUseCase
+    private val voteUseCase = cloudViewModelDeps.voteUseCase
+    private val deleteFromCloudUseCase = cloudViewModelDeps.deleteFromCloudUseCase
+    private val addWarningCloudUseCase = cloudViewModelDeps.addWarningCloudUseCase
 
     private val cloudSongCount = cloudStateHolder.cloudSongCount.asStateFlow()
     private val cloudSong = cloudStateHolder.cloudSong.asStateFlow()
@@ -62,7 +67,7 @@ internal class CloudViewModel @Inject constructor(
         snapshotHolder.isFlowInitDone = false
         cloudStateHolder.cloudSongsFlow.value =
             Pager(CONFIG) {
-                CloudSongSource(songBookAPIAdapter, searchFor, orderBy) {
+                CloudSongSource(pagedSearchUseCase, searchFor, orderBy) {
                     updateFetchDataError(true)
                 }
             }.flow.onEach {
@@ -136,8 +141,8 @@ internal class CloudViewModel @Inject constructor(
     @SuppressLint("CheckResult")
     fun deleteCurrentFromCloud(secret1: String, secret2: String) {
         cloudSong.value?.apply {
-            songBookAPIAdapter
-                .delete(secret1, secret2, this)
+            deleteFromCloudUseCase
+                .execute(secret1, secret2, this)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
@@ -164,7 +169,7 @@ internal class CloudViewModel @Inject constructor(
 
     fun downloadCurrent() {
         cloudSong.value?.apply {
-            songRepo.addSongFromCloud(this)
+            addSongFromCloudUseCase.execute(this)
             showToast(R.string.toast_chords_saved_and_added_to_favorite)
         }
     }
@@ -172,8 +177,8 @@ internal class CloudViewModel @Inject constructor(
     @SuppressLint("CheckResult")
     fun voteForCurrent(voteValue: Int) {
         cloudSong.value?.apply {
-            songBookAPIAdapter
-                .vote(this, userInfo, voteValue)
+            voteUseCase
+                .execute(this, voteValue)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
@@ -222,8 +227,8 @@ internal class CloudViewModel @Inject constructor(
     @SuppressLint("CheckResult")
     override fun sendWarningCloud(comment: String) {
         cloudSong.value?.apply {
-            songBookAPIAdapter
-                .addWarning(this, comment)
+            addWarningCloudUseCase
+                .execute(this, comment)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->

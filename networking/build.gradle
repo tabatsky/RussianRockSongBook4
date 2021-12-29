@@ -56,7 +56,6 @@ dependencies {
 
     api project(':domain')
     api project(':preferences')
-    api project(':debug')
     api project(':database')
     api project(':SynchronousCallAdapterFactory')
 }

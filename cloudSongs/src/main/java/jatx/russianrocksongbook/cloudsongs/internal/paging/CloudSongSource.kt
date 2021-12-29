@@ -3,16 +3,17 @@ package jatx.russianrocksongbook.cloudsongs.internal.paging
 import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import jatx.russianrocksongbook.networking.api.result.STATUS_SUCCESS
-import jatx.russianrocksongbook.debug.debug.exceptionToString
-import jatx.russianrocksongbook.domain.CloudSong
-import jatx.russianrocksongbook.networking.api.OrderBy
-import jatx.russianrocksongbook.networking.api.SongBookAPIAdapter
+import jatx.russianrocksongbook.domain.repository.result.STATUS_SUCCESS
+import jatx.russianrocksongbook.domain.models.CloudSong
+import jatx.russianrocksongbook.domain.repository.OrderBy
+import jatx.russianrocksongbook.domain.repository.CloudSongRepository
+import jatx.russianrocksongbook.domain.usecase.PagedSearchUseCase
+import jatx.russianrocksongbook.util.debug.exceptionToString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 internal class CloudSongSource(
-    private val songBookAPIAdapter: SongBookAPIAdapter,
+    private val pagedSearchUseCase: PagedSearchUseCase,
     private val searchFor: String = "",
     private val orderBy: OrderBy = OrderBy.BY_ID_DESC,
     private val onFetchDataError: () -> Unit = {}
@@ -25,8 +26,8 @@ internal class CloudSongSource(
             try {
                 val nextPage = params.key ?: 1
 
-                val result = songBookAPIAdapter
-                        .pagedSearch(searchFor, orderBy, nextPage)
+                val result = pagedSearchUseCase
+                        .execute(searchFor, orderBy, nextPage)
 
                 if (result.status == STATUS_SUCCESS) {
                     val data = (result.data ?: listOf())

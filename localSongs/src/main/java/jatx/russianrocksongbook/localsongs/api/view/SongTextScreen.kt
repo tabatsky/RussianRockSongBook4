@@ -32,7 +32,7 @@ import jatx.clickablewordstextview.ClickableWordsTextView
 import jatx.clickablewordstextview.OnWordClickListener
 import jatx.clickablewordstextview.Word
 import jatx.russianrocksongbook.commonview.*
-import jatx.russianrocksongbook.domain.Song
+import jatx.russianrocksongbook.domain.models.Song
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.preferences.api.ListenToMusicVariant

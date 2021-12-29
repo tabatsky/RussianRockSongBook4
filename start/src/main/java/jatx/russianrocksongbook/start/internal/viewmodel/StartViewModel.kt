@@ -1,7 +1,7 @@
 package jatx.russianrocksongbook.start.internal.viewmodel
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jatx.russianrocksongbook.database.api.*
+import jatx.russianrocksongbook.database.dbinit.*
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import jatx.russianrocksongbook.viewmodel.MvvmViewModel
 import jatx.russianrocksongbook.viewmodel.ViewModelDeps
@@ -12,12 +12,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class StartViewModel @Inject constructor(
-    viewModelDeps: ViewModelDeps,
+    startViewModelDeps: StartViewModelDeps,
     private val startStateHolder: StartStateHolder
 ): MvvmViewModel(
-    viewModelDeps,
+    startViewModelDeps,
     startStateHolder.commonStateHolder
 ) {
+
+    val songRepository = startViewModelDeps.songRepository
 
     val stubCurrentProgress = startStateHolder
         .stubCurrentProgress.asStateFlow()
@@ -27,13 +29,13 @@ internal class StartViewModel @Inject constructor(
     suspend fun asyncInit() {
         if (settings.appWasUpdated) {
             withContext(Dispatchers.IO) {
-                fillDbFromJSON(songRepo, context) { current, total ->
+                fillDbFromJSON(songRepository, context) { current, total ->
                     updateStubProgress(current, total)
                 }
-                deleteWrongSongs(songRepo)
-                deleteWrongArtists(songRepo)
-                patchWrongArtists(songRepo)
-                applySongPatches(songRepo)
+                deleteWrongSongs(songRepository)
+                deleteWrongArtists(songRepository)
+                patchWrongArtists(songRepository)
+                applySongPatches(songRepository)
             }
             setAppWasUpdated(true)
         }

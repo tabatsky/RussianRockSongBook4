@@ -50,7 +50,6 @@ dependencies {
     implementation "androidx.documentfile:documentfile:1.0.1"
     implementation 'org.apache.commons:commons-lang3:3.3.2'
 
-
-
+    api project(':util')
     api project(':domain')
 }
