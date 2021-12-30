@@ -605,6 +605,20 @@ class ExampleInstrumentedTest {
                 .onNodeWithText(stringConst.listIsEmpty)
                 .assertIsDisplayed()
             Log.e("test $testNumber assert", "${stringConst.listIsEmpty} is displayed")
+            composeTestRule
+                .onNodeWithTag(SEARCH_BUTTON)
+                .performClick()
+            Log.e("test $testNumber click", SEARCH_BUTTON)
+            composeTestRule.waitFor(timeout)
+            composeTestRule
+                .onNodeWithTag(SEARCH_PROGRESS)
+                .assertIsDisplayed()
+            Log.e("test $testNumber assert", "$SEARCH_PROGRESS is displayed")
+            composeTestRule.waitFor(EMPTY_LIST_DELAY)
+            composeTestRule
+                .onNodeWithText(stringConst.listIsEmpty)
+                .assertIsDisplayed()
+            Log.e("test $testNumber assert", "${stringConst.listIsEmpty} is displayed")
         }
     }
 

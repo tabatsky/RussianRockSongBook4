@@ -19,11 +19,9 @@ internal class CloudStateHolder @Inject constructor(
     private val pagedSearchUseCase: PagedSearchUseCase
 ) {
 
-    val isCloudLoading = MutableStateFlow(false)
-    val isListEmpty = MutableStateFlow(false)
+    val searchState = MutableStateFlow(SearchState.LOADING)
     val cloudSongCount = MutableStateFlow(0)
     val cloudSongPosition = MutableStateFlow(0)
-    var wasFetchDataError = MutableStateFlow(false)
     val cloudSong: MutableStateFlow<CloudSong?> = MutableStateFlow(null)
     val cloudSongsFlow: MutableStateFlow<Flow<PagingData<CloudSong>>> = MutableStateFlow(
         Pager(CONFIG) {
