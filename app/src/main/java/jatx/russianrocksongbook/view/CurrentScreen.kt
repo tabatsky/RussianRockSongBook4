@@ -14,12 +14,13 @@ import jatx.russianrocksongbook.localsongs.api.view.SongTextScreen
 import jatx.russianrocksongbook.settings.api.view.SettingsScreen
 import jatx.russianrocksongbook.start.api.view.StartScreen
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
-import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.russianrocksongbook.viewmodel.CommonViewModel
 
 @ExperimentalFoundationApi
 @Composable
-fun CurrentScreen(mvvmViewModel: MvvmViewModel = viewModel()) {
-    when (mvvmViewModel.currentScreenVariant.collectAsState().value) {
+fun CurrentScreen() {
+    val commonViewModel: CommonViewModel = viewModel()
+    when (commonViewModel.currentScreenVariant.collectAsState().value) {
         CurrentScreenVariant.START -> StartScreen()
         CurrentScreenVariant.SONG_LIST, CurrentScreenVariant.FAVORITE ->
             SongListScreen()

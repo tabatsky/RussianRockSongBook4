@@ -76,10 +76,10 @@ class ExampleInstrumentedTest {
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     @Inject
-    lateinit var songRepo: SongRepository
+    lateinit var localRepo: LocalRepository
 
     @Inject
-    lateinit var cloudSongRepository: CloudSongRepository
+    lateinit var cloudRepository: CloudRepository
 
     @Inject
     lateinit var settingsRepository: SettingsRepository
@@ -108,7 +108,7 @@ class ExampleInstrumentedTest {
     fun test1_menuAndSongList() {
         val testNumber = 1
 
-        val artists = songRepo.getArtistsAsList()
+        val artists = localRepo.getArtistsAsList()
 
         composeTestRule
             .onNodeWithTag(DRAWER_BUTTON_MAIN)
@@ -162,7 +162,7 @@ class ExampleInstrumentedTest {
             .onNodeWithText(TITLE_2)
             .assertDoesNotExist()
         Log.e("test $testNumber assert", "$TITLE_2 does not exist")
-        val indexSong2 = songRepo
+        val indexSong2 = localRepo
             .getSongsByArtistAsList(ARTIST_1)
             .map { it.title }
             .indexOf(TITLE_2) - 3
@@ -203,7 +203,7 @@ class ExampleInstrumentedTest {
             .onNodeWithText(TITLE_4)
             .assertDoesNotExist()
         Log.e("test $testNumber assert", "$TITLE_4 does not exist")
-        val indexSong4 = songRepo
+        val indexSong4 = localRepo
             .getSongsByArtistAsList(ARTIST_2)
             .map { it.title }
             .indexOf(TITLE_4) - 3
@@ -222,7 +222,7 @@ class ExampleInstrumentedTest {
     fun test2_songText() {
         val testNumber = 2
 
-        val artists = songRepo.getArtistsAsList()
+        val artists = localRepo.getArtistsAsList()
 
         composeTestRule
             .onNodeWithTag(DRAWER_BUTTON_MAIN)
@@ -246,7 +246,7 @@ class ExampleInstrumentedTest {
         Log.e("test $testNumber click", ARTIST_1)
         composeTestRule.waitFor(timeout)
 
-        val songs = songRepo.getSongsByArtistAsList(ARTIST_1)
+        val songs = localRepo.getSongsByArtistAsList(ARTIST_1)
         val songIndex1 = songs.indexOfFirst { it.title == TITLE_5 }
         val song1 = songs[songIndex1]
         composeTestRule
@@ -474,7 +474,7 @@ class ExampleInstrumentedTest {
     fun test3_cloudSearch() {
         val testNumber = 3
 
-        cloudSongRepository.apply {
+        cloudRepository.apply {
             var list = search("", OrderBy.BY_ID_DESC)
             var titleList = list.map { "${it.artist} - ${it.title}" }
             Log.e("test $testNumber list", titleList.toString())
@@ -612,7 +612,7 @@ class ExampleInstrumentedTest {
     fun test4_cloudSongText() {
         val testNumber = 4
 
-        cloudSongRepository.apply {
+        cloudRepository.apply {
             var list = search("", OrderBy.BY_ID_DESC)
             var titleList = list.map { "${it.artist} - ${it.title}" }
             Log.e("test $testNumber list", titleList.toString())
@@ -661,14 +661,14 @@ class ExampleInstrumentedTest {
             Log.e("test $testNumber click", DOWNLOAD_BUTTON)
             composeTestRule.waitFor(timeout)
             assert(
-                songRepo
+                localRepo
                     .getSongsByArtistAsList(list[2].artist)
                     .map { it.title }
                     .contains(list[2].title)
             )
             Log.e("test $testNumber assert", "${list[2].artist} contains ${list[2].title}")
             assert(
-                songRepo
+                localRepo
                     .getSongsByArtistAsList(ARTIST_FAVORITE)
                     .map { it.title }
                     .contains(list[2].title)
@@ -876,7 +876,7 @@ class ExampleInstrumentedTest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "$SONG_TEXT_VIEWER is displayed")
 
-        val song = songRepo.getSongByArtistAndTitle(ARTIST_NEW, TITLE_NEW)
+        val song = localRepo.getSongByArtistAndTitle(ARTIST_NEW, TITLE_NEW)
         assert(song != null)
         song!!.apply {
             assert(text == TEXT_NEW)
@@ -915,7 +915,7 @@ class ExampleInstrumentedTest {
             .onNodeWithText(stringConst.listIsEmpty)
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "${stringConst.listIsEmpty} is displayed")
-        val artists = songRepo.getArtistsAsList()
+        val artists = localRepo.getArtistsAsList()
         assert(!artists.contains(ARTIST_NEW))
         Log.e("test $testNumber assert", "new artist deleted")
     }

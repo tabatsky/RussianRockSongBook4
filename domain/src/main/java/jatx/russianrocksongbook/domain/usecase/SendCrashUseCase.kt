@@ -1,15 +1,14 @@
 package jatx.russianrocksongbook.domain.usecase
 
 import jatx.russianrocksongbook.domain.models.AppCrash
-import jatx.russianrocksongbook.domain.repository.CloudSongRepository
-import jatx.russianrocksongbook.domain.repository.OrderBy
+import jatx.russianrocksongbook.domain.repository.CloudRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class SendCrashUseCase @Inject constructor(
-    private val cloudSongRepository: CloudSongRepository
+    private val cloudRepository: CloudRepository
 ) {
-    fun execute(appCrash: AppCrash) = cloudSongRepository
+    fun execute(appCrash: AppCrash) = cloudRepository
         .sendCrash(appCrash)
 }

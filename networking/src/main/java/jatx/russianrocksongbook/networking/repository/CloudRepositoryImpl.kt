@@ -8,7 +8,7 @@ import jatx.russianrocksongbook.domain.models.AppCrash
 import jatx.russianrocksongbook.domain.models.CloudSong
 import jatx.russianrocksongbook.domain.models.Song
 import jatx.russianrocksongbook.domain.repository.OrderBy
-import jatx.russianrocksongbook.domain.repository.CloudSongRepository
+import jatx.russianrocksongbook.domain.repository.CloudRepository
 import jatx.russianrocksongbook.networking.ext.toCloudSong
 import jatx.russianrocksongbook.networking.ext.toCloudSongGson
 import jatx.russianrocksongbook.domain.repository.result.ResultWithAddSongListResultData
@@ -23,10 +23,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-@BoundTo(supertype = CloudSongRepository::class, component = SingletonComponent::class)
-class CloudSongRepositoryImpl @Inject constructor(
+@BoundTo(supertype = CloudRepository::class, component = SingletonComponent::class)
+class CloudRepositoryImpl @Inject constructor(
     private val retrofitClient: RetrofitClient
-): CloudSongRepository {
+): CloudRepository {
     override var isOnline = true
 
     override fun sendCrash(appCrash: AppCrash): Single<ResultWithoutData> {

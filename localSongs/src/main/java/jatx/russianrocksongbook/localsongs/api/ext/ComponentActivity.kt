@@ -6,9 +6,9 @@ import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.VoiceCommandViewModel
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 
-fun ComponentActivity.parseVoiceCommand(cmd: String) {
+fun ComponentActivity.parseAndExecuteVoiceCommand(cmd: String) {
     val voiceCommandViewModel: VoiceCommandViewModel by viewModels()
-    voiceCommandViewModel.parseVoiceCommand(cmd)
+    voiceCommandViewModel.parseAndExecuteVoiceCommand(cmd)
 }
 
 fun ComponentActivity.selectArtist(artist: String) = runOnUiThread {

@@ -4,41 +4,41 @@ import android.content.Context
 import jatx.russianrocksongbook.database.db.util.wrongArtists
 import jatx.russianrocksongbook.database.db.util.wrongArtistsPatch
 import jatx.russianrocksongbook.database.db.util.wrongSongs
-import jatx.russianrocksongbook.domain.repository.SongRepository
+import jatx.russianrocksongbook.domain.repository.LocalRepository
 
-fun fillDbFromJSON(songRepo: SongRepository, context: Context, onProgressChanged: (Int, Int) -> Unit) {
+fun fillDbFromJSON(localRepo: LocalRepository, context: Context, onProgressChanged: (Int, Int) -> Unit) {
     val jsonLoader = JsonLoader(context)
     while (jsonLoader.hasNext()) {
         onProgressChanged(jsonLoader.current + 1, jsonLoader.total)
         val songs = jsonLoader.loadNext()
-        songRepo.insertIgnoreSongs(songs)
+        localRepo.insertIgnoreSongs(songs)
     }
 }
 
-fun applySongPatches(songRepo: SongRepository) {
+fun applySongPatches(localRepo: LocalRepository) {
     patches.forEach {
-        songRepo.getSongByArtistAndTitle(it.artist, it.title)?.apply {
+        localRepo.getSongByArtistAndTitle(it.artist, it.title)?.apply {
             val patchedText = this.text.replace(it.orig, it.patch)
             this.text = patchedText
-            songRepo.updateSong(this)
+            localRepo.updateSong(this)
         }
     }
 }
 
-fun deleteWrongSongs(songRepo: SongRepository) {
+fun deleteWrongSongs(localRepo: LocalRepository) {
     wrongSongs.forEach {
-        songRepo.deleteWrongSong(it.artist, it.title)
+        localRepo.deleteWrongSong(it.artist, it.title)
     }
 }
 
-fun deleteWrongArtists(songRepo: SongRepository) {
+fun deleteWrongArtists(localRepo: LocalRepository) {
     wrongArtists.forEach {
-        songRepo.deleteWrongArtist(it)
+        localRepo.deleteWrongArtist(it)
     }
 }
 
-fun patchWrongArtists(songRepo: SongRepository) {
+fun patchWrongArtists(localRepo: LocalRepository) {
     wrongArtistsPatch.keys.forEach { key ->
-        songRepo.patchWrongArtist(key, wrongArtistsPatch[key]!!)
+        localRepo.patchWrongArtist(key, wrongArtistsPatch[key]!!)
     }
 }

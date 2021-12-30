@@ -18,7 +18,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.preferences.api.Theme
 import jatx.russianrocksongbook.preferences.api.colorDarkYellow
 import jatx.russianrocksongbook.testing.BACK_BUTTON
-import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.russianrocksongbook.viewmodel.CommonViewModel
 import jatx.sideappbar.SideAppBar
 
 val COMMON_APP_BAR_WIDTH = 72.dp
@@ -64,12 +64,12 @@ fun CommonIconButton(
 
 @Composable
 fun CommonBackButton(
-    mvvmViewModel: MvvmViewModel = viewModel()
+    commonViewModel: CommonViewModel = viewModel()
 ) {
     CommonIconButton(
         resId = R.drawable.ic_back,
         testTag = BACK_BUTTON,
-        onClick = { mvvmViewModel.back() }
+        onClick = { commonViewModel.back() }
     )
 }
 

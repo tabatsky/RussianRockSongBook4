@@ -3,8 +3,7 @@ package jatx.russianrocksongbook.start.internal.viewmodel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jatx.russianrocksongbook.database.dbinit.*
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
-import jatx.russianrocksongbook.viewmodel.MvvmViewModel
-import jatx.russianrocksongbook.viewmodel.ViewModelDeps
+import jatx.russianrocksongbook.viewmodel.CommonViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
@@ -12,14 +11,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class StartViewModel @Inject constructor(
-    startViewModelDeps: StartViewModelDeps,
-    private val startStateHolder: StartStateHolder
-): MvvmViewModel(
-    startViewModelDeps,
-    startStateHolder.commonStateHolder
+    private val startStateHolder: StartStateHolder,
+    startViewModelDeps: StartViewModelDeps
+): CommonViewModel(
+    startStateHolder.commonStateHolder,
+    startViewModelDeps.commonViewModelDeps
 ) {
-
-    val songRepository = startViewModelDeps.songRepository
+    val songRepository =
+        startViewModelDeps.localRepository
 
     val stubCurrentProgress = startStateHolder
         .stubCurrentProgress.asStateFlow()

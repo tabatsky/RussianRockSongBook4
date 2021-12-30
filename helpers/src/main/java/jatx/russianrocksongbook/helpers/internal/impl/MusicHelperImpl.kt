@@ -11,7 +11,7 @@ import dagger.hilt.android.scopes.ActivityScoped
 import it.czerwinski.android.hilt.annotations.BoundTo
 import jatx.russianrocksongbook.helpers.R
 import jatx.russianrocksongbook.helpers.api.MusicHelper
-import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.russianrocksongbook.viewmodel.CommonViewModel
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 import javax.inject.Inject
@@ -22,8 +22,8 @@ internal class MusicHelperImpl @Inject constructor(
     private val activity: Activity
 ): MusicHelper {
     private val mvvmViewModel = (activity as? ComponentActivity)?.let {
-        val mvvmViewModel: MvvmViewModel by it.viewModels()
-        mvvmViewModel
+        val commonViewModel: CommonViewModel by it.viewModels()
+        commonViewModel
     }
 
     override fun openYandexMusic(searchFor: String) {

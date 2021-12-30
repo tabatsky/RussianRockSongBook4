@@ -13,8 +13,7 @@ import jatx.russianrocksongbook.domain.repository.result.STATUS_ERROR
 import jatx.russianrocksongbook.domain.repository.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.domain.models.CloudSong
 import jatx.russianrocksongbook.domain.repository.OrderBy
-import jatx.russianrocksongbook.viewmodel.MvvmViewModel
-import jatx.russianrocksongbook.viewmodel.ViewModelDeps
+import jatx.russianrocksongbook.viewmodel.CommonViewModel
 import jatx.russianrocksongbook.viewmodel.interfaces.Cloud
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onEach
@@ -22,18 +21,23 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class CloudViewModel @Inject constructor(
-    cloudViewModelDeps: CloudViewModelDeps,
     val snapshotHolder: SnapshotHolder,
-    private val cloudStateHolder: CloudStateHolder
-): MvvmViewModel(
-    cloudViewModelDeps,
-    cloudStateHolder.commonStateHolder
+    private val cloudStateHolder: CloudStateHolder,
+    cloudViewModelDeps: CloudViewModelDeps
+): CommonViewModel(
+    cloudStateHolder.commonStateHolder,
+    cloudViewModelDeps.commonViewModelDeps
 ), Cloud {
-    private val addSongFromCloudUseCase = cloudViewModelDeps.addSongFromCloudUseCase
-    private val pagedSearchUseCase = cloudViewModelDeps.pagedSearchUseCase
-    private val voteUseCase = cloudViewModelDeps.voteUseCase
-    private val deleteFromCloudUseCase = cloudViewModelDeps.deleteFromCloudUseCase
-    private val addWarningCloudUseCase = cloudViewModelDeps.addWarningCloudUseCase
+    private val addSongFromCloudUseCase =
+        cloudViewModelDeps.addSongFromCloudUseCase
+    private val pagedSearchUseCase =
+        cloudViewModelDeps.pagedSearchUseCase
+    private val voteUseCase =
+        cloudViewModelDeps.voteUseCase
+    private val deleteFromCloudUseCase =
+        cloudViewModelDeps.deleteFromCloudUseCase
+    private val addWarningCloudUseCase =
+        cloudViewModelDeps.addWarningCloudUseCase
 
     private val cloudSongCount = cloudStateHolder.cloudSongCount.asStateFlow()
     private val cloudSong = cloudStateHolder.cloudSong.asStateFlow()

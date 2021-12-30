@@ -62,9 +62,7 @@ dependencies {
     implementation 'it.czerwinski.android.hilt:hilt-extensions:1.2.0'
     kapt 'it.czerwinski.android.hilt:hilt-processor:1.2.0'
 
-
-
-
+    api project(':domain')
     api project(':preferences')
     api project(':viewmodel')
     api project(':commonview')

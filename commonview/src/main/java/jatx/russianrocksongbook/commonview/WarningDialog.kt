@@ -12,16 +12,16 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.preferences.api.ScalePow
-import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.russianrocksongbook.viewmodel.CommonViewModel
 
 @Composable
 fun WarningDialog(
-    mvvmViewModel: MvvmViewModel = viewModel(),
+    commonViewModel: CommonViewModel = viewModel(),
     onConfirm: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val theme = mvvmViewModel.settings.theme
-    val fontScale = mvvmViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
+    val theme = commonViewModel.settings.theme
+    val fontScale = commonViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTextDp = dimensionResource(id = R.dimen.text_size_12) * fontScale
     val fontSizeTextSp = with(LocalDensity.current) {
         fontSizeTextDp.toSp()
@@ -91,7 +91,7 @@ fun WarningDialog(
                         onDismiss()
                         onConfirm(comment)
                     } else {
-                        mvvmViewModel
+                        commonViewModel
                             .showToast(R.string.comment_cannot_be_empty)
                     }
                 }) {

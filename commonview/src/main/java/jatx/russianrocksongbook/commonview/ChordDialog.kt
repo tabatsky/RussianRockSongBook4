@@ -15,15 +15,15 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dqt.libs.chorddroid.classes.ChordLibrary
 import com.dqt.libs.chorddroid.components.ChordTextureView
-import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.russianrocksongbook.viewmodel.CommonViewModel
 
 @Composable
 fun ChordDialog(
-    mvvmViewModel: MvvmViewModel = viewModel(),
+    commonViewModel: CommonViewModel = viewModel(),
     chord: String,
     onDismiss: () -> Unit
 ) {
-    val theme = mvvmViewModel.settings.theme
+    val theme = commonViewModel.settings.theme
     var actualChord = chord
     for (key in ChordLibrary.chordMappings.keys) {
         actualChord = actualChord.replace(key, ChordLibrary.chordMappings[key] ?: "")

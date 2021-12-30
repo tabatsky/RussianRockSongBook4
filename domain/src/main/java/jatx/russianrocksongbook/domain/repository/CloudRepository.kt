@@ -10,7 +10,7 @@ import jatx.russianrocksongbook.domain.repository.result.ResultWithNumber
 import jatx.russianrocksongbook.domain.repository.result.ResultWithoutData
 import jatx.russianrocksongbook.domain.models.interfaces.UserInfo
 
-interface CloudSongRepository {
+interface CloudRepository {
     var isOnline: Boolean
 
     fun sendCrash(appCrash: AppCrash): Single<ResultWithoutData>
