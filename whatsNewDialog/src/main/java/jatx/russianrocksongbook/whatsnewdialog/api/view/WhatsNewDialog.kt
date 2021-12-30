@@ -18,23 +18,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.preferences.api.ScalePow
-import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.russianrocksongbook.viewmodel.CommonViewModel
 import jatx.russianrocksongbook.whatsnewdialog.R
 
 @Composable
 fun WhatsNewDialog() {
-    val mvvmViewModel: MvvmViewModel = viewModel()
+    val commonViewModel: CommonViewModel = viewModel()
 
-    val theme = mvvmViewModel.settings.theme
-    val fontScale = mvvmViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
+    val theme = commonViewModel.settings.theme
+    val fontScale = commonViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTitleDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
     val fontSizeTitleSp = with(LocalDensity.current) {
         fontSizeTitleDp.toSp()
     }
 
-    val appWasUpdated by mvvmViewModel.appWasUpdated.collectAsState()
+    val appWasUpdated by commonViewModel.appWasUpdated.collectAsState()
     val onDismiss = {
-        mvvmViewModel.setAppWasUpdated(false)
+        commonViewModel.setAppWasUpdated(false)
     }
 
     if (appWasUpdated) {

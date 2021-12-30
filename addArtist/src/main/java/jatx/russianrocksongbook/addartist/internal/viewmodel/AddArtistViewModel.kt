@@ -9,7 +9,7 @@ import jatx.russianrocksongbook.domain.repository.result.STATUS_ERROR
 import jatx.russianrocksongbook.domain.repository.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.domain.models.Song
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
-import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.russianrocksongbook.viewmodel.CommonViewModel
 import jatx.russianrocksongbook.viewmodel.R
 import kotlinx.coroutines.flow.asStateFlow
 import java.io.File
@@ -17,18 +17,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class AddArtistViewModel @Inject constructor(
-    addArtistViewModelDeps: AddArtistViewModelDeps,
-    private val addArtistStateHolder: AddArtistStateHolder
-): MvvmViewModel(
-    addArtistViewModelDeps,
-    addArtistStateHolder.commonStateHolder
+    private val addArtistStateHolder: AddArtistStateHolder,
+    addArtistViewModelDeps: AddArtistViewModelDeps
+): CommonViewModel(
+    addArtistStateHolder.commonStateHolder,
+    addArtistViewModelDeps.commonViewModelDeps
 ) {
-    private val insertReplaceUserSongsUseCase = addArtistViewModelDeps
-        .insertReplaceUserSongsUseCase
-    private val addSongListToCloudUseCase = addArtistViewModelDeps
-        .addSongListToCloudUseCase
-
-    private val fileSystemAdapter = addArtistViewModelDeps.fileSystemRepository
+    private val insertReplaceUserSongsUseCase =
+        addArtistViewModelDeps.insertReplaceUserSongsUseCase
+    private val addSongListToCloudUseCase =
+        addArtistViewModelDeps.addSongListToCloudUseCase
+    private val fileSystemAdapter =
+        addArtistViewModelDeps.fileSystemRepository
 
     val showUploadDialogForDir = addArtistStateHolder
         .showUploadDialogForDir.asStateFlow()

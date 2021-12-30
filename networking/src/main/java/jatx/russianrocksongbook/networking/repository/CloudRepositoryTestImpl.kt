@@ -6,8 +6,8 @@ import it.czerwinski.android.hilt.annotations.TestBoundTo
 import jatx.russianrocksongbook.domain.models.AppCrash
 import jatx.russianrocksongbook.domain.models.CloudSong
 import jatx.russianrocksongbook.domain.models.Song
-import jatx.russianrocksongbook.domain.repository.CloudSongRepository
-import jatx.russianrocksongbook.domain.repository.SongRepository
+import jatx.russianrocksongbook.domain.repository.CloudRepository
+import jatx.russianrocksongbook.domain.repository.LocalRepository
 import jatx.russianrocksongbook.domain.repository.OrderBy
 import jatx.russianrocksongbook.domain.repository.result.*
 import jatx.russianrocksongbook.networking.ext.toCloudSong
@@ -18,16 +18,16 @@ import javax.inject.Singleton
 const val PAGE_SIZE = 15
 
 @Singleton
-@TestBoundTo(supertype = CloudSongRepository::class, component = SingletonComponent::class)
-internal class CloudSongRepositoryTestImpl @Inject constructor(
-    songRepo: SongRepository,
+@TestBoundTo(supertype = CloudRepository::class, component = SingletonComponent::class)
+internal class CloudRepositoryTestImpl @Inject constructor(
+    localRepo: LocalRepository,
     userInfo: UserInfo
-): CloudSongRepository {
+): CloudRepository {
     override var isOnline = true
 
-    private val list1 = songRepo.getSongsByArtistAsList("Немного Нервно")
-    private val list2 = songRepo.getSongsByArtistAsList("Александр Башлачёв")
-    private val list3 = songRepo.getSongsByArtistAsList("Сплин")
+    private val list1 = localRepo.getSongsByArtistAsList("Немного Нервно")
+    private val list2 = localRepo.getSongsByArtistAsList("Александр Башлачёв")
+    private val list3 = localRepo.getSongsByArtistAsList("Сплин")
     private val list = list1
         .plus(list2)
         .plus(list3)

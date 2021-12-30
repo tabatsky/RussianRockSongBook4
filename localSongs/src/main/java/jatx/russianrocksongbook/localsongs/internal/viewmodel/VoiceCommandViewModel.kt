@@ -4,26 +4,25 @@ import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jatx.russianrocksongbook.domain.models.Song
 import jatx.russianrocksongbook.localsongs.R
-import jatx.russianrocksongbook.viewmodel.ViewModelDeps
 import jatx.russianrocksongbook.voicecommands.api.aliases
 import jatx.russianrocksongbook.voicecommands.api.voiceFilter
 import javax.inject.Inject
 
 @HiltViewModel
 internal class VoiceCommandViewModel @Inject constructor(
-    voiceCommandViewModelDeps: VoiceCommandViewModelDeps,
-    private val localStateHolder: LocalStateHolder
+    private val localStateHolder: LocalStateHolder,
+    voiceCommandViewModelDeps: VoiceCommandViewModelDeps
 ): LocalViewModel(
-    voiceCommandViewModelDeps,
-    localStateHolder
+    localStateHolder,
+    voiceCommandViewModelDeps.localViewModelDeps
 ) {
-    private val getArtistsAsListUseCase = voiceCommandViewModelDeps
-        .getArtistsAsListUseCase
+    private val getArtistsAsListUseCase =
+        voiceCommandViewModelDeps.getArtistsAsListUseCase
 
-    private val getSongsByVoiceSearchUseCase = voiceCommandViewModelDeps
-        .getSongsByVoiceSearchUseCase
+    private val getSongsByVoiceSearchUseCase =
+        voiceCommandViewModelDeps.getSongsByVoiceSearchUseCase
 
-    fun parseVoiceCommand(command: String) {
+    fun parseAndExecuteVoiceCommand(command: String) {
         Log.e("voice command", command)
 
         if (command.lowercase().startsWith("открой группу ")

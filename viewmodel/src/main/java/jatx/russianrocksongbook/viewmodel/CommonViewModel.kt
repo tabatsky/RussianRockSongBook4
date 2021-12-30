@@ -14,15 +14,18 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-open class MvvmViewModel @Inject constructor(
-    viewModelDeps: ViewModelDeps,
-    private val commonStateHolder: CommonStateHolder
+open class CommonViewModel @Inject constructor(
+    private val commonStateHolder: CommonStateHolder,
+    commonViewModelDeps: CommonViewModelDeps
 ): ViewModel() {
-    val settings = viewModelDeps.settingsRepository
-    val callbacks = viewModelDeps.callbacks
-    val context = viewModelDeps.context
+    val settings =
+        commonViewModelDeps.settingsRepository
+    val callbacks =
+        commonViewModelDeps.callbacks
+    val context =
+        commonViewModelDeps.context
 
-    private val getArtistsUseCase = viewModelDeps.getArtistsUseCase
+    private val getArtistsUseCase = commonViewModelDeps.getArtistsUseCase
 
     val currentScreenVariant = commonStateHolder
         .currentScreenVariant

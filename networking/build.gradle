@@ -55,7 +55,5 @@ dependencies {
     api 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
     api project(':domain')
-    api project(':preferences')
-    api project(':database')
     api project(':SynchronousCallAdapterFactory')
 }

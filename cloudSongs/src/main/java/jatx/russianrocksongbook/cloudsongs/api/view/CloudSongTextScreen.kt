@@ -255,7 +255,7 @@ fun CloudSongTextScreen() {
                     cloudViewModel.openYandexMusicCloud(true)
                 } else {
                     YandexMusicDialog(
-                        mvvmViewModel = cloudViewModel
+                        commonViewModel = cloudViewModel
                     ) {
                         showYandexDialog = false
                     }
@@ -267,7 +267,7 @@ fun CloudSongTextScreen() {
                     cloudViewModel.openVkMusicCloud(true)
                 } else {
                     VkMusicDialog(
-                        mvvmViewModel = cloudViewModel
+                        commonViewModel = cloudViewModel
                     ) {
                         showVkDialog = false
                     }
@@ -279,7 +279,7 @@ fun CloudSongTextScreen() {
                     cloudViewModel.openYoutubeMusicCloud(true)
                 } else {
                     YoutubeMusicDialog(
-                        mvvmViewModel = cloudViewModel
+                        commonViewModel = cloudViewModel
                     ) {
                         showYoutubeMusicDialog = false
                     }

@@ -8,24 +8,23 @@ import io.reactivex.schedulers.Schedulers
 import jatx.russianrocksongbook.domain.repository.result.STATUS_ERROR
 import jatx.russianrocksongbook.domain.repository.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.domain.models.Song
-import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.russianrocksongbook.viewmodel.CommonViewModel
 import jatx.russianrocksongbook.viewmodel.R
-import jatx.russianrocksongbook.viewmodel.ViewModelDeps
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
 internal class AddSongViewModel @Inject constructor(
-    addSongViewModelDeps: AddSongViewModelDeps,
-    private val addSongStateHolder: AddSongStateHolder
-): MvvmViewModel(
-    addSongViewModelDeps,
-    addSongStateHolder.commonStateHolder
+    private val addSongStateHolder: AddSongStateHolder,
+    addSongViewModelDeps: AddSongViewModelDeps
+): CommonViewModel(
+    addSongStateHolder.commonStateHolder,
+    addSongViewModelDeps.commonViewModelDeps
 ) {
-    private val insertReplaceUserSongUseCase = addSongViewModelDeps
-        .insertReplaceUserSongUseCase
-    private val addSongToCloudUseCase = addSongViewModelDeps
-        .addSongToCloudUseCase
+    private val insertReplaceUserSongUseCase =
+        addSongViewModelDeps.insertReplaceUserSongUseCase
+    private val addSongToCloudUseCase =
+        addSongViewModelDeps.addSongToCloudUseCase
 
     val showUploadDialogForSong = addSongStateHolder
         .showUploadDialogForSong.asStateFlow()

@@ -1,14 +1,13 @@
 package jatx.russianrocksongbook.domain.usecase
 
 import jatx.russianrocksongbook.domain.models.CloudSong
-import jatx.russianrocksongbook.domain.models.Song
-import jatx.russianrocksongbook.domain.repository.SongRepository
+import jatx.russianrocksongbook.domain.repository.LocalRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class AddSongFromCloudUseCase @Inject constructor(
-    private val songRepository: SongRepository
+    private val localRepository: LocalRepository
 ) {
-    fun execute(cloudSong: CloudSong) = songRepository.addSongFromCloud(cloudSong)
+    fun execute(cloudSong: CloudSong) = localRepository.addSongFromCloud(cloudSong)
 }

@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -20,7 +21,7 @@ import jatx.russianrocksongbook.domain.usecase.SendCrashUseCase
 import jatx.russianrocksongbook.helpers.api.AddSongsFromDirHelper
 import jatx.russianrocksongbook.helpers.api.DonationHelper
 import jatx.russianrocksongbook.helpers.api.MusicHelper
-import jatx.russianrocksongbook.localsongs.api.ext.parseVoiceCommand
+import jatx.russianrocksongbook.localsongs.api.ext.parseAndExecuteVoiceCommand
 import jatx.russianrocksongbook.localsongs.api.ext.selectArtist
 import jatx.russianrocksongbook.localsongs.api.ext.selectSongByArtistAndTitle
 import jatx.russianrocksongbook.preferences.api.Orientation
@@ -28,10 +29,9 @@ import jatx.russianrocksongbook.preferences.api.SettingsRepository
 import jatx.russianrocksongbook.domain.models.interfaces.Version
 import jatx.russianrocksongbook.start.api.ext.asyncInit
 import jatx.russianrocksongbook.view.CurrentScreen
-import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.russianrocksongbook.viewmodel.CommonViewModel
 import jatx.russianrocksongbook.voicecommands.api.VoiceCommandHelper
 import kotlinx.coroutines.*
-import java.lang.NullPointerException
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -74,20 +74,20 @@ class MainActivity : ComponentActivity() {
     @Inject
     fun initActions() {
         Log.e("inject init", "actions")
-        val mvvmViewModel: MvvmViewModel by viewModels()
-        mvvmViewModel.callbacks.onRestartApp = ::restartApp
-        mvvmViewModel.callbacks.onReviewApp = ::reviewApp
-        mvvmViewModel.callbacks.onShowDevSite = ::showDevSite
-        mvvmViewModel.callbacks.onOpenYandexMusic = musicHelper::openYandexMusic
-        mvvmViewModel.callbacks.onOpenVkMusic = musicHelper::openVkMusic
-        mvvmViewModel.callbacks.onOpenYoutubeMusic = musicHelper::openYoutubeMusic
-        mvvmViewModel.callbacks.onAddSongsFromDir = ::addSongsFromDir
-        mvvmViewModel.callbacks.onPurchaseItem = donationHelper::purchaseItem
-        mvvmViewModel.callbacks.onCloudSearchScreenSelected = ::initCloudSearch
-        mvvmViewModel.callbacks.onArtistSelected = ::selectArtist
-        mvvmViewModel.callbacks.onSongByArtistAndTitleSelected =
+        val commonViewModel: CommonViewModel by viewModels()
+        commonViewModel.callbacks.onRestartApp = ::restartApp
+        commonViewModel.callbacks.onReviewApp = ::reviewApp
+        commonViewModel.callbacks.onShowDevSite = ::showDevSite
+        commonViewModel.callbacks.onOpenYandexMusic = musicHelper::openYandexMusic
+        commonViewModel.callbacks.onOpenVkMusic = musicHelper::openVkMusic
+        commonViewModel.callbacks.onOpenYoutubeMusic = musicHelper::openYoutubeMusic
+        commonViewModel.callbacks.onAddSongsFromDir = ::addSongsFromDir
+        commonViewModel.callbacks.onPurchaseItem = donationHelper::purchaseItem
+        commonViewModel.callbacks.onCloudSearchScreenSelected = ::initCloudSearch
+        commonViewModel.callbacks.onArtistSelected = ::selectArtist
+        commonViewModel.callbacks.onSongByArtistAndTitleSelected =
             ::selectSongByArtistAndTitle
-        mvvmViewModel.callbacks.onSpeechRecognize = ::speechRecognize
+        commonViewModel.callbacks.onSpeechRecognize = ::speechRecognize
     }
 
     @Inject
@@ -97,8 +97,8 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onBackPressed() {
-        val mvvmViewModel: MvvmViewModel by viewModels()
-        mvvmViewModel.back {
+        val commonViewModel: CommonViewModel by viewModels()
+        commonViewModel.back {
             finish()
         }
     }
@@ -138,9 +138,18 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun speechRecognize() {
-        voiceCommandHelper.recognizeVoiceCommand {
-            parseVoiceCommand(it)
-        }
+        voiceCommandHelper.recognizeVoiceCommand(
+            onVoiceCommand =  {
+                parseAndExecuteVoiceCommand(it)
+            },
+            onError = {
+                Toast.makeText(
+                    this,
+                    getString(R.string.toast_speech_recognize_not_supported),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        )
     }
 
 }

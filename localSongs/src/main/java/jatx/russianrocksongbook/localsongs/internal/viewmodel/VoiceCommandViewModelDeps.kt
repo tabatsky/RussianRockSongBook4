@@ -1,16 +1,13 @@
 package jatx.russianrocksongbook.localsongs.internal.viewmodel
 
-import dagger.hilt.android.scopes.ActivityRetainedScoped
+import dagger.hilt.android.scopes.ViewModelScoped
 import jatx.russianrocksongbook.domain.usecase.GetArtistsAsListUseCase
 import jatx.russianrocksongbook.domain.usecase.GetSongsByVoiceSearchUseCase
-import jatx.russianrocksongbook.viewmodel.ViewModelDeps
 import javax.inject.Inject
 
-@ActivityRetainedScoped
-internal class VoiceCommandViewModelDeps @Inject constructor(): LocalViewModelDeps() {
-    @Inject
-    lateinit var getArtistsAsListUseCase: GetArtistsAsListUseCase
-
-    @Inject
-    lateinit var getSongsByVoiceSearchUseCase: GetSongsByVoiceSearchUseCase
-}
+@ViewModelScoped
+internal class VoiceCommandViewModelDeps @Inject constructor(
+    val localViewModelDeps: LocalViewModelDeps,
+    val getArtistsAsListUseCase: GetArtistsAsListUseCase,
+    val getSongsByVoiceSearchUseCase: GetSongsByVoiceSearchUseCase
+)

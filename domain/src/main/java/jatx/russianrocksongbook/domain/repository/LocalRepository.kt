@@ -10,7 +10,7 @@ const val ARTIST_ADD_SONG = "Добавить песню"
 const val ARTIST_CLOUD_SONGS = "Аккорды онлайн"
 const val ARTIST_DONATION = "Пожертвования"
 
-interface SongRepository {
+interface LocalRepository {
     fun getArtists(): Flowable<List<String>>
     fun getArtistsAsList(): List<String>
     fun getCountByArtist(artist: String): Int

@@ -15,50 +15,50 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.preferences.api.ScalePow
-import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.russianrocksongbook.viewmodel.CommonViewModel
 
 @Composable
 fun YandexMusicDialog(
-    mvvmViewModel: MvvmViewModel,
+    commonViewModel: CommonViewModel,
     onDismiss: () -> Unit
 ) = MusicDialog(
-    mvvmViewModel = mvvmViewModel,
+    commonViewModel = commonViewModel,
     stringRes = R.string.question_search_at_yandex_music,
-    onConfirm = mvvmViewModel::openYandexMusic,
+    onConfirm = commonViewModel::openYandexMusic,
     onDismiss = onDismiss
 )
 
 @Composable
 fun VkMusicDialog(
-    mvvmViewModel: MvvmViewModel,
+    commonViewModel: CommonViewModel,
     onDismiss: () -> Unit
 ) = MusicDialog(
-    mvvmViewModel = mvvmViewModel,
+    commonViewModel = commonViewModel,
     stringRes = R.string.question_search_at_vk_music,
-    onConfirm = mvvmViewModel::openVkMusic,
+    onConfirm = commonViewModel::openVkMusic,
     onDismiss = onDismiss
 )
 
 @Composable
 fun YoutubeMusicDialog(
-    mvvmViewModel: MvvmViewModel,
+    commonViewModel: CommonViewModel,
     onDismiss: () -> Unit
 ) = MusicDialog(
-    mvvmViewModel = mvvmViewModel,
+    commonViewModel = commonViewModel,
     stringRes = R.string.question_search_at_youtube_music,
-    onConfirm = mvvmViewModel::openYoutubeMusic,
+    onConfirm = commonViewModel::openYoutubeMusic,
     onDismiss = onDismiss
 )
 
 @Composable
 private fun MusicDialog(
-    mvvmViewModel: MvvmViewModel,
+    commonViewModel: CommonViewModel,
     @StringRes stringRes: Int,
     onConfirm: (Boolean) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val theme = mvvmViewModel.settings.theme
-    val fontScale = mvvmViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
+    val theme = commonViewModel.settings.theme
+    val fontScale = commonViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTitleDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
     val fontSizeTitleSp = with(LocalDensity.current) {
         fontSizeTitleDp.toSp()

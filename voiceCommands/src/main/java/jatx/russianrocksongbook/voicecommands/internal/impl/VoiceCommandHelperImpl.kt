@@ -1,9 +1,11 @@
 package jatx.russianrocksongbook.voicecommands.internal.impl
 
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.speech.RecognizerIntent
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContract
 import dagger.hilt.android.components.ActivityComponent
@@ -29,9 +31,16 @@ internal class VoiceCommandHelperImpl @Inject constructor(
             }
         }
 
-    override fun recognizeVoiceCommand(onVoiceCommand: (String) -> Unit) {
+    override fun recognizeVoiceCommand(
+        onVoiceCommand: (String) -> Unit,
+        onError: () -> Unit
+    ) {
         this.onVoiceCommand = onVoiceCommand
-        speechRecognizeLauncher?.launch(null)
+        try {
+            speechRecognizeLauncher?.launch(null)
+        } catch (e: ActivityNotFoundException) {
+            onError()
+        }
     }
 }
 

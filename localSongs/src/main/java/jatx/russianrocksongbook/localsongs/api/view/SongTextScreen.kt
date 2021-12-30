@@ -265,7 +265,7 @@ fun SongTextScreen() {
                     localViewModel.openYandexMusic(true)
                 } else {
                     YandexMusicDialog(
-                        mvvmViewModel = localViewModel,
+                        commonViewModel = localViewModel,
                     ) {
                         showYandexDialog = false
                     }
@@ -277,7 +277,7 @@ fun SongTextScreen() {
                     localViewModel.openVkMusic(true)
                 } else {
                     VkMusicDialog(
-                        mvvmViewModel = localViewModel,
+                        commonViewModel = localViewModel,
                     ) {
                         showVkDialog = false
                     }
@@ -289,7 +289,7 @@ fun SongTextScreen() {
                     localViewModel.openYoutubeMusic(true)
                 } else {
                     YoutubeMusicDialog(
-                        mvvmViewModel = localViewModel,
+                        commonViewModel = localViewModel,
                     ) {
                         showYoutubeMusicDialog = false
                     }

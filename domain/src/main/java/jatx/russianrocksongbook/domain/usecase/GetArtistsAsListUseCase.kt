@@ -1,12 +1,12 @@
 package jatx.russianrocksongbook.domain.usecase
 
-import jatx.russianrocksongbook.domain.repository.SongRepository
+import jatx.russianrocksongbook.domain.repository.LocalRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class GetArtistsAsListUseCase @Inject constructor(
-    private val songRepository: SongRepository
+    private val localRepository: LocalRepository
 ) {
-    fun execute() = songRepository.getArtistsAsList()
+    fun execute() = localRepository.getArtistsAsList()
 }

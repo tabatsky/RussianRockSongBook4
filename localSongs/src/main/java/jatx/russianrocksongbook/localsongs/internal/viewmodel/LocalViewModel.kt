@@ -17,21 +17,26 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal open class LocalViewModel @Inject constructor(
-    localViewModelDeps: LocalViewModelDeps,
-    private val localStateHolder: LocalStateHolder
-): MvvmViewModel(
-    localViewModelDeps,
-    localStateHolder.commonStateHolder
+    private val localStateHolder: LocalStateHolder,
+    localViewModelDeps: LocalViewModelDeps
+): CommonViewModel(
+    localStateHolder.commonStateHolder,
+    localViewModelDeps.commonViewModelDeps
 ), Local {
-
-    private val getSongsByArtistUseCase = localViewModelDeps.getSongsByArtistUseCase
-    private val getCountByArtistUseCase = localViewModelDeps.getCountByArtistUseCase
+    private val getSongsByArtistUseCase =
+        localViewModelDeps.getSongsByArtistUseCase
+    private val getCountByArtistUseCase =
+        localViewModelDeps.getCountByArtistUseCase
     private val getSongByArtistAndPositionUseCase =
         localViewModelDeps.getSongByArtistAndPositionUseCase
-    private val updateSongUseCase = localViewModelDeps.updateSongUseCase
-    private val deleteSongToTrashUseCase = localViewModelDeps.deleteSongToTrashUseCase
-    private val addWarningLocalUseCase = localViewModelDeps.addWarningLocalUseCase
-    private val addSongToCloudUseCase = localViewModelDeps.addSongToCloudUseCase
+    private val updateSongUseCase =
+        localViewModelDeps.updateSongUseCase
+    private val deleteSongToTrashUseCase =
+        localViewModelDeps.deleteSongToTrashUseCase
+    private val addWarningLocalUseCase =
+        localViewModelDeps.addWarningLocalUseCase
+    private val addSongToCloudUseCase =
+        localViewModelDeps.addSongToCloudUseCase
 
     private val currentSongCount = localStateHolder.currentSongCount.asStateFlow()
     val currentSongList = localStateHolder.currentSongList.asStateFlow()
@@ -97,6 +102,10 @@ internal open class LocalViewModel @Inject constructor(
     }
 
     fun selectSong(position: Int) {
+        selectSongDisposable?.apply {
+            if (!this.isDisposed) this.dispose()
+        }
+
         Log.e("select song", position.toString())
         updateScrollPosition(position)
         updateNeedScroll(true)

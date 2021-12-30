@@ -38,10 +38,10 @@ private val voiceSearchQuery: String
 private val voiceSearchQueryCached = voiceSearchQuery
 
 @Singleton
-@BoundTo(supertype = SongRepository::class, component = SingletonComponent::class)
-class SongRepositoryImpl @Inject constructor(
+@BoundTo(supertype = LocalRepository::class, component = SingletonComponent::class)
+class LocalRepositoryImpl @Inject constructor(
     private val songDao: SongDao
-): SongRepository {
+): LocalRepository {
     override fun getArtists(): Flowable<List<String>> {
         return songDao
             .getArtists()

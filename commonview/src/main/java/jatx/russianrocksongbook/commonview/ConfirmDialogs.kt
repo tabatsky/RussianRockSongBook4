@@ -17,19 +17,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.preferences.api.ScalePow
-import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.russianrocksongbook.viewmodel.CommonViewModel
 
 @Composable
 fun ConfirmDialog(
-    mvvmViewModel: MvvmViewModel = viewModel(),
+    commonViewModel: CommonViewModel = viewModel(),
     @StringRes titleRes: Int,
     @StringRes messageRes: Int,
     invertColors: Boolean = false,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
-    val theme = mvvmViewModel.settings.theme
-    val fontScale = mvvmViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
+    val theme = commonViewModel.settings.theme
+    val fontScale = commonViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTitleDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
     val fontSizeTitleSp = with(LocalDensity.current) {
         fontSizeTitleDp.toSp()

@@ -1,30 +1,18 @@
 package jatx.russianrocksongbook.localsongs.internal.viewmodel
 
-import dagger.hilt.android.scopes.ActivityRetainedScoped
+import dagger.hilt.android.scopes.ViewModelScoped
 import jatx.russianrocksongbook.domain.usecase.*
-import jatx.russianrocksongbook.viewmodel.ViewModelDeps
+import jatx.russianrocksongbook.viewmodel.CommonViewModelDeps
 import javax.inject.Inject
 
-@ActivityRetainedScoped
-internal open class LocalViewModelDeps @Inject constructor(): ViewModelDeps() {
-    @Inject
-    lateinit var getSongsByArtistUseCase: GetSongsByArtistUseCase
-
-    @Inject
-    lateinit var getCountByArtistUseCase: GetCountByArtistUseCase
-
-    @Inject
-    lateinit var getSongByArtistAndPositionUseCase: GetSongByArtistAndPositionUseCase
-
-    @Inject
-    lateinit var updateSongUseCase: UpdateSongUseCase
-
-    @Inject
-    lateinit var deleteSongToTrashUseCase: DeleteSongToTrashUseCase
-
-    @Inject
-    lateinit var addWarningLocalUseCase: AddWarningLocalUseCase
-
-    @Inject
-    lateinit var addSongToCloudUseCase: AddSongToCloudUseCase
-}
+@ViewModelScoped
+internal class LocalViewModelDeps @Inject constructor(
+    val commonViewModelDeps: CommonViewModelDeps,
+    val getSongsByArtistUseCase: GetSongsByArtistUseCase,
+    val getCountByArtistUseCase: GetCountByArtistUseCase,
+    val getSongByArtistAndPositionUseCase: GetSongByArtistAndPositionUseCase,
+    val updateSongUseCase: UpdateSongUseCase,
+    val deleteSongToTrashUseCase: DeleteSongToTrashUseCase,
+    val addWarningLocalUseCase: AddWarningLocalUseCase,
+    val addSongToCloudUseCase: AddSongToCloudUseCase
+)

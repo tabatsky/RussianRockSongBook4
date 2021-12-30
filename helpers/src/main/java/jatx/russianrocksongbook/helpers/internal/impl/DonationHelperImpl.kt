@@ -11,7 +11,7 @@ import it.czerwinski.android.hilt.annotations.BoundTo
 import jatx.russianrocksongbook.helpers.R
 import jatx.russianrocksongbook.helpers.api.DonationHelper
 import jatx.russianrocksongbook.helpers.api.SKUS
-import jatx.russianrocksongbook.viewmodel.MvvmViewModel
+import jatx.russianrocksongbook.viewmodel.CommonViewModel
 import java.util.*
 import javax.inject.Inject
 
@@ -21,8 +21,8 @@ internal class DonationHelperImpl @Inject constructor(
     private val activity: Activity
 ): PurchasesUpdatedListener, DonationHelper {
     private val mvvmViewModel = (activity as? ComponentActivity)?.let {
-        val mvvmViewModel: MvvmViewModel by it.viewModels()
-        mvvmViewModel
+        val commonViewModel: CommonViewModel by it.viewModels()
+        commonViewModel
     }
 
     private var billingClient: BillingClient = BillingClient
