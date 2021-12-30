@@ -42,8 +42,7 @@ internal class CloudViewModel @Inject constructor(
     private val cloudSongCount = cloudStateHolder.cloudSongCount.asStateFlow()
     private val cloudSong = cloudStateHolder.cloudSong.asStateFlow()
 
-    val isCloudLoading = cloudStateHolder.isCloudLoading.asStateFlow()
-    val isListEmpty = cloudStateHolder.isListEmpty.asStateFlow()
+    val searchState = cloudStateHolder.searchState.asStateFlow()
     val cloudSongPosition = cloudStateHolder.cloudSongPosition.asStateFlow()
 
     val scrollPosition = cloudStateHolder.scrollPosition.asStateFlow()
@@ -53,17 +52,13 @@ internal class CloudViewModel @Inject constructor(
 
     val cloudSongsFlow = cloudStateHolder.cloudSongsFlow.asStateFlow()
 
-    val wasFetchDataError = cloudStateHolder.wasFetchDataError.asStateFlow()
-
     val searchFor = cloudStateHolder.searchFor.asStateFlow()
     val orderBy = cloudStateHolder.orderBy.asStateFlow()
 
     val invalidateCounter = cloudStateHolder.invalidateCounter.asStateFlow()
 
     fun cloudSearch(searchFor: String, orderBy: OrderBy) {
-        updateFetchDataError(false)
-        updateLoading(true)
-        updateListIsEmpty(false)
+        updateSearchState(SearchState.LOADING)
         updateScrollPosition(0)
         updateNeedScroll(true)
         updateSearchFor(searchFor)
@@ -72,7 +67,7 @@ internal class CloudViewModel @Inject constructor(
         cloudStateHolder.cloudSongsFlow.value =
             Pager(CONFIG) {
                 CloudSongSource(pagedSearchUseCase, searchFor, orderBy) {
-                    updateFetchDataError(true)
+                    updateSearchState(SearchState.ERROR)
                 }
             }.flow.onEach {
                 if (!snapshotHolder.isFlowInitDone) {
@@ -82,16 +77,8 @@ internal class CloudViewModel @Inject constructor(
             }
     }
 
-    private fun updateFetchDataError(value: Boolean) {
-        cloudStateHolder.wasFetchDataError.value = value
-    }
-
-    fun updateLoading(value: Boolean) {
-        cloudStateHolder.isCloudLoading.value = value
-    }
-
-    fun updateListIsEmpty(value: Boolean) {
-        cloudStateHolder.isListEmpty.value = value
+    fun updateSearchState(searchState: SearchState) {
+        cloudStateHolder.searchState.value = searchState
     }
 
     fun updateScrollPosition(position: Int) {

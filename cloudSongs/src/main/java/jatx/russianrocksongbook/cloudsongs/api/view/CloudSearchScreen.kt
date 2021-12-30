@@ -24,6 +24,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.paging.ItemsAdapter
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.CloudViewModel
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.SearchState
 import jatx.russianrocksongbook.commonview.*
 import jatx.russianrocksongbook.domain.models.CloudSong
 import jatx.russianrocksongbook.preferences.api.ScalePow
@@ -101,9 +102,7 @@ private fun CloudSearchBody(
     val theme = cloudViewModel.settings.theme
 
     val scrollPosition by cloudViewModel.scrollPosition.collectAsState()
-    val isCloudLoading by cloudViewModel.isCloudLoading.collectAsState()
-    val isListEmpty by cloudViewModel.isListEmpty.collectAsState()
-    val wasFetchDataError by cloudViewModel.wasFetchDataError.collectAsState()
+    val searchState by cloudViewModel.searchState.collectAsState()
 
     val cloudSongsFlow by cloudViewModel
         .cloudSongsFlow.collectAsState()
@@ -179,10 +178,11 @@ private fun CloudSearchBody(
         val listState = rememberLazyListState()
         val coroutineScope = rememberCoroutineScope()
 
-        if (!isCloudLoading || isListEmpty) {
-            if (isListEmpty) {
-                CommonSongListStub(fontSizeSongTitleSp, theme)
-            } else {
+        when (searchState) {
+            SearchState.EMPTY -> CommonSongListStub(fontSizeSongTitleSp, theme)
+            SearchState.ERROR -> ErrorSongListStub(fontSizeSongTitleSp, theme)
+            SearchState.LOADING -> CloudSearchProgress(theme)
+            SearchState.LOADED, SearchState.LOADING_NEXT_PAGE -> {
                 val wasOrientationChanged by cloudViewModel.wasOrientationChanged.collectAsState()
                 val needScroll by cloudViewModel.needScroll.collectAsState()
 
@@ -217,31 +217,26 @@ private fun CloudSearchBody(
                     }
                 }
             }
-        } else if (wasFetchDataError) {
-            ErrorSongListStub(fontSizeSongTitleSp, theme)
-        } else if (isCloudLoading) {
-            CloudSearchProgress(theme)
         }
 
         when {
+            searchState == SearchState.ERROR -> {}
             scrollPosition < itemsAdapter.size -> {
-                cloudViewModel.updateLoading(false)
-                cloudViewModel.updateListIsEmpty(false)
+                cloudViewModel.updateSearchState(SearchState.LOADED)
             }
             itemsAdapter.size > 0 -> {
-                cloudViewModel.updateLoading(true)
-                cloudViewModel.updateListIsEmpty(false)
+                cloudViewModel.updateSearchState(SearchState.LOADING_NEXT_PAGE)
                 itemsAdapter.getItem(itemsAdapter.size - 1)
             }
-            itemsAdapter.size == 0 -> {
-                cloudViewModel.updateLoading(true)
+            itemsAdapter.size == 0 && searchState != SearchState.EMPTY -> {
+                cloudViewModel.updateSearchState(SearchState.LOADING)
                 var isLaunched by remember { mutableStateOf(false) }
                 if (!isLaunched) {
                     coroutineScope.launch {
                         isLaunched = true
                         delay(EMPTY_LIST_DELAY)
                         if (itemsAdapter.size == 0) {
-                            cloudViewModel.updateListIsEmpty(true)
+                            cloudViewModel.updateSearchState(SearchState.EMPTY)
                         }
                         isLaunched = false
                     }
