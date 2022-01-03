@@ -7,7 +7,7 @@ import jatx.russianrocksongbook.domain.repository.result.ResultWithoutData
 import jatx.russianrocksongbook.networking.gson.ResultWithCloudSongGsonListData
 import retrofit2.http.*
 
-const val BASE_URL = "http://tabatsky.ru/SongBook/api/"
+const val BASE_URL = "http://tabatsky.ru/SongBook2/api/"
 
 interface SongBookAPI {
     @FormUrlEncoded
