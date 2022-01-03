@@ -19,16 +19,16 @@ interface SongDao {
     @Query("SELECT COUNT(*) AS count FROM songs WHERE artist=:artist AND deleted=0")
     fun getCountByArtist(artist: String): Int
 
-    @Query("SELECT * FROM songs WHERE favorite=1 AND deleted=0")
+    @Query("SELECT * FROM songs WHERE favorite=1 AND deleted=0 ORDER BY artist||title")
     fun getSongsFavorite(): Flowable<List<SongEntity>>
 
-    @Query("SELECT * FROM songs WHERE artist=:artist AND deleted=0")
+    @Query("SELECT * FROM songs WHERE artist=:artist AND deleted=0 ORDER BY title")
     fun getSongsByArtist(artist: String): Flowable<List<SongEntity>>
 
-    @Query("SELECT * FROM songs WHERE favorite=1 AND deleted=0")
+    @Query("SELECT * FROM songs WHERE favorite=1 AND deleted=0 ORDER BY artist||title")
     fun getSongsFavoriteAsList(): List<SongEntity>
 
-    @Query("SELECT * FROM songs WHERE artist=:artist AND deleted=0")
+    @Query("SELECT * FROM songs WHERE artist=:artist AND deleted=0 ORDER BY title")
     fun getSongsByArtistAsList(artist: String): List<SongEntity>
 
     @RawQuery
