@@ -31,7 +31,6 @@ import jatx.russianrocksongbook.start.api.ext.asyncInit
 import jatx.russianrocksongbook.view.CurrentScreen
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
 import jatx.russianrocksongbook.voicecommands.api.VoiceCommandHelper
-import kotlinx.coroutines.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -52,7 +51,6 @@ class MainActivity : ComponentActivity() {
     lateinit var version: Version
 
     @ExperimentalFoundationApi
-    @DelicateCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
