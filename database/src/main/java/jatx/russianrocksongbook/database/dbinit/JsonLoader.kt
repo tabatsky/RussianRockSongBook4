@@ -86,6 +86,7 @@ private val artistMap = mapOf(
     "Мельница" to R.raw.melnitsa,
     "Мультfильмы" to R.raw.multfilmi,
     "Мумий Тролль" to R.raw.mumiytrol,
+    "Мураками" to R.raw.murakami,
     "Наив" to R.raw.naiv,
     "Настя" to R.raw.nastia,
     "Наутилус Помпилиус" to R.raw.nautilus,
