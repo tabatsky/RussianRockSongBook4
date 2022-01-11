@@ -11,25 +11,24 @@ fun ComponentActivity.parseAndExecuteVoiceCommand(cmd: String) {
     voiceCommandViewModel.parseAndExecuteVoiceCommand(cmd)
 }
 
-fun ComponentActivity.selectArtist(artist: String) = runOnUiThread {
+fun ComponentActivity.selectArtist(artist: String) {
     val localViewModel: LocalViewModel by viewModels()
     localViewModel.selectArtist(artist)
 }
 
-fun ComponentActivity.selectSongByArtistAndTitle(artist: String, title: String) =
-    runOnUiThread {
-        val localViewModel: LocalViewModel by viewModels()
-        localViewModel.selectArtist(
-            artist = artist,
-            forceOnSuccess = true,
-            onSuccess = {
-                val position = localViewModel
-                    .currentSongList
-                    .value
-                    .map { it.title }
-                    .indexOf(title)
-                localViewModel.selectSong(position)
-                localViewModel.selectScreen(CurrentScreenVariant.SONG_TEXT)
-            }
-        )
-    }
+fun ComponentActivity.selectSongByArtistAndTitle(artist: String, title: String) {
+    val localViewModel: LocalViewModel by viewModels()
+    localViewModel.selectArtist(
+        artist = artist,
+        forceOnSuccess = true,
+        onSuccess = {
+            val position = localViewModel
+                .currentSongList
+                .value
+                .map { it.title }
+                .indexOf(title)
+            localViewModel.selectSong(position)
+            localViewModel.selectScreen(CurrentScreenVariant.SONG_TEXT)
+        }
+    )
+}
