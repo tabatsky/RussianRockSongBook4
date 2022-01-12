@@ -15,7 +15,8 @@ internal class CloudSongSource(
     private val pagedSearchUseCase: PagedSearchUseCase,
     private val searchFor: String = "",
     private val orderBy: OrderBy = OrderBy.BY_ID_DESC,
-    private val onFetchDataError: () -> Unit = {}
+    private val onFetchDataError: () -> Unit = {},
+    private val onEmptyList: () -> Unit = {}
 ): PagingSource<Int, CloudSong>() {
 
     override val jumpingSupported = false
@@ -26,10 +27,14 @@ internal class CloudSongSource(
                 val nextPage = params.key ?: 1
 
                 val result = pagedSearchUseCase
-                        .execute(searchFor, orderBy, nextPage)
+                    .execute(searchFor, orderBy, nextPage)
 
                 if (result.status == STATUS_SUCCESS) {
                     val data = (result.data ?: listOf())
+
+                    if (data.isEmpty() && nextPage == 1) {
+                        throw EmptyListException()
+                    }
 
                     LoadResult.Page(
                         data = data,
@@ -39,6 +44,11 @@ internal class CloudSongSource(
                 } else {
                     throw ServerException()
                 }
+            } catch (e: EmptyListException) {
+                withContext(Dispatchers.Main) {
+                    onEmptyList()
+                }
+                LoadResult.Error(e)
             } catch (e: Exception) {
                 Log.e("load", exceptionToString(e))
                 withContext(Dispatchers.Main) {
@@ -56,3 +66,4 @@ internal class CloudSongSource(
 }
 
 class ServerException: Exception()
+class EmptyListException: Exception()

@@ -176,7 +176,6 @@ private fun CloudSearchBody(
         }
 
         val listState = rememberLazyListState()
-        val coroutineScope = rememberCoroutineScope()
 
         when (searchState) {
             SearchState.EMPTY -> CommonSongListStub(fontSizeSongTitleSp, theme)
@@ -230,17 +229,6 @@ private fun CloudSearchBody(
             }
             itemsAdapter.size == 0 && searchState != SearchState.EMPTY -> {
                 cloudViewModel.updateSearchState(SearchState.LOADING)
-                var isLaunched by remember { mutableStateOf(false) }
-                if (!isLaunched) {
-                    coroutineScope.launch {
-                        isLaunched = true
-                        delay(EMPTY_LIST_DELAY)
-                        if (itemsAdapter.size == 0) {
-                            cloudViewModel.updateSearchState(SearchState.EMPTY)
-                        }
-                        isLaunched = false
-                    }
-                }
             }
         }
     }

@@ -66,9 +66,13 @@ internal class CloudViewModel @Inject constructor(
         snapshotHolder.isFlowInitDone = false
         cloudStateHolder.cloudSongsFlow.value =
             Pager(CONFIG) {
-                CloudSongSource(pagedSearchUseCase, searchFor, orderBy) {
-                    updateSearchState(SearchState.ERROR)
-                }
+                CloudSongSource(
+                    pagedSearchUseCase = pagedSearchUseCase,
+                    searchFor = searchFor,
+                    orderBy = orderBy,
+                    onFetchDataError = { updateSearchState(SearchState.ERROR) },
+                    onEmptyList = { updateSearchState(SearchState.EMPTY) }
+                )
             }.flow.onEach {
                 if (!snapshotHolder.isFlowInitDone) {
                     snapshotHolder.snapshot = null
