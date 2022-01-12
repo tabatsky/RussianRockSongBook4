@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.*
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,7 +39,10 @@ import jatx.russianrocksongbook.domain.models.CloudSong
 import jatx.russianrocksongbook.preferences.api.ListenToMusicVariant
 import jatx.russianrocksongbook.preferences.api.ScalePow
 import jatx.russianrocksongbook.preferences.api.Theme
-import jatx.russianrocksongbook.testing.*
+import jatx.russianrocksongbook.testing.CLOUD_SONG_TEXT_VIEWER
+import jatx.russianrocksongbook.testing.LEFT_BUTTON
+import jatx.russianrocksongbook.testing.NUMBER_LABEL
+import jatx.russianrocksongbook.testing.RIGHT_BUTTON
 import kotlinx.coroutines.launch
 
 private val CLOUD_SONG_TEXT_APP_BAR_WIDTH = 96.dp
