@@ -61,7 +61,7 @@ internal class AddArtistViewModel @Inject constructor(
                 when (result.status) {
                     STATUS_SUCCESS -> {
                         result.data?.apply {
-                            val toastText = context.getString(
+                            val toastText = resources.getString(
                                 R.string.toast_upload_songs_result,
                                 success, duplicate, error
                             )
@@ -85,11 +85,11 @@ internal class AddArtistViewModel @Inject constructor(
             showToast(R.string.toast_this_is_not_folder)
         } else {
             val (artist, songs) = fileSystemAdapter.getSongsFromDir(pickedDir) {
-                val toastText = context.getString(R.string.toast_file_not_found, it)
+                val toastText = resources.getString(R.string.toast_file_not_found, it)
                 showToast(toastText)
             }
             val actualSongs = insertReplaceUserSongsUseCase.execute(songs)
-            val toastText = context.getString(R.string.toast_added_songs_count, songs.size)
+            val toastText = resources.getString(R.string.toast_added_songs_count, songs.size)
             showToast(toastText)
             showUploadOfferForDir(artist, actualSongs)
         }
@@ -103,11 +103,11 @@ internal class AddArtistViewModel @Inject constructor(
             showToast(R.string.toast_this_is_not_folder)
         } else {
             val (artist, songs) = fileSystemAdapter.getSongsFromDir(dir) {
-                val toastText = context.getString(R.string.toast_file_not_found, it)
+                val toastText = resources.getString(R.string.toast_file_not_found, it)
                 showToast(toastText)
             }
             val actualSongs = insertReplaceUserSongsUseCase.execute(songs)
-            val toastText = context.getString(R.string.toast_added_songs_count, songs.size)
+            val toastText = resources.getString(R.string.toast_added_songs_count, songs.size)
             showToast(toastText)
             showUploadOfferForDir(artist, actualSongs)
         }

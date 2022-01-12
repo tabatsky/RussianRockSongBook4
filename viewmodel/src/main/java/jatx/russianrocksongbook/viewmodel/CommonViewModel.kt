@@ -22,8 +22,10 @@ open class CommonViewModel @Inject constructor(
         commonViewModelDeps.settingsRepository
     val callbacks =
         commonViewModelDeps.callbacks
-    val context =
-        commonViewModelDeps.context
+    val resources =
+        commonViewModelDeps.resources
+    private val toasts =
+        commonViewModelDeps.toasts
 
     private val getArtistsUseCase = commonViewModelDeps.getArtistsUseCase
 
@@ -112,14 +114,9 @@ open class CommonViewModel @Inject constructor(
         commonStateHolder.appWasUpdated.value = value
     }
 
-    fun showToast(toastText: String) {
-        Toast.makeText(context, toastText, Toast.LENGTH_LONG).show()
-    }
+    fun showToast(toastText: String) = toasts.showToast(toastText)
 
-    fun showToast(@StringRes resId: Int) {
-        val toastText = context.getString(resId)
-        showToast(toastText)
-    }
+    fun showToast(@StringRes resId: Int) = toasts.showToast(resId)
 
     fun openYandexMusic(dontAskMore: Boolean) {
         when (this) {
