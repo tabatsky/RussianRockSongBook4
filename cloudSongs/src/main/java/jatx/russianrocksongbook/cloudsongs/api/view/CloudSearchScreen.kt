@@ -7,7 +7,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -27,13 +30,15 @@ import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.CloudViewModel
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.SearchState
 import jatx.russianrocksongbook.commonview.*
 import jatx.russianrocksongbook.domain.models.CloudSong
+import jatx.russianrocksongbook.domain.repository.OrderBy
 import jatx.russianrocksongbook.preferences.api.ScalePow
 import jatx.russianrocksongbook.preferences.api.Theme
-import jatx.russianrocksongbook.domain.repository.OrderBy
-import jatx.russianrocksongbook.testing.*
+import jatx.russianrocksongbook.testing.SEARCH_BUTTON
+import jatx.russianrocksongbook.testing.SEARCH_PROGRESS
+import jatx.russianrocksongbook.testing.TEXT_FIELD_SEARCH_FOR
+import jatx.russianrocksongbook.testing.TestingConfig
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 const val EMPTY_LIST_DELAY = 5000L
 

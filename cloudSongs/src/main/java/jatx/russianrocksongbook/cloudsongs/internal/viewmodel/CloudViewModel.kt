@@ -5,14 +5,14 @@ import androidx.paging.Pager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.paging.CONFIG
 import jatx.russianrocksongbook.cloudsongs.internal.paging.CloudSongSource
 import jatx.russianrocksongbook.cloudsongs.internal.paging.SnapshotHolder
-import jatx.russianrocksongbook.cloudsongs.R
-import jatx.russianrocksongbook.domain.repository.result.STATUS_ERROR
-import jatx.russianrocksongbook.domain.repository.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.domain.models.CloudSong
 import jatx.russianrocksongbook.domain.repository.OrderBy
+import jatx.russianrocksongbook.domain.repository.result.STATUS_ERROR
+import jatx.russianrocksongbook.domain.repository.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
 import jatx.russianrocksongbook.viewmodel.interfaces.Cloud
 import kotlinx.coroutines.flow.asStateFlow
