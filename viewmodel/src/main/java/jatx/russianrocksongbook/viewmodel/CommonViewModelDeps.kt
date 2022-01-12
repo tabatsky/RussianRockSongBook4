@@ -11,6 +11,7 @@ import javax.inject.Inject
 class CommonViewModelDeps @Inject constructor(
     val settingsRepository: SettingsRepository,
     val callbacks: Callbacks,
-    @ApplicationContext val context: Context,
+    val resources: Resources,
+    val toasts: Toasts,
     val getArtistsUseCase: GetArtistsUseCase
 )
