@@ -25,11 +25,11 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.dqt.libs.chorddroid.classes.ChordLibrary
 import jatx.clickablewordstextview.ClickableWordsTextView
-import jatx.clickablewordstextview.OnWordClickListener
 import jatx.clickablewordstextview.Word
 import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.paging.ItemsAdapter
@@ -43,6 +43,7 @@ import jatx.russianrocksongbook.testing.CLOUD_SONG_TEXT_VIEWER
 import jatx.russianrocksongbook.testing.LEFT_BUTTON
 import jatx.russianrocksongbook.testing.NUMBER_LABEL
 import jatx.russianrocksongbook.testing.RIGHT_BUTTON
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 private val CLOUD_SONG_TEXT_APP_BAR_WIDTH = 96.dp
@@ -356,6 +357,7 @@ private fun CloudSongTextViewer(
     fontSizeTextSp: TextUnit,
     onWordClick: (Word) -> Unit
 ) {
+    val cloudViewModel: CloudViewModel = viewModel()
     AndroidView(
         modifier = Modifier.testTag(CLOUD_SONG_TEXT_VIEWER),
         factory = { context ->
@@ -369,9 +371,9 @@ private fun CloudSongTextViewer(
             view.setBackgroundColor(theme.colorBg.toArgb())
             view.textSize = fontSizeTextSp.value
             view.typeface = Typeface.MONOSPACE
-            view.onWordClickListener = object : OnWordClickListener {
-                override fun onWordClick(word: Word) {
-                    onWordClick(word)
+            cloudViewModel.viewModelScope.launch {
+                view.wordFlow.collect {
+                    onWordClick(it)
                 }
             }
         }
