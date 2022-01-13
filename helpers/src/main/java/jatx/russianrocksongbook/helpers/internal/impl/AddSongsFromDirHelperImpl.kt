@@ -12,13 +12,14 @@ import com.obsez.android.lib.filechooser.ChooserDialog
 import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.scopes.ActivityScoped
 import it.czerwinski.android.hilt.annotations.BoundTo
+import jatx.russianrocksongbook.helpers.api.AddSongsFromDirHelper
 import javax.inject.Inject
 
 @ActivityScoped
-@BoundTo(supertype = jatx.russianrocksongbook.helpers.api.AddSongsFromDirHelper::class, component = ActivityComponent::class)
+@BoundTo(supertype = AddSongsFromDirHelper::class, component = ActivityComponent::class)
 internal class AddSongsFromDirHelperImpl @Inject constructor(
     private val activity: Activity
-): jatx.russianrocksongbook.helpers.api.AddSongsFromDirHelper {
+): AddSongsFromDirHelper {
     private var onPickedDirReturned: (DocumentFile) -> Unit = {}
     private var onPathReturned: (String) -> Unit = {}
 
