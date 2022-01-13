@@ -10,6 +10,7 @@ import jatx.russianrocksongbook.database.db.util.wrongArtistsPatch
 import jatx.russianrocksongbook.database.db.util.wrongSongs
 import jatx.russianrocksongbook.domain.repository.LocalRepository
 import jatx.russianrocksongbook.domain.repository.init.LocalRepositoryInitializer
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 @ViewModelScoped
@@ -18,14 +19,12 @@ class LocalRepositoryInitializerImpl @Inject constructor(
     private val localRepo: LocalRepository,
     @ApplicationContext private val context: Context
 ): LocalRepositoryInitializer {
-    override fun fillDbFromJSON(
-        onProgressChanged: (Int, Int) -> Unit
-    ) {
+    override fun fillDbFromJSON() = flow {
         val jsonLoader = JsonLoader(context)
         while (jsonLoader.hasNext()) {
-            onProgressChanged(jsonLoader.current + 1, jsonLoader.total)
             val songs = jsonLoader.loadNext()
             localRepo.insertIgnoreSongs(songs)
+            emit(jsonLoader.current to jsonLoader.total)
         }
     }
 
