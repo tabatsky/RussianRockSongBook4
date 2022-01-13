@@ -1,20 +1,24 @@
 package jatx.russianrocksongbook.database.dbinit
 
 import android.content.Context
+import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
+import it.czerwinski.android.hilt.annotations.BoundTo
 import jatx.russianrocksongbook.database.db.util.wrongArtists
 import jatx.russianrocksongbook.database.db.util.wrongArtistsPatch
 import jatx.russianrocksongbook.database.db.util.wrongSongs
 import jatx.russianrocksongbook.domain.repository.LocalRepository
+import jatx.russianrocksongbook.domain.repository.init.LocalRepositoryInitializer
 import javax.inject.Inject
 
 @ViewModelScoped
-class DBInitializer @Inject constructor(
+@BoundTo(supertype = LocalRepositoryInitializer::class, component = ViewModelComponent::class)
+class LocalRepositoryInitializerImpl @Inject constructor(
     private val localRepo: LocalRepository,
     @ApplicationContext private val context: Context
-) {
-    fun fillDbFromJSON(
+): LocalRepositoryInitializer {
+    override fun fillDbFromJSON(
         onProgressChanged: (Int, Int) -> Unit
     ) {
         val jsonLoader = JsonLoader(context)
@@ -25,7 +29,7 @@ class DBInitializer @Inject constructor(
         }
     }
 
-    fun applySongPatches() {
+    override fun applySongPatches() {
         patches.forEach {
             localRepo.getSongByArtistAndTitle(it.artist, it.title)?.apply {
                 val patchedText = this.text.replace(it.orig, it.patch)
@@ -35,19 +39,19 @@ class DBInitializer @Inject constructor(
         }
     }
 
-    fun deleteWrongSongs() {
+    override fun deleteWrongSongs() {
         wrongSongs.forEach {
             localRepo.deleteWrongSong(it.artist, it.title)
         }
     }
 
-    fun deleteWrongArtists() {
+    override fun deleteWrongArtists() {
         wrongArtists.forEach {
             localRepo.deleteWrongArtist(it)
         }
     }
 
-    fun patchWrongArtists() {
+    override fun patchWrongArtists() {
         wrongArtistsPatch.keys.forEach { key ->
             localRepo.patchWrongArtist(key, wrongArtistsPatch[key]!!)
         }
