@@ -6,6 +6,7 @@ import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -31,8 +32,8 @@ internal class StartViewModel @Inject constructor(
             withContext(Dispatchers.Main) {
                 if (settings.appWasUpdated) {
                     withContext(Dispatchers.IO) {
-                        localRepoInitializer.fillDbFromJSON() { current, total ->
-                            updateStubProgress(current, total)
+                        localRepoInitializer.fillDbFromJSON().collect {
+                            updateStubProgress(it.first, it.second)
                         }
                         localRepoInitializer.deleteWrongSongs()
                         localRepoInitializer.deleteWrongArtists()
