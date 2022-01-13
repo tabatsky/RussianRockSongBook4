@@ -48,7 +48,7 @@ internal class AddSongsFromDirHelperImpl @Inject constructor(
             } else {
                 openDirResultLauncher?.launch(
                     Uri.fromFile(
-                        Environment.getExternalStorageDirectory()
+                        activity.getExternalFilesDir(null)
                     ))
             }
         } catch (e: ActivityNotFoundException) {
@@ -56,6 +56,7 @@ internal class AddSongsFromDirHelperImpl @Inject constructor(
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun showFileSelectDialog() {
         ChooserDialog(activity)
             .withFilter(true, false)
