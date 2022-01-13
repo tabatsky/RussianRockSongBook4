@@ -1,10 +1,10 @@
 package jatx.russianrocksongbook.viewmodel
 
-import android.content.Context
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import jatx.russianrocksongbook.preferences.api.SettingsRepository
 import jatx.russianrocksongbook.domain.usecase.GetArtistsUseCase
+import jatx.russianrocksongbook.viewmodel.sideeffects.Resources
+import jatx.russianrocksongbook.viewmodel.sideeffects.Toasts
 import javax.inject.Inject
 
 @ViewModelScoped

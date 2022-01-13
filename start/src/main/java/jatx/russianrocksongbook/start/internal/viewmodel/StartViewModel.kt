@@ -18,8 +18,8 @@ internal class StartViewModel @Inject constructor(
     startStateHolder.commonStateHolder,
     startViewModelDeps.commonViewModelDeps
 ) {
-    private val dbInitializer =
-        startViewModelDeps.dbInitializer
+    private val localRepoInitializer =
+        startViewModelDeps.localRepoInitializer
 
     val stubCurrentProgress = startStateHolder
         .stubCurrentProgress.asStateFlow()
@@ -31,13 +31,13 @@ internal class StartViewModel @Inject constructor(
             withContext(Dispatchers.Main) {
                 if (settings.appWasUpdated) {
                     withContext(Dispatchers.IO) {
-                        dbInitializer.fillDbFromJSON() { current, total ->
+                        localRepoInitializer.fillDbFromJSON() { current, total ->
                             updateStubProgress(current, total)
                         }
-                        dbInitializer.deleteWrongSongs()
-                        dbInitializer.deleteWrongArtists()
-                        dbInitializer.patchWrongArtists()
-                        dbInitializer.applySongPatches()
+                        localRepoInitializer.deleteWrongSongs()
+                        localRepoInitializer.deleteWrongArtists()
+                        localRepoInitializer.patchWrongArtists()
+                        localRepoInitializer.applySongPatches()
                     }
                     setAppWasUpdated(true)
                 }
