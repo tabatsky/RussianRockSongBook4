@@ -26,10 +26,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dqt.libs.chorddroid.classes.ChordLibrary
 import jatx.clickablewordstextview.ClickableWordsTextView
-import jatx.clickablewordstextview.OnWordClickListener
 import jatx.clickablewordstextview.Word
 import jatx.russianrocksongbook.commonview.*
 import jatx.russianrocksongbook.domain.models.Song
@@ -41,6 +41,7 @@ import jatx.russianrocksongbook.preferences.api.Theme
 import jatx.russianrocksongbook.testing.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 const val interval = 250L
@@ -420,6 +421,7 @@ private fun SongTextViewer(
     fontSizeTextSp: TextUnit,
     onWordClick: (Word) -> Unit
 ) {
+    val localViewModel: LocalViewModel = viewModel()
     AndroidView(
         modifier = Modifier.testTag(SONG_TEXT_VIEWER),
         factory = { context ->
@@ -433,9 +435,9 @@ private fun SongTextViewer(
             view.setBackgroundColor(theme.colorBg.toArgb())
             view.textSize = fontSizeTextSp.value
             view.typeface = Typeface.MONOSPACE
-            view.onWordClickListener = object : OnWordClickListener {
-                override fun onWordClick(word: Word) {
-                    onWordClick(word)
+            localViewModel.viewModelScope.launch {
+                view.wordFlow.collect {
+                    onWordClick(it)
                 }
             }
         }

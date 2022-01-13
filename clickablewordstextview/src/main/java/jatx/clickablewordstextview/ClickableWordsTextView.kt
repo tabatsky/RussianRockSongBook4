@@ -11,13 +11,26 @@ import android.text.style.ClickableSpan
 import android.util.AttributeSet
 import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.buffer
+import kotlinx.coroutines.flow.callbackFlow
 
 class ClickableWordsTextView(context: Context, attrs: AttributeSet?, defStyleAttr: Int):
     AppCompatTextView(context, attrs, defStyleAttr) {
     private var txt: CharSequence? = null
-    var onWordClickListener: OnWordClickListener? = null
+    private var onWordClickListener: OnWordClickListener? = null
     var actualWordSet = setOf<String>()
     var actualWordMappings = hashMapOf<String, String>()
+    val wordFlow: Flow<Word> = callbackFlow {
+        onWordClickListener = onWordClickListener {
+            trySend(it)
+        }
+        awaitClose {
+            onWordClickListener = null
+        }
+    }.buffer(Channel.CONFLATED)
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context) : this(context, null)
