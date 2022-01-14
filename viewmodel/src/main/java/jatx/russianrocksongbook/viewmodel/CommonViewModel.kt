@@ -7,8 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import jatx.russianrocksongbook.domain.repository.ARTIST_FAVORITE
-import jatx.russianrocksongbook.viewmodel.interfaces.Cloud
-import jatx.russianrocksongbook.viewmodel.interfaces.Local
+import jatx.russianrocksongbook.viewmodel.contracts.SongTextViewModelContract
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
@@ -118,30 +117,26 @@ open class CommonViewModel @Inject constructor(
     fun showToast(@StringRes resId: Int) = toasts.showToast(resId)
 
     fun openYandexMusic(dontAskMore: Boolean) {
-        when (this) {
-            is Local -> openYandexMusicLocal(dontAskMore)
-            is Cloud -> openYandexMusicCloud(dontAskMore)
+        if (this is SongTextViewModelContract) {
+            openYandexMusicImpl(dontAskMore)
         }
     }
 
     fun openVkMusic(dontAskMore: Boolean) {
-        when (this) {
-            is Local -> openVkMusicLocal(dontAskMore)
-            is Cloud -> openVkMusicCloud(dontAskMore)
+        if (this is SongTextViewModelContract) {
+            openVkMusicImpl(dontAskMore)
         }
     }
 
     fun openYoutubeMusic(dontAskMore: Boolean) {
-        when (this) {
-            is Local -> openYoutubeMusicLocal(dontAskMore)
-            is Cloud -> openYoutubeMusicCloud(dontAskMore)
+        if (this is SongTextViewModelContract) {
+            openYoutubeMusicImpl(dontAskMore)
         }
     }
 
     fun sendWarning(comment: String) {
-        when (this) {
-            is Local -> sendWarningLocal(comment)
-            is Cloud -> sendWarningCloud(comment)
+        if (this is SongTextViewModelContract) {
+            sendWarningImpl(comment)
         }
     }
 }

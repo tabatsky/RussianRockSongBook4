@@ -14,7 +14,7 @@ import jatx.russianrocksongbook.domain.repository.OrderBy
 import jatx.russianrocksongbook.domain.repository.result.STATUS_ERROR
 import jatx.russianrocksongbook.domain.repository.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
-import jatx.russianrocksongbook.viewmodel.interfaces.Cloud
+import jatx.russianrocksongbook.viewmodel.contracts.SongTextViewModelContract
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
@@ -27,7 +27,7 @@ internal class CloudViewModel @Inject constructor(
 ): CommonViewModel(
     cloudStateHolder.commonStateHolder,
     cloudViewModelDeps.commonViewModelDeps
-), Cloud {
+), SongTextViewModelContract {
     private val addSongFromCloudUseCase =
         cloudViewModelDeps.addSongFromCloudUseCase
     private val pagedSearchUseCase =
@@ -198,21 +198,21 @@ internal class CloudViewModel @Inject constructor(
         }
     }
 
-    override fun openYandexMusicCloud(dontAskMore: Boolean) {
+    override fun openYandexMusicImpl(dontAskMore: Boolean) {
         settings.yandexMusicDontAsk = dontAskMore
         cloudSong.value?.apply {
             callbacks.onOpenYandexMusic("$artist $title")
         }
     }
 
-    override fun openVkMusicCloud(dontAskMore: Boolean) {
+    override fun openVkMusicImpl(dontAskMore: Boolean) {
         settings.vkMusicDontAsk = dontAskMore
         cloudSong.value?.apply {
             callbacks.onOpenVkMusic("$artist $title")
         }
     }
 
-    override fun openYoutubeMusicCloud(dontAskMore: Boolean) {
+    override fun openYoutubeMusicImpl(dontAskMore: Boolean) {
         settings.youtubeMusicDontAsk = dontAskMore
         cloudSong.value?.apply {
             callbacks.onOpenYoutubeMusic("$artist $title")
@@ -220,7 +220,7 @@ internal class CloudViewModel @Inject constructor(
     }
 
     @SuppressLint("CheckResult")
-    override fun sendWarningCloud(comment: String) {
+    override fun sendWarningImpl(comment: String) {
         cloudSong.value?.apply {
             addWarningCloudUseCase
                 .execute(this, comment)
