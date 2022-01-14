@@ -1,4 +1,4 @@
-package jatx.clickablewordstextview
+package jatx.clickablewordstextview.api
 
 data class Word(
     val text: String,

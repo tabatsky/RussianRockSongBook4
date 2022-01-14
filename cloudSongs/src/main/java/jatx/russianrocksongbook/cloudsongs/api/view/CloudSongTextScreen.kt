@@ -29,8 +29,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.dqt.libs.chorddroid.classes.ChordLibrary
-import jatx.clickablewordstextview.ClickableWordsTextView
-import jatx.clickablewordstextview.Word
+import jatx.clickablewordstextview.api.ClickableWordsTextView
+import jatx.clickablewordstextview.api.Word
 import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.paging.ItemsAdapter
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.CloudViewModel
