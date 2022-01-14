@@ -58,9 +58,9 @@ open class CommonViewModel @Inject constructor(
             }
             CurrentScreenVariant.SONG_TEXT -> {
                 if (currentArtist.value != ARTIST_FAVORITE) {
-                    selectScreen(CurrentScreenVariant.SONG_LIST)
+                    selectScreen(CurrentScreenVariant.SONG_LIST, true)
                 } else {
-                    selectScreen(CurrentScreenVariant.FAVORITE)
+                    selectScreen(CurrentScreenVariant.FAVORITE, true)
                 }
             }
             else -> {
@@ -79,16 +79,18 @@ open class CommonViewModel @Inject constructor(
     ) {
         commonStateHolder.currentScreenVariant.value = screen
         Log.e("select screen", currentScreenVariant.value.toString())
-        if (screen == CurrentScreenVariant.SONG_LIST && !isBackFromSong) {
-            getArtistsDisposable?.apply {
-                if (!this.isDisposed) this.dispose()
-            }
-            getArtistsDisposable = getArtistsUseCase
-                .execute()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    commonStateHolder.artistList.value = it
+        if (screen == CurrentScreenVariant.SONG_LIST) {
+            if (!isBackFromSong) {
+                getArtistsDisposable?.apply {
+                    if (!this.isDisposed) this.dispose()
                 }
+                getArtistsDisposable = getArtistsUseCase
+                    .execute()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        commonStateHolder.artistList.value = it
+                    }
+            }
             callbacks.onArtistSelected(currentArtist.value)
         }
         if (screen == CurrentScreenVariant.FAVORITE) {
