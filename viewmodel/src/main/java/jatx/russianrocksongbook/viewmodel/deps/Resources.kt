@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.viewmodel.sideeffects
+package jatx.russianrocksongbook.viewmodel.deps
 
 import androidx.annotation.StringRes
 

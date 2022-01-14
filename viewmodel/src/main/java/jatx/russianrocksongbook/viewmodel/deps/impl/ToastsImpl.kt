@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.viewmodel.sideeffects.impl
+package jatx.russianrocksongbook.viewmodel.deps.impl
 
 import android.content.Context
 import android.widget.Toast
@@ -7,8 +7,8 @@ import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import it.czerwinski.android.hilt.annotations.BoundTo
-import jatx.russianrocksongbook.viewmodel.sideeffects.Resources
-import jatx.russianrocksongbook.viewmodel.sideeffects.Toasts
+import jatx.russianrocksongbook.viewmodel.deps.Resources
+import jatx.russianrocksongbook.viewmodel.deps.Toasts
 import javax.inject.Inject
 
 @ViewModelScoped

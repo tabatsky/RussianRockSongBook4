@@ -3,8 +3,8 @@ package jatx.russianrocksongbook.viewmodel
 import dagger.hilt.android.scopes.ViewModelScoped
 import jatx.russianrocksongbook.preferences.api.SettingsRepository
 import jatx.russianrocksongbook.domain.usecase.GetArtistsUseCase
-import jatx.russianrocksongbook.viewmodel.sideeffects.Resources
-import jatx.russianrocksongbook.viewmodel.sideeffects.Toasts
+import jatx.russianrocksongbook.viewmodel.deps.Resources
+import jatx.russianrocksongbook.viewmodel.deps.Toasts
 import javax.inject.Inject
 
 @ViewModelScoped
