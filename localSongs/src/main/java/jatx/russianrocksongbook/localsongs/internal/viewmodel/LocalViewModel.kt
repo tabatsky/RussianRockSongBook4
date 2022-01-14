@@ -11,7 +11,7 @@ import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.domain.repository.result.STATUS_ERROR
 import jatx.russianrocksongbook.domain.repository.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.viewmodel.*
-import jatx.russianrocksongbook.viewmodel.interfaces.Local
+import jatx.russianrocksongbook.viewmodel.contracts.SongTextViewModelContract
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
@@ -22,7 +22,7 @@ internal open class LocalViewModel @Inject constructor(
 ): CommonViewModel(
     localStateHolder.commonStateHolder,
     localViewModelDeps.commonViewModelDeps
-), Local {
+), SongTextViewModelContract {
     private val getSongsByArtistUseCase =
         localViewModelDeps.getSongsByArtistUseCase
     private val getCountByArtistUseCase =
@@ -211,33 +211,28 @@ internal open class LocalViewModel @Inject constructor(
         showToast(R.string.toast_deleted_to_trash)
     }
 
-    override fun openYandexMusicLocal(dontAskMore: Boolean) {
+    override fun openYandexMusicImpl(dontAskMore: Boolean) {
         settings.yandexMusicDontAsk = dontAskMore
         currentSong.value?.apply {
             callbacks.onOpenYandexMusic("$artist $title")
         }
     }
 
-    override fun openVkMusicLocal(dontAskMore: Boolean) {
+    override fun openVkMusicImpl(dontAskMore: Boolean) {
         settings.vkMusicDontAsk = dontAskMore
         currentSong.value?.apply {
             callbacks.onOpenVkMusic("$artist $title")
         }
     }
 
-    override fun openYoutubeMusicLocal(dontAskMore: Boolean) {
+    override fun openYoutubeMusicImpl(dontAskMore: Boolean) {
         settings.youtubeMusicDontAsk = dontAskMore
         currentSong.value?.apply {
             callbacks.onOpenYoutubeMusic("$artist $title")
         }
     }
 
-    fun speechRecognize(dontAskMore: Boolean) {
-        settings.voiceHelpDontAsk = dontAskMore
-        callbacks.onSpeechRecognize()
-    }
-
-    override fun sendWarningLocal(comment: String) {
+    override fun sendWarningImpl(comment: String) {
         currentSong.value?.apply {
             sendWarningDisposable?.apply {
                 if (!this.isDisposed) this.dispose()
@@ -256,6 +251,11 @@ internal open class LocalViewModel @Inject constructor(
                     showToast(R.string.error_in_app)
                 })
         }
+    }
+
+    fun speechRecognize(dontAskMore: Boolean) {
+        settings.voiceHelpDontAsk = dontAskMore
+        callbacks.onSpeechRecognize()
     }
 
     fun uploadCurrentToCloud() {

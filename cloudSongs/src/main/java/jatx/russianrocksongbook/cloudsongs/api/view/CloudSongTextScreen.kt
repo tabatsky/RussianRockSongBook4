@@ -258,7 +258,7 @@ fun CloudSongTextScreen() {
             if (showYandexDialog) {
                 if (cloudViewModel.settings.yandexMusicDontAsk) {
                     showYandexDialog = false
-                    cloudViewModel.openYandexMusicCloud(true)
+                    cloudViewModel.openYandexMusic(true)
                 } else {
                     YandexMusicDialog(
                         commonViewModel = cloudViewModel
@@ -270,7 +270,7 @@ fun CloudSongTextScreen() {
             if (showVkDialog) {
                 if (cloudViewModel.settings.vkMusicDontAsk) {
                     showVkDialog = false
-                    cloudViewModel.openVkMusicCloud(true)
+                    cloudViewModel.openVkMusic(true)
                 } else {
                     VkMusicDialog(
                         commonViewModel = cloudViewModel
@@ -282,7 +282,7 @@ fun CloudSongTextScreen() {
             if (showYoutubeMusicDialog) {
                 if (cloudViewModel.settings.youtubeMusicDontAsk) {
                     showYoutubeMusicDialog = false
-                    cloudViewModel.openYoutubeMusicCloud(true)
+                    cloudViewModel.openYoutubeMusic(true)
                 } else {
                     YoutubeMusicDialog(
                         commonViewModel = cloudViewModel
@@ -294,7 +294,7 @@ fun CloudSongTextScreen() {
             if (showWarningDialog) {
                 WarningDialog(
                     onConfirm = { comment ->
-                        cloudViewModel.sendWarningCloud(comment)
+                        cloudViewModel.sendWarning(comment)
                     },
                     onDismiss = {
                         showWarningDialog = false
