@@ -1,4 +1,6 @@
-package jatx.clickablewordstextview
+package jatx.clickablewordstextview.internal
+
+import jatx.clickablewordstextview.api.Word
 
 internal interface OnWordClickListener {
     fun onWordClick(word: Word)

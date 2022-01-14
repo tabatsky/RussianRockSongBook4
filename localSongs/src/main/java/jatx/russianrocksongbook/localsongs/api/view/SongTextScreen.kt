@@ -29,8 +29,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dqt.libs.chorddroid.classes.ChordLibrary
-import jatx.clickablewordstextview.ClickableWordsTextView
-import jatx.clickablewordstextview.Word
+import jatx.clickablewordstextview.api.ClickableWordsTextView
+import jatx.clickablewordstextview.api.Word
 import jatx.russianrocksongbook.commonview.*
 import jatx.russianrocksongbook.domain.models.Song
 import jatx.russianrocksongbook.localsongs.R

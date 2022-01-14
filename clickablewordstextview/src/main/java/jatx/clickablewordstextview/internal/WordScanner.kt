@@ -1,6 +1,8 @@
-package jatx.clickablewordstextview
+package jatx.clickablewordstextview.internal
 
-class WordScanner(private val text: String) {
+import jatx.clickablewordstextview.api.Word
+
+internal class WordScanner(private val text: String) {
     private var currentIndex: Int = 0
 
     val specialSymbols = listOf('#')

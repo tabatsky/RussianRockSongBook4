@@ -1,4 +1,4 @@
-package jatx.clickablewordstextview
+package jatx.clickablewordstextview.api
 
 import android.content.Context
 import android.graphics.Color
@@ -11,6 +11,9 @@ import android.text.style.ClickableSpan
 import android.util.AttributeSet
 import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
+import jatx.clickablewordstextview.internal.OnWordClickListener
+import jatx.clickablewordstextview.internal.WordScanner
+import jatx.clickablewordstextview.internal.onWordClickListener
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -21,6 +24,7 @@ class ClickableWordsTextView(context: Context, attrs: AttributeSet?, defStyleAtt
     AppCompatTextView(context, attrs, defStyleAttr) {
     private var txt: CharSequence? = null
     private var onWordClickListener: OnWordClickListener? = null
+
     var actualWordSet = setOf<String>()
     var actualWordMappings = hashMapOf<String, String>()
     val wordFlow: Flow<Word> = callbackFlow {
