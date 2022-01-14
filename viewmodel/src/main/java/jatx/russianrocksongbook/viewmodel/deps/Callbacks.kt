@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.viewmodel
+package jatx.russianrocksongbook.viewmodel.deps
 
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
