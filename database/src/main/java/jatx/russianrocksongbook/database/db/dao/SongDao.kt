@@ -2,13 +2,13 @@ package jatx.russianrocksongbook.database.db.dao
 
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
-import io.reactivex.Flowable
 import jatx.russianrocksongbook.database.db.entities.SongEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SongDao {
     @Query("SELECT DISTINCT artist FROM songs WHERE deleted=0 ORDER BY artist")
-    fun getArtists(): Flowable<List<String>>
+    fun getArtists(): Flow<List<String>>
 
     @Query("SELECT DISTINCT artist FROM songs WHERE deleted=0 ORDER BY artist")
     fun getArtistsAsList(): List<String>
@@ -20,10 +20,10 @@ interface SongDao {
     fun getCountByArtist(artist: String): Int
 
     @Query("SELECT * FROM songs WHERE favorite=1 AND deleted=0 ORDER BY artist||title")
-    fun getSongsFavorite(): Flowable<List<SongEntity>>
+    fun getSongsFavorite(): Flow<List<SongEntity>>
 
     @Query("SELECT * FROM songs WHERE artist=:artist AND deleted=0 ORDER BY title")
-    fun getSongsByArtist(artist: String): Flowable<List<SongEntity>>
+    fun getSongsByArtist(artist: String): Flow<List<SongEntity>>
 
     @Query("SELECT * FROM songs WHERE favorite=1 AND deleted=0 ORDER BY artist||title")
     fun getSongsFavoriteAsList(): List<SongEntity>
@@ -38,13 +38,13 @@ interface SongDao {
         SELECT * FROM songs WHERE favorite=1 AND deleted=0 
         ORDER BY artist||title LIMIT 1 OFFSET :position
         """)
-    fun getSongByPositionFavorite(position: Int): Flowable<SongEntity>
+    fun getSongByPositionFavorite(position: Int): Flow<SongEntity?>
 
     @Query("""
         SELECT * FROM songs WHERE artist=:artist AND deleted=0 
         ORDER BY title LIMIT 1 OFFSET :position
     """)
-    fun getSongByPositionAndArtist(position: Int, artist: String): Flowable<SongEntity>
+    fun getSongByPositionAndArtist(position: Int, artist: String): Flow<SongEntity?>
 
     @Query("SELECT * FROM songs WHERE artist=:artist AND title=:title")
     fun getSongByArtistAndTitle(artist: String, title: String): SongEntity?

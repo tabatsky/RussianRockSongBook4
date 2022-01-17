@@ -1,6 +1,7 @@
 package jatx.russianrocksongbook.localsongs.internal.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -12,7 +13,12 @@ import jatx.russianrocksongbook.domain.repository.result.STATUS_ERROR
 import jatx.russianrocksongbook.domain.repository.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.viewmodel.*
 import jatx.russianrocksongbook.viewmodel.contracts.SongTextViewModelContract
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -52,8 +58,8 @@ internal open class LocalViewModel @Inject constructor(
     val wasOrientationChanged = localStateHolder.wasOrientationChanged.asStateFlow()
     val needScroll = localStateHolder.needScroll.asStateFlow()
 
-    private var showSongsDisposable: Disposable? = null
-    private var selectSongDisposable: Disposable? = null
+    private var showSongsJob: Job? = null
+    private var selectSongJob: Job? = null
     private var uploadSongDisposable: Disposable? = null
     private var sendWarningDisposable: Disposable? = null
 
@@ -63,8 +69,8 @@ internal open class LocalViewModel @Inject constructor(
         onSuccess: () -> Unit = {}
     ) {
         Log.e("select artist", artist)
-        showSongsDisposable?.apply {
-            if (!this.isDisposed) this.dispose()
+        showSongsJob?.let {
+            if (!it.isCancelled) it.cancel()
         }
         when (artist) {
             ARTIST_ADD_ARTIST -> {
@@ -85,16 +91,21 @@ internal open class LocalViewModel @Inject constructor(
                     .currentArtist.value = artist
                 localStateHolder.currentSongCount.value =
                     getCountByArtistUseCase.execute(artist)
-                showSongsDisposable = getSongsByArtistUseCase
-                    .execute(artist)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
-                        val oldArtist = currentSongList.value.getOrNull(0)?.artist
-                        val newArtist = it.getOrNull(0)?.artist
-                        localStateHolder.currentSongList.value = it
-                        if (oldArtist != newArtist || forceOnSuccess) {
-                            onSuccess()
+                showSongsJob = viewModelScope
+                    .launch {
+                        withContext(Dispatchers.IO) {
+                            getSongsByArtistUseCase
+                                .execute(artist)
+                                .collect {
+                                    withContext(Dispatchers.Main) {
+                                        val oldArtist = currentSongList.value.getOrNull(0)?.artist
+                                        val newArtist = it.getOrNull(0)?.artist
+                                        localStateHolder.currentSongList.value = it
+                                        if (oldArtist != newArtist || forceOnSuccess) {
+                                            onSuccess()
+                                        }
+                                    }
+                                }
                         }
                     }
             }
@@ -102,8 +113,8 @@ internal open class LocalViewModel @Inject constructor(
     }
 
     fun selectSong(position: Int) {
-        selectSongDisposable?.apply {
-            if (!this.isDisposed) this.dispose()
+        selectSongJob?.let {
+            if (!it.isCancelled) it.cancel()
         }
 
         Log.e("select song", position.toString())
@@ -113,12 +124,17 @@ internal open class LocalViewModel @Inject constructor(
         localStateHolder.isAutoPlayMode.value = false
         localStateHolder.isEditorMode.value = false
 
-        selectSongDisposable = getSongByArtistAndPositionUseCase
-            .execute(currentArtist.value, position)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                localStateHolder.currentSong.value = it
+        selectSongJob = viewModelScope
+            .launch {
+                withContext(Dispatchers.IO) {
+                    getSongByArtistAndPositionUseCase
+                        .execute(currentArtist.value, position)
+                        .collect {
+                            withContext(Dispatchers.Main) {
+                                localStateHolder.currentSong.value = it
+                            }
+                        }
+                }
             }
     }
 
