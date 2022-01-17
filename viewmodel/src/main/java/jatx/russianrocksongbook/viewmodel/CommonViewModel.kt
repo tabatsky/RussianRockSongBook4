@@ -3,12 +3,16 @@ package jatx.russianrocksongbook.viewmodel
 import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import jatx.russianrocksongbook.domain.repository.ARTIST_FAVORITE
 import jatx.russianrocksongbook.viewmodel.contracts.SongTextViewModelContract
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,7 +47,7 @@ open class CommonViewModel @Inject constructor(
         .appWasUpdated
         .asStateFlow()
 
-    private var getArtistsDisposable: Disposable? = null
+    private var getArtistsJob: Job? = null
 
     fun back(onFinish: () -> Unit = {}) {
         Log.e("current screen", currentScreenVariant.value.toString())
@@ -81,28 +85,12 @@ open class CommonViewModel @Inject constructor(
         Log.e("select screen", currentScreenVariant.value.toString())
         if (screen == CurrentScreenVariant.SONG_LIST) {
             if (!isBackFromSong) {
-                getArtistsDisposable?.apply {
-                    if (!this.isDisposed) this.dispose()
-                }
-                getArtistsDisposable = getArtistsUseCase
-                    .execute()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
-                        commonStateHolder.artistList.value = it
-                    }
+                getArtists()
             }
             callbacks.onArtistSelected(currentArtist.value)
         }
         if (screen == CurrentScreenVariant.FAVORITE) {
-            getArtistsDisposable?.apply {
-                if (!this.isDisposed) this.dispose()
-            }
-            getArtistsDisposable = getArtistsUseCase
-                .execute()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    commonStateHolder.artistList.value = it
-                }
+            getArtists()
             callbacks.onArtistSelected(ARTIST_FAVORITE)
         }
         if (screen == CurrentScreenVariant.CLOUD_SEARCH && !isBackFromSong) {
@@ -139,6 +127,21 @@ open class CommonViewModel @Inject constructor(
     fun sendWarning(comment: String) {
         if (this is SongTextViewModelContract) {
             sendWarningImpl(comment)
+        }
+    }
+
+    private fun getArtists() {
+        getArtistsJob?.let {
+            if (!it.isCancelled) it.cancel()
+        }
+        getArtistsJob = viewModelScope.launch {
+            getArtistsUseCase
+                .execute()
+                .collect {
+                    withContext(Dispatchers.Main) {
+                        commonStateHolder.artistList.value = it
+                    }
+                }
         }
     }
 }

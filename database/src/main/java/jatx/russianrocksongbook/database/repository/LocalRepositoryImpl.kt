@@ -2,7 +2,6 @@ package jatx.russianrocksongbook.database.repository
 
 import androidx.sqlite.db.SimpleSQLiteQuery
 import dagger.hilt.components.SingletonComponent
-import io.reactivex.Flowable
 import it.czerwinski.android.hilt.annotations.BoundTo
 import jatx.russianrocksongbook.database.db.dao.SongDao
 import jatx.russianrocksongbook.database.ext.toSong
@@ -12,6 +11,8 @@ import jatx.russianrocksongbook.domain.models.Song
 import jatx.russianrocksongbook.domain.models.USER_SONG_MD5
 import jatx.russianrocksongbook.domain.repository.*
 import jatx.russianrocksongbook.util.hashing.songTextHash
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -42,7 +43,7 @@ private val voiceSearchQueryCached = voiceSearchQuery
 class LocalRepositoryImpl @Inject constructor(
     private val songDao: SongDao
 ): LocalRepository {
-    override fun getArtists(): Flowable<List<String>> {
+    override fun getArtists(): Flow<List<String>> {
         return songDao
             .getArtists()
             .map {
@@ -95,7 +96,7 @@ class LocalRepositoryImpl @Inject constructor(
             songDao.getSongByPositionFavorite(position)
         else
             songDao.getSongByPositionAndArtist(position, artist))
-            .map { it.toSong() }
+            .map { it?.toSong() }
 
 
     override fun getSongByArtistAndTitle(artist: String, title: String): Song? {

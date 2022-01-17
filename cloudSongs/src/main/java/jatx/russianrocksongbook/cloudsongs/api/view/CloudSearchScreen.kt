@@ -40,8 +40,6 @@ import jatx.russianrocksongbook.testing.TestingConfig
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import kotlinx.coroutines.delay
 
-const val EMPTY_LIST_DELAY = 5000L
-
 @Composable
 fun CloudSearchScreen() {
     val cloudViewModel: CloudViewModel = viewModel()
