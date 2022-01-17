@@ -13,7 +13,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
-import jatx.russianrocksongbook.cloudsongs.api.view.EMPTY_LIST_DELAY
 import jatx.russianrocksongbook.domain.repository.*
 import jatx.russianrocksongbook.donation.api.view.donationLabel
 import jatx.russianrocksongbook.helpers.api.DONATIONS
@@ -597,11 +596,6 @@ class ExampleInstrumentedTest {
             Log.e("test $testNumber click", SEARCH_BUTTON)
             composeTestRule.waitFor(timeout)
             composeTestRule
-                .onNodeWithTag(SEARCH_PROGRESS)
-                .assertIsDisplayed()
-            Log.e("test $testNumber assert", "$SEARCH_PROGRESS is displayed")
-            composeTestRule.waitFor(EMPTY_LIST_DELAY)
-            composeTestRule
                 .onNodeWithText(stringConst.listIsEmpty)
                 .assertIsDisplayed()
             Log.e("test $testNumber assert", "${stringConst.listIsEmpty} is displayed")
@@ -610,11 +604,6 @@ class ExampleInstrumentedTest {
                 .performClick()
             Log.e("test $testNumber click", SEARCH_BUTTON)
             composeTestRule.waitFor(timeout)
-            composeTestRule
-                .onNodeWithTag(SEARCH_PROGRESS)
-                .assertIsDisplayed()
-            Log.e("test $testNumber assert", "$SEARCH_PROGRESS is displayed")
-            composeTestRule.waitFor(EMPTY_LIST_DELAY)
             composeTestRule
                 .onNodeWithText(stringConst.listIsEmpty)
                 .assertIsDisplayed()
@@ -627,8 +616,8 @@ class ExampleInstrumentedTest {
         val testNumber = 4
 
         cloudRepository.apply {
-            var list = search("", OrderBy.BY_ID_DESC)
-            var titleList = list.map { "${it.artist} - ${it.title}" }
+            val list = search("", OrderBy.BY_ID_DESC)
+            val titleList = list.map { "${it.artist} - ${it.title}" }
             Log.e("test $testNumber list", titleList.toString())
 
             composeTestRule
@@ -718,7 +707,6 @@ class ExampleInstrumentedTest {
             composeTestRule.waitFor(timeout)
 
             var cloudSong = list[2]
-            cloudSong.likeCount += 1
 
             composeTestRule
                 .onNodeWithTag(LIKE_BUTTON)
@@ -733,6 +721,8 @@ class ExampleInstrumentedTest {
                 .onNodeWithText(cloudSong.visibleTitleWithArtistAndRating)
                 .assertIsDisplayed()
             Log.e("test $testNumber assert", "${cloudSong.visibleTitleWithArtistAndRating} is displayed")
+            assert(cloudSong.likeCount == 1)
+            Log.e("test $testNumber assert", "likeCount == 1")
 
             composeTestRule
                 .onNodeWithTag(NUMBER_LABEL)
@@ -755,7 +745,6 @@ class ExampleInstrumentedTest {
             Log.e("test $testNumber assert", "$NUMBER_LABEL contains '4 /'")
 
             cloudSong = list[3]
-            cloudSong.dislikeCount += 1
 
             composeTestRule
                 .onNodeWithTag(DISLIKE_BUTTON)
@@ -770,6 +759,8 @@ class ExampleInstrumentedTest {
                 .onNodeWithText(cloudSong.visibleTitleWithArtistAndRating)
                 .assertIsDisplayed()
             Log.e("test $testNumber assert", "${cloudSong.visibleTitleWithArtistAndRating} is displayed")
+            assert(cloudSong.dislikeCount == 1)
+            Log.e("test $testNumber assert", "dislikeCount == 1")
 
             composeTestRule
                 .onNodeWithTag(LEFT_BUTTON)
