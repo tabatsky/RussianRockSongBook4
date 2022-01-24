@@ -1,7 +1,5 @@
 package jatx.russianrocksongbook.preferences.storage
 
-import jatx.russianrocksongbook.preferences.api.*
-
 interface SettingsStorage {
     val appWasUpdated: Boolean
     var theme: Int

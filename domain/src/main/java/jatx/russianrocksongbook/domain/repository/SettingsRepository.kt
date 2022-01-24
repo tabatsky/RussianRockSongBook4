@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.preferences.api
+package jatx.russianrocksongbook.domain.repository
 
 import androidx.compose.ui.graphics.Color
 

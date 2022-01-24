@@ -33,12 +33,13 @@ import jatx.clickablewordstextview.api.ClickableWordsTextView
 import jatx.clickablewordstextview.api.Word
 import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.paging.ItemsAdapter
+import jatx.russianrocksongbook.cloudsongs.internal.view.DeleteCloudSongDialog
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.CloudViewModel
 import jatx.russianrocksongbook.commonview.*
 import jatx.russianrocksongbook.domain.models.CloudSong
-import jatx.russianrocksongbook.preferences.api.ListenToMusicVariant
-import jatx.russianrocksongbook.preferences.api.ScalePow
-import jatx.russianrocksongbook.preferences.api.Theme
+import jatx.russianrocksongbook.domain.repository.ListenToMusicVariant
+import jatx.russianrocksongbook.domain.repository.ScalePow
+import jatx.russianrocksongbook.domain.repository.Theme
 import jatx.russianrocksongbook.testing.CLOUD_SONG_TEXT_VIEWER
 import jatx.russianrocksongbook.testing.LEFT_BUTTON
 import jatx.russianrocksongbook.testing.NUMBER_LABEL

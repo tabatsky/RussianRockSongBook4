@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.localsongs.api.view
+package jatx.russianrocksongbook.localsongs.internal.view
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel

@@ -24,9 +24,9 @@ import jatx.russianrocksongbook.helpers.api.MusicHelper
 import jatx.russianrocksongbook.localsongs.api.ext.parseAndExecuteVoiceCommand
 import jatx.russianrocksongbook.localsongs.api.ext.selectArtist
 import jatx.russianrocksongbook.localsongs.api.ext.selectSongByArtistAndTitle
-import jatx.russianrocksongbook.preferences.api.Orientation
-import jatx.russianrocksongbook.preferences.api.SettingsRepository
 import jatx.russianrocksongbook.domain.models.interfaces.Version
+import jatx.russianrocksongbook.domain.repository.Orientation
+import jatx.russianrocksongbook.domain.repository.SettingsRepository
 import jatx.russianrocksongbook.start.api.ext.asyncInit
 import jatx.russianrocksongbook.view.CurrentScreen
 import jatx.russianrocksongbook.viewmodel.CommonViewModel

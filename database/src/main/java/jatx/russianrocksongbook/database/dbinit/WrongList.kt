@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.database.db.util
+package jatx.russianrocksongbook.database.dbinit
 
 import jatx.russianrocksongbook.domain.models.Song
 

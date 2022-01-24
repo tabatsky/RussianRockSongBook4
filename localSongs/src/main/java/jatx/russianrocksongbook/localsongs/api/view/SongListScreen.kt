@@ -24,10 +24,8 @@ import jatx.russianrocksongbook.commonview.*
 import jatx.russianrocksongbook.domain.models.Song
 import jatx.russianrocksongbook.domain.repository.*
 import jatx.russianrocksongbook.localsongs.R
+import jatx.russianrocksongbook.localsongs.internal.view.VoiceHelpDialog
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
-import jatx.russianrocksongbook.preferences.api.ScalePow
-import jatx.russianrocksongbook.preferences.api.Theme
-import jatx.russianrocksongbook.preferences.api.colorBlack
 import jatx.russianrocksongbook.testing.*
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import jatx.russianrocksongbook.whatsnewdialog.api.view.WhatsNewDialog

@@ -15,8 +15,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import jatx.russianrocksongbook.preferences.api.Theme
-import jatx.russianrocksongbook.preferences.api.colorDarkYellow
+import jatx.russianrocksongbook.domain.repository.Theme
+import jatx.russianrocksongbook.domain.repository.colorDarkYellow
 import jatx.russianrocksongbook.testing.BACK_BUTTON
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
 import jatx.sideappbar.SideAppBar
