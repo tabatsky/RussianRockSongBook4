@@ -16,7 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import jatx.russianrocksongbook.preferences.api.ScalePow
+import jatx.russianrocksongbook.domain.repository.ScalePow
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
 
 @Composable

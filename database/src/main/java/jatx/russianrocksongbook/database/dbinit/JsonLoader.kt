@@ -3,8 +3,8 @@ package jatx.russianrocksongbook.database.dbinit
 import android.content.Context
 import com.google.gson.Gson
 import jatx.russianrocksongbook.database.R
-import jatx.russianrocksongbook.database.db.util.gson.SongBookGson
 import jatx.russianrocksongbook.database.ext.toSong
+import jatx.russianrocksongbook.database.gson.SongBookGson
 import jatx.russianrocksongbook.domain.models.Song
 import java.util.*
 

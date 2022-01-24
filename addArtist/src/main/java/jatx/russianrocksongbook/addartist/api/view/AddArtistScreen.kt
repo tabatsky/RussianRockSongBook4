@@ -20,7 +20,7 @@ import jatx.russianrocksongbook.addartist.internal.viewmodel.AddArtistViewModel
 import jatx.russianrocksongbook.commonview.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.UploadDialog
-import jatx.russianrocksongbook.preferences.api.ScalePow
+import jatx.russianrocksongbook.domain.repository.ScalePow
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 
 @Composable

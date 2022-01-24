@@ -31,8 +31,8 @@ import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.SearchState
 import jatx.russianrocksongbook.commonview.*
 import jatx.russianrocksongbook.domain.models.CloudSong
 import jatx.russianrocksongbook.domain.repository.OrderBy
-import jatx.russianrocksongbook.preferences.api.ScalePow
-import jatx.russianrocksongbook.preferences.api.Theme
+import jatx.russianrocksongbook.domain.repository.ScalePow
+import jatx.russianrocksongbook.domain.repository.Theme
 import jatx.russianrocksongbook.testing.SEARCH_BUTTON
 import jatx.russianrocksongbook.testing.SEARCH_PROGRESS
 import jatx.russianrocksongbook.testing.TEXT_FIELD_SEARCH_FOR

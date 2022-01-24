@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.cloudsongs.api.view
+package jatx.russianrocksongbook.cloudsongs.internal.view
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.CloudViewModel
-import jatx.russianrocksongbook.preferences.api.ScalePow
+import jatx.russianrocksongbook.domain.repository.ScalePow
 
 @Composable
 internal fun DeleteCloudSongDialog(

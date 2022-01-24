@@ -33,11 +33,12 @@ import jatx.clickablewordstextview.api.ClickableWordsTextView
 import jatx.clickablewordstextview.api.Word
 import jatx.russianrocksongbook.commonview.*
 import jatx.russianrocksongbook.domain.models.Song
+import jatx.russianrocksongbook.domain.repository.ListenToMusicVariant
+import jatx.russianrocksongbook.domain.repository.ScalePow
+import jatx.russianrocksongbook.domain.repository.Theme
 import jatx.russianrocksongbook.localsongs.R
+import jatx.russianrocksongbook.localsongs.internal.view.DeleteToTrashDialog
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
-import jatx.russianrocksongbook.preferences.api.ListenToMusicVariant
-import jatx.russianrocksongbook.preferences.api.ScalePow
-import jatx.russianrocksongbook.preferences.api.Theme
 import jatx.russianrocksongbook.testing.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow

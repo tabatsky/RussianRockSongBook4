@@ -15,13 +15,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.commonview.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.CommonTopAppBar
+import jatx.russianrocksongbook.domain.repository.Theme
 import jatx.russianrocksongbook.donation.R
 import jatx.russianrocksongbook.donation.internal.viewmodel.DonationViewModel
 import jatx.russianrocksongbook.helpers.api.DONATIONS
 import jatx.russianrocksongbook.helpers.api.DONATIONS_LANDSCAPE
 import jatx.russianrocksongbook.helpers.api.SKUS
 import jatx.russianrocksongbook.helpers.api.SKUS_LANDSCAPE
-import jatx.russianrocksongbook.preferences.api.Theme
 
 @Composable
 fun DonationScreen() {

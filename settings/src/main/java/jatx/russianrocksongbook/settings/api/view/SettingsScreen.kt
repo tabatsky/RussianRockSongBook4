@@ -23,7 +23,6 @@ import jatx.russianrocksongbook.commonview.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.Spinner
 import jatx.russianrocksongbook.domain.repository.*
-import jatx.russianrocksongbook.preferences.api.*
 import jatx.russianrocksongbook.settings.R
 import jatx.russianrocksongbook.settings.internal.viewmodel.SettingsViewModel
 import jatx.russianrocksongbook.testing.*

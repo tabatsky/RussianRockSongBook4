@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.localsongs.api.view
+package jatx.russianrocksongbook.localsongs.internal.view
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,9 +12,9 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import jatx.russianrocksongbook.domain.repository.ScalePow
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
-import jatx.russianrocksongbook.preferences.api.ScalePow
 
 @Composable
 internal fun VoiceHelpDialog(
