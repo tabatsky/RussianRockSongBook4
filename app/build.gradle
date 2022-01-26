@@ -12,8 +12,8 @@ android {
         applicationId "jatx.russianrocksongbook"
         minSdk 21
         targetSdk 30
-        versionCode 85
-        versionName "5.5.5"
+        versionCode 86
+        versionName "5.5.6"
 
         testInstrumentationRunner "jatx.russianrocksongbook.HiltTestRunner"
     }
