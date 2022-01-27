@@ -86,30 +86,39 @@ internal open class LocalViewModel @Inject constructor(
                 selectScreen(CurrentScreenVariant.DONATION)
             }
             else -> {
-                localStateHolder
-                    .commonStateHolder
-                    .currentArtist.value = artist
-                localStateHolder.currentSongCount.value =
-                    getCountByArtistUseCase.execute(artist)
-                showSongsJob = viewModelScope
-                    .launch {
-                        withContext(Dispatchers.IO) {
-                            getSongsByArtistUseCase
-                                .execute(artist)
-                                .collect {
-                                    withContext(Dispatchers.Main) {
-                                        val oldArtist = currentSongList.value.getOrNull(0)?.artist
-                                        val newArtist = it.getOrNull(0)?.artist
-                                        localStateHolder.currentSongList.value = it
-                                        if (oldArtist != newArtist || forceOnSuccess) {
-                                            onSuccess()
-                                        }
-                                    }
-                                }
-                        }
-                    }
+                showSongs(artist, forceOnSuccess, onSuccess)
             }
         }
+    }
+
+    private fun showSongs(
+        artist: String,
+        forceOnSuccess: Boolean,
+        onSuccess: () -> Unit
+    ) {
+        localStateHolder
+            .commonStateHolder
+            .currentArtist.value = artist
+        localStateHolder.currentSongCount.value =
+            getCountByArtistUseCase.execute(artist)
+        showSongsJob = viewModelScope
+            .launch {
+                withContext(Dispatchers.IO) {
+                    getSongsByArtistUseCase
+                        .execute(artist)
+                        .collect {
+                            withContext(Dispatchers.Main) {
+                                val oldArtist = currentSongList.value.getOrNull(0)?.artist
+                                    ?: "null"
+                                val newArtist = it.getOrNull(0)?.artist ?: "null"
+                                localStateHolder.currentSongList.value = it
+                                if (oldArtist != newArtist || forceOnSuccess) {
+                                    onSuccess()
+                                }
+                            }
+                        }
+                }
+            }
     }
 
     fun selectSong(position: Int) {
