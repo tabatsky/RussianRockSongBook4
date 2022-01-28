@@ -16,9 +16,6 @@ import dagger.hilt.android.testing.HiltTestApplication
 import jatx.russianrocksongbook.domain.repository.*
 import jatx.russianrocksongbook.donation.api.view.donationLabel
 import jatx.russianrocksongbook.helpers.api.DONATIONS
-import jatx.russianrocksongbook.preferences.api.ARTIST_KINO
-import jatx.russianrocksongbook.preferences.api.Orientation
-import jatx.russianrocksongbook.preferences.api.SettingsRepository
 import jatx.russianrocksongbook.testing.*
 import jatx.russianrocksongbook.view.CurrentScreen
 import org.junit.Before
@@ -109,6 +106,8 @@ class ExampleInstrumentedTest {
 
         val artists = localRepo.getArtistsAsList()
 
+        composeTestRule.waitFor(20000L)
+
         composeTestRule
             .onNodeWithTag(DRAWER_BUTTON_MAIN)
             .performClick()
@@ -118,6 +117,10 @@ class ExampleInstrumentedTest {
             .onNodeWithText(ARTIST_FAVORITE)
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "$ARTIST_FAVORITE is displayed")
+        composeTestRule
+            .onNodeWithText("ghjghg")
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "ghjghg is displayed")
         composeTestRule
             .onNodeWithText(ARTIST_ADD_ARTIST)
             .assertIsDisplayed()
