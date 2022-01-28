@@ -25,6 +25,9 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
+      
+      - name: Java Heap Size
+        run: java -XX:+PrintFlagsFinal -version | grep HeapSize
           
       - name: Gradle Wrapper
         run: gradle wrapper
