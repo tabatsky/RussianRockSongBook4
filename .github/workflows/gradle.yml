@@ -14,8 +14,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
-
+  wrapper:
     runs-on: ubuntu-latest
 
     steps:
@@ -30,8 +29,20 @@ jobs:
     - name: Gradle Wrapper
       run: gradle wrapper
       
+  assembleDebug:
+    runs-on: ubuntu-latest
+    
+    needs: wrapper
+    
+    steps:
     - name: Assemble Debug
       run: ./gradlew assembleDebug
-      
+    
+  assembleRelease:
+    runs-on: ubuntu-latest
+    
+    needs: wrapper
+    
+    steps:
     - name: Assemble Release
       run: ./gradlew assembleRelease
