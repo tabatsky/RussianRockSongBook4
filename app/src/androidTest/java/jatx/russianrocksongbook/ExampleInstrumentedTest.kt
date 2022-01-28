@@ -104,9 +104,11 @@ class ExampleInstrumentedTest {
     fun test1_menuAndSongList() {
         val testNumber = 1
 
-        val artists = localRepo.getArtistsAsList()
+        while (settingsRepository.appWasUpdated) {
+            composeTestRule.waitFor(1000L)
+        }
 
-        composeTestRule.waitFor(90000L)
+        val artists = localRepo.getArtistsAsList()
 
         composeTestRule
             .onNodeWithTag(DRAWER_BUTTON_MAIN)
