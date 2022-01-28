@@ -104,11 +104,21 @@ class ExampleInstrumentedTest {
     fun test1_menuAndSongList() {
         val testNumber = 1
 
+        val appWasUpdated = settingsRepository.appWasUpdated
+
         while (settingsRepository.appWasUpdated) {
             composeTestRule.waitFor(1000L)
         }
 
         val artists = localRepo.getArtistsAsList()
+
+        if (appWasUpdated) {
+            composeTestRule
+                .onNodeWithText(stringConst.ok)
+                .performClick()
+            Log.e("test $testNumber click", stringConst.ok)
+            composeTestRule.waitFor(timeout)
+        }
 
         composeTestRule
             .onNodeWithTag(DRAWER_BUTTON_MAIN)
@@ -1107,7 +1117,7 @@ class ExampleInstrumentedTest {
     }
 }
 
-const val timeout = 1000L
+const val timeout = 2500L
 
 fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.waitFor(time: Long) {
     try {
