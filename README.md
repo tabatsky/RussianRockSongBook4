@@ -4,4 +4,4 @@
 
 Версия, реализованная через Jetpack Compose.
 
-[![assemble status](https://github.com/tabatsky/RussianRockSongBook4/workflows/Assemble/badge.svg)]
+![assemble status](https://github.com/tabatsky/RussianRockSongBook4/workflows/Assemble/badge.svg)
