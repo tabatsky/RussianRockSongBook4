@@ -106,7 +106,7 @@ class ExampleInstrumentedTest {
 
         val artists = localRepo.getArtistsAsList()
 
-        composeTestRule.waitFor(20000L)
+        composeTestRule.waitFor(90000L)
 
         composeTestRule
             .onNodeWithTag(DRAWER_BUTTON_MAIN)
@@ -117,10 +117,6 @@ class ExampleInstrumentedTest {
             .onNodeWithText(ARTIST_FAVORITE)
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "$ARTIST_FAVORITE is displayed")
-        composeTestRule
-            .onNodeWithText("ghjghg")
-            .assertIsDisplayed()
-        Log.e("test $testNumber assert", "ghjghg is displayed")
         composeTestRule
             .onNodeWithText(ARTIST_ADD_ARTIST)
             .assertIsDisplayed()
