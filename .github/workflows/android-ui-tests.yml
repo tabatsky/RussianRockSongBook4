@@ -37,6 +37,7 @@ jobs:
         with:
           api-level: 29
           profile: Nexus 6
+          ram-size: 2048M
           heap-size: 256
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
