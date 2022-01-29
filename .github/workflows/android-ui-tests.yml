@@ -33,7 +33,7 @@ jobs:
         run: gradle wrapper
 
       - name: Android Tests
-        uses: tabatsky/android-emulator-runner@v2
+        uses: tabatsky/android-emulator-runner@release/v2
         with:
           api-level: 29
           profile: Nexus 6
