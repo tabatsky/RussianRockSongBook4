@@ -37,9 +37,9 @@ jobs:
         with:
           api-level: 29
           profile: Nexus 6
-          arch: x86
+          arch: x86_64
           ram-size: 2048
-          heap-size: 256
+          #heap-size: 256
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
