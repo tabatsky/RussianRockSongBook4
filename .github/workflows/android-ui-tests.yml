@@ -33,10 +33,11 @@ jobs:
         run: gradle wrapper
 
       - name: Android Tests
-        uses: reactivecircus/android-emulator-runner@v2
+        uses: tabatsky/android-emulator-runner@v2
         with:
           api-level: 29
           profile: Nexus 6
+          heap-size: 64M
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
