@@ -35,7 +35,7 @@ jobs:
       - name: Android Tests
         uses: tabatsky/android-emulator-runner@release/v2
         with:
-          api-level: 29
+          api-level: 31
           profile: Nexus 6
           ram-size: 2048M
           heap-size: 256
