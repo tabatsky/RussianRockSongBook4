@@ -36,7 +36,7 @@ jobs:
         uses: tabatsky/android-emulator-runner@release/v2
         with:
           api-level: 29
-          profile: `Nexus 6`
+          profile: Nexus 6
           arch: x86_64
           ram-size: 2048
           heap-size: 256
