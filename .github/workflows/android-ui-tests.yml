@@ -37,7 +37,7 @@ jobs:
         with:
           api-level: 29
           profile: Nexus 6
-          arch: x86_64
+          arch: x86
           ram-size: 2048
           heap-size: 256
           force-avd-creation: false
