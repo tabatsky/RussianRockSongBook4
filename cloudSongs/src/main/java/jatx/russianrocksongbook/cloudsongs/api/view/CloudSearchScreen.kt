@@ -110,11 +110,8 @@ private fun CloudSearchBody(
     val cloudSongsFlow by cloudViewModel
         .cloudSongsFlow.collectAsState()
 
-    val cloudSongItems = cloudSongsFlow.collectAsLazyPagingItems()
-    val itemsAdapter = ItemsAdapter(
-        cloudViewModel.snapshotHolder,
-        cloudSongItems
-    )
+    val cloudSongItems = cloudSongsFlow?.collectAsLazyPagingItems()
+    val itemsAdapter = ItemsAdapter(cloudSongItems)
 
     val fontScale = cloudViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTextDp = dimensionResource(id = R.dimen.text_size_16) * fontScale
@@ -149,8 +146,8 @@ private fun CloudSearchBody(
 
     val onItemClick: (Int, CloudSong) -> Unit = { index, cloudSong ->
         println("selected: ${cloudSong.artist} - ${cloudSong.title}")
-        cloudViewModel.selectCloudSong(index)
         cloudViewModel.selectScreen(CurrentScreenVariant.CLOUD_SONG_TEXT)
+        cloudViewModel.selectCloudSong(index)
     }
 
     Column(
@@ -214,8 +211,8 @@ private fun CloudSearchBody(
                                 delay(100L)
                             }
                             listState.scrollToItem(scrollPosition)
+                            cloudViewModel.updateNeedScroll(false)
                         }
-                        cloudViewModel.updateNeedScroll(false)
                     }
                 }
             }

@@ -59,11 +59,8 @@ fun CloudSongTextScreen() {
     val cloudSongsFlow by cloudViewModel
         .cloudSongsFlow.collectAsState()
 
-    val cloudSongItems = cloudSongsFlow.collectAsLazyPagingItems()
-    val itemsAdapter = ItemsAdapter(
-        cloudViewModel.snapshotHolder,
-        cloudSongItems
-    )
+    val cloudSongItems = cloudSongsFlow?.collectAsLazyPagingItems()
+    val itemsAdapter = ItemsAdapter(cloudSongItems)
 
     val cloudSong = itemsAdapter.getItem(position)
     val invalidateCounter by cloudViewModel.invalidateCounter.collectAsState()
