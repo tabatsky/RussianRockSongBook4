@@ -1,14 +1,15 @@
 package jatx.russianrocksongbook.cloudsongs.internal.viewmodel
 
 import android.annotation.SuppressLint
+import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
+import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.paging.CONFIG
 import jatx.russianrocksongbook.cloudsongs.internal.paging.CloudSongSource
-import jatx.russianrocksongbook.cloudsongs.internal.paging.SnapshotHolder
 import jatx.russianrocksongbook.domain.models.CloudSong
 import jatx.russianrocksongbook.domain.repository.OrderBy
 import jatx.russianrocksongbook.domain.repository.result.STATUS_ERROR
@@ -16,12 +17,10 @@ import jatx.russianrocksongbook.domain.repository.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
 import jatx.russianrocksongbook.viewmodel.contracts.SongTextViewModelContract
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
 internal class CloudViewModel @Inject constructor(
-    val snapshotHolder: SnapshotHolder,
     private val cloudStateHolder: CloudStateHolder,
     cloudViewModelDeps: CloudViewModelDeps
 ): CommonViewModel(
@@ -63,7 +62,6 @@ internal class CloudViewModel @Inject constructor(
         updateNeedScroll(true)
         updateSearchFor(searchFor)
         updateOrderBy(orderBy)
-        snapshotHolder.isFlowInitDone = false
         cloudStateHolder.cloudSongsFlow.value =
             Pager(CONFIG) {
                 CloudSongSource(
@@ -73,12 +71,7 @@ internal class CloudViewModel @Inject constructor(
                     onFetchDataError = { updateSearchState(SearchState.ERROR) },
                     onEmptyList = { updateSearchState(SearchState.EMPTY) }
                 )
-            }.flow.onEach {
-                if (!snapshotHolder.isFlowInitDone) {
-                    snapshotHolder.snapshot = null
-                    snapshotHolder.isFlowInitDone = true
-                }
-            }
+            }.flow.cachedIn(viewModelScope)
     }
 
     fun updateSearchState(searchState: SearchState) {
@@ -91,6 +84,7 @@ internal class CloudViewModel @Inject constructor(
 
     fun updateOrientationWasChanged(value: Boolean) {
         cloudStateHolder.wasOrientationChanged.value = value
+        if (value) updateNeedScroll(true)
     }
 
     fun updateNeedScroll(value: Boolean) {
