@@ -204,7 +204,7 @@ private fun CloudSearchBody(
                         cloudViewModel.updateScrollPosition(listState.firstVisibleItemIndex)
                     }
                 }
-                if (wasOrientationChanged || needScroll) {
+                if (needScroll) {
                     LaunchedEffect(Unit) {
                         if (scrollPosition < itemsAdapter.size) {
                             if (TestingConfig.isTesting) {

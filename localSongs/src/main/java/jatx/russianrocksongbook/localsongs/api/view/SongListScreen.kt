@@ -201,7 +201,7 @@ private fun SongListBody() {
                 localViewModel.updateScrollPosition(listState.firstVisibleItemIndex)
             }
         }
-        if (wasOrientationChanged || needScroll) {
+        if (needScroll) {
             val scrollPosition by localViewModel.scrollPosition.collectAsState()
             LaunchedEffect(Unit) {
                 if (TestingConfig.isTesting) {
