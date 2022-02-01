@@ -208,6 +208,7 @@ internal open class LocalViewModel @Inject constructor(
 
     fun updateOrientationWasChanged(value: Boolean) {
         localStateHolder.wasOrientationChanged.value = value
+        if (value) updateNeedScroll(true)
     }
 
     fun updateNeedScroll(value: Boolean) {
