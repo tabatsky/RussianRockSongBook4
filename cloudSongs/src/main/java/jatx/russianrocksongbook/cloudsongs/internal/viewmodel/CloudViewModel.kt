@@ -129,9 +129,9 @@ internal class CloudViewModel @Inject constructor(
 
     @SuppressLint("CheckResult")
     fun deleteCurrentFromCloud(secret1: String, secret2: String) {
-        cloudSong.value?.apply {
+        cloudSong.value?.let {
             deleteFromCloudUseCase
-                .execute(secret1, secret2, this)
+                .execute(secret1, secret2, it)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
@@ -157,26 +157,26 @@ internal class CloudViewModel @Inject constructor(
     }
 
     fun downloadCurrent() {
-        cloudSong.value?.apply {
-            addSongFromCloudUseCase.execute(this)
+        cloudSong.value?.let {
+            addSongFromCloudUseCase.execute(it)
             showToast(R.string.toast_chords_saved_and_added_to_favorite)
         }
     }
 
     @SuppressLint("CheckResult")
     fun voteForCurrent(voteValue: Int) {
-        cloudSong.value?.apply {
+        cloudSong.value?.let { cloudSong ->
             voteUseCase
-                .execute(this, voteValue)
+                .execute(cloudSong, voteValue)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
                     when (result.status) {
                         STATUS_SUCCESS -> {
                             if (voteValue == 1) {
-                                this@apply.likeCount += 1
+                                cloudSong.likeCount += 1
                             } else if (voteValue == -1) {
-                                this@apply.dislikeCount += 1
+                                cloudSong.dislikeCount += 1
                             }
                             cloudStateHolder.invalidateCounter.value += 1
                             showToast(R.string.toast_vote_success)
@@ -194,30 +194,30 @@ internal class CloudViewModel @Inject constructor(
 
     override fun openYandexMusicImpl(dontAskMore: Boolean) {
         settings.yandexMusicDontAsk = dontAskMore
-        cloudSong.value?.apply {
-            callbacks.onOpenYandexMusic("$artist $title")
+        cloudSong.value?.let {
+            callbacks.onOpenYandexMusic("${it.artist} ${it.title}")
         }
     }
 
     override fun openVkMusicImpl(dontAskMore: Boolean) {
         settings.vkMusicDontAsk = dontAskMore
-        cloudSong.value?.apply {
-            callbacks.onOpenVkMusic("$artist $title")
+        cloudSong.value?.let {
+            callbacks.onOpenVkMusic("${it.artist} ${it.title}")
         }
     }
 
     override fun openYoutubeMusicImpl(dontAskMore: Boolean) {
         settings.youtubeMusicDontAsk = dontAskMore
-        cloudSong.value?.apply {
-            callbacks.onOpenYoutubeMusic("$artist $title")
+        cloudSong.value?.let {
+            callbacks.onOpenYoutubeMusic("${it.artist} ${it.title}")
         }
     }
 
     @SuppressLint("CheckResult")
     override fun sendWarningImpl(comment: String) {
-        cloudSong.value?.apply {
+        cloudSong.value?.let {
             addWarningCloudUseCase
-                .execute(this, comment)
+                .execute(it, comment)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->

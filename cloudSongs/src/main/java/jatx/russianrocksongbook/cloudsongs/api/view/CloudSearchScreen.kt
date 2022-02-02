@@ -192,11 +192,11 @@ private fun CloudSearchBody(
                 ) {
                     items(itemsAdapter.size) { index ->
                         val cloudSong = itemsAdapter.getItem(index)
-                        cloudSong?.apply {
+                        cloudSong?.let {
                             CloudSongItem(
-                                this, theme, fontSizeArtistSp, fontSizeSongTitleSp
+                                it, theme, fontSizeArtistSp, fontSizeSongTitleSp
                             ) {
-                                onItemClick(index, this)
+                                onItemClick(index, it)
                             }
                         }
                     }

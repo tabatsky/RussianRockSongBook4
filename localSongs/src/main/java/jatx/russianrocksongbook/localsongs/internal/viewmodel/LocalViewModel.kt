@@ -220,8 +220,8 @@ internal open class LocalViewModel @Inject constructor(
     }
 
     fun deleteCurrentToTrash() {
-        currentSong.value?.apply {
-            deleteSongToTrashUseCase.execute(this)
+        currentSong.value?.let {
+            deleteSongToTrashUseCase.execute(it)
             localStateHolder.currentSongCount.value = getCountByArtistUseCase
                 .execute(currentArtist.value)
             if (currentSongCount.value > 0) {
@@ -239,32 +239,32 @@ internal open class LocalViewModel @Inject constructor(
 
     override fun openYandexMusicImpl(dontAskMore: Boolean) {
         settings.yandexMusicDontAsk = dontAskMore
-        currentSong.value?.apply {
-            callbacks.onOpenYandexMusic("$artist $title")
+        currentSong.value?.let {
+            callbacks.onOpenYandexMusic("${it.artist} ${it.title}")
         }
     }
 
     override fun openVkMusicImpl(dontAskMore: Boolean) {
         settings.vkMusicDontAsk = dontAskMore
-        currentSong.value?.apply {
-            callbacks.onOpenVkMusic("$artist $title")
+        currentSong.value?.let {
+            callbacks.onOpenVkMusic("${it.artist} ${it.title}")
         }
     }
 
     override fun openYoutubeMusicImpl(dontAskMore: Boolean) {
         settings.youtubeMusicDontAsk = dontAskMore
-        currentSong.value?.apply {
-            callbacks.onOpenYoutubeMusic("$artist $title")
+        currentSong.value?.let {
+            callbacks.onOpenYoutubeMusic("${it.artist} ${it.title}")
         }
     }
 
     override fun sendWarningImpl(comment: String) {
-        currentSong.value?.apply {
-            sendWarningDisposable?.apply {
-                if (!this.isDisposed) this.dispose()
+        currentSong.value?.let {
+            sendWarningDisposable?.let {
+                if (!it.isDisposed) it.dispose()
             }
             sendWarningDisposable = addWarningLocalUseCase
-                .execute(this, comment)
+                .execute(it, comment)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
@@ -285,13 +285,13 @@ internal open class LocalViewModel @Inject constructor(
     }
 
     fun uploadCurrentToCloud() {
-        currentSong.value?.apply {
+        currentSong.value?.let {
             localStateHolder.isUploadButtonEnabled.value = false
-            uploadSongDisposable?.apply {
-                if (!this.isDisposed) this.dispose()
+            uploadSongDisposable?.let {
+                if (!it.isDisposed) it.dispose()
             }
             uploadSongDisposable = addSongToCloudUseCase
-                .execute(this)
+                .execute(it)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->

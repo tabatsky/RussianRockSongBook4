@@ -50,8 +50,8 @@ internal class AddArtistViewModel @Inject constructor(
     }
 
     fun uploadListToCloud() {
-        uploadListDisposable?.apply {
-            if (!this.isDisposed) this.dispose()
+        uploadListDisposable?.let {
+            if (!it.isDisposed) it.dispose()
         }
         uploadListDisposable = addSongListToCloudUseCase
             .execute(uploadSongList.value)
@@ -60,10 +60,10 @@ internal class AddArtistViewModel @Inject constructor(
             .subscribe({ result ->
                 when (result.status) {
                     STATUS_SUCCESS -> {
-                        result.data?.apply {
+                        result.data?.let {
                             val toastText = resources.getString(
                                 R.string.toast_upload_songs_result,
-                                success, duplicate, error
+                                it.success, it.duplicate, it.error
                             )
                             showToast(toastText)
                             callbacks.onArtistSelected(uploadArtist.value)

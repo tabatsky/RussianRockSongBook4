@@ -145,7 +145,7 @@ fun CloudSongTextScreen() {
         CloudSongTextProgress(theme)
     }
 
-    cloudSong?.apply {
+    cloudSong?.let {
         BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
@@ -173,7 +173,7 @@ fun CloudSongTextScreen() {
                     CloudSongTextBody(
                         W = W,
                         H = H,
-                        cloudSong = this@apply,
+                        cloudSong = it,
                         invalidateCounter = invalidateCounter,
                         listState = listState,
                         fontSizeTextSp = fontSizeTextSp,
@@ -223,7 +223,7 @@ fun CloudSongTextScreen() {
                     CloudSongTextBody(
                         W = W,
                         H = H,
-                        cloudSong = this@apply,
+                        cloudSong = it,
                         invalidateCounter = invalidateCounter,
                         listState = listState,
                         fontSizeTextSp = fontSizeTextSp,

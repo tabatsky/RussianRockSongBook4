@@ -27,10 +27,10 @@ class LocalRepositoryInitializerImpl @Inject constructor(
 
     override fun applySongPatches() {
         patches.forEach {
-            localRepo.getSongByArtistAndTitle(it.artist, it.title)?.apply {
-                val patchedText = this.text.replace(it.orig, it.patch)
-                this.text = patchedText
-                localRepo.updateSong(this)
+            localRepo.getSongByArtistAndTitle(it.artist, it.title)?.let { song ->
+                val patchedText = song.text.replace(it.orig, it.patch)
+                song.text = patchedText
+                localRepo.updateSong(song)
             }
         }
     }

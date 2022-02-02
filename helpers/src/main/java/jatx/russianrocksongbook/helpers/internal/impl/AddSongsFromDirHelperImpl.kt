@@ -27,10 +27,10 @@ internal class AddSongsFromDirHelperImpl @Inject constructor(
         (activity as? ComponentActivity)?.registerForActivityResult(
             ActivityResultContracts.OpenDocumentTree()
         ) { uri ->
-            uri?.apply {
-                val pickedDir = DocumentFile.fromTreeUri(activity, this)
-                pickedDir?.apply {
-                    onPickedDirReturned(this)
+            uri?.let {
+                val pickedDir = DocumentFile.fromTreeUri(activity, it)
+                pickedDir?.let {
+                    onPickedDirReturned(it)
                 }
             }
         }

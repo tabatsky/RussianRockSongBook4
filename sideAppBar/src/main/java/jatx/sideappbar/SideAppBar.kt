@@ -79,7 +79,7 @@ fun SideAppBar(
                 .width(appBarWidth)
                 .weight(1.0f)
         ) {
-            title?.apply {
+            title?.let {
                 val scope = rememberCoroutineScope()
                 val state = rememberLazyListState()
                 LazyRow(
@@ -101,7 +101,7 @@ fun SideAppBar(
                                     LocalContentAlpha provides ContentAlpha.high,
                                 ) {
                                     Text(
-                                        text = this@apply,
+                                        text = it,
                                         modifier = Modifier
                                             .width(TextMaxWidth),
                                         softWrap = false,

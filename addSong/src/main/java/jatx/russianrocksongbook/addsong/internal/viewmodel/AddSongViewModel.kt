@@ -45,12 +45,12 @@ internal class AddSongViewModel @Inject constructor(
     }
 
     fun uploadNewToCloud() {
-        newSong.value?.apply {
-            uploadSongDisposable?.apply {
-                if (!this.isDisposed) this.dispose()
+        newSong.value?.let { song ->
+            uploadSongDisposable?.let {
+                if (!it.isDisposed) it.dispose()
             }
             uploadSongDisposable = addSongToCloudUseCase
-                .execute(this)
+                .execute(song)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
@@ -70,8 +70,8 @@ internal class AddSongViewModel @Inject constructor(
 
     fun showNewSong() {
         Log.e("show", "new song")
-        newSong.value?.apply {
-            callbacks.onSongByArtistAndTitleSelected(this.artist, this.title)
+        newSong.value?.let {
+            callbacks.onSongByArtistAndTitleSelected(it.artist, it.title)
         }
     }
 
