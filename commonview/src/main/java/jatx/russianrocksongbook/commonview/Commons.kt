@@ -119,9 +119,9 @@ fun CommonTopAppBar(
 ) {
     TopAppBar(
         title = {
-            title?.apply {
+            title?.let {
                 Text(
-                    text = this,
+                    text = it,
                     softWrap = false
                 )
             }

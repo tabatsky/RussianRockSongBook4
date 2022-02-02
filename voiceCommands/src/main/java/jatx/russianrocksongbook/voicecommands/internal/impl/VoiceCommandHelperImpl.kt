@@ -26,8 +26,8 @@ internal class VoiceCommandHelperImpl @Inject constructor(
         (activity as? ComponentActivity)?.registerForActivityResult(
             SpeechRecognizeContract()
         ) {
-            it?.apply {
-                onVoiceCommand(this)
+            it?.let { cmd ->
+                onVoiceCommand(cmd)
             }
         }
 

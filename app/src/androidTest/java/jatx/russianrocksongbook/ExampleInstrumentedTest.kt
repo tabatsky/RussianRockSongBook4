@@ -484,7 +484,7 @@ class ExampleInstrumentedTest {
     fun test3_cloudSearch() {
         val testNumber = 3
 
-        cloudRepository.apply {
+        with (cloudRepository) {
             var list = search("", OrderBy.BY_ID_DESC)
             var titleList = list.map { "${it.artist} - ${it.title}" }
             Log.e("test $testNumber list", titleList.toString())
@@ -626,7 +626,7 @@ class ExampleInstrumentedTest {
     fun test4_cloudSongText() {
         val testNumber = 4
 
-        cloudRepository.apply {
+        with (cloudRepository) {
             val list = search("", OrderBy.BY_ID_DESC)
             val titleList = list.map { "${it.artist} - ${it.title}" }
             Log.e("test $testNumber list", titleList.toString())
@@ -894,9 +894,7 @@ class ExampleInstrumentedTest {
 
         val song = localRepo.getSongByArtistAndTitle(ARTIST_NEW, TITLE_NEW)
         assert(song != null)
-        song!!.apply {
-            assert(text == TEXT_NEW)
-        }
+        assert(song!!.text == TEXT_NEW)
         Log.e("test $testNumber assert", "new song exists and text matches")
 
         composeTestRule

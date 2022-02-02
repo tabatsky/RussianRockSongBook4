@@ -24,20 +24,19 @@ internal class JsonLoader(
 
             current++
 
-            dict?.apply {
-                val sc = Scanner(context.resources.openRawResource(this))
+            return dict?.let {
+                val sc = Scanner(context.resources.openRawResource(it))
                 val jsonStr = sc.useDelimiter("\\A").next()
                 sc.close()
 
                 val songbook = Gson().fromJson(jsonStr, SongBookGson::class.java)
 
-                return songbook.songbook.map { it.toSong(artist) }
-            }
+                songbook.songbook.map { it.toSong(artist) }
+            } ?: listOf()
         } catch (e: Throwable) {
             e.printStackTrace()
+            return listOf()
         }
-
-        return listOf()
     }
 }
 

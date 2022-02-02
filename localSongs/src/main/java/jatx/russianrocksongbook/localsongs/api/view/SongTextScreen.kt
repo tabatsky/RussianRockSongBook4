@@ -54,8 +54,8 @@ fun SongTextScreen() {
 
     val song by localViewModel.currentSong.collectAsState()
     var text by rememberSaveable { mutableStateOf("") }
-    song?.apply {
-        text = this.text
+    song?.let {
+        text = it.text
     }
     val onTextChange: (String) -> Unit = { text = it }
 
@@ -145,7 +145,7 @@ fun SongTextScreen() {
         fontSizeTextDp.toSp()
     }
 
-    song?.apply {
+    song?.let {
         BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
@@ -163,7 +163,7 @@ fun SongTextScreen() {
                     CommonTopAppBar(
                         actions = {
                             SongTextActions(
-                                isFavorite = this@apply.favorite,
+                                isFavorite = it.favorite,
                                 onSongChanged = onSongChanged
                             )
                         }
@@ -172,7 +172,7 @@ fun SongTextScreen() {
                     SongTextBody(
                         W = W,
                         H = H,
-                        song = this@apply,
+                        song = it,
                         text = text,
                         isEditorMode = isEditorMode,
                         listState = listState,
@@ -216,7 +216,7 @@ fun SongTextScreen() {
                     CommonSideAppBar(
                         actions = {
                             SongTextActions(
-                                isFavorite = this@apply.favorite,
+                                isFavorite = it.favorite,
                                 onSongChanged = onSongChanged
                             )
                         }
@@ -225,7 +225,7 @@ fun SongTextScreen() {
                     SongTextBody(
                         W = W,
                         H = H,
-                        song = this@apply,
+                        song = it,
                         text = text,
                         isEditorMode = isEditorMode,
                         listState = listState,
