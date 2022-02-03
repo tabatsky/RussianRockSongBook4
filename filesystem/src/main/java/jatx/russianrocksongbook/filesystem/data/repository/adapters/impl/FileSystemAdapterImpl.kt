@@ -24,7 +24,7 @@ class FileSystemAdapterImpl @Inject constructor(
     ) : Pair<String, List<Song>> {
         val files = pickedDir.listFiles()
         val txtFileList = arrayListOf<DocumentFile>()
-        files.forEach {file ->
+        files.forEach { file ->
             if (file.exists() && file.isFile && (file.name?.endsWith(".txt") == true)) {
                 txtFileList.add(file)
             }
