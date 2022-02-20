@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private val predefinedList = listOf(
+internal val predefinedList = listOf(
     ARTIST_FAVORITE,
     ARTIST_ADD_ARTIST,
     ARTIST_ADD_SONG,
