@@ -2,7 +2,7 @@ package jatx.russianrocksongbook.database
 
 import android.util.Log
 import androidx.room.Room
-import androidx.test.InstrumentationRegistry
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import jatx.russianrocksongbook.database.db.AppDatabase
 import jatx.russianrocksongbook.database.db.dao.SongDao
@@ -12,6 +12,7 @@ import jatx.russianrocksongbook.database.repository.LocalRepositoryImpl
 import jatx.russianrocksongbook.database.repository.predefinedList
 import jatx.russianrocksongbook.domain.repository.LocalRepository
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
@@ -34,7 +35,7 @@ class ExampleInstrumentedTest {
     fun createDb() {
         db = Room
             .inMemoryDatabaseBuilder(
-                InstrumentationRegistry.getContext(),
+                ApplicationProvider.getApplicationContext(),
                 AppDatabase::class.java
             )
             .build()
@@ -51,7 +52,7 @@ class ExampleInstrumentedTest {
     fun test1_fillDbFromJSON() {
         val localRepositoryInitializer = LocalRepositoryInitializerImpl(
             localRepo,
-            InstrumentationRegistry.getContext()
+            ApplicationProvider.getApplicationContext()
         )
         runBlocking {
             localRepositoryInitializer.fillDbFromJSON().collect {
@@ -72,5 +73,11 @@ class ExampleInstrumentedTest {
         Log.e("size", "match")
         Log.e("artists1", artists1.toString())
         Log.e("artists2", artists2.toString())
+        runBlocking {
+            localRepo.getSongsByArtist(artists1[0]).take(1).collect { list ->
+                assert(list.all { it.artist == artists1[0] })
+                Log.e("song list","artist match")
+            }
+        }
     }
 }
