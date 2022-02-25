@@ -21,19 +21,32 @@ const val PAGE_SIZE = 15
 @TestBoundTo(supertype = CloudRepository::class, component = SingletonComponent::class)
 internal class CloudRepositoryTestImpl @Inject constructor(
     localRepo: LocalRepository,
-    userInfo: UserInfo
+    private val userInfo: UserInfo
 ): CloudRepository {
     override var isOnline = true
 
     private val list1 = localRepo.getSongsByArtistAsList("Немного Нервно")
     private val list2 = localRepo.getSongsByArtistAsList("Александр Башлачёв")
     private val list3 = localRepo.getSongsByArtistAsList("Сплин")
-    private val list = list1
-        .plus(list2)
-        .plus(list3)
-        .map {
-            it.toCloudSong(userInfo)
+
+    private val arrayList = arrayListOf<Song>().apply {
+        addAll(list1)
+        addAll(list2)
+        addAll(list3)
+    }
+
+    private var list: List<CloudSong> = arrayList
+            .map {
+                it.toCloudSong(userInfo)
+            }
+
+    private val orderByLambda: (CloudSong, OrderBy) -> String = { cloudSong, orderBy ->
+        when (orderBy) {
+            OrderBy.BY_ARTIST -> cloudSong.artist + cloudSong.title
+            OrderBy.BY_TITLE -> cloudSong.title + cloudSong.artist
+            OrderBy.BY_ID_DESC -> String.format("%04d", list.size - list.indexOf(cloudSong))
         }
+    }
 
     override fun search(searchFor: String, orderBy: OrderBy) = list
         .filter {
@@ -41,11 +54,7 @@ internal class CloudRepositoryTestImpl @Inject constructor(
                 .or(it.title.lowercase().contains(searchFor.lowercase()))
         }
         .sortedBy {
-            when (orderBy) {
-                OrderBy.BY_ARTIST -> it.artist + it.title
-                OrderBy.BY_TITLE -> it.title + it.artist
-                OrderBy.BY_ID_DESC -> String.format("%04d", list.indexOf(it))
-            }
+            orderByLambda(it, orderBy)
         }
 
 
@@ -54,7 +63,12 @@ internal class CloudRepositoryTestImpl @Inject constructor(
     }
 
     override fun addSong(song: Song, userInfo: UserInfo): Single<ResultWithoutData> {
-        TODO("Not yet implemented")
+        arrayList.add(song)
+        list = arrayList
+            .map {
+                it.toCloudSong(userInfo)
+            }
+        return Single.just(ResultWithoutData(STATUS_SUCCESS, null))
     }
 
     override fun addSongList(
