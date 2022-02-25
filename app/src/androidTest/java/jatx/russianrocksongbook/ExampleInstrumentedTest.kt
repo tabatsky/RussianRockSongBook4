@@ -878,10 +878,22 @@ class ExampleInstrumentedTest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "${stringConst.cancel} is displayed")
         composeTestRule
-            .onNodeWithText(stringConst.cancel)
+            .onNodeWithText(stringConst.ok)
             .performClick()
-        Log.e("test $testNumber click", stringConst.cancel)
+        Log.e("test $testNumber click", stringConst.ok)
         composeTestRule.waitFor(timeout)
+
+        with (cloudRepository) {
+            var list = search("", OrderBy.BY_ID_DESC)
+            val cloudSong = list[0]
+
+            assert(cloudSong.artist == ARTIST_NEW)
+            Log.e("test $testNumber assert", "new artist matches")
+            assert(cloudSong.title == TITLE_NEW)
+            Log.e("test $testNumber assert", "new title matches")
+            assert(cloudSong.text == TEXT_NEW)
+            Log.e("test $testNumber assert", "new text matches")
+        }
 
         composeTestRule
             .onNodeWithText("$TITLE_NEW ($ARTIST_NEW)")
