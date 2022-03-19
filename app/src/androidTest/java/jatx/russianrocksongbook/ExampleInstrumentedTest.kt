@@ -669,6 +669,8 @@ class ExampleInstrumentedTest {
                 .onNodeWithTag(CLOUD_SONG_TEXT_VIEWER)
                 .assertIsDisplayed()
             Log.e("test $testNumber assert", "$CLOUD_SONG_TEXT_VIEWER is displayed")
+            Espresso.onView(withText(list[2].text)).check(matches(isDisplayed()))
+            Log.e("test $testNumber assert", "song text is displayed")
 
             composeTestRule
                 .onAllNodesWithTag(MUSIC_BUTTON)
@@ -913,6 +915,8 @@ class ExampleInstrumentedTest {
             .onNodeWithTag(SONG_TEXT_VIEWER)
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "$SONG_TEXT_VIEWER is displayed")
+        Espresso.onView(withText(TEXT_NEW)).check(matches(isDisplayed()))
+        Log.e("test $testNumber assert", "song text is displayed")
 
         val song = localRepo.getSongByArtistAndTitle(ARTIST_NEW, TITLE_NEW)
         assert(song != null)
