@@ -8,6 +8,10 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.runner.AndroidJUnitRunner
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -283,6 +287,8 @@ class ExampleInstrumentedTest {
             .onNodeWithTag(SONG_TEXT_VIEWER)
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "$SONG_TEXT_VIEWER is displayed")
+        Espresso.onView(withText(song1.text)).check(matches(isDisplayed()))
+        Log.e("test $testNumber assert", "song text is displayed")
         composeTestRule
             .onNodeWithTag(SONG_TEXT_EDITOR)
             .assertDoesNotExist()
@@ -331,6 +337,8 @@ class ExampleInstrumentedTest {
             .onNodeWithTag(SONG_TEXT_VIEWER)
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "$SONG_TEXT_VIEWER is displayed")
+        Espresso.onView(withText(song1.text)).check(matches(isDisplayed()))
+        Log.e("test $testNumber assert", "song text is displayed")
         composeTestRule
             .onNodeWithTag(SONG_TEXT_EDITOR)
             .assertDoesNotExist()
@@ -360,6 +368,8 @@ class ExampleInstrumentedTest {
             .onNodeWithText("${song2.title} (${song2.artist})")
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song2 title with artist is displayed")
+        Espresso.onView(withText(song2.text)).check(matches(isDisplayed()))
+        Log.e("test $testNumber assert", "song text is displayed")
 
         composeTestRule
             .onNodeWithTag(LEFT_BUTTON)
@@ -884,7 +894,7 @@ class ExampleInstrumentedTest {
         composeTestRule.waitFor(timeout)
 
         with (cloudRepository) {
-            var list = search("", OrderBy.BY_ID_DESC)
+            val list = search("", OrderBy.BY_ID_DESC)
             val cloudSong = list[0]
 
             assert(cloudSong.artist == ARTIST_NEW)
