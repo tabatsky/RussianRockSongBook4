@@ -6,3 +6,4 @@
 
 ![Assemble status](https://github.com/tabatsky/RussianRockSongBook4/workflows/Assemble/badge.svg)
 ![AndroidUITests status](https://github.com/tabatsky/RussianRockSongBook4/workflows/AndroidUITests/badge.svg)
+![AndroidDatabaseTests status](https://github.com/tabatsky/RussianRockSongBook4/workflows/AndroidDatabaseTests/badge.svg)
