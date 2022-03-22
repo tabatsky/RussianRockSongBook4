@@ -5,7 +5,7 @@ import jatx.clickablewordstextview.api.Word
 internal class WordScanner(private val text: String) {
     private var currentIndex: Int = 0
 
-    val specialSymbols = listOf('#')
+    private val specialSymbols = listOf('#')
 
     private fun isLetter(ch: Char): Boolean {
         return (ch in 'A'..'Z') || (ch in 'a'..'z') || (ch in '0'..'9') || (ch in specialSymbols)
