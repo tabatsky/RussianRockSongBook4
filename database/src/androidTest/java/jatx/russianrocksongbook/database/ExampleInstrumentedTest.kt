@@ -10,6 +10,7 @@ import jatx.russianrocksongbook.database.dbinit.LocalRepositoryInitializerImpl
 import jatx.russianrocksongbook.database.dbinit.artistMap
 import jatx.russianrocksongbook.database.repository.LocalRepositoryImpl
 import jatx.russianrocksongbook.database.repository.predefinedList
+import jatx.russianrocksongbook.domain.models.Song
 import jatx.russianrocksongbook.domain.repository.LocalRepository
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.take
@@ -20,10 +21,20 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * Example local unit test, which will execute on the development machine (host).
+ * Instrumented test, which will execute on an Android device.
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
+
+const val ARTIST_NEW = "Новый исполнитель"
+const val TITLE_NEW = "Новая песня"
+val TEXT_NEW = """
+    Какой-то
+    Текст песни
+    С какими-то
+    Аккордами
+""".trimIndent()
+
 @RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest {
 
@@ -79,5 +90,44 @@ class ExampleInstrumentedTest {
                 Log.e("song list","artist match")
             }
         }
+    }
+
+    @Test
+    fun test2_addAndDeleteSong() {
+        val song = Song(
+            artist = ARTIST_NEW,
+            title = TITLE_NEW,
+            text = TEXT_NEW
+        )
+        localRepo.insertIgnoreSongs(listOf(song))
+        val artists = localRepo.getArtistsAsList()
+        assert(ARTIST_NEW in artists)
+        val songFromDb = localRepo.getSongByArtistAndTitle(ARTIST_NEW, TITLE_NEW)
+        assert(songFromDb != null)
+        assert(songFromDb!!.text == TEXT_NEW)
+        localRepo.deleteSongToTrash(songFromDb)
+        val artists2 = localRepo.getArtistsAsList()
+        assert(ARTIST_NEW !in artists2)
+        val songFromDb2 = localRepo.getSongByArtistAndTitle(ARTIST_NEW, TITLE_NEW)
+        assert(songFromDb2 != null)
+        assert(songFromDb2!!.deleted)
+    }
+
+    @Test
+    fun test3_setFavorite() {
+        val song = Song(
+            artist = ARTIST_NEW,
+            title = TITLE_NEW,
+            text = TEXT_NEW
+        )
+        localRepo.insertIgnoreSongs(listOf(song))
+        localRepo.setFavorite(true, ARTIST_NEW, TITLE_NEW)
+        val songFromDb = localRepo.getSongByArtistAndTitle(ARTIST_NEW, TITLE_NEW)
+        assert(songFromDb != null)
+        assert(songFromDb!!.favorite)
+        localRepo.setFavorite(false, ARTIST_NEW, TITLE_NEW)
+        val songFromDb2 = localRepo.getSongByArtistAndTitle(ARTIST_NEW, TITLE_NEW)
+        assert(songFromDb2 != null)
+        assert(!(songFromDb2!!.favorite))
     }
 }
