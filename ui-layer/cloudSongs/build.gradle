@@ -1,5 +1,5 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
@@ -9,13 +9,11 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "jatx.russianrocksongbook"
         minSdk 21
-        targetSdk 30
-        versionCode 86
-        versionName "5.5.6"
+        targetSdk 31
 
-        testInstrumentationRunner "jatx.russianrocksongbook.HiltTestRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -41,13 +39,10 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
     }
-    packagingOptions {
-        exclude 'META-INF/AL2.0'
-        exclude 'META-INF/LGPL2.1'
-    }
 }
 
 dependencies {
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation 'androidx.core:core-ktx:1.7.0'
@@ -61,45 +56,21 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
 
+    implementation "androidx.paging:paging-compose:1.0.0-alpha14"
+
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
     implementation 'it.czerwinski.android.hilt:hilt-extensions:1.2.0'
     kapt 'it.czerwinski.android.hilt:hilt-processor:1.2.0'
 
-    api project(':ui-layer:util:helpers')
+    api project(':ui-library:clickablewordstextview')
 
-    api project(':ui-layer:localSongs')
-    api project(':ui-layer:cloudSongs')
-    api project(':ui-layer:addArtist')
-    api project(':ui-layer:addSong')
-    api project(':ui-layer:donation')
-    api project(':ui-layer:settings')
-    api project(':ui-layer:start')
+    api project(':domain')
+    api project(':data-layer:database')
+    api project(':data-layer:networking')
+    api project(':data-layer:preferences')
+    api project(':ui-layer:viewmodel')
+    api project(':ui-layer:commonview')
 
     api project(':core:testing')
-
-    // testing
-
-    androidTestImplementation 'androidx.test:core:1.4.0'
-    androidTestImplementation 'androidx.test:runner:1.4.0'
-    androidTestImplementation 'androidx.test.ext:truth:1.4.0'
-    androidTestImplementation 'androidx.test:rules:1.4.0'
-
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-
-    androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
-
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.4.0'
-
-    androidTestImplementation "org.hamcrest:hamcrest:2.2"
-
-    androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
-    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version"
-
-    androidTestImplementation "androidx.compose.ui:ui-test:$compose_version"
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
-    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
-
-    debugImplementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 }
