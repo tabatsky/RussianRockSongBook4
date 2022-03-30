@@ -30,6 +30,6 @@ jobs:
       run: gradle wrapper
       
     - name: Assemble Debug
-      run: ./gradlew clickablewordstextview:test
+      run: ./gradlew ui-library:clickablewordstextview:test
     
       
