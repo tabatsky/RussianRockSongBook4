@@ -103,6 +103,7 @@ internal val artistMap = mapOf(
     "План Ломоносова" to R.raw.plan_lomonosova,
     "Порнофильмы" to R.raw.pornofilmy,
     "Северный Флот" to R.raw.severnyi_flot,
+    "Секрет" to R.raw.sekret,
     "Сектор Газа" to R.raw.sektor,
     "СерьГа" to R.raw.serga,
     "Смысловые Галлюцинации" to R.raw.smislovie,
