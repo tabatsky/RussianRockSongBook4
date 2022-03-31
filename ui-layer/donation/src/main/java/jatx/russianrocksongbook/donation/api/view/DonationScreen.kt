@@ -18,10 +18,10 @@ import jatx.russianrocksongbook.commonview.CommonTopAppBar
 import jatx.russianrocksongbook.domain.repository.Theme
 import jatx.russianrocksongbook.donation.R
 import jatx.russianrocksongbook.donation.internal.viewmodel.DonationViewModel
-import jatx.russianrocksongbook.helpers.api.DONATIONS
-import jatx.russianrocksongbook.helpers.api.DONATIONS_LANDSCAPE
-import jatx.russianrocksongbook.helpers.api.SKUS
-import jatx.russianrocksongbook.helpers.api.SKUS_LANDSCAPE
+import jatx.russianrocksongbook.donationhelper.api.DONATIONS
+import jatx.russianrocksongbook.donationhelper.api.DONATIONS_LANDSCAPE
+import jatx.russianrocksongbook.donationhelper.api.SKUS
+import jatx.russianrocksongbook.donationhelper.api.SKUS_LANDSCAPE
 
 @Composable
 fun DonationScreen() {
