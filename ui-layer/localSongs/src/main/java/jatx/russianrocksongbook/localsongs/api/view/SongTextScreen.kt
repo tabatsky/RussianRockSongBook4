@@ -47,7 +47,6 @@ import kotlinx.coroutines.launch
 
 const val interval = 250L
 
-@ExperimentalFoundationApi
 @Composable
 fun SongTextScreen() {
     val localViewModel: LocalViewModel = viewModel()
@@ -553,7 +552,6 @@ private fun SongTextLazyColumn(
 }
 
 
-@ExperimentalFoundationApi
 @Composable
 private fun SongTextPanel(
     W: Dp,
@@ -621,7 +619,6 @@ private fun SongTextPanel(
     }
 }
 
-@ExperimentalFoundationApi
 @Composable
 private fun SongTextPanelContent(
     W: Dp,

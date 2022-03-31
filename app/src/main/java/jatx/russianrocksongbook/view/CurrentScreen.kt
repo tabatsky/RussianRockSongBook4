@@ -16,7 +16,6 @@ import jatx.russianrocksongbook.start.api.view.StartScreen
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
 
-@ExperimentalFoundationApi
 @Composable
 fun CurrentScreen() {
     val commonViewModel: CommonViewModel = viewModel()

@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.domain.repository.Theme
 import jatx.russianrocksongbook.testing.*
 
-@ExperimentalFoundationApi
 @Composable
 fun YandexMusicButton(size: Dp, theme: Theme, onClick: () -> Unit) =
     FooterButton(
@@ -29,7 +28,6 @@ fun YandexMusicButton(size: Dp, theme: Theme, onClick: () -> Unit) =
         onClick = onClick
     )
 
-@ExperimentalFoundationApi
 @Composable
 fun VkMusicButton(size: Dp, theme: Theme, onClick: () -> Unit) =
     FooterButton(
@@ -40,7 +38,6 @@ fun VkMusicButton(size: Dp, theme: Theme, onClick: () -> Unit) =
         onClick = onClick
     )
 
-@ExperimentalFoundationApi
 @Composable
 fun YoutubeMusicButton(size: Dp, theme: Theme, onClick: () -> Unit) =
     FooterButton(
@@ -51,7 +48,6 @@ fun YoutubeMusicButton(size: Dp, theme: Theme, onClick: () -> Unit) =
         onClick = onClick
     )
 
-@ExperimentalFoundationApi
 @Composable
 fun UploadButton(size: Dp, theme: Theme, onClick: () -> Unit) =
     FooterButton(
@@ -62,7 +58,6 @@ fun UploadButton(size: Dp, theme: Theme, onClick: () -> Unit) =
         onClick = onClick
     )
 
-@ExperimentalFoundationApi
 @Composable
 fun WarningButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
     FooterButton(
@@ -73,7 +68,6 @@ fun WarningButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
         onClick = onClick
     )
 
-@ExperimentalFoundationApi
 @Composable
 fun TrashButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
     FooterButton(
@@ -84,7 +78,6 @@ fun TrashButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
         onClick = onClick
     )
 
-@ExperimentalFoundationApi
 @Composable
 fun EditButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
     FooterButton(
@@ -95,7 +88,6 @@ fun EditButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
         onClick = onClick
     )
 
-@ExperimentalFoundationApi
 @Composable
 fun SaveButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
     FooterButton(
@@ -106,7 +98,6 @@ fun SaveButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
         onClick = onClick
     )
 
-@ExperimentalFoundationApi
 @Composable
 fun DownloadButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
     FooterButton(
@@ -117,7 +108,6 @@ fun DownloadButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
         onClick = onClick
     )
 
-@ExperimentalFoundationApi
 @Composable
 fun LikeButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
     FooterButton(
@@ -128,7 +118,6 @@ fun LikeButton(size: Dp, theme: Theme, onClick: () -> Unit)  =
         onClick = onClick
     )
 
-@ExperimentalFoundationApi
 @Composable
 fun DislikeButton(
     size: Dp,
@@ -145,7 +134,6 @@ fun DislikeButton(
         onLongClick = onLongClick
     )
 
-@ExperimentalFoundationApi
 @Composable
 private fun FooterButton(
     size: Dp,
