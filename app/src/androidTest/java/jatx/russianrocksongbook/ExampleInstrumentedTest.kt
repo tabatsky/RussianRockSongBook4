@@ -87,7 +87,6 @@ class ExampleInstrumentedTest {
     @Inject
     lateinit var stringConst: StringConst
 
-    @ExperimentalFoundationApi
     @Before
     fun init() {
         TestingConfig.isTesting = true

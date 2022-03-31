@@ -49,7 +49,6 @@ import kotlinx.coroutines.launch
 
 private val CLOUD_SONG_TEXT_APP_BAR_WIDTH = 96.dp
 
-@ExperimentalFoundationApi
 @Composable
 fun CloudSongTextScreen() {
     val cloudViewModel: CloudViewModel = viewModel()
@@ -446,7 +445,6 @@ private fun CloudSongTextLazyColumn(
 }
 
 
-@ExperimentalFoundationApi
 @Composable
 private fun CloudSongTextPanel(
     W: Dp,
@@ -511,7 +509,6 @@ private fun CloudSongTextPanel(
     }
 }
 
-@ExperimentalFoundationApi
 @Composable
 private fun CloudSongTextPanelContent(
     W: Dp,

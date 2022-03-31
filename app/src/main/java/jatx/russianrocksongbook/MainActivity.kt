@@ -50,7 +50,6 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var version: Version
 
-    @ExperimentalFoundationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
