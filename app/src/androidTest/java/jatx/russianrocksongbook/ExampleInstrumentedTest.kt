@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -19,7 +18,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import jatx.russianrocksongbook.domain.repository.*
 import jatx.russianrocksongbook.donation.api.view.donationLabel
-import jatx.russianrocksongbook.helpers.api.DONATIONS
+import jatx.russianrocksongbook.donationhelper.api.DONATIONS
 import jatx.russianrocksongbook.testing.*
 import jatx.russianrocksongbook.view.CurrentScreen
 import org.junit.Before
