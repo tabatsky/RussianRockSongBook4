@@ -22,7 +22,7 @@ import jatx.russianrocksongbook.musichelper.api.MusicHelper
 import jatx.russianrocksongbook.localsongs.api.ext.parseAndExecuteVoiceCommand
 import jatx.russianrocksongbook.localsongs.api.ext.selectArtist
 import jatx.russianrocksongbook.localsongs.api.ext.selectSongByArtistAndTitle
-import jatx.russianrocksongbook.domain.models.version.Version
+import jatx.russianrocksongbook.domain.models.appcrash.Version
 import jatx.russianrocksongbook.domain.repository.preferences.Orientation
 import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
 import jatx.russianrocksongbook.donationhelper.api.DonationHelper
