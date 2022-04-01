@@ -36,10 +36,10 @@ import jatx.russianrocksongbook.cloudsongs.internal.paging.ItemsAdapter
 import jatx.russianrocksongbook.cloudsongs.internal.view.DeleteCloudSongDialog
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.CloudViewModel
 import jatx.russianrocksongbook.commonview.*
-import jatx.russianrocksongbook.domain.models.CloudSong
-import jatx.russianrocksongbook.domain.repository.ListenToMusicVariant
-import jatx.russianrocksongbook.domain.repository.ScalePow
-import jatx.russianrocksongbook.domain.repository.Theme
+import jatx.russianrocksongbook.domain.models.cloud.CloudSong
+import jatx.russianrocksongbook.domain.repository.preferences.ListenToMusicVariant
+import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
+import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.testing.CLOUD_SONG_TEXT_VIEWER
 import jatx.russianrocksongbook.testing.LEFT_BUTTON
 import jatx.russianrocksongbook.testing.NUMBER_LABEL

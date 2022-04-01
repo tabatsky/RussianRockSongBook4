@@ -1,7 +1,7 @@
 package jatx.russianrocksongbook.start.internal.viewmodel
 
 import dagger.hilt.android.scopes.ViewModelScoped
-import jatx.russianrocksongbook.domain.repository.init.LocalRepositoryInitializer
+import jatx.russianrocksongbook.domain.repository.local.init.LocalRepositoryInitializer
 import jatx.russianrocksongbook.viewmodel.CommonViewModelDeps
 import javax.inject.Inject
 

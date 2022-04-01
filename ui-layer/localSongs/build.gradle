@@ -59,7 +59,10 @@ dependencies {
 
     api project(':ui-library:clickablewordstextview')
 
-    api project(':domain')
+    api project(':domain-layer:models:models')
+    api project(':domain-layer:repository:cloud')
+    api project(':domain-layer:repository:local')
+    api project(':domain-layer:usecase')
     api project(':data-layer:database')
     api project(':data-layer:networking')
     api project(':data-layer:preferences')

@@ -3,15 +3,15 @@ package jatx.russianrocksongbook.networking.repository
 import dagger.hilt.components.SingletonComponent
 import io.reactivex.Single
 import it.czerwinski.android.hilt.annotations.TestBoundTo
-import jatx.russianrocksongbook.domain.models.AppCrash
-import jatx.russianrocksongbook.domain.models.CloudSong
-import jatx.russianrocksongbook.domain.models.Song
-import jatx.russianrocksongbook.domain.repository.CloudRepository
-import jatx.russianrocksongbook.domain.repository.LocalRepository
-import jatx.russianrocksongbook.domain.repository.OrderBy
-import jatx.russianrocksongbook.domain.repository.result.*
-import jatx.russianrocksongbook.networking.ext.toCloudSong
-import jatx.russianrocksongbook.domain.models.interfaces.UserInfo
+import jatx.russianrocksongbook.domain.models.appcrash.AppCrash
+import jatx.russianrocksongbook.domain.models.cloud.CloudSong
+import jatx.russianrocksongbook.domain.models.local.Song
+import jatx.russianrocksongbook.domain.repository.cloud.CloudRepository
+import jatx.russianrocksongbook.domain.repository.local.LocalRepository
+import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
+import jatx.russianrocksongbook.domain.repository.cloud.result.*
+import jatx.russianrocksongbook.domain.models.cloud.UserInfo
+import jatx.russianrocksongbook.domain.models.converters.toCloudSong
 import javax.inject.Inject
 import javax.inject.Singleton
 

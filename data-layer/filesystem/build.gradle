@@ -41,5 +41,8 @@ dependencies {
     implementation 'it.czerwinski.android.hilt:hilt-extensions:1.2.0'
     kapt 'it.czerwinski.android.hilt:hilt-processor:1.2.0'
 
-    api project(':domain')
+    api project(':domain-layer:models:models')
+    api project(':domain-layer:repository:filesystem')
+    api project(':domain-layer:repository:local')
+    api project(':domain-layer:usecase')
 }

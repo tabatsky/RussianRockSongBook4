@@ -1,9 +1,9 @@
 package jatx.russianrocksongbook.networking.songbookapi
 
 import io.reactivex.Single
-import jatx.russianrocksongbook.domain.repository.result.ResultWithAddSongListResultData
-import jatx.russianrocksongbook.domain.repository.result.ResultWithNumber
-import jatx.russianrocksongbook.domain.repository.result.ResultWithoutData
+import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithAddSongListResultData
+import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithNumber
+import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithoutData
 import jatx.russianrocksongbook.networking.gson.ResultWithCloudSongGsonListData
 import retrofit2.http.*
 

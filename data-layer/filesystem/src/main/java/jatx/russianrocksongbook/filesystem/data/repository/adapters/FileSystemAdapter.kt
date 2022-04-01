@@ -1,7 +1,7 @@
 package jatx.russianrocksongbook.filesystem.data.repository.adapters
 
 import androidx.documentfile.provider.DocumentFile
-import jatx.russianrocksongbook.domain.models.Song
+import jatx.russianrocksongbook.domain.models.local.Song
 import java.io.File
 
 interface FileSystemAdapter {

@@ -5,8 +5,8 @@ import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import it.czerwinski.android.hilt.annotations.BoundTo
-import jatx.russianrocksongbook.domain.repository.LocalRepository
-import jatx.russianrocksongbook.domain.repository.init.LocalRepositoryInitializer
+import jatx.russianrocksongbook.domain.repository.local.LocalRepository
+import jatx.russianrocksongbook.domain.repository.local.init.LocalRepositoryInitializer
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 

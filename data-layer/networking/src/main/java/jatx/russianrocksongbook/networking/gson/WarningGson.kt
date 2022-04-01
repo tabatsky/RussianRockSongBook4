@@ -1,7 +1,7 @@
 package jatx.russianrocksongbook.networking.gson
 
-import jatx.russianrocksongbook.domain.models.CloudSong
-import jatx.russianrocksongbook.domain.models.Song
+import jatx.russianrocksongbook.domain.models.cloud.CloudSong
+import jatx.russianrocksongbook.domain.models.local.Song
 
 const val TYPE_CLOUD = "cloud"
 const val TYPE_OUT_OF_THE_BOX = "outOfTheBox"

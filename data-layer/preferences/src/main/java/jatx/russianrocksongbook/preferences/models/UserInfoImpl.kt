@@ -6,7 +6,7 @@ import android.provider.Settings
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import it.czerwinski.android.hilt.annotations.BoundTo
-import jatx.russianrocksongbook.domain.models.interfaces.UserInfo
+import jatx.russianrocksongbook.domain.models.cloud.UserInfo
 import jatx.russianrocksongbook.util.hashing.HashingUtil
 import javax.inject.Inject
 import javax.inject.Singleton
