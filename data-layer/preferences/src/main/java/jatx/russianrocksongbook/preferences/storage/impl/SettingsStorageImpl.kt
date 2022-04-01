@@ -32,6 +32,7 @@ class SettingsStorageImpl @Inject constructor(
 ): SettingsStorage {
     private val sp = context.getSharedPreferences(PREFS_NAME, 0)
 
+    @Suppress("DEPRECATION")
     override val appWasUpdated: Boolean
         get() {
             return try {
@@ -51,6 +52,7 @@ class SettingsStorageImpl @Inject constructor(
             }
         }
 
+    @Suppress("DEPRECATION")
     override fun confirmAppUpdate() {
         try {
             val pInfo =
