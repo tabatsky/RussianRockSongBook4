@@ -12,7 +12,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import jatx.russianrocksongbook.domain.repository.ScalePow
+import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 

@@ -10,8 +10,8 @@ import jatx.russianrocksongbook.database.dbinit.LocalRepositoryInitializerImpl
 import jatx.russianrocksongbook.database.dbinit.artistMap
 import jatx.russianrocksongbook.database.repository.LocalRepositoryImpl
 import jatx.russianrocksongbook.database.repository.predefinedList
-import jatx.russianrocksongbook.domain.models.Song
-import jatx.russianrocksongbook.domain.repository.LocalRepository
+import jatx.russianrocksongbook.domain.models.local.Song
+import jatx.russianrocksongbook.domain.repository.local.LocalRepository
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking

@@ -1,7 +1,7 @@
 package jatx.russianrocksongbook.cloudsongs.internal.paging
 
 import androidx.paging.compose.LazyPagingItems
-import jatx.russianrocksongbook.domain.models.CloudSong
+import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 
 internal class ItemsAdapter(
     private val lazyItems: LazyPagingItems<CloudSong>?

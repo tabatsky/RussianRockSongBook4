@@ -1,16 +1,11 @@
 package jatx.russianrocksongbook.filesystem.data.repository
 
-import android.content.Context
 import androidx.documentfile.provider.DocumentFile
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import it.czerwinski.android.hilt.annotations.BoundTo
-import jatx.russianrocksongbook.domain.models.Song
-import jatx.russianrocksongbook.domain.repository.FileSystemRepository
+import jatx.russianrocksongbook.domain.repository.filesystem.FileSystemRepository
 import jatx.russianrocksongbook.filesystem.data.repository.adapters.FileSystemAdapter
 import java.io.File
-import java.io.FileNotFoundException
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 

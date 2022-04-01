@@ -5,7 +5,7 @@ import androidx.documentfile.provider.DocumentFile
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import it.czerwinski.android.hilt.annotations.BoundTo
-import jatx.russianrocksongbook.domain.models.Song
+import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.filesystem.data.repository.adapters.FileSystemAdapter
 import java.io.File
 import java.io.FileNotFoundException

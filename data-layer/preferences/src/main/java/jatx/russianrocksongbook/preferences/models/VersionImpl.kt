@@ -5,7 +5,7 @@ import android.content.pm.PackageManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import it.czerwinski.android.hilt.annotations.BoundTo
-import jatx.russianrocksongbook.domain.models.interfaces.Version
+import jatx.russianrocksongbook.domain.models.version.Version
 import javax.inject.Inject
 import javax.inject.Singleton
 

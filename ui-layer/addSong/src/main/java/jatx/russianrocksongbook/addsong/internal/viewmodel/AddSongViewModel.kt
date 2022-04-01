@@ -5,9 +5,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import jatx.russianrocksongbook.domain.repository.result.STATUS_ERROR
-import jatx.russianrocksongbook.domain.repository.result.STATUS_SUCCESS
-import jatx.russianrocksongbook.domain.models.Song
+import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_ERROR
+import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
+import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
 import jatx.russianrocksongbook.viewmodel.R
 import kotlinx.coroutines.flow.asStateFlow

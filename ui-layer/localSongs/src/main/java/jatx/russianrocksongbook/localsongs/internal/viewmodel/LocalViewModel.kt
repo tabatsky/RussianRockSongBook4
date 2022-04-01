@@ -6,11 +6,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import jatx.russianrocksongbook.domain.models.Song
-import jatx.russianrocksongbook.domain.repository.*
+import jatx.russianrocksongbook.domain.models.local.Song
+import jatx.russianrocksongbook.domain.repository.cloud.result.*
+import jatx.russianrocksongbook.domain.repository.local.*
 import jatx.russianrocksongbook.localsongs.R
-import jatx.russianrocksongbook.domain.repository.result.STATUS_ERROR
-import jatx.russianrocksongbook.domain.repository.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.viewmodel.*
 import jatx.russianrocksongbook.viewmodel.contracts.SongTextViewModelContract
 import kotlinx.coroutines.Dispatchers

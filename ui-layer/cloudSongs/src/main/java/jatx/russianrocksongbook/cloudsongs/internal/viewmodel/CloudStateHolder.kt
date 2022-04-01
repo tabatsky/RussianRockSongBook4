@@ -2,8 +2,8 @@ package jatx.russianrocksongbook.cloudsongs.internal.viewmodel
 
 import androidx.paging.PagingData
 import dagger.hilt.android.scopes.ActivityRetainedScoped
-import jatx.russianrocksongbook.domain.models.CloudSong
-import jatx.russianrocksongbook.domain.repository.OrderBy
+import jatx.russianrocksongbook.domain.models.cloud.CloudSong
+import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.viewmodel.CommonStateHolder
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

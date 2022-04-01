@@ -2,7 +2,7 @@ package jatx.russianrocksongbook.localsongs.internal.viewmodel
 
 import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jatx.russianrocksongbook.domain.models.Song
+import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.voicecommands.api.aliases
 import jatx.russianrocksongbook.voicecommands.api.voiceFilter

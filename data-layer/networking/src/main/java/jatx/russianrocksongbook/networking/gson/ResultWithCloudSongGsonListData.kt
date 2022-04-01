@@ -1,7 +1,7 @@
 package jatx.russianrocksongbook.networking.gson
 
-import jatx.russianrocksongbook.domain.repository.result.ResultWithCloudSongListData
-import jatx.russianrocksongbook.networking.ext.toCloudSong
+import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithCloudSongListData
+import jatx.russianrocksongbook.networking.converters.toCloudSong
 
 data class ResultWithCloudSongGsonListData(
     val status: String,

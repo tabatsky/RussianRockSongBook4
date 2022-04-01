@@ -10,10 +10,10 @@ import io.reactivex.schedulers.Schedulers
 import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.paging.CONFIG
 import jatx.russianrocksongbook.cloudsongs.internal.paging.CloudSongSource
-import jatx.russianrocksongbook.domain.models.CloudSong
-import jatx.russianrocksongbook.domain.repository.OrderBy
-import jatx.russianrocksongbook.domain.repository.result.STATUS_ERROR
-import jatx.russianrocksongbook.domain.repository.result.STATUS_SUCCESS
+import jatx.russianrocksongbook.domain.models.cloud.CloudSong
+import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
+import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_ERROR
+import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
 import jatx.russianrocksongbook.viewmodel.contracts.SongTextViewModelContract
 import kotlinx.coroutines.flow.asStateFlow

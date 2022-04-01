@@ -48,5 +48,8 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.12.0'
 
     api project(':core:util')
-    api project(':domain')
+    api project(':domain-layer:models:models')
+    api project(':domain-layer:repository:filesystem')
+    api project(':domain-layer:repository:preferences')
+    api project(':domain-layer:usecase')
 }

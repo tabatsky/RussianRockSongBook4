@@ -3,7 +3,7 @@ package jatx.russianrocksongbook.preferences.repository
 import android.annotation.SuppressLint
 import dagger.hilt.components.SingletonComponent
 import it.czerwinski.android.hilt.annotations.BoundTo
-import jatx.russianrocksongbook.domain.repository.*
+import jatx.russianrocksongbook.domain.repository.preferences.*
 import jatx.russianrocksongbook.preferences.storage.SettingsStorage
 import javax.inject.Inject
 import javax.inject.Singleton

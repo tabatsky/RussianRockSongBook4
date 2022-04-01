@@ -1,6 +1,6 @@
 package jatx.russianrocksongbook.database.dbinit
 
-import jatx.russianrocksongbook.domain.models.Song
+import jatx.russianrocksongbook.domain.models.local.Song
 
 internal val wrongSongs = listOf(
     Song(artist = "Король и Шут", title = "Анархист"),

@@ -1,7 +1,7 @@
 package jatx.russianrocksongbook.viewmodel
 
 import dagger.hilt.android.scopes.ViewModelScoped
-import jatx.russianrocksongbook.domain.repository.SettingsRepository
+import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
 import jatx.russianrocksongbook.domain.usecase.GetArtistsUseCase
 import jatx.russianrocksongbook.viewmodel.deps.Callbacks
 import jatx.russianrocksongbook.viewmodel.deps.Resources

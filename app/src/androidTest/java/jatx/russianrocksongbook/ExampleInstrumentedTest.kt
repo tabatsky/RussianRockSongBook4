@@ -16,7 +16,12 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
-import jatx.russianrocksongbook.domain.repository.*
+import jatx.russianrocksongbook.domain.repository.cloud.CloudRepository
+import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
+import jatx.russianrocksongbook.domain.repository.local.*
+import jatx.russianrocksongbook.domain.repository.preferences.ARTIST_KINO
+import jatx.russianrocksongbook.domain.repository.preferences.Orientation
+import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
 import jatx.russianrocksongbook.donation.api.view.donationLabel
 import jatx.russianrocksongbook.donationhelper.api.DONATIONS
 import jatx.russianrocksongbook.testing.*

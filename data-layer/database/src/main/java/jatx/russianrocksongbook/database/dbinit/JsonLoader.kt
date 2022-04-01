@@ -3,9 +3,9 @@ package jatx.russianrocksongbook.database.dbinit
 import android.content.Context
 import com.google.gson.Gson
 import jatx.russianrocksongbook.database.R
-import jatx.russianrocksongbook.database.ext.toSong
+import jatx.russianrocksongbook.database.converters.toSong
 import jatx.russianrocksongbook.database.gson.SongBookGson
-import jatx.russianrocksongbook.domain.models.Song
+import jatx.russianrocksongbook.domain.models.local.Song
 import java.util.*
 
 internal class JsonLoader(

@@ -32,10 +32,10 @@ import com.dqt.libs.chorddroid.classes.ChordLibrary
 import jatx.clickablewordstextview.api.ClickableWordsTextView
 import jatx.clickablewordstextview.api.Word
 import jatx.russianrocksongbook.commonview.*
-import jatx.russianrocksongbook.domain.models.Song
-import jatx.russianrocksongbook.domain.repository.ListenToMusicVariant
-import jatx.russianrocksongbook.domain.repository.ScalePow
-import jatx.russianrocksongbook.domain.repository.Theme
+import jatx.russianrocksongbook.domain.models.local.Song
+import jatx.russianrocksongbook.domain.repository.preferences.ListenToMusicVariant
+import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
+import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.view.DeleteToTrashDialog
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
