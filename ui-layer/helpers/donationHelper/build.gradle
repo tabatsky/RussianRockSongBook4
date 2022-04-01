@@ -35,17 +35,12 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.activity:activity-compose:1.4.0'
-    implementation "androidx.navigation:navigation-compose:2.4.0-rc01"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
 
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
     implementation 'it.czerwinski.android.hilt:hilt-extensions:1.2.0'
     kapt 'it.czerwinski.android.hilt:hilt-processor:1.2.0'
-    
-    implementation 'com.obsez.android.lib.filechooser:filechooser:1.1.19'
 
     api 'com.android.billingclient:billing:4.1.0'
     api 'com.android.billingclient:billing-ktx:4.1.0'
