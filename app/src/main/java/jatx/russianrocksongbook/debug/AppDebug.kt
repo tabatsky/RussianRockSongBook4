@@ -6,7 +6,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import jatx.russianrocksongbook.domain.models.appcrash.AppCrash
 import jatx.russianrocksongbook.domain.usecase.SendCrashUseCase
-import jatx.russianrocksongbook.domain.models.version.Version
+import jatx.russianrocksongbook.domain.models.appcrash.Version
 import jatx.russianrocksongbook.util.debug.exceptionToString
 
 object AppDebug {

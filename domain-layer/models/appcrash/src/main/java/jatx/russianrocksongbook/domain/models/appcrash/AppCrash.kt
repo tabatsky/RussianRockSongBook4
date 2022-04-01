@@ -1,7 +1,6 @@
 package jatx.russianrocksongbook.domain.models.appcrash
 
 import android.os.Build
-import jatx.russianrocksongbook.domain.models.version.Version
 import jatx.russianrocksongbook.util.debug.exceptionToString
 
 data class AppCrash(

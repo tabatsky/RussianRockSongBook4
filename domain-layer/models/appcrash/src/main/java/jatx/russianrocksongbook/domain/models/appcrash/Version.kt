@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.domain.models.version
+package jatx.russianrocksongbook.domain.models.appcrash
 
 interface Version {
     var appVersionName: String
