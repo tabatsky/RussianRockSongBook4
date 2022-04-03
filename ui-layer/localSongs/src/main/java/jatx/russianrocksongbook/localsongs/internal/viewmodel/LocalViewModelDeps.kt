@@ -1,7 +1,9 @@
 package jatx.russianrocksongbook.localsongs.internal.viewmodel
 
 import dagger.hilt.android.scopes.ViewModelScoped
-import jatx.russianrocksongbook.domain.usecase.*
+import jatx.russianrocksongbook.domain.usecase.cloud.AddSongToCloudUseCase
+import jatx.russianrocksongbook.domain.usecase.cloud.AddWarningLocalUseCase
+import jatx.russianrocksongbook.domain.usecase.local.*
 import jatx.russianrocksongbook.viewmodel.CommonViewModelDeps
 import javax.inject.Inject
 

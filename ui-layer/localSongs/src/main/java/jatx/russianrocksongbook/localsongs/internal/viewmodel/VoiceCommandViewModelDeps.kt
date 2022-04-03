@@ -1,8 +1,8 @@
 package jatx.russianrocksongbook.localsongs.internal.viewmodel
 
 import dagger.hilt.android.scopes.ViewModelScoped
-import jatx.russianrocksongbook.domain.usecase.GetArtistsAsListUseCase
-import jatx.russianrocksongbook.domain.usecase.GetSongsByVoiceSearchUseCase
+import jatx.russianrocksongbook.domain.usecase.local.GetArtistsAsListUseCase
+import jatx.russianrocksongbook.domain.usecase.local.GetSongsByVoiceSearchUseCase
 import javax.inject.Inject
 
 @ViewModelScoped

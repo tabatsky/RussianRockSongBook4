@@ -43,5 +43,5 @@ dependencies {
     api project(':domain-layer:models:local')
     api project(':domain-layer:repository:filesystem')
     api project(':domain-layer:repository:local')
-    api project(':domain-layer:usecase')
+
 }

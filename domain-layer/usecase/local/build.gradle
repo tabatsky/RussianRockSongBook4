@@ -32,30 +32,27 @@ android {
 }
 
 dependencies {
+
     implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
 
     implementation "com.google.dagger:hilt-android:$hilt_version"
     implementation "com.google.dagger:hilt-android-testing:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
-    implementation 'it.czerwinski.android.hilt:hilt-extensions:1.2.0'
-    kapt 'it.czerwinski.android.hilt:hilt-processor:1.2.0'
 
-    implementation "androidx.documentfile:documentfile:1.0.1"
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    api "androidx.documentfile:documentfile:1.0.1"
+
+    api "androidx.compose.ui:ui:$compose_version"
 
     api 'io.reactivex.rxjava2:rxjava:2.2.9'
     api 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
-    api project(':domain-layer:models:appcrash')
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+
+    api project(':core:util')
     api project(':domain-layer:models:cloud')
-    api project(':domain-layer:models:converters')
     api project(':domain-layer:models:local')
     api project(':domain-layer:repository:cloud')
+    api project(':domain-layer:repository:filesystem')
     api project(':domain-layer:repository:local')
-
-    api project(':net-library:SynchronousCallAdapterFactory')
+    api project(':domain-layer:repository:preferences')
 }

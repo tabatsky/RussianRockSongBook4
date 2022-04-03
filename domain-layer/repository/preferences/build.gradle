@@ -50,5 +50,4 @@ dependencies {
 
     api project(':core:util')
     api project(':domain-layer:models:cloud')
-    api project(':domain-layer:models:local')
 }

@@ -54,7 +54,7 @@ dependencies {
     api project(':domain-layer:models:cloud')
     api project(':domain-layer:models:local')
     api project(':domain-layer:repository:local')
-    api project(':domain-layer:usecase')
+
 
     androidTestImplementation 'androidx.test:core:1.4.0'
     androidTestImplementation 'androidx.test:runner:1.4.0'

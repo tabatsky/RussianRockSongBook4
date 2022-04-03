@@ -47,7 +47,9 @@ dependencies {
     implementation "androidx.documentfile:documentfile:1.0.1"
     implementation 'org.apache.commons:commons-lang3:3.12.0'
 
+    api project(':domain-layer:usecase:local')
     api project(':data-layer:database')
     api project(':data-layer:networking')
     api project(':data-layer:filesystem')
+    api project(':data-layer:preferences')
 }
