@@ -101,33 +101,13 @@ fun CloudSongTextScreen() {
         showChordDialog = true
     }
 
-    val onYandexMusicClick = {
-        showYandexDialog = true
-    }
-
-    val onVkMusicClick = {
-        showVkDialog = true
-    }
-
-    val onYoutubeMusicClick = {
-        showYoutubeMusicDialog = true
-    }
-
-    val onWarningClick = {
-        showWarningDialog = true
-    }
-
-    val onDownloadClick = {
-        cloudViewModel.downloadCurrent()
-    }
-
-    val onLikeClick = {
-        cloudViewModel.voteForCurrent(1)
-    }
-
-    val onDislikeClick = {
-        cloudViewModel.voteForCurrent(-1)
-    }
+    val onYandexMusicClick = { showYandexDialog = true }
+    val onVkMusicClick = { showVkDialog = true }
+    val onYoutubeMusicClick = { showYoutubeMusicDialog = true }
+    val onWarningClick = { showWarningDialog = true }
+    val onDownloadClick = { cloudViewModel.downloadCurrent() }
+    val onLikeClick = { cloudViewModel.voteForCurrent(1) }
+    val onDislikeClick = { cloudViewModel.voteForCurrent(-1) }
 
     var showDeleteDialog by remember { mutableStateOf(false) }
     val onDislikeLongClick = {
