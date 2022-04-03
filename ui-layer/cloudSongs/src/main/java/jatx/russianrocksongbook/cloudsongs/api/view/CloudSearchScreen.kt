@@ -28,7 +28,11 @@ import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.paging.ItemsAdapter
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.CloudViewModel
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.SearchState
-import jatx.russianrocksongbook.commonview.*
+import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
+import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
+import jatx.russianrocksongbook.commonview.spinner.Spinner
+import jatx.russianrocksongbook.commonview.stub.CommonSongListStub
+import jatx.russianrocksongbook.commonview.stub.ErrorSongListStub
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow

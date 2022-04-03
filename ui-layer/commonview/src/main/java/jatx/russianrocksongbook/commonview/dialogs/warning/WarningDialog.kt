@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.commonview
+package jatx.russianrocksongbook.commonview.dialogs.warning
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -11,6 +11,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import jatx.russianrocksongbook.commonview.R
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
 

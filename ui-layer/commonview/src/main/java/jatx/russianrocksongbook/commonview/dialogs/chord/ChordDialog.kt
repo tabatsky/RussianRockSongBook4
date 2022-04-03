@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.commonview
+package jatx.russianrocksongbook.commonview.dialogs.chord
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.AlertDialog
@@ -15,6 +15,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dqt.libs.chorddroid.classes.ChordLibrary
 import com.dqt.libs.chorddroid.components.ChordTextureView
+import jatx.russianrocksongbook.commonview.R
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
 
 @Composable

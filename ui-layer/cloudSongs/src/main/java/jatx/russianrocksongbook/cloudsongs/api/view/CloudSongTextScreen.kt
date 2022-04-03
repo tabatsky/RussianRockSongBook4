@@ -2,7 +2,6 @@ package jatx.russianrocksongbook.cloudsongs.api.view
 
 import android.graphics.Typeface
 import android.util.Log
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -35,7 +34,15 @@ import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.paging.ItemsAdapter
 import jatx.russianrocksongbook.cloudsongs.internal.view.DeleteCloudSongDialog
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.CloudViewModel
-import jatx.russianrocksongbook.commonview.*
+import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
+import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
+import jatx.russianrocksongbook.commonview.buttons.*
+import jatx.russianrocksongbook.commonview.dialogs.chord.ChordDialog
+import jatx.russianrocksongbook.commonview.dialogs.music.VkMusicDialog
+import jatx.russianrocksongbook.commonview.dialogs.music.YandexMusicDialog
+import jatx.russianrocksongbook.commonview.dialogs.music.YoutubeMusicDialog
+import jatx.russianrocksongbook.commonview.dialogs.warning.WarningDialog
+import jatx.russianrocksongbook.commonview.divider.CommonPanelDivider
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.repository.preferences.ListenToMusicVariant
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow

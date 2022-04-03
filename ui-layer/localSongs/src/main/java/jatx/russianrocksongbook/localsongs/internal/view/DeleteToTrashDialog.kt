@@ -2,7 +2,7 @@ package jatx.russianrocksongbook.localsongs.internal.view
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
-import jatx.russianrocksongbook.commonview.ConfirmDialog
+import jatx.russianrocksongbook.commonview.dialogs.confirm.ConfirmDialog
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 
