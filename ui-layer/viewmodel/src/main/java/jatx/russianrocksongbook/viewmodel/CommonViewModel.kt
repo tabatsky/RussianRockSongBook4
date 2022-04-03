@@ -106,29 +106,17 @@ open class CommonViewModel @Inject constructor(
 
     fun showToast(@StringRes resId: Int) = toasts.showToast(resId)
 
-    fun openYandexMusic(dontAskMore: Boolean) {
-        if (this is SongTextViewModelContract) {
-            openYandexMusicImpl(dontAskMore)
-        }
-    }
+    fun openVkMusic(dontAskMore: Boolean) =
+        (this as? SongTextViewModelContract)?.openVkMusicImpl(dontAskMore)
 
-    fun openVkMusic(dontAskMore: Boolean) {
-        if (this is SongTextViewModelContract) {
-            openVkMusicImpl(dontAskMore)
-        }
-    }
+    fun openYandexMusic(dontAskMore: Boolean) =
+        (this as? SongTextViewModelContract)?.openYandexMusicImpl(dontAskMore)
 
-    fun openYoutubeMusic(dontAskMore: Boolean) {
-        if (this is SongTextViewModelContract) {
-            openYoutubeMusicImpl(dontAskMore)
-        }
-    }
+    fun openYoutubeMusic(dontAskMore: Boolean) =
+        (this as? SongTextViewModelContract)?.openYoutubeMusicImpl(dontAskMore)
 
-    fun sendWarning(comment: String) {
-        if (this is SongTextViewModelContract) {
-            sendWarningImpl(comment)
-        }
-    }
+    fun sendWarning(comment: String) =
+        (this as? SongTextViewModelContract)?.sendWarningImpl(comment)
 
     private fun getArtists() {
         getArtistsJob?.let {

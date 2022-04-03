@@ -238,17 +238,17 @@ internal open class LocalViewModel @Inject constructor(
         showToast(R.string.toast_deleted_to_trash)
     }
 
-    override fun openYandexMusicImpl(dontAskMore: Boolean) {
-        settings.yandexMusicDontAsk = dontAskMore
-        currentSong.value?.let {
-            callbacks.onOpenYandexMusic("${it.artist} ${it.title}")
-        }
-    }
-
     override fun openVkMusicImpl(dontAskMore: Boolean) {
         settings.vkMusicDontAsk = dontAskMore
         currentSong.value?.let {
             callbacks.onOpenVkMusic("${it.artist} ${it.title}")
+        }
+    }
+
+    override fun openYandexMusicImpl(dontAskMore: Boolean) {
+        settings.yandexMusicDontAsk = dontAskMore
+        currentSong.value?.let {
+            callbacks.onOpenYandexMusic("${it.artist} ${it.title}")
         }
     }
 

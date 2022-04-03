@@ -192,17 +192,17 @@ internal class CloudViewModel @Inject constructor(
         }
     }
 
-    override fun openYandexMusicImpl(dontAskMore: Boolean) {
-        settings.yandexMusicDontAsk = dontAskMore
-        cloudSong.value?.let {
-            callbacks.onOpenYandexMusic("${it.artist} ${it.title}")
-        }
-    }
-
     override fun openVkMusicImpl(dontAskMore: Boolean) {
         settings.vkMusicDontAsk = dontAskMore
         cloudSong.value?.let {
             callbacks.onOpenVkMusic("${it.artist} ${it.title}")
+        }
+    }
+
+    override fun openYandexMusicImpl(dontAskMore: Boolean) {
+        settings.yandexMusicDontAsk = dontAskMore
+        cloudSong.value?.let {
+            callbacks.onOpenYandexMusic("${it.artist} ${it.title}")
         }
     }
 
