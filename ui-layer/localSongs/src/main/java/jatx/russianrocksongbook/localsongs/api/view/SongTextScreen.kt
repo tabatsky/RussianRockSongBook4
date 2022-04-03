@@ -1,59 +1,32 @@
 package jatx.russianrocksongbook.localsongs.api.view
 
-import android.graphics.Typeface
-import androidx.compose.foundation.MutatePriority
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.dqt.libs.chorddroid.classes.ChordLibrary
-import jatx.clickablewordstextview.api.ClickableWordsTextView
 import jatx.clickablewordstextview.api.Word
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
-import jatx.russianrocksongbook.commonview.buttons.*
 import jatx.russianrocksongbook.commonview.dialogs.chord.ChordDialog
 import jatx.russianrocksongbook.commonview.dialogs.confirm.UploadDialog
 import jatx.russianrocksongbook.commonview.dialogs.music.VkMusicDialog
 import jatx.russianrocksongbook.commonview.dialogs.music.YandexMusicDialog
 import jatx.russianrocksongbook.commonview.dialogs.music.YoutubeMusicDialog
 import jatx.russianrocksongbook.commonview.dialogs.warning.WarningDialog
-import jatx.russianrocksongbook.commonview.divider.CommonPanelDivider
-import jatx.russianrocksongbook.domain.models.local.Song
-import jatx.russianrocksongbook.domain.repository.preferences.ListenToMusicVariant
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
-import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.localsongs.R
-import jatx.russianrocksongbook.localsongs.internal.view.DeleteToTrashDialog
+import jatx.russianrocksongbook.localsongs.internal.view.dialogs.DeleteToTrashDialog
+import jatx.russianrocksongbook.localsongs.internal.view.songtext.SongTextActions
+import jatx.russianrocksongbook.localsongs.internal.view.songtext.SongTextBody
+import jatx.russianrocksongbook.localsongs.internal.view.songtext.SongTextPanel
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
-import jatx.russianrocksongbook.testing.*
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-
-const val interval = 250L
 
 @Composable
 fun SongTextScreen() {
@@ -338,367 +311,15 @@ fun SongTextScreen() {
     }
 }
 
-@Composable
-private fun SongTextActions(
-    isFavorite: Boolean,
-    onSongChanged: () -> Unit
-) {
-    val localViewModel: LocalViewModel = viewModel()
-
-    if (localViewModel.isAutoPlayMode.collectAsState().value) {
-        CommonIconButton(
-            resId = R.drawable.ic_pause,
-        ) {
-            localViewModel.setAutoPlayMode(false)
-        }
-    } else {
-        val isEditorMode = localViewModel.isEditorMode.collectAsState().value
-        CommonIconButton(
-            resId = R.drawable.ic_play,
-        ) {
-            if (!isEditorMode) {
-                localViewModel.setAutoPlayMode(true)
-            }
-        }
-    }
-    CommonIconButton(
-        resId = R.drawable.ic_left,
-        testTag = LEFT_BUTTON
-    ) {
-        localViewModel.prevSong()
-        onSongChanged()
-    }
-    if (isFavorite) {
-        CommonIconButton(
-            resId = R.drawable.ic_delete,
-            testTag = DELETE_FROM_FAVORITE_BUTTON
-        ) {
-            localViewModel.setFavorite(false)
-        }
-    } else {
-        CommonIconButton(
-            resId = R.drawable.ic_star,
-            testTag = ADD_TO_FAVORITE_BUTTON
-        ) {
-            localViewModel.setFavorite(true)
-        }
-    }
-    CommonIconButton(
-        resId = R.drawable.ic_right,
-        testTag = RIGHT_BUTTON
-    ) {
-        localViewModel.nextSong()
-        onSongChanged()
-    }
-}
-
-@Composable
-private fun SongTextEditor(
-    text: String,
-    fontSizeTextSp: TextUnit,
-    theme: Theme,
-    onTextChange: (String) -> Unit
-) {
-    BasicTextField(
-        modifier = Modifier
-            .testTag(SONG_TEXT_EDITOR)
-            .fillMaxWidth(),
-        value = text,
-        onValueChange = onTextChange,
-        textStyle = TextStyle(
-            fontFamily = FontFamily.Monospace,
-            fontSize = fontSizeTextSp,
-            color = theme.colorMain
-        ),
-        decorationBox = { innerTextField ->
-            Row(
-                modifier = Modifier
-                    .background(theme.colorBg)
-            ) {
-                innerTextField()  //<-- Add this
-            }
-        },
-        cursorBrush = SolidColor(theme.colorCommon)
-    )
-}
-
-@Composable
-private fun SongTextViewer(
-    song: Song,
-    theme: Theme,
-    fontSizeTextSp: TextUnit,
-    onWordClick: (Word) -> Unit
-) {
-    val localViewModel: LocalViewModel = viewModel()
-    AndroidView(
-        modifier = Modifier.testTag(SONG_TEXT_VIEWER),
-        factory = { context ->
-            ClickableWordsTextView(context)
-        },
-        update = { view ->
-            view.text = song.text
-            view.actualWordMappings = ChordLibrary.chordMappings
-            view.actualWordSet = ChordLibrary.baseChords.keys
-            view.setTextColor(theme.colorMain.toArgb())
-            view.setBackgroundColor(theme.colorBg.toArgb())
-            view.textSize = fontSizeTextSp.value
-            view.typeface = Typeface.MONOSPACE
-            localViewModel.viewModelScope.launch {
-                view.wordFlow.collect {
-                    onWordClick(it)
-                }
-            }
-        }
-    )
-}
-
-@Composable
-private fun SongTextBody(
-    W: Dp,
-    H: Dp,
-    song: Song,
-    text: String,
-    isEditorMode: Boolean,
-    listState: LazyListState,
-    fontSizeTextSp: TextUnit,
-    fontSizeTitleSp: TextUnit,
-    theme: Theme,
-    modifier: Modifier,
-    isAutoPlayMode: StateFlow<Boolean>,
-    dY: Int,
-    onTextChange: (String) -> Unit,
-    onWordClick: (Word) -> Unit
-) {
-    val paddingStart = if (W > H) 20.dp else 0.dp
-
-    Column(
-        modifier = modifier
-            .padding(start = paddingStart)
-    ) {
-        Text(
-            text = "${song.title} (${song.artist})",
-            color = theme.colorMain,
-            fontWeight = FontWeight.W700,
-            fontSize = fontSizeTitleSp
-        )
-        Divider(
-            color = theme.colorBg,
-            thickness = dimensionResource(id = R.dimen.song_text_empty)
-        )
-        SongTextLazyColumn(
-            song = song,
-            text = text,
-            isEditorMode = isEditorMode,
-            listState = listState,
-            fontSizeTextSp = fontSizeTextSp,
-            theme = theme,
-            modifier = Modifier
-                .weight(1.0f),
-            isAutoPlayMode = isAutoPlayMode,
-            dY = dY,
-            onTextChange = onTextChange,
-            onWordClick = onWordClick
-        )
-    }
-}
-
-@Composable
-private fun SongTextLazyColumn(
-    song: Song,
-    text: String,
-    isEditorMode: Boolean,
-    listState: LazyListState,
-    fontSizeTextSp: TextUnit,
-    theme: Theme,
-    modifier: Modifier,
-    isAutoPlayMode: StateFlow<Boolean>,
-    dY: Int,
-    onTextChange: (String) -> Unit,
-    onWordClick: (Word) -> Unit
-) {
-    LazyColumn(
-        state = listState,
-        modifier = modifier
-    ) {
-        if (isEditorMode) {
-            item {
-                SongTextEditor(
-                    text = text,
-                    fontSizeTextSp = fontSizeTextSp,
-                    theme = theme,
-                    onTextChange = onTextChange
-                )
-            }
-        } else {
-            item {
-                SongTextViewer(
-                    song = song,
-                    theme = theme,
-                    fontSizeTextSp = fontSizeTextSp,
-                    onWordClick = onWordClick
-                )
-
-                val needToScroll by isAutoPlayMode.collectAsState()
-
-                tailrec suspend fun autoScroll(listState: LazyListState) {
-                    listState.scroll(MutatePriority.PreventUserInput) {
-                        scrollBy(dY.toFloat())
-                    }
-
-                    delay(interval)
-                    autoScroll(listState)
-                }
-
-                if (needToScroll) {
-                    LaunchedEffect(Unit) {
-                        autoScroll(listState)
-                    }
-                }
-            }
-        }
-    }
-}
 
 
-@Composable
-private fun SongTextPanel(
-    W: Dp,
-    H: Dp,
-    theme: Theme,
-    isEditorMode: Boolean,
-    listenToMusicVariant: ListenToMusicVariant,
-    onYandexMusicClick: () -> Unit,
-    onVkMusicClick: () -> Unit,
-    onYoutubeMusicClick: () -> Unit,
-    onUploadClick: () -> Unit,
-    onWarningClick: () -> Unit,
-    onTrashClick: () -> Unit,
-    onEditClick: () -> Unit,
-    onSaveClick: () -> Unit
-) {
-    val A = if (W < H) W * 3.0f / 21 else H * 3.0f / 21
 
-    if (W < H) {
-        Row (
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(A)
-                .background(Color.Transparent)
-        ) {
-            SongTextPanelContent(
-                W = W,
-                H = H,
-                theme = theme,
-                isEditorMode = isEditorMode,
-                listenToMusicVariant = listenToMusicVariant,
-                onYandexMusicClick = onYandexMusicClick,
-                onVkMusicClick = onVkMusicClick,
-                onYoutubeMusicClick = onYoutubeMusicClick,
-                onUploadClick = onUploadClick,
-                onWarningClick = onWarningClick,
-                onTrashClick = onTrashClick,
-                onEditClick = onEditClick,
-                onSaveClick = onSaveClick
-            )
-        }
-    } else {
-        Column (
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(A)
-                .background(Color.Transparent)
-        ) {
-            SongTextPanelContent(
-                W = W,
-                H = H,
-                theme = theme,
-                isEditorMode = isEditorMode,
-                listenToMusicVariant = listenToMusicVariant,
-                onYandexMusicClick = onYandexMusicClick,
-                onVkMusicClick = onVkMusicClick,
-                onYoutubeMusicClick = onYoutubeMusicClick,
-                onUploadClick = onUploadClick,
-                onWarningClick = onWarningClick,
-                onTrashClick = onTrashClick,
-                onEditClick = onEditClick,
-                onSaveClick = onSaveClick
-            )
-        }
-    }
-}
 
-@Composable
-private fun SongTextPanelContent(
-    W: Dp,
-    H: Dp,
-    theme: Theme,
-    isEditorMode: Boolean,
-    listenToMusicVariant: ListenToMusicVariant,
-    onYandexMusicClick: () -> Unit,
-    onVkMusicClick: () -> Unit,
-    onYoutubeMusicClick: () -> Unit,
-    onUploadClick: () -> Unit,
-    onWarningClick: () -> Unit,
-    onTrashClick: () -> Unit,
-    onEditClick: () -> Unit,
-    onSaveClick: () -> Unit
-) {
-    val A = if (W < H) W * 3.0f / 21 else H * 3.0f / 21
 
-    if (listenToMusicVariant.isYandex) {
-        YandexMusicButton(
-            size = A,
-            theme = theme,
-            onClick = onYandexMusicClick
-        )
-        CommonPanelDivider(W = W, H = H, theme = theme)
-    }
-    if (listenToMusicVariant.isVk) {
-        VkMusicButton(
-            size = A,
-            theme = theme,
-            onClick = onVkMusicClick
-        )
-        CommonPanelDivider(W = W, H = H, theme = theme)
-    }
-    if (listenToMusicVariant.isYoutube) {
-        YoutubeMusicButton(
-            size = A,
-            theme = theme,
-            onClick = onYoutubeMusicClick
-        )
-        CommonPanelDivider(W = W, H = H, theme = theme)
-    }
-    UploadButton(
-        size = A,
-        theme = theme,
-        onClick = onUploadClick
-    )
-    CommonPanelDivider(W = W, H = H, theme = theme)
-    WarningButton(
-        size = A,
-        theme = theme,
-        onClick = onWarningClick
-    )
-    CommonPanelDivider(W = W, H = H, theme = theme)
-    TrashButton(
-        size = A,
-        theme = theme,
-        onClick = onTrashClick
-    )
-    CommonPanelDivider(W = W, H = H, theme = theme)
-    if (isEditorMode) {
-        SaveButton(
-            size = A,
-            theme = theme,
-            onClick = onSaveClick
-        )
-    } else {
-        EditButton(
-            size = A,
-            theme = theme,
-            onClick = onEditClick
-        )
-    }
-}
+
+
+
+
+
+
 
