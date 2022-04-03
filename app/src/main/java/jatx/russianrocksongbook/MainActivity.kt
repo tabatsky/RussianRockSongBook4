@@ -17,7 +17,7 @@ import jatx.russianrocksongbook.addartist.api.ext.copySongsFromDirToRepoWithPick
 import jatx.russianrocksongbook.addsongsfromdirhelper.api.AddSongsFromDirHelper
 import jatx.russianrocksongbook.cloudsongs.api.ext.initCloudSearch
 import jatx.russianrocksongbook.debug.AppDebug
-import jatx.russianrocksongbook.domain.usecase.SendCrashUseCase
+import jatx.russianrocksongbook.domain.usecase.cloud.SendCrashUseCase
 import jatx.russianrocksongbook.musichelper.api.MusicHelper
 import jatx.russianrocksongbook.localsongs.api.ext.parseAndExecuteVoiceCommand
 import jatx.russianrocksongbook.localsongs.api.ext.selectArtist

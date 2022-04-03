@@ -58,7 +58,7 @@ dependencies {
 
     api project(':domain-layer:models:cloud')
     api project(':domain-layer:models:local')
-    api project(':domain-layer:usecase')
+
     api project(':data-layer:preferences')
     api project(':ui-layer:viewmodel')
     api project(':ui-layer:commonview')

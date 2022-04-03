@@ -6,7 +6,7 @@ import androidx.paging.PagingState
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
-import jatx.russianrocksongbook.domain.usecase.PagedSearchUseCase
+import jatx.russianrocksongbook.domain.usecase.cloud.PagedSearchUseCase
 import jatx.russianrocksongbook.util.debug.exceptionToString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
