@@ -86,7 +86,6 @@ fun WhatsNewDialog() {
                         Text(text = stringResource(id = R.string.ok))
                     }
                 }
-
             }
         )
     }
