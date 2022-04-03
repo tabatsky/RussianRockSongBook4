@@ -68,17 +68,9 @@ fun SongTextScreen() {
         showChordDialog = true
     }
 
-    val onYandexMusicClick = {
-        showYandexDialog = true
-    }
-
-    val onVkMusicClick = {
-        showVkDialog = true
-    }
-
-    val onYoutubeMusicClick = {
-        showYoutubeMusicDialog = true
-    }
+    val onYandexMusicClick = { showYandexDialog = true }
+    val onVkMusicClick = { showVkDialog = true }
+    val onYoutubeMusicClick = { showYoutubeMusicDialog = true }
 
     val isUploadButtonEnabled by localViewModel.isUploadButtonEnabled.collectAsState()
     val onUploadClick = {
@@ -91,13 +83,8 @@ fun SongTextScreen() {
         }
     }
 
-    val onTrashClick = {
-        showDeleteToTrashDialog = true
-    }
-
-    val onWarningClick = {
-        showWarningDialog = true
-    }
+    val onTrashClick = { showDeleteToTrashDialog = true }
+    val onWarningClick = { showWarningDialog = true }
 
     val onEditClick =  {
         localViewModel.setAutoPlayMode(false)
