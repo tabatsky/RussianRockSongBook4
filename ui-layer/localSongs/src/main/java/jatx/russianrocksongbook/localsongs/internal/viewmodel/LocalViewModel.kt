@@ -62,7 +62,6 @@ internal open class LocalViewModel @Inject constructor(
     private var showSongsJob: Job? = null
     private var selectSongJob: Job? = null
     private var uploadSongDisposable: Disposable? = null
-    private var sendWarningDisposable: Disposable? = null
 
     fun selectArtist(
         artist: String,
@@ -261,10 +260,7 @@ internal open class LocalViewModel @Inject constructor(
 
     override fun sendWarningImpl(comment: String) {
         currentSong.value?.let {
-            sendWarningDisposable?.let {
-                if (!it.isDisposed) it.dispose()
-            }
-            sendWarningDisposable = addWarningLocalUseCase
+            addWarningLocalUseCase
                 .execute(it, comment)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -286,13 +282,13 @@ internal open class LocalViewModel @Inject constructor(
     }
 
     fun uploadCurrentToCloud() {
-        currentSong.value?.let {
+        currentSong.value?.let { song ->
             localStateHolder.isUploadButtonEnabled.value = false
             uploadSongDisposable?.let {
                 if (!it.isDisposed) it.dispose()
             }
             uploadSongDisposable = addSongToCloudUseCase
-                .execute(it)
+                .execute(song)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->

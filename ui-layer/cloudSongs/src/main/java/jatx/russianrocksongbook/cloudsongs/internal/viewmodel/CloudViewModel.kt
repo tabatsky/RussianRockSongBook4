@@ -213,7 +213,6 @@ internal class CloudViewModel @Inject constructor(
         }
     }
 
-    @SuppressLint("CheckResult")
     override fun sendWarningImpl(comment: String) {
         cloudSong.value?.let {
             addWarningCloudUseCase
