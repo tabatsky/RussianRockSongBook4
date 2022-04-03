@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.commonview
+package jatx.russianrocksongbook.commonview.dialogs.confirm
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import jatx.russianrocksongbook.commonview.R
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
 
@@ -112,15 +113,3 @@ fun ConfirmDialog(
     )
 }
 
-@Composable
-fun UploadDialog(
-    invertColors: Boolean = false,
-    onConfirm: () -> Unit,
-    onDismiss: () -> Unit
-) = ConfirmDialog(
-    invertColors =  invertColors,
-    titleRes = R.string.dialog_upload_to_cloud_title,
-    messageRes = R.string.dialog_upload_to_cloud_message,
-    onConfirm = onConfirm,
-    onDismiss = onDismiss
-)

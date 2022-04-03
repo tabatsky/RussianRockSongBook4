@@ -16,9 +16,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.addsong.R
 import jatx.russianrocksongbook.addsong.internal.viewmodel.AddSongViewModel
-import jatx.russianrocksongbook.commonview.CommonSideAppBar
-import jatx.russianrocksongbook.commonview.CommonTopAppBar
-import jatx.russianrocksongbook.commonview.UploadDialog
+import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
+import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
+import jatx.russianrocksongbook.commonview.dialogs.confirm.UploadDialog
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.testing.TEXT_FIELD_ARTIST
 import jatx.russianrocksongbook.testing.TEXT_FIELD_TEXT

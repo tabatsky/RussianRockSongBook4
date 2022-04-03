@@ -1,7 +1,6 @@
 package jatx.russianrocksongbook.localsongs.api.view
 
 import android.graphics.Typeface
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.MutatePriority
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -31,7 +30,16 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dqt.libs.chorddroid.classes.ChordLibrary
 import jatx.clickablewordstextview.api.ClickableWordsTextView
 import jatx.clickablewordstextview.api.Word
-import jatx.russianrocksongbook.commonview.*
+import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
+import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
+import jatx.russianrocksongbook.commonview.buttons.*
+import jatx.russianrocksongbook.commonview.dialogs.chord.ChordDialog
+import jatx.russianrocksongbook.commonview.dialogs.confirm.UploadDialog
+import jatx.russianrocksongbook.commonview.dialogs.music.VkMusicDialog
+import jatx.russianrocksongbook.commonview.dialogs.music.YandexMusicDialog
+import jatx.russianrocksongbook.commonview.dialogs.music.YoutubeMusicDialog
+import jatx.russianrocksongbook.commonview.dialogs.warning.WarningDialog
+import jatx.russianrocksongbook.commonview.divider.CommonPanelDivider
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.preferences.ListenToMusicVariant
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow

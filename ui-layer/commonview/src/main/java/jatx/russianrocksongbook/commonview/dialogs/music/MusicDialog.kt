@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.commonview
+package jatx.russianrocksongbook.commonview.dialogs.music
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
@@ -14,44 +14,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import jatx.russianrocksongbook.commonview.R
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
 
 @Composable
-fun YandexMusicDialog(
-    commonViewModel: CommonViewModel,
-    onDismiss: () -> Unit
-) = MusicDialog(
-    commonViewModel = commonViewModel,
-    stringRes = R.string.question_search_at_yandex_music,
-    onConfirm = commonViewModel::openYandexMusic,
-    onDismiss = onDismiss
-)
-
-@Composable
-fun VkMusicDialog(
-    commonViewModel: CommonViewModel,
-    onDismiss: () -> Unit
-) = MusicDialog(
-    commonViewModel = commonViewModel,
-    stringRes = R.string.question_search_at_vk_music,
-    onConfirm = commonViewModel::openVkMusic,
-    onDismiss = onDismiss
-)
-
-@Composable
-fun YoutubeMusicDialog(
-    commonViewModel: CommonViewModel,
-    onDismiss: () -> Unit
-) = MusicDialog(
-    commonViewModel = commonViewModel,
-    stringRes = R.string.question_search_at_youtube_music,
-    onConfirm = commonViewModel::openYoutubeMusic,
-    onDismiss = onDismiss
-)
-
-@Composable
-private fun MusicDialog(
+internal fun MusicDialog(
     commonViewModel: CommonViewModel,
     @StringRes stringRes: Int,
     onConfirm: (Boolean) -> Unit,

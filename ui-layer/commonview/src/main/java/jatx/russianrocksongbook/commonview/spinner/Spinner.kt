@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.commonview
+package jatx.russianrocksongbook.commonview.spinner
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
