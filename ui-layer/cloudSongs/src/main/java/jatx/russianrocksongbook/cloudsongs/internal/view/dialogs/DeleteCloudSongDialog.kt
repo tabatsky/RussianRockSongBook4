@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.cloudsongs.internal.view
+package jatx.russianrocksongbook.cloudsongs.internal.view.dialogs
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
