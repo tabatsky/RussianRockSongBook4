@@ -4,7 +4,7 @@ import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.models.local.USER_SONG_MD5
 import jatx.russianrocksongbook.domain.models.cloud.UserInfo
-import jatx.russianrocksongbook.util.hashing.songTextHash
+import jatx.russianrocksongbook.domain.models.local.songTextHash
 
 fun Song.toCloudSong(userInfo: UserInfo) = CloudSong(
     googleAccount = userInfo.googleAccount,
