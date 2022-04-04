@@ -7,7 +7,7 @@ buildscript {
         room_version = '2.4.2'
         retrofit_version = '2.4.0'
         coroutines_version = '1.5.2'
-        lifecycle_version = '2.4.1'
+        lifecycle_version = '2.5.0-alpha05'
         navigation_compose_version = '2.5.0-alpha03'
     }
     repositories {
