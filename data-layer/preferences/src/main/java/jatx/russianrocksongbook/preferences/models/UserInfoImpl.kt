@@ -23,15 +23,14 @@ class UserInfoImpl @Inject constructor(
 
     private val sp = context.getSharedPreferences(USER_PREFS_NAME, 0)
 
-    override val deviceIdHash: String
+    override val deviceIdHash by lazy {
         @SuppressLint("HardwareIds")
-        get() {
-            val deviceId = Settings.Secure.getString(
-                context.contentResolver,
-                Settings.Secure.ANDROID_ID
-            )
-            return HashingUtil.md5(deviceId)
-        }
+        val deviceId = Settings.Secure.getString(
+            context.contentResolver,
+            Settings.Secure.ANDROID_ID
+        )
+        HashingUtil.md5(deviceId)
+    }
 
     override var googleAccount: String
         get() = sp.getString(KEY_GOOGLE_ACCOUNT, null) ?: ""

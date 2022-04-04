@@ -2,7 +2,7 @@ package jatx.russianrocksongbook.database.converters
 
 import jatx.russianrocksongbook.database.gson.SongGson
 import jatx.russianrocksongbook.domain.models.local.Song
-import jatx.russianrocksongbook.util.hashing.songTextHash
+import jatx.russianrocksongbook.domain.models.local.songTextHash
 
 internal fun SongGson.toSong(artist: String) = Song(
     artist = artist,

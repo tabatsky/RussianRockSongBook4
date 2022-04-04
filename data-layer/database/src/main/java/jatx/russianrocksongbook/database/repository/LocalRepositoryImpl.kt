@@ -9,8 +9,8 @@ import jatx.russianrocksongbook.database.converters.toSongEntity
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.models.local.USER_SONG_MD5
+import jatx.russianrocksongbook.domain.models.local.songTextHash
 import jatx.russianrocksongbook.domain.repository.local.*
-import jatx.russianrocksongbook.util.hashing.songTextHash
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

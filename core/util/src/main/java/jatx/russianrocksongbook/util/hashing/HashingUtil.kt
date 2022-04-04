@@ -20,22 +20,14 @@ object HashingUtil {
         digest = tmpDigest
     }
 
-    fun md5(text: String): String {
-        return if (digest != null) {
-            digest!!.reset()
-            digest!!.update(text.toByteArray())
-            //Log.e("md5Hash", hash);
-            BigInteger(1, digest!!.digest()).toString(16)
-        } else {
-            val hash: String = RandomStringUtils.randomAlphanumeric(20)
-            Log.e("randomHash", hash)
-            hash
-        }
+    fun md5(text: String): String = digest?.let {
+        it.reset()
+        it.update(text.toByteArray())
+        BigInteger(1, it.digest()).toString(16)
+    } ?: run {
+        Log.e("songTextHash", "using random")
+        RandomStringUtils.randomAlphanumeric(20)
     }
 }
 
-fun songTextHash(text: String): String {
-    val preparedText =
-        text.trim { it <= ' ' }.lowercase().replace("\\s+".toRegex(), " ")
-    return HashingUtil.md5(preparedText)
-}
+
