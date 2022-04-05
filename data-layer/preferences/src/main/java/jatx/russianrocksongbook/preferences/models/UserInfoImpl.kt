@@ -29,7 +29,7 @@ class UserInfoImpl @Inject constructor(
             context.contentResolver,
             Settings.Secure.ANDROID_ID
         )
-        HashingUtil.md5(deviceId)
+        HashingUtil.hash(deviceId)
     }
 
     override var googleAccount: String
