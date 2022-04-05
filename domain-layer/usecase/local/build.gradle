@@ -48,7 +48,7 @@ dependencies {
 
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
 
-    api project(':core:util')
+    api project(':core:debug')
     api project(':domain-layer:models:cloud')
     api project(':domain-layer:models:local')
     api project(':domain-layer:repository:cloud')
