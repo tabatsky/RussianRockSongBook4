@@ -27,7 +27,7 @@ private const val KEY_VOICE_HELP_DONT_ASK = "voiceHelpDontAsk"
 @Singleton
 @BoundTo(supertype = SettingsStorage::class, component = SingletonComponent::class)
 @SuppressLint("ApplySharedPref")
-class SettingsStorageImpl @Inject constructor(
+internal class SettingsStorageImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ): SettingsStorage {
     private val sp = context.getSharedPreferences(PREFS_NAME, 0)

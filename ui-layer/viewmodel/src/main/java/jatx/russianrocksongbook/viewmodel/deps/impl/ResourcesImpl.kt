@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 @ViewModelScoped
 @BoundTo(supertype = Resources::class, component = ViewModelComponent::class)
-class ResourcesImpl @Inject constructor(
+internal class ResourcesImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ): Resources {
     override fun getString(@StringRes resId: Int, vararg args: Any) = context
