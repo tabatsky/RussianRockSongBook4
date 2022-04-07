@@ -11,6 +11,7 @@ class AddSongListToCloudUseCase @Inject constructor(
     private val cloudRepository: CloudRepository,
     private val userInfo: UserInfo
 ) {
+    // TODO: change CloudRepository API to use CloudSong
     fun execute(songs: List<Song>) = cloudRepository
         .addSongList(songs, userInfo)
 }
