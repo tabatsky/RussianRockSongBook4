@@ -1,6 +1,5 @@
 package jatx.russianrocksongbook.domain.repository.local
 
-import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.models.local.Song
 import kotlinx.coroutines.flow.Flow
 
@@ -22,7 +21,7 @@ interface LocalRepository {
     fun setFavorite(favorite: Boolean, artist: String, title: String)
     fun updateSong(song: Song)
     fun deleteSongToTrash(song: Song)
-    fun addSongFromCloud(cloudSong: CloudSong)
+    fun addSongFromCloud(song: Song)
     fun isSongFavorite(artist: String, title: String): Boolean
     fun insertIgnoreSongs(songs: List<Song>)
     fun insertReplaceUserSongs(songs: List<Song>): List<Song>

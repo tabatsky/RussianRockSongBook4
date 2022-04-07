@@ -6,7 +6,6 @@ import it.czerwinski.android.hilt.annotations.BoundTo
 import jatx.russianrocksongbook.database.db.dao.SongDao
 import jatx.russianrocksongbook.database.converters.toSong
 import jatx.russianrocksongbook.database.converters.toSongEntity
-import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.models.local.USER_SONG_MD5
 import jatx.russianrocksongbook.domain.models.local.songTextHash
@@ -112,21 +111,12 @@ class LocalRepositoryImpl @Inject constructor(
 
     override fun deleteSongToTrash(song: Song) = songDao.setDeleted(true, song.artist, song.title)
 
-    override fun addSongFromCloud(cloudSong: CloudSong) {
-        val song = Song().apply {
-            artist = cloudSong.artist
-            title = cloudSong.title
-            text = cloudSong.text
-            favorite = true
-            outOfTheBox = true
-            origTextMD5 = songTextHash(cloudSong.text)
-        }
-
-        if (songDao.getSongByArtistAndTitle(cloudSong.artist, cloudSong.visibleTitle) == null) {
+    override fun addSongFromCloud(song: Song) {
+        if (songDao.getSongByArtistAndTitle(song.artist, song.title) == null) {
             songDao.insertReplaceSong(song.toSongEntity())
         } else {
             updateSongText(song)
-            setFavorite(true, cloudSong.artist, cloudSong.visibleTitle)
+            setFavorite(true, song.artist, song.title)
         }
     }
 
