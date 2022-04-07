@@ -37,7 +37,7 @@ internal class CloudRepositoryTestImpl @Inject constructor(
 
     private var list: List<CloudSong> = arrayList
             .map {
-                it.toCloudSong(userInfo)
+                it.toCloudSong(userInfo).copy(variant = 1)
             }
 
     private val orderByLambda: (CloudSong, OrderBy) -> String = { cloudSong, orderBy ->

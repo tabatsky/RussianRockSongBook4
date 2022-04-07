@@ -693,9 +693,9 @@ class ExampleInstrumentedTest {
                 localRepo
                     .getSongsByArtistAsList(list[2].artist)
                     .map { it.title }
-                    .contains(list[2].title)
+                    .contains(list[2].visibleTitle)
             )
-            Log.e("test $testNumber assert", "${list[2].artist} contains ${list[2].title}")
+            Log.e("test $testNumber assert", "${list[2].artist} contains ${list[2].visibleTitle}")
             assert(
                 localRepo
                     .getSongsByArtistAsList(ARTIST_FAVORITE)
