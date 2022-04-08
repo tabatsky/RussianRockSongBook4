@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -125,11 +126,11 @@ open class CommonViewModel @Inject constructor(
         getArtistsJob = viewModelScope.launch {
             getArtistsUseCase
                 .execute()
-                .collect {
+                .onEach {
                     withContext(Dispatchers.Main) {
                         commonStateHolder.artistList.value = it
                     }
-                }
+                }.collect()
         }
     }
 }

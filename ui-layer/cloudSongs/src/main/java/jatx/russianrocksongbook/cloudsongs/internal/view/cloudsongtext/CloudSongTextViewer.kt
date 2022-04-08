@@ -17,6 +17,7 @@ import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.testing.CLOUD_SONG_TEXT_VIEWER
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @Composable
@@ -41,9 +42,9 @@ internal fun CloudSongTextViewer(
             view.textSize = fontSizeTextSp.value
             view.typeface = Typeface.MONOSPACE
             cloudViewModel.viewModelScope.launch {
-                view.wordFlow.collect {
+                view.wordFlow.onEach {
                     onWordClick(it)
-                }
+                }.collect()
             }
         }
     )
