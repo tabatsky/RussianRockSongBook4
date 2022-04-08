@@ -9,7 +9,7 @@ import retrofit2.http.*
 
 const val BASE_URL = "http://tabatsky.ru/SongBook2/api/"
 
-interface SongBookAPI {
+internal interface SongBookAPI {
     @FormUrlEncoded
     @POST("crashes/add")
     fun sendCrash(@FieldMap params: Map<String, String>): Single<ResultWithoutData>
