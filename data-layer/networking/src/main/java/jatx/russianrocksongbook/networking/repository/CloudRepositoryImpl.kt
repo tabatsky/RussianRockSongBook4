@@ -17,7 +17,6 @@ import jatx.russianrocksongbook.networking.gson.WarningGson
 import jatx.russianrocksongbook.networking.gson.toResultWithCloudSongListData
 import jatx.russianrocksongbook.networking.songbookapi.RetrofitClient
 import jatx.russianrocksongbook.domain.models.cloud.UserInfo
-import jatx.russianrocksongbook.domain.models.converters.toCloudSong
 import jatx.russianrocksongbook.networking.converters.toCloudSongGson
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -36,18 +35,17 @@ class CloudRepositoryImpl @Inject constructor(
         return retrofitClient.songBookAPI.sendCrash(params)
     }
 
-    override fun addSong(song: Song, userInfo: UserInfo): Single<ResultWithoutData> {
-        val cloudSong = song.toCloudSong(userInfo)
+    override fun addCloudSong(cloudSong: CloudSong): Single<ResultWithoutData> {
         val params = mapOf(
             "cloudSongJSON" to Gson().toJson(cloudSong.toCloudSongGson())
         )
         return retrofitClient.songBookAPI.addSong(params)
     }
 
-    override fun addSongList(songs: List<Song>, userInfo: UserInfo): Single<ResultWithAddSongListResultData> {
-        val cloudSongs = songs.map { it.toCloudSong(userInfo).toCloudSongGson() }
+    override fun addCloudSongList(cloudSongs: List<CloudSong>): Single<ResultWithAddSongListResultData> {
+        val cloudSongsGson = cloudSongs.map { it.toCloudSongGson() }
         val params = mapOf(
-            "cloudSongListJSON" to Gson().toJson(cloudSongs)
+            "cloudSongListJSON" to Gson().toJson(cloudSongsGson)
         )
         return retrofitClient.songBookAPI.addSongList(params)
     }

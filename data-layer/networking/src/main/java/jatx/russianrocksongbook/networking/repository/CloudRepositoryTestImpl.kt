@@ -62,19 +62,12 @@ internal class CloudRepositoryTestImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override fun addSong(song: Song, userInfo: UserInfo): Single<ResultWithoutData> {
-        arrayList.add(song)
-        list = arrayList
-            .map {
-                it.toCloudSong(userInfo)
-            }
+    override fun addCloudSong(cloudSong: CloudSong): Single<ResultWithoutData> {
+        list = list + listOf(cloudSong)
         return Single.just(ResultWithoutData(STATUS_SUCCESS, null))
     }
 
-    override fun addSongList(
-        songs: List<Song>,
-        userInfo: UserInfo
-    ): Single<ResultWithAddSongListResultData> {
+    override fun addCloudSongList(cloudSongs: List<CloudSong>): Single<ResultWithAddSongListResultData> {
         TODO("Not yet implemented")
     }
 
