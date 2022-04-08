@@ -6,18 +6,18 @@ import io.reactivex.Single
 import it.czerwinski.android.hilt.annotations.BoundTo
 import jatx.russianrocksongbook.domain.models.appcrash.AppCrash
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
-import jatx.russianrocksongbook.domain.models.local.Song
-import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
+import jatx.russianrocksongbook.domain.models.cloud.UserInfo
+import jatx.russianrocksongbook.domain.models.warning.Warning
 import jatx.russianrocksongbook.domain.repository.cloud.CloudRepository
+import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithAddSongListResultData
 import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithCloudSongListData
 import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithoutData
 import jatx.russianrocksongbook.networking.converters.toAppCrashJson
-import jatx.russianrocksongbook.networking.gson.WarningGson
+import jatx.russianrocksongbook.networking.converters.toCloudSongGson
+import jatx.russianrocksongbook.networking.converters.toWarningGson
 import jatx.russianrocksongbook.networking.gson.toResultWithCloudSongListData
 import jatx.russianrocksongbook.networking.songbookapi.RetrofitClient
-import jatx.russianrocksongbook.domain.models.cloud.UserInfo
-import jatx.russianrocksongbook.networking.converters.toCloudSongGson
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -50,18 +50,9 @@ class CloudRepositoryImpl @Inject constructor(
         return retrofitClient.songBookAPI.addSongList(params)
     }
 
-    override fun addWarning(song: Song, comment: String): Single<ResultWithoutData> {
-        val warning = WarningGson(song, comment)
+    override fun addWarning(warning: Warning): Single<ResultWithoutData> {
         val params = mapOf(
-            "warningJSON" to Gson().toJson(warning)
-        )
-        return retrofitClient.songBookAPI.addWarning(params)
-    }
-
-    override fun addWarning(cloudSong: CloudSong, comment: String): Single<ResultWithoutData> {
-        val warning = WarningGson(cloudSong, comment)
-        val params = mapOf(
-            "warningJSON" to Gson().toJson(warning)
+            "warningJSON" to Gson().toJson(warning.toWarningGson())
         )
         return retrofitClient.songBookAPI.addWarning(params)
     }

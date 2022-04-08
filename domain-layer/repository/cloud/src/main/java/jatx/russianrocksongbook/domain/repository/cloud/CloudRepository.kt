@@ -3,12 +3,12 @@ package jatx.russianrocksongbook.domain.repository.cloud
 import io.reactivex.Single
 import jatx.russianrocksongbook.domain.models.appcrash.AppCrash
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
-import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithAddSongListResultData
 import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithCloudSongListData
 import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithNumber
 import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithoutData
 import jatx.russianrocksongbook.domain.models.cloud.UserInfo
+import jatx.russianrocksongbook.domain.models.warning.Warning
 
 interface CloudRepository {
     var isOnline: Boolean
@@ -17,8 +17,7 @@ interface CloudRepository {
     fun addCloudSong(cloudSong: CloudSong): Single<ResultWithoutData>
     fun addCloudSongList(cloudSongs: List<CloudSong>):
             Single<ResultWithAddSongListResultData>
-    fun addWarning(song: Song, comment: String): Single<ResultWithoutData>
-    fun addWarning(cloudSong: CloudSong, comment: String): Single<ResultWithoutData>
+    fun addWarning(warning: Warning): Single<ResultWithoutData>
     fun searchSongs(searchFor: String, orderBy: OrderBy = OrderBy.BY_ID_DESC):
             Single<ResultWithCloudSongListData>
     fun vote(cloudSong: CloudSong, userInfo: UserInfo, voteValue: Int):

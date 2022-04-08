@@ -5,13 +5,14 @@ import io.reactivex.Single
 import it.czerwinski.android.hilt.annotations.TestBoundTo
 import jatx.russianrocksongbook.domain.models.appcrash.AppCrash
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
-import jatx.russianrocksongbook.domain.models.local.Song
-import jatx.russianrocksongbook.domain.repository.cloud.CloudRepository
-import jatx.russianrocksongbook.domain.repository.local.LocalRepository
-import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
-import jatx.russianrocksongbook.domain.repository.cloud.result.*
 import jatx.russianrocksongbook.domain.models.cloud.UserInfo
 import jatx.russianrocksongbook.domain.models.converters.toCloudSong
+import jatx.russianrocksongbook.domain.models.local.Song
+import jatx.russianrocksongbook.domain.models.warning.Warning
+import jatx.russianrocksongbook.domain.repository.cloud.CloudRepository
+import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
+import jatx.russianrocksongbook.domain.repository.cloud.result.*
+import jatx.russianrocksongbook.domain.repository.local.LocalRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -71,11 +72,7 @@ internal class CloudRepositoryTestImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override fun addWarning(song: Song, comment: String): Single<ResultWithoutData> {
-        TODO("Not yet implemented")
-    }
-
-    override fun addWarning(cloudSong: CloudSong, comment: String): Single<ResultWithoutData> {
+    override fun addWarning(warning: Warning): Single<ResultWithoutData> {
         TODO("Not yet implemented")
     }
 
