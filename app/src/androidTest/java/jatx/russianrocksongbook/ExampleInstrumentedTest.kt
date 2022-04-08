@@ -700,9 +700,9 @@ class ExampleInstrumentedTest {
                 localRepo
                     .getSongsByArtistAsList(ARTIST_FAVORITE)
                     .map { it.title }
-                    .contains(list[2].title)
+                    .contains(list[2].visibleTitle)
             )
-            Log.e("test $testNumber assert", "$ARTIST_FAVORITE contains ${list[2].title}")
+            Log.e("test $testNumber assert", "$ARTIST_FAVORITE contains ${list[2].visibleTitle}")
 
             composeTestRule
                 .onNodeWithTag(WARNING_BUTTON)
