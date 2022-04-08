@@ -52,8 +52,9 @@ dependencies {
 
     api project(':domain-layer:models:appcrash')
     api project(':domain-layer:models:cloud')
-    api project(':domain-layer:models:local')
     api project(':domain-layer:models:converters')
+    api project(':domain-layer:models:local')
+    api project(':domain-layer:models:warning')
     api project(':domain-layer:repository:cloud')
     api project(':domain-layer:repository:local')
 
