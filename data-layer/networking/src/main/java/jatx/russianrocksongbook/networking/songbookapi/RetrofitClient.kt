@@ -6,5 +6,5 @@ import javax.inject.Inject
 class RetrofitClient @Inject constructor(
     retrofit: Retrofit
 ) {
-    val songBookAPI: SongBookAPI = retrofit.create(SongBookAPI::class.java)
+    internal val songBookAPI: SongBookAPI = retrofit.create(SongBookAPI::class.java)
 }
