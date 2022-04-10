@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -19,10 +21,6 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
         jvmTarget = '1.8'
@@ -49,10 +47,18 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:$navigation_compose_version"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
 
-    api project(':ui-library:sideAppBar')
-    api project(':ui-library:ChordDroidLibrary')
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
+    implementation 'it.czerwinski.android.hilt:hilt-extensions:1.2.0'
+    kapt 'it.czerwinski.android.hilt:hilt-processor:1.2.0'
 
-    api project(':ui-layer:viewmodel')
+    api project(':domain-layer:usecase:cloud')
+    api project(':domain-layer:usecase:local')
+    api project(':data-layer:database')
+    api project(':data-layer:networking')
+    api project(':data-layer:preferences')
+    api project(':presentation-layer:viewmodel')
+    api project(':presentation-layer:commonview')
 
     api project(':core:testing')
 }
