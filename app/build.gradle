@@ -62,17 +62,17 @@ dependencies {
     implementation 'it.czerwinski.android.hilt:hilt-extensions:1.2.0'
     kapt 'it.czerwinski.android.hilt:hilt-processor:1.2.0'
 
-    api project(':ui-layer:localSongs')
-    api project(':ui-layer:cloudSongs')
-    api project(':ui-layer:addArtist')
-    api project(':ui-layer:addSong')
-    api project(':ui-layer:donation')
-    api project(':ui-layer:settings')
-    api project(':ui-layer:start')
+    api project(':presentation-layer:localSongs')
+    api project(':presentation-layer:cloudSongs')
+    api project(':presentation-layer:addArtist')
+    api project(':presentation-layer:addSong')
+    api project(':presentation-layer:donation')
+    api project(':presentation-layer:settings')
+    api project(':presentation-layer:start')
 
-    api project(':ui-layer:helpers:addSongsFromDirHelper')
-    api project(':ui-layer:helpers:donationHelper')
-    api project(':ui-layer:helpers:musicHelper')
+    api project(':presentation-layer:helpers:addSongsFromDirHelper')
+    api project(':presentation-layer:helpers:donationHelper')
+    api project(':presentation-layer:helpers:musicHelper')
 
     api project(':core:testing')
 

@@ -52,13 +52,12 @@ dependencies {
     implementation 'it.czerwinski.android.hilt:hilt-extensions:1.2.0'
     kapt 'it.czerwinski.android.hilt:hilt-processor:1.2.0'
 
-    api project(':domain-layer:usecase:cloud')
-    api project(':domain-layer:usecase:local')
-    api project(':data-layer:database')
-    api project(':data-layer:networking')
-    api project(':data-layer:preferences')
-    api project(':ui-layer:viewmodel')
-    api project(':ui-layer:commonview')
 
-    api project(':core:testing')
+
+
+    api project(':ui-library:sideAppBar')
+    api project(':data-layer:preferences')
+    api project(':presentation-layer:viewmodel')
+    api project(':presentation-layer:commonview')
+    api project(':presentation-layer:helpers:donationHelper')
 }

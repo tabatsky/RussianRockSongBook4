@@ -43,7 +43,7 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.12.0'
 
     api project(':core:debug')
-    api project(':core:hashingUtil')
+    api project(':core:hashing')
     api project(':domain-layer:models:appcrash')
     api project(':domain-layer:models:cloud')
     api project(':domain-layer:repository:preferences')

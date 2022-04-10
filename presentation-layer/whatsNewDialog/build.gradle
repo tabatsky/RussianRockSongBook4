@@ -22,6 +22,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     kotlinOptions {
         jvmTarget = '1.8'
         useIR = true
@@ -52,12 +56,10 @@ dependencies {
     implementation 'it.czerwinski.android.hilt:hilt-extensions:1.2.0'
     kapt 'it.czerwinski.android.hilt:hilt-processor:1.2.0'
 
+    api project(':domain-layer:models:cloud')
+    api project(':domain-layer:models:local')
 
-
-
-    api project(':ui-library:sideAppBar')
     api project(':data-layer:preferences')
-    api project(':ui-layer:viewmodel')
-    api project(':ui-layer:commonview')
-    api project(':ui-layer:helpers:donationHelper')
+    api project(':presentation-layer:viewmodel')
+    api project(':presentation-layer:commonview')
 }
