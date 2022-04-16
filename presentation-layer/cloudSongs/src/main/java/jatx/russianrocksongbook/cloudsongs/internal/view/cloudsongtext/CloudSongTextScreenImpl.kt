@@ -103,13 +103,48 @@ internal fun CloudSongTextScreenImpl() {
         CloudSongTextProgress(theme)
     }
 
-    cloudSong?.let {
+    cloudSong?.let { _cloudSong ->
         BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
         ) {
             val W = this.maxWidth
             val H = this.minHeight
+
+            val body: @Composable (Modifier) -> Unit = { modifier ->
+                CloudSongTextBody(
+                    W = W,
+                    H = H,
+                    cloudSong = _cloudSong,
+                    invalidateCounter = invalidateCounter,
+                    listState = listState,
+                    fontSizeTextSp = fontSizeTextSp,
+                    fontSizeTitleSp = fontSizeTitleSp,
+                    theme = theme,
+                    modifier = modifier,
+                    onWordClick = onWordClick
+                )
+            }
+
+            val panel: @Composable () -> Unit = {
+                CloudSongTextPanel(
+                    W = W,
+                    H = H,
+                    theme = theme,
+                    listenToMusicVariant =
+                    cloudViewModel
+                        .settings
+                        .listenToMusicVariant,
+                    onYandexMusicClick = onYandexMusicClick,
+                    onVkMusicClick = onVkMusicClick,
+                    onYoutubeMusicClick = onYoutubeMusicClick,
+                    onDownloadClick = onDownloadClick,
+                    onWarningClick = onWarningClick,
+                    onLikeClick = onLikeClick,
+                    onDislikeClick = onDislikeClick,
+                    onDislikeLongClick = onDislikeLongClick
+                )
+            }
 
             if (W < H) {
                 Column(
@@ -128,37 +163,8 @@ internal fun CloudSongTextScreenImpl() {
                         }
                     )
 
-                    CloudSongTextBody(
-                        W = W,
-                        H = H,
-                        cloudSong = it,
-                        invalidateCounter = invalidateCounter,
-                        listState = listState,
-                        fontSizeTextSp = fontSizeTextSp,
-                        fontSizeTitleSp = fontSizeTitleSp,
-                        theme = theme,
-                        modifier = Modifier
-                            .weight(1.0f),
-                        onWordClick = onWordClick
-                    )
-
-                    CloudSongTextPanel(
-                        W = W,
-                        H = H,
-                        theme = theme,
-                        listenToMusicVariant =
-                        cloudViewModel
-                            .settings
-                            .listenToMusicVariant,
-                        onYandexMusicClick = onYandexMusicClick,
-                        onVkMusicClick = onVkMusicClick,
-                        onYoutubeMusicClick = onYoutubeMusicClick,
-                        onDownloadClick = onDownloadClick,
-                        onWarningClick = onWarningClick,
-                        onLikeClick = onLikeClick,
-                        onDislikeClick = onDislikeClick,
-                        onDislikeLongClick = onDislikeLongClick
-                    )
+                    body(Modifier.weight(1.0f))
+                    panel()
                 }
             } else {
                 Row(
@@ -178,37 +184,8 @@ internal fun CloudSongTextScreenImpl() {
                         appBarWidth = CLOUD_SONG_TEXT_APP_BAR_WIDTH
                     )
 
-                    CloudSongTextBody(
-                        W = W,
-                        H = H,
-                        cloudSong = it,
-                        invalidateCounter = invalidateCounter,
-                        listState = listState,
-                        fontSizeTextSp = fontSizeTextSp,
-                        fontSizeTitleSp = fontSizeTitleSp,
-                        theme = theme,
-                        modifier = Modifier
-                            .weight(1.0f),
-                        onWordClick = onWordClick
-                    )
-
-                    CloudSongTextPanel(
-                        W = W,
-                        H = H,
-                        theme = theme,
-                        listenToMusicVariant =
-                        cloudViewModel
-                            .settings
-                            .listenToMusicVariant,
-                        onYandexMusicClick = onYandexMusicClick,
-                        onVkMusicClick = onVkMusicClick,
-                        onYoutubeMusicClick = onYoutubeMusicClick,
-                        onDownloadClick = onDownloadClick,
-                        onWarningClick = onWarningClick,
-                        onLikeClick = onLikeClick,
-                        onDislikeClick = onDislikeClick,
-                        onDislikeLongClick = onDislikeLongClick
-                    )
+                    body(Modifier.weight(1.0f))
+                    panel()
                 }
             }
             if (showYandexDialog) {
