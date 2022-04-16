@@ -27,6 +27,24 @@ internal fun SongTextPanel(
 ) {
     val A = if (W < H) W * 3.0f / 21 else H * 3.0f / 21
 
+    val content: @Composable () -> Unit = {
+        SongTextPanelContent(
+            W = W,
+            H = H,
+            theme = theme,
+            isEditorMode = isEditorMode,
+            listenToMusicVariant = listenToMusicVariant,
+            onYandexMusicClick = onYandexMusicClick,
+            onVkMusicClick = onVkMusicClick,
+            onYoutubeMusicClick = onYoutubeMusicClick,
+            onUploadClick = onUploadClick,
+            onWarningClick = onWarningClick,
+            onTrashClick = onTrashClick,
+            onEditClick = onEditClick,
+            onSaveClick = onSaveClick
+        )
+    }
+
     if (W < H) {
         Row (
             modifier = Modifier
@@ -34,21 +52,7 @@ internal fun SongTextPanel(
                 .height(A)
                 .background(Color.Transparent)
         ) {
-            SongTextPanelContent(
-                W = W,
-                H = H,
-                theme = theme,
-                isEditorMode = isEditorMode,
-                listenToMusicVariant = listenToMusicVariant,
-                onYandexMusicClick = onYandexMusicClick,
-                onVkMusicClick = onVkMusicClick,
-                onYoutubeMusicClick = onYoutubeMusicClick,
-                onUploadClick = onUploadClick,
-                onWarningClick = onWarningClick,
-                onTrashClick = onTrashClick,
-                onEditClick = onEditClick,
-                onSaveClick = onSaveClick
-            )
+            content()
         }
     } else {
         Column (
@@ -57,21 +61,7 @@ internal fun SongTextPanel(
                 .width(A)
                 .background(Color.Transparent)
         ) {
-            SongTextPanelContent(
-                W = W,
-                H = H,
-                theme = theme,
-                isEditorMode = isEditorMode,
-                listenToMusicVariant = listenToMusicVariant,
-                onYandexMusicClick = onYandexMusicClick,
-                onVkMusicClick = onVkMusicClick,
-                onYoutubeMusicClick = onYoutubeMusicClick,
-                onUploadClick = onUploadClick,
-                onWarningClick = onWarningClick,
-                onTrashClick = onTrashClick,
-                onEditClick = onEditClick,
-                onSaveClick = onSaveClick
-            )
+            content()
         }
     }
 }

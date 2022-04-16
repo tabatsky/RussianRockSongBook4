@@ -19,6 +19,27 @@ internal fun DonationBodyLandscape(
     theme: Theme,
     onPurchaseClick: (Int, Boolean) -> Unit
 ) {
+    val item: @Composable (Int, Int) -> Unit = { index, value ->
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+            colors = ButtonDefaults
+                .buttonColors(
+                    backgroundColor = theme.colorCommon,
+                    contentColor = theme.colorMain
+                ),
+            onClick = {
+                onPurchaseClick(index, true)
+            }) {
+            Text(text = donationLabel(value))
+        }
+        Divider(
+            color = theme.colorBg,
+            thickness = 4.dp
+        )
+    }
+
     Column(
         Modifier
             .fillMaxSize()
@@ -33,24 +54,7 @@ internal fun DonationBodyLandscape(
                     .padding(4.dp)
             ) {
                 itemsIndexed(DONATIONS_LANDSCAPE.take(4)) { index, value ->
-                    Button(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(50.dp),
-                        colors = ButtonDefaults
-                            .buttonColors(
-                                backgroundColor = theme.colorCommon,
-                                contentColor = theme.colorMain
-                            ),
-                        onClick = {
-                            onPurchaseClick(index, true)
-                        }) {
-                        Text(text = donationLabel(value))
-                    }
-                    Divider(
-                        color = theme.colorBg,
-                        thickness = 4.dp
-                    )
+                    item(index, value)
                 }
             }
             LazyColumn(
@@ -59,24 +63,7 @@ internal fun DonationBodyLandscape(
                     .padding(4.dp)
             ) {
                 itemsIndexed(DONATIONS_LANDSCAPE.takeLast(4)) { index, value ->
-                    Button(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(50.dp),
-                        colors = ButtonDefaults
-                            .buttonColors(
-                                backgroundColor = theme.colorCommon,
-                                contentColor = theme.colorMain
-                            ),
-                        onClick = {
-                            onPurchaseClick(index + 4, true)
-                        }) {
-                        Text(text = donationLabel(value))
-                    }
-                    Divider(
-                        color = theme.colorBg,
-                        thickness = 4.dp
-                    )
+                    item(index + 4, value)
                 }
             }
         }

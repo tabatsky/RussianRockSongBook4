@@ -109,13 +109,53 @@ internal fun SongTextScreenImpl() {
         fontSizeTextDp.toSp()
     }
 
-    song?.let {
+    song?.let { _song ->
         BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
         ) {
             val W = this.maxWidth
             val H = this.maxHeight
+
+            val body: @Composable (Modifier) -> Unit = { modifier ->
+                SongTextBody(
+                    W = W,
+                    H = H,
+                    song = _song,
+                    text = text,
+                    isEditorMode = isEditorMode,
+                    listState = listState,
+                    fontSizeTextSp = fontSizeTextSp,
+                    fontSizeTitleSp = fontSizeTitleSp,
+                    theme = theme,
+                    modifier = modifier,
+                    isAutoPlayMode = isAutoPlayMode,
+                    dY = dY,
+                    onTextChange = onTextChange,
+                    onWordClick = onWordClick
+                )
+            }
+
+            val panel: @Composable () -> Unit = {
+                SongTextPanel(
+                    W = W,
+                    H = H,
+                    theme = theme,
+                    isEditorMode = isEditorMode,
+                    listenToMusicVariant =
+                    localViewModel
+                        .settings
+                        .listenToMusicVariant,
+                    onYandexMusicClick = onYandexMusicClick,
+                    onVkMusicClick = onVkMusicClick,
+                    onYoutubeMusicClick = onYoutubeMusicClick,
+                    onUploadClick = onUploadClick,
+                    onWarningClick = onWarningClick,
+                    onTrashClick = onTrashClick,
+                    onEditClick = onEditClick,
+                    onSaveClick = onSaveClick
+                )
+            }
 
             if (W < H) {
                 Column(
@@ -127,48 +167,14 @@ internal fun SongTextScreenImpl() {
                     CommonTopAppBar(
                         actions = {
                             SongTextActions(
-                                isFavorite = it.favorite,
+                                isFavorite = _song.favorite,
                                 onSongChanged = onSongChanged
                             )
                         }
                     )
 
-                    SongTextBody(
-                        W = W,
-                        H = H,
-                        song = it,
-                        text = text,
-                        isEditorMode = isEditorMode,
-                        listState = listState,
-                        fontSizeTextSp = fontSizeTextSp,
-                        fontSizeTitleSp = fontSizeTitleSp,
-                        theme = theme,
-                        modifier = Modifier
-                            .weight(1.0f),
-                        isAutoPlayMode = isAutoPlayMode,
-                        dY = dY,
-                        onTextChange = onTextChange,
-                        onWordClick = onWordClick
-                    )
-
-                    SongTextPanel(
-                        W = W,
-                        H = H,
-                        theme = theme,
-                        isEditorMode = isEditorMode,
-                        listenToMusicVariant =
-                        localViewModel
-                            .settings
-                            .listenToMusicVariant,
-                        onYandexMusicClick = onYandexMusicClick,
-                        onVkMusicClick = onVkMusicClick,
-                        onYoutubeMusicClick = onYoutubeMusicClick,
-                        onUploadClick = onUploadClick,
-                        onWarningClick = onWarningClick,
-                        onTrashClick = onTrashClick,
-                        onEditClick = onEditClick,
-                        onSaveClick = onSaveClick
-                    )
+                    body(Modifier.weight(1.0f))
+                    panel()
                 }
             } else {
                 Row(
@@ -180,48 +186,14 @@ internal fun SongTextScreenImpl() {
                     CommonSideAppBar(
                         actions = {
                             SongTextActions(
-                                isFavorite = it.favorite,
+                                isFavorite = _song.favorite,
                                 onSongChanged = onSongChanged
                             )
                         }
                     )
 
-                    SongTextBody(
-                        W = W,
-                        H = H,
-                        song = it,
-                        text = text,
-                        isEditorMode = isEditorMode,
-                        listState = listState,
-                        fontSizeTextSp = fontSizeTextSp,
-                        fontSizeTitleSp = fontSizeTitleSp,
-                        theme = theme,
-                        modifier = Modifier
-                            .weight(1.0f),
-                        isAutoPlayMode = isAutoPlayMode,
-                        dY = dY,
-                        onTextChange = onTextChange,
-                        onWordClick = onWordClick
-                    )
-
-                    SongTextPanel(
-                        W = W,
-                        H = H,
-                        theme = theme,
-                        isEditorMode = isEditorMode,
-                        listenToMusicVariant =
-                        localViewModel
-                            .settings
-                            .listenToMusicVariant,
-                        onYandexMusicClick = onYandexMusicClick,
-                        onVkMusicClick = onVkMusicClick,
-                        onYoutubeMusicClick = onYoutubeMusicClick,
-                        onUploadClick = onUploadClick,
-                        onWarningClick = onWarningClick,
-                        onTrashClick = onTrashClick,
-                        onEditClick = onEditClick,
-                        onSaveClick = onSaveClick
-                    )
+                    body(Modifier.weight(1.0f))
+                    panel()
                 }
             }
 

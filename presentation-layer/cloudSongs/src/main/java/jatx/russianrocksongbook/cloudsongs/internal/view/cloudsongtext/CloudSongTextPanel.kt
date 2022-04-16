@@ -26,6 +26,23 @@ internal fun CloudSongTextPanel(
 ) {
     val A = if (W < H) W * 3.0f / 21 else H * 3.0f / 21
 
+    val content: @Composable () -> Unit = {
+        CloudSongTextPanelContent(
+            W = W,
+            H = H,
+            theme = theme,
+            listenToMusicVariant = listenToMusicVariant,
+            onYandexMusicClick = onYandexMusicClick,
+            onVkMusicClick = onVkMusicClick,
+            onYoutubeMusicClick = onYoutubeMusicClick,
+            onDownloadClick = onDownloadClick,
+            onWarningClick = onWarningClick,
+            onLikeClick = onLikeClick,
+            onDislikeClick = onDislikeClick,
+            onDislikeLongClick = onDislikeLongClick
+        )
+    }
+
     if (W < H) {
         Row (
             modifier = Modifier
@@ -33,20 +50,7 @@ internal fun CloudSongTextPanel(
                 .height(A)
                 .background(Color.Transparent)
         ) {
-            CloudSongTextPanelContent(
-                W = W,
-                H = H,
-                theme = theme,
-                listenToMusicVariant = listenToMusicVariant,
-                onYandexMusicClick = onYandexMusicClick,
-                onVkMusicClick = onVkMusicClick,
-                onYoutubeMusicClick = onYoutubeMusicClick,
-                onDownloadClick = onDownloadClick,
-                onWarningClick = onWarningClick,
-                onLikeClick = onLikeClick,
-                onDislikeClick = onDislikeClick,
-                onDislikeLongClick = onDislikeLongClick
-            )
+            content()
         }
     } else {
         Column (
@@ -55,20 +59,7 @@ internal fun CloudSongTextPanel(
                 .width(A)
                 .background(Color.Transparent)
         ) {
-            CloudSongTextPanelContent(
-                W = W,
-                H = H,
-                theme = theme,
-                listenToMusicVariant = listenToMusicVariant,
-                onYandexMusicClick = onYandexMusicClick,
-                onVkMusicClick = onVkMusicClick,
-                onYoutubeMusicClick = onYoutubeMusicClick,
-                onDownloadClick = onDownloadClick,
-                onWarningClick = onWarningClick,
-                onLikeClick = onLikeClick,
-                onDislikeClick = onDislikeClick,
-                onDislikeLongClick = onDislikeLongClick
-            )
+            content()
         }
     }
 }
