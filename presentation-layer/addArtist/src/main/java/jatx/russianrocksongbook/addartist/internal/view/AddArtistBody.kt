@@ -18,8 +18,7 @@ import jatx.russianrocksongbook.addartist.internal.viewmodel.AddArtistViewModel
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 
 @Composable
-internal fun AddArtistBody(
-) {
+internal fun AddArtistBody() {
     val addArtistViewModel: AddArtistViewModel = viewModel()
 
     val theme = addArtistViewModel.settings.theme
