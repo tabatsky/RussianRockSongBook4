@@ -25,7 +25,6 @@ import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
 import jatx.russianrocksongbook.donation.api.view.donationLabel
 import jatx.russianrocksongbook.donationhelper.api.DONATIONS
 import jatx.russianrocksongbook.testing.*
-import jatx.russianrocksongbook.view.CurrentScreen
 import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Rule
@@ -101,10 +100,6 @@ class ExampleInstrumentedTest {
         settingsRepository.defaultArtist = ARTIST_KINO
 
         composeTestRule.activityRule.scenario.recreate()
-
-        composeTestRule.setContent {
-            CurrentScreen()
-        }
     }
 
     @Test
