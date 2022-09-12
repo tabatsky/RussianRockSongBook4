@@ -29,6 +29,7 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    namespace 'jatx.russianrocksongbook.domain.repository.preferences'
 }
 
 dependencies {
@@ -39,12 +40,12 @@ dependencies {
     implementation "com.google.dagger:hilt-android-testing:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
 
-    api "androidx.documentfile:documentfile:1.0.1"
+    api "androidx.documentfile:documentfile:$document_file_version"
 
     api "androidx.compose.ui:ui:$compose_version"
 
-    api 'io.reactivex.rxjava2:rxjava:2.2.9'
-    api 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    api "io.reactivex.rxjava2:rxjava:$rxjava_version"
+    api "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
 
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
 

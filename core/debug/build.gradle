@@ -27,9 +27,10 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    namespace 'jatx.russianrocksongbook.util.debug'
 }
 
 dependencies {
     implementation "androidx.core:core-ktx:$core_ktx_version"
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation "org.apache.commons:commons-lang3:$commons_lang_version"
 }
