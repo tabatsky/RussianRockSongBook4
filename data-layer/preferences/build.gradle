@@ -29,6 +29,7 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    namespace 'jatx.russianrocksongbook.preferences'
 }
 
 dependencies {
@@ -37,10 +38,10 @@ dependencies {
 
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
-    implementation 'it.czerwinski.android.hilt:hilt-extensions:1.2.0'
-    kapt 'it.czerwinski.android.hilt:hilt-processor:1.2.0'
+    implementation "it.czerwinski.android.hilt:hilt-extensions:$hilt_extensions_version"
+    kapt "it.czerwinski.android.hilt:hilt-processor:$hilt_extensions_version"
 
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation "org.apache.commons:commons-lang3:$commons_lang_version"
 
     api project(':core:debug')
     api project(':core:hashing')

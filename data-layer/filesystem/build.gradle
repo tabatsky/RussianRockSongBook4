@@ -29,6 +29,7 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    namespace 'jatx.russianrocksongbook.filesystem'
 }
 
 dependencies {
@@ -37,8 +38,8 @@ dependencies {
 
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
-    implementation 'it.czerwinski.android.hilt:hilt-extensions:1.2.0'
-    kapt 'it.czerwinski.android.hilt:hilt-processor:1.2.0'
+    implementation "it.czerwinski.android.hilt:hilt-extensions:$hilt_extensions_version"
+    kapt "it.czerwinski.android.hilt:hilt-processor:$hilt_extensions_version"
 
     api project(':domain-layer:models:local')
     api project(':domain-layer:repository:filesystem')
