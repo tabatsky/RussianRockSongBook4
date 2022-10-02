@@ -16,7 +16,8 @@ import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 
 @Composable
 internal fun SongListAppDrawer(
-    onCloseDrawer: () -> Unit
+    onCloseDrawer: () -> Unit,
+    isActive: Boolean
 ) {
     val localViewModel: LocalViewModel = viewModel()
 
@@ -40,11 +41,14 @@ internal fun SongListAppDrawer(
                     navigationIcon = {
                         SongListNavigationIcon(
                             onClick = onCloseDrawer,
+                            isActive = isActive,
                             testTag = "drawerButtonMenu"
                         )
                     }
                 )
-                SongListMenuBody(onCloseDrawer = onCloseDrawer)
+                SongListMenuBody(
+                    onCloseDrawer = onCloseDrawer
+                )
             }
         } else {
             Row(
@@ -57,11 +61,14 @@ internal fun SongListAppDrawer(
                     navigationIcon = {
                         SongListNavigationIcon(
                             onClick = onCloseDrawer,
+                            isActive = isActive,
                             testTag = "drawerButtonMenu"
                         )
                     }
                 )
-                SongListMenuBody(onCloseDrawer = onCloseDrawer)
+                SongListMenuBody(
+                    onCloseDrawer = onCloseDrawer
+                )
             }
         }
     }

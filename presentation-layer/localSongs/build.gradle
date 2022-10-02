@@ -58,6 +58,7 @@ dependencies {
     kapt "it.czerwinski.android.hilt:hilt-processor:$hilt_extensions_version"
 
     api project(':ui-library:clickablewordstextview')
+    api project(':ui-library:dpad')
 
     api project(':domain-layer:usecase:cloud')
     api project(':domain-layer:usecase:local')

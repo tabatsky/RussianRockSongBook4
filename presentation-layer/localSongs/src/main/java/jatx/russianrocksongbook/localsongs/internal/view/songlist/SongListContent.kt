@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
@@ -19,7 +20,8 @@ private const val MAX_ARTIST_LENGTH_PORTRAIT = 15
 
 @Composable
 internal fun SongListContent(
-    openDrawer: () -> Unit
+    openDrawer: () -> Unit,
+    isActive: Boolean
 ) {
     val localViewModel: LocalViewModel = viewModel()
 
@@ -51,14 +53,17 @@ internal fun SongListContent(
                 CommonTopAppBar(
                     title = visibleArtist,
                     navigationIcon = {
-                        SongListNavigationIcon(onClick = openDrawer)
+                        SongListNavigationIcon(
+                            onClick = openDrawer,
+                            isActive = isActive
+                        )
                     },
                     actions = {
-                        SongListActions()
+                        SongListActions(isActive = isActive)
                     }
                 )
 
-                SongListBody()
+                SongListBody(isActive = isActive)
 
                 WhatsNewDialog()
             }
@@ -81,15 +86,16 @@ internal fun SongListContent(
                     title = visibleArtist,
                     navigationIcon = {
                         SongListNavigationIcon(
-                            onClick = openDrawer
+                            onClick = openDrawer,
+                            isActive = isActive
                         )
                     },
                     actions = {
-                        SongListActions()
+                        SongListActions(isActive = isActive)
                     }
                 )
 
-                SongListBody()
+                SongListBody(isActive = isActive)
 
                 WhatsNewDialog()
             }
@@ -102,6 +108,7 @@ internal fun SongListContent(
 
         VoiceButton(
             modifier = Modifier
+                .focusProperties { canFocus = false }
                 .align(Alignment.BottomEnd)
                 .padding(20.dp),
             theme = theme,

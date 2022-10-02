@@ -3,8 +3,7 @@ package jatx.russianrocksongbook.localsongs.internal.view.songlist
 import androidx.compose.material.DrawerValue
 import androidx.compose.material.ModalDrawer
 import androidx.compose.material.rememberDrawerState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import kotlinx.coroutines.launch
 
 @Composable
@@ -15,11 +14,14 @@ internal fun SongListScreenImpl() {
     ModalDrawer(
         drawerState = drawerState,
         drawerContent = {
-            SongListAppDrawer {
-                scope.launch {
-                    drawerState.close()
-                }
-            }
+            SongListAppDrawer(
+                onCloseDrawer = {
+                    scope.launch {
+                        drawerState.close()
+                    }
+                },
+                isActive = drawerState.isOpen
+            )
         },
         content = {
             SongListContent(
@@ -27,7 +29,8 @@ internal fun SongListScreenImpl() {
                     scope.launch {
                         drawerState.open()
                     }
-                }
+                },
+                isActive = drawerState.isClosed
             )
         }
     )

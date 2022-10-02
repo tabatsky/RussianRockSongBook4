@@ -1,10 +1,10 @@
 package jatx.russianrocksongbook.localsongs.internal.view.songlist
 
+import android.util.Log
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
@@ -30,16 +30,28 @@ internal fun SongListMenuBody(
         fontSizeDp.toSp()
     }
 
+    val menuState = rememberLazyListState()
+
     LazyColumn(
-        modifier = Modifier.testTag(MENU_LAZY_COLUMN)
+        modifier = Modifier.testTag(MENU_LAZY_COLUMN),
+        state = menuState
     ) {
-        items(artistList) { artist ->
-            ArtistItem(artist, fontSizeSp, theme) {
-                localViewModel.selectArtist(artist) {
-                    localViewModel.selectSong(0)
+        itemsIndexed(artistList) { index, artist ->
+            ArtistItem(
+                artist = artist,
+                fontSizeSp = fontSizeSp,
+                theme = theme,
+                onClick = {
+                    localViewModel.selectArtist(artist) {
+                        localViewModel.selectSong(0)
+                    }
+                    onCloseDrawer()
+                },
+                onFocused = {
+                    Log.e("focused", artist)
+                    menuState.scrollToItem(index)
                 }
-                onCloseDrawer()
-            }
+            )
         }
     }
 }
