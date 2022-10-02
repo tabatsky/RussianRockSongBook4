@@ -3,7 +3,8 @@ package jatx.russianrocksongbook.localsongs.internal.view.songlist
 import androidx.compose.material.DrawerValue
 import androidx.compose.material.ModalDrawer
 import androidx.compose.material.rememberDrawerState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.DrawerStateClosed
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.DrawerStateOpened
