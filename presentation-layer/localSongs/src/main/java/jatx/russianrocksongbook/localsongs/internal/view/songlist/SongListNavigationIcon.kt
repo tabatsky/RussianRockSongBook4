@@ -15,8 +15,7 @@ internal fun SongListNavigationIcon(
     testTag: String? = null
 ) {
     val modifier = if (isActive)
-        Modifier
-            .dpadFocusable(onClick = onClick)
+        Modifier.dpadFocusable(onClick = onClick)
     else
         Modifier.focusProperties {
             canFocus = false
