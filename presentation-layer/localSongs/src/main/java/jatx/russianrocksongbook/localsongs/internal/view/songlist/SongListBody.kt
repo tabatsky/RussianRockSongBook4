@@ -1,5 +1,6 @@
 package jatx.russianrocksongbook.localsongs.internal.view.songlist
 
+import android.util.Log
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -22,7 +23,9 @@ import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import kotlinx.coroutines.delay
 
 @Composable
-internal fun SongListBody() {
+internal fun SongListBody(
+    isActive: Boolean
+) {
     val localViewModel: LocalViewModel = viewModel()
 
     val theme = localViewModel.settings.theme
@@ -44,11 +47,21 @@ internal fun SongListBody() {
             state = listState
         ) {
             itemsIndexed(songList) { index, song ->
-                SongItem(song, theme, fontSizeSp) {
-                    println("selected: ${song.artist} - ${song.title}")
-                    localViewModel.selectSong(index)
-                    localViewModel.selectScreen(CurrentScreenVariant.SONG_TEXT)
-                }
+                SongItem(
+                    song = song,
+                    theme = theme,
+                    fontSizeSp = fontSizeSp,
+                    onClick = {
+                        Log.e("SongListBody", "selected: ${song.artist} - ${song.title}")
+                        localViewModel.selectSong(index)
+                        localViewModel.selectScreen(CurrentScreenVariant.SONG_TEXT)
+                    },
+                    onFocused = {
+                        Log.e("SongListBody", "focused: ${song.artist} - ${song.title}")
+                        listState.scrollToItem(index)
+                    },
+                    isSongListActive = isActive
+                )
             }
             if (!wasOrientationChanged && !needScroll) {
                 localViewModel.updateScrollPosition(listState.firstVisibleItemIndex)

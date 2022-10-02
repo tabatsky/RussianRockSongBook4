@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import jatx.dpad.dpadFocusable
 import jatx.russianrocksongbook.domain.repository.local.*
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 
@@ -18,8 +19,11 @@ internal fun ArtistItem(
     artist: String,
     fontSizeSp: TextUnit,
     theme: Theme,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onFocused: suspend () -> Unit
 ) {
+    val modifier = Modifier.dpadFocusable(onClick = onClick, onFocused = onFocused)
+
     val isBold =
         (listOf(
             ARTIST_FAVORITE,
@@ -30,7 +34,7 @@ internal fun ArtistItem(
         ).contains(artist))
     Text(
         text = artist,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(5.dp)
             .clickable {

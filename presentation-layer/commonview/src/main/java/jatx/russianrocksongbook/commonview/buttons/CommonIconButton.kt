@@ -12,13 +12,14 @@ import androidx.compose.ui.res.painterResource
 fun CommonIconButton(
     @DrawableRes resId: Int,
     testTag: String? = null,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    val modifier = testTag?.let {
-        Modifier.testTag(it)
-    } ?: Modifier
+    val theModifier = testTag?.let {
+        modifier.testTag(it)
+    } ?: modifier
     IconButton(
-        modifier = modifier,
+        modifier = theModifier,
         onClick = onClick
     ) {
         Icon(painterResource(id = resId), "")
