@@ -12,16 +12,20 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.dpad.dpadFocusable
 import jatx.russianrocksongbook.commonview.buttons.CommonIconButton
 import jatx.russianrocksongbook.localsongs.R
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.DrawerStateClosed
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.testing.SETTINGS_BUTTON
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 
 @Composable
-internal fun SongListActions(isActive: Boolean) {
+internal fun SongListActions() {
     val localViewModel: LocalViewModel = viewModel()
 
     val theme = localViewModel.settings.theme
     var expanded by remember { mutableStateOf(false) }
+
+    val drawerState by localViewModel.drawerState.collectAsState()
+    val isActive = drawerState == DrawerStateClosed
 
     val onSettingsClick = {
         println("selected: settings")
