@@ -5,23 +5,26 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.localsongs.R
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.DrawerStateOpened
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 
 @Composable
 internal fun SongListAppDrawer(
-    onCloseDrawer: () -> Unit,
-    isActive: Boolean
+    onCloseDrawer: () -> Unit
 ) {
     val localViewModel: LocalViewModel = viewModel()
 
     val theme = localViewModel.settings.theme
+
+    val drawerState by localViewModel.drawerState.collectAsState()
+    val isActive = drawerState == DrawerStateOpened
 
     BoxWithConstraints(
         modifier = Modifier

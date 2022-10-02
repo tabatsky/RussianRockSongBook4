@@ -12,6 +12,7 @@ import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.ext.crop
 import jatx.russianrocksongbook.localsongs.internal.view.dialogs.VoiceHelpDialog
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.DrawerStateClosed
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.whatsnewdialog.api.view.WhatsNewDialog
 
@@ -20,13 +21,15 @@ private const val MAX_ARTIST_LENGTH_PORTRAIT = 15
 
 @Composable
 internal fun SongListContent(
-    openDrawer: () -> Unit,
-    isActive: Boolean
+    openDrawer: () -> Unit
 ) {
     val localViewModel: LocalViewModel = viewModel()
 
     val theme = localViewModel.settings.theme
     val artist by localViewModel.currentArtist.collectAsState()
+
+    val drawerState by localViewModel.drawerState.collectAsState()
+    val isActive = drawerState == DrawerStateClosed
 
     BoxWithConstraints(
         modifier = Modifier
@@ -59,11 +62,11 @@ internal fun SongListContent(
                         )
                     },
                     actions = {
-                        SongListActions(isActive = isActive)
+                        SongListActions()
                     }
                 )
 
-                SongListBody(isActive = isActive)
+                SongListBody()
 
                 WhatsNewDialog()
             }
@@ -91,11 +94,11 @@ internal fun SongListContent(
                         )
                     },
                     actions = {
-                        SongListActions(isActive = isActive)
+                        SongListActions()
                     }
                 )
 
-                SongListBody(isActive = isActive)
+                SongListBody()
 
                 WhatsNewDialog()
             }

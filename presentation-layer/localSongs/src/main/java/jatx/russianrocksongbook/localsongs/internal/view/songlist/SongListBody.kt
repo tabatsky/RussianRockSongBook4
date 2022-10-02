@@ -23,9 +23,7 @@ import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import kotlinx.coroutines.delay
 
 @Composable
-internal fun SongListBody(
-    isActive: Boolean
-) {
+internal fun SongListBody() {
     val localViewModel: LocalViewModel = viewModel()
 
     val theme = localViewModel.settings.theme
@@ -59,8 +57,7 @@ internal fun SongListBody(
                     onFocused = {
                         Log.e("SongListBody", "focused: ${song.artist} - ${song.title}")
                         listState.scrollToItem(index)
-                    },
-                    isSongListActive = isActive
+                    }
                 )
             }
             if (!wasOrientationChanged && !needScroll) {
