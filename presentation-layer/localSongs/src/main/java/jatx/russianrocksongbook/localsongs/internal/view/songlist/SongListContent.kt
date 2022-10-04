@@ -12,7 +12,6 @@ import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.ext.crop
 import jatx.russianrocksongbook.localsongs.internal.view.dialogs.VoiceHelpDialog
-import jatx.russianrocksongbook.localsongs.internal.viewmodel.DrawerStateClosed
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.whatsnewdialog.api.view.WhatsNewDialog
 
@@ -28,8 +27,8 @@ internal fun SongListContent(
     val theme = localViewModel.settings.theme
     val artist by localViewModel.currentArtist.collectAsState()
 
-    val drawerState by localViewModel.drawerState.collectAsState()
-    val isActive = drawerState == DrawerStateClosed
+    val isDrawerOpened by localViewModel.isDrawerOpened.collectAsState()
+    val isActive = !isDrawerOpened
 
     BoxWithConstraints(
         modifier = Modifier

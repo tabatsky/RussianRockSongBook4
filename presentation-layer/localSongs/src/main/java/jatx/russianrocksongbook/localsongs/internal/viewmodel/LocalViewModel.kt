@@ -60,7 +60,7 @@ internal open class LocalViewModel @Inject constructor(
     val wasOrientationChanged = localStateHolder.wasOrientationChanged.asStateFlow()
     val needScroll = localStateHolder.needScroll.asStateFlow()
 
-    val drawerState = localStateHolder.drawerState.asStateFlow()
+    val isDrawerOpened = localStateHolder.isDrawerOpened.asStateFlow()
 
     private var showSongsJob: Job? = null
     private var selectSongJob: Job? = null
@@ -222,8 +222,8 @@ internal open class LocalViewModel @Inject constructor(
         localStateHolder.isLastOrientationPortrait.value = value
     }
 
-    fun updateDrawerState(value: DrawerState) {
-        localStateHolder.drawerState.value = value
+    fun updateDrawerIsOpened(value: Boolean) {
+        localStateHolder.isDrawerOpened.value = value
     }
 
     fun deleteCurrentToTrash() {

@@ -14,7 +14,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.localsongs.R
-import jatx.russianrocksongbook.localsongs.internal.viewmodel.DrawerStateOpened
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 
 @Composable
@@ -25,8 +24,8 @@ internal fun SongListAppDrawer(
 
     val theme = localViewModel.settings.theme
 
-    val drawerState by localViewModel.drawerState.collectAsState()
-    val isActive = drawerState == DrawerStateOpened
+    val isDrawerOpened by localViewModel.isDrawerOpened.collectAsState()
+    val isActive = isDrawerOpened
 
     BoxWithConstraints(
         modifier = Modifier
