@@ -6,8 +6,6 @@ import androidx.compose.material.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import jatx.russianrocksongbook.localsongs.internal.viewmodel.DrawerStateClosed
-import jatx.russianrocksongbook.localsongs.internal.viewmodel.DrawerStateOpened
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import kotlinx.coroutines.launch
 
@@ -25,7 +23,7 @@ internal fun SongListScreenImpl() {
                 onCloseDrawer = {
                     scope.launch {
                         drawerState.close()
-                        localViewModel.updateDrawerState(DrawerStateClosed)
+                        localViewModel.updateDrawerIsOpened(false)
                     }
                 }
             )
@@ -35,7 +33,7 @@ internal fun SongListScreenImpl() {
                 openDrawer = {
                     scope.launch {
                         drawerState.open()
-                        localViewModel.updateDrawerState(DrawerStateOpened)
+                        localViewModel.updateDrawerIsOpened(true)
                     }
                 }
             )
