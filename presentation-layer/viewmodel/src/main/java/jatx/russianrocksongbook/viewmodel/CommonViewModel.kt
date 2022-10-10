@@ -1,5 +1,9 @@
 package jatx.russianrocksongbook.viewmodel
 
+import android.annotation.SuppressLint
+import android.app.UiModeManager
+import android.content.Context
+import android.content.res.Configuration
 import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
@@ -29,6 +33,14 @@ open class CommonViewModel @Inject constructor(
         commonViewModelDeps.resources
     private val toasts =
         commonViewModelDeps.toasts
+    @SuppressLint("StaticFieldLeak")
+    private val appContext = commonViewModelDeps.appContext
+
+    val isTV: Boolean
+        get() {
+            val uiModeManager = appContext.getSystemService(Context.UI_MODE_SERVICE) as? UiModeManager
+            return uiModeManager?.currentModeType == Configuration.UI_MODE_TYPE_TELEVISION
+        }
 
     private val getArtistsUseCase = commonViewModelDeps.getArtistsUseCase
 

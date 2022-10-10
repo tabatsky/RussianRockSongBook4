@@ -8,7 +8,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
-import jatx.dpad.dpadFocusable
 import jatx.russianrocksongbook.commonview.buttons.CommonIconButton
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
@@ -26,11 +25,9 @@ internal fun SongListActions() {
         println("selected: settings")
         localViewModel.selectScreen(CurrentScreenVariant.SETTINGS)
     }
-    val settingsModifier = Modifier.dpadFocusable(onSettingsClick)
     CommonIconButton(
         testTag = SETTINGS_BUTTON,
         resId = R.drawable.ic_settings,
-        modifier = settingsModifier,
         onClick = onSettingsClick
     )
 
@@ -38,10 +35,8 @@ internal fun SongListActions() {
         println("selected: question")
         expanded = !expanded
     }
-    val questionModifier = Modifier.dpadFocusable(onQuestionClick)
     CommonIconButton(
         resId = R.drawable.ic_question,
-        modifier = questionModifier,
         onClick = onQuestionClick
     )
     DropdownMenu(

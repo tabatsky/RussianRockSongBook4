@@ -56,8 +56,10 @@ dependencies {
     implementation "it.czerwinski.android.hilt:hilt-extensions:$hilt_extensions_version"
     kapt "it.czerwinski.android.hilt:hilt-processor:$hilt_extensions_version"
 
+    implementation "androidx.tv:tv-foundation:1.0.0-alpha01"
+    implementation "androidx.tv:tv-material:1.0.0-alpha01"
+
     api project(':ui-library:clickablewordstextview')
-    api project(':ui-library:dpad')
 
     api project(':domain-layer:usecase:cloud')
     api project(':domain-layer:usecase:local')

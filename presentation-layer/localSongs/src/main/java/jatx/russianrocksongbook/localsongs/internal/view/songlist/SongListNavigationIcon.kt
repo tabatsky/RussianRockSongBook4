@@ -3,7 +3,7 @@ package jatx.russianrocksongbook.localsongs.internal.view.songlist
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusProperties
-import jatx.dpad.dpadFocusable
+import androidx.compose.ui.focus.focusTarget
 import jatx.russianrocksongbook.commonview.buttons.CommonIconButton
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.testing.DRAWER_BUTTON_MAIN
@@ -15,12 +15,12 @@ internal fun SongListNavigationIcon(
     testTag: String? = null
 ) {
     val modifier = if (isActive)
-        Modifier.dpadFocusable(onClick = onClick)
+        Modifier
+            .focusProperties { canFocus = true }
+            .focusTarget()
     else
-        Modifier.focusProperties {
-            canFocus = false
-        }
-
+        Modifier
+            .focusProperties { canFocus = false }
     CommonIconButton(
         resId = R.drawable.ic_drawer,
         testTag = testTag ?: DRAWER_BUTTON_MAIN,

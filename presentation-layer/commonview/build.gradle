@@ -50,7 +50,6 @@ dependencies {
 
     api project(':ui-library:sideAppBar')
     api project(':ui-library:ChordDroidLibrary')
-    api project(':ui-library:dpad')
 
     api project(':presentation-layer:viewmodel')
 

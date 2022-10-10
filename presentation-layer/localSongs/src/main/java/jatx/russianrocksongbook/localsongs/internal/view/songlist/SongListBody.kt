@@ -13,6 +13,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.tv.foundation.lazy.list.TvLazyColumn
+import androidx.tv.foundation.lazy.list.itemsIndexed
+import androidx.tv.foundation.lazy.list.rememberTvLazyListState
 import jatx.russianrocksongbook.commonview.stub.CommonSongListStub
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.localsongs.R
@@ -37,41 +40,71 @@ internal fun SongListBody() {
     }
 
     if (songList.isNotEmpty()) {
-        val listState = rememberLazyListState()
         val wasOrientationChanged by localViewModel.wasOrientationChanged.collectAsState()
         val needScroll by localViewModel.needScroll.collectAsState()
-        LazyColumn(
-            modifier = Modifier.testTag(SONG_LIST_LAZY_COLUMN),
-            state = listState
-        ) {
-            itemsIndexed(songList) { index, song ->
-                SongItem(
-                    song = song,
-                    theme = theme,
-                    fontSizeSp = fontSizeSp,
-                    onClick = {
-                        Log.e("SongListBody", "selected: ${song.artist} - ${song.title}")
-                        localViewModel.selectSong(index)
-                        localViewModel.selectScreen(CurrentScreenVariant.SONG_TEXT)
-                    },
-                    onFocused = {
-                        Log.e("SongListBody", "focused: ${song.artist} - ${song.title}")
-                        listState.scrollToItem(index)
-                    }
-                )
-            }
-            if (!wasOrientationChanged && !needScroll) {
-                localViewModel.updateScrollPosition(listState.firstVisibleItemIndex)
-            }
-        }
-        if (needScroll) {
-            val scrollPosition by localViewModel.scrollPosition.collectAsState()
-            LaunchedEffect(Unit) {
-                if (TestingConfig.isTesting) {
-                    delay(100L)
+        if (localViewModel.isTV) {
+            val listState = rememberTvLazyListState()
+            TvLazyColumn(
+                modifier = Modifier.testTag(SONG_LIST_LAZY_COLUMN),
+                state = listState
+            ) {
+                itemsIndexed(songList) { index, song ->
+                    SongItem(
+                        song = song,
+                        theme = theme,
+                        fontSizeSp = fontSizeSp,
+                        onClick = {
+                            Log.e("SongListBody", "selected: ${song.artist} - ${song.title}")
+                            localViewModel.selectSong(index)
+                            localViewModel.selectScreen(CurrentScreenVariant.SONG_TEXT)
+                        }
+                    )
                 }
-                listState.scrollToItem(scrollPosition)
-                localViewModel.updateNeedScroll(false)
+                if (!wasOrientationChanged && !needScroll) {
+                    localViewModel.updateScrollPosition(listState.firstVisibleItemIndex)
+                }
+            }
+            if (needScroll) {
+                val scrollPosition by localViewModel.scrollPosition.collectAsState()
+                LaunchedEffect(Unit) {
+                    if (TestingConfig.isTesting) {
+                        delay(100L)
+                    }
+                    listState.scrollToItem(scrollPosition)
+                    localViewModel.updateNeedScroll(false)
+                }
+            }
+        } else {
+            val listState = rememberLazyListState()
+            LazyColumn(
+                modifier = Modifier.testTag(SONG_LIST_LAZY_COLUMN),
+                state = listState
+            ) {
+                itemsIndexed(songList) { index, song ->
+                    SongItem(
+                        song = song,
+                        theme = theme,
+                        fontSizeSp = fontSizeSp,
+                        onClick = {
+                            Log.e("SongListBody", "selected: ${song.artist} - ${song.title}")
+                            localViewModel.selectSong(index)
+                            localViewModel.selectScreen(CurrentScreenVariant.SONG_TEXT)
+                        }
+                    )
+                }
+                if (!wasOrientationChanged && !needScroll) {
+                    localViewModel.updateScrollPosition(listState.firstVisibleItemIndex)
+                }
+            }
+            if (needScroll) {
+                val scrollPosition by localViewModel.scrollPosition.collectAsState()
+                LaunchedEffect(Unit) {
+                    if (TestingConfig.isTesting) {
+                        delay(100L)
+                    }
+                    listState.scrollToItem(scrollPosition)
+                    localViewModel.updateNeedScroll(false)
+                }
             }
         }
     } else {
