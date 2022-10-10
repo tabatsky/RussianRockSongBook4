@@ -14,7 +14,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import jatx.dpad.dpadFocusable
 import jatx.russianrocksongbook.commonview.R
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.testing.*
@@ -149,7 +148,6 @@ private fun FooterButton(
     } ?: Modifier
     Box(
         modifier = modifier
-            .dpadFocusable(onClick = onClick)
             .background(theme.colorCommon)
             .width(size)
             .height(size)

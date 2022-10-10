@@ -1,5 +1,7 @@
 package jatx.russianrocksongbook.viewmodel
 
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
 import jatx.russianrocksongbook.domain.usecase.local.GetArtistsUseCase
@@ -10,6 +12,7 @@ import javax.inject.Inject
 
 @ViewModelScoped
 class CommonViewModelDeps @Inject constructor(
+    @ApplicationContext val appContext: Context,
     val settingsRepository: SettingsRepository,
     val callbacks: Callbacks,
     val resources: Resources,

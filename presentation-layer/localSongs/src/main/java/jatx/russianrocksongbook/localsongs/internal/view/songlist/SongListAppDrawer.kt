@@ -45,8 +45,8 @@ internal fun SongListAppDrawer(
                     navigationIcon = {
                         SongListNavigationIcon(
                             onClick = onCloseDrawer,
-                            isActive = isActive,
-                            testTag = "drawerButtonMenu"
+                            testTag = "drawerButtonMenu",
+                            isActive = isActive
                         )
                     }
                 )
@@ -65,8 +65,8 @@ internal fun SongListAppDrawer(
                     navigationIcon = {
                         SongListNavigationIcon(
                             onClick = onCloseDrawer,
-                            isActive = isActive,
-                            testTag = "drawerButtonMenu"
+                            testTag = "drawerButtonMenu",
+                            isActive = isActive
                         )
                     }
                 )

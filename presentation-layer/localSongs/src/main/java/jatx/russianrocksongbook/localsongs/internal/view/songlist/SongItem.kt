@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import jatx.dpad.dpadFocusable
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.localsongs.R
@@ -20,11 +19,9 @@ internal fun SongItem(
     song: Song,
     theme: Theme,
     fontSizeSp: TextUnit,
-    onClick: () -> Unit,
-    onFocused: suspend () -> Unit
+    onClick: () -> Unit
 ) {
     val modifier = Modifier
-        .dpadFocusable(onClick = onClick, onFocused = onFocused)
         .fillMaxWidth()
         .padding(dimensionResource(id = R.dimen.padding_20))
         .clickable {
