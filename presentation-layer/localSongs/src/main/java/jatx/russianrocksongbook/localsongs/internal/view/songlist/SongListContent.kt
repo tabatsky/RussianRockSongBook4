@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -26,9 +27,6 @@ internal fun SongListContent(
 
     val theme = localViewModel.settings.theme
     val artist by localViewModel.currentArtist.collectAsState()
-
-    val isDrawerOpened by localViewModel.isDrawerOpened.collectAsState()
-    val isActive = !isDrawerOpened
 
     BoxWithConstraints(
         modifier = Modifier
@@ -52,12 +50,13 @@ internal fun SongListContent(
                     .background(theme.colorBg)
                     .fillMaxSize()
             ) {
+                val navigationFocusRequester = remember { FocusRequester() }
                 CommonTopAppBar(
                     title = visibleArtist,
                     navigationIcon = {
                         SongListNavigationIcon(
                             onClick = openDrawer,
-                            isActive = isActive
+                            focusRequester = navigationFocusRequester
                         )
                     },
                     actions = {
@@ -65,7 +64,7 @@ internal fun SongListContent(
                     }
                 )
 
-                SongListBody()
+                SongListBody(navigationFocusRequester)
 
                 WhatsNewDialog()
             }
@@ -84,12 +83,13 @@ internal fun SongListContent(
                     .background(theme.colorBg)
                     .fillMaxSize()
             ) {
+                val navigationFocusRequester = remember { FocusRequester() }
                 CommonSideAppBar(
                     title = visibleArtist,
                     navigationIcon = {
                         SongListNavigationIcon(
                             onClick = openDrawer,
-                            isActive = isActive
+                            focusRequester = navigationFocusRequester
                         )
                     },
                     actions = {
@@ -97,7 +97,7 @@ internal fun SongListContent(
                     }
                 )
 
-                SongListBody()
+                SongListBody(navigationFocusRequester)
 
                 WhatsNewDialog()
             }

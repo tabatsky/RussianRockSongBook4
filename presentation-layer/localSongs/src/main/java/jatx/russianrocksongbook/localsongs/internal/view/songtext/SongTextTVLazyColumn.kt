@@ -1,28 +1,26 @@
 package jatx.russianrocksongbook.localsongs.internal.view.songtext
 
 import androidx.compose.foundation.MutatePriority
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.TextUnit
+import androidx.tv.foundation.lazy.list.TvLazyColumn
+import androidx.tv.foundation.lazy.list.TvLazyListState
 import jatx.clickablewordstextview.api.Word
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
 
-const val AUTO_SCROLL_INTERVAL = 250L
-
 @Composable
-internal fun SongTextLazyColumn(
+internal fun SongTextTvLazyColumn(
     song: Song,
     text: String,
     isEditorMode: Boolean,
-    listState: LazyListState,
+    listState: TvLazyListState,
     fontSizeTextSp: TextUnit,
     theme: Theme,
     modifier: Modifier,
@@ -31,7 +29,7 @@ internal fun SongTextLazyColumn(
     onTextChange: (String) -> Unit,
     onWordClick: (Word) -> Unit
 ) {
-    LazyColumn(
+    TvLazyColumn(
         state = listState,
         modifier = modifier
     ) {
@@ -55,7 +53,7 @@ internal fun SongTextLazyColumn(
 
                 val needToScroll by isAutoPlayMode.collectAsState()
 
-                tailrec suspend fun autoScroll(listState: LazyListState) {
+                tailrec suspend fun autoScroll(listState: TvLazyListState) {
                     listState.scroll(MutatePriority.PreventUserInput) {
                         scrollBy(dY.toFloat())
                     }

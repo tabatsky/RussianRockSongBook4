@@ -5,6 +5,8 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
@@ -19,6 +21,7 @@ import jatx.russianrocksongbook.testing.MENU_LAZY_COLUMN
 
 @Composable
 internal fun SongListMenuBody(
+    navigationFocusRequester: FocusRequester,
     onCloseDrawer: () -> Unit
 ) {
     val localViewModel: LocalViewModel = viewModel()
@@ -32,10 +35,16 @@ internal fun SongListMenuBody(
         fontSizeDp.toSp()
     }
 
+    val modifier = Modifier
+        .testTag(MENU_LAZY_COLUMN)
+        .focusProperties {
+            left = navigationFocusRequester
+        }
+
     if (localViewModel.isTV) {
         val menuState = rememberTvLazyListState()
         TvLazyColumn(
-            modifier = Modifier.testTag(MENU_LAZY_COLUMN),
+            modifier = modifier,
             state = menuState
         ) {
             itemsIndexed(artistList) { index, artist ->
@@ -55,7 +64,7 @@ internal fun SongListMenuBody(
     } else {
         val menuState = rememberLazyListState()
         LazyColumn(
-            modifier = Modifier.testTag(MENU_LAZY_COLUMN),
+            modifier = modifier,
             state = menuState
         ) {
             itemsIndexed(artistList) { index, artist ->
