@@ -23,6 +23,4 @@ internal class LocalStateHolder @Inject constructor(
     val isLastOrientationPortrait = MutableStateFlow(true)
     val wasOrientationChanged = MutableStateFlow(false)
     val needScroll = MutableStateFlow(false)
-
-    val isDrawerOpened = MutableStateFlow(false)
 }
