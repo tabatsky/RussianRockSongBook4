@@ -12,10 +12,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.tv.foundation.lazy.list.TvLazyListState
 import jatx.clickablewordstextview.api.Word
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.localsongs.R
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
@@ -26,6 +29,7 @@ internal fun SongTextBody(
     text: String,
     isEditorMode: Boolean,
     listState: LazyListState,
+    tvListState: TvLazyListState,
     fontSizeTextSp: TextUnit,
     fontSizeTitleSp: TextUnit,
     theme: Theme,
@@ -35,6 +39,8 @@ internal fun SongTextBody(
     onTextChange: (String) -> Unit,
     onWordClick: (Word) -> Unit
 ) {
+    val localViewModel: LocalViewModel = viewModel()
+
     val paddingStart = if (W > H) 20.dp else 0.dp
 
     Column(
@@ -51,19 +57,36 @@ internal fun SongTextBody(
             color = theme.colorBg,
             thickness = dimensionResource(id = R.dimen.song_text_empty)
         )
-        SongTextLazyColumn(
-            song = song,
-            text = text,
-            isEditorMode = isEditorMode,
-            listState = listState,
-            fontSizeTextSp = fontSizeTextSp,
-            theme = theme,
-            modifier = Modifier
-                .weight(1.0f),
-            isAutoPlayMode = isAutoPlayMode,
-            dY = dY,
-            onTextChange = onTextChange,
-            onWordClick = onWordClick
-        )
+        if (localViewModel.isTV) {
+            SongTextTvLazyColumn(
+                song = song,
+                text = text,
+                isEditorMode = isEditorMode,
+                listState = tvListState,
+                fontSizeTextSp = fontSizeTextSp,
+                theme = theme,
+                modifier = Modifier
+                    .weight(1.0f),
+                isAutoPlayMode = isAutoPlayMode,
+                dY = dY,
+                onTextChange = onTextChange,
+                onWordClick = onWordClick
+            )
+        } else {
+            SongTextLazyColumn(
+                song = song,
+                text = text,
+                isEditorMode = isEditorMode,
+                listState = listState,
+                fontSizeTextSp = fontSizeTextSp,
+                theme = theme,
+                modifier = Modifier
+                    .weight(1.0f),
+                isAutoPlayMode = isAutoPlayMode,
+                dY = dY,
+                onTextChange = onTextChange,
+                onWordClick = onWordClick
+            )
+        }
     }
 }

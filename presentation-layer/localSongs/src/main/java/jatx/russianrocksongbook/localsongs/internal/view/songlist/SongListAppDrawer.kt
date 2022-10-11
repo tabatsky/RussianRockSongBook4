@@ -6,9 +6,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
@@ -24,9 +24,6 @@ internal fun SongListAppDrawer(
 
     val theme = localViewModel.settings.theme
 
-    val isDrawerOpened by localViewModel.isDrawerOpened.collectAsState()
-    val isActive = isDrawerOpened
-
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
@@ -40,17 +37,19 @@ internal fun SongListAppDrawer(
                     .background(theme.colorMain)
                     .fillMaxSize()
             ) {
+                val navigationFocusRequester = remember { FocusRequester() }
                 CommonTopAppBar(
                     title = stringResource(R.string.menu),
                     navigationIcon = {
                         SongListNavigationIcon(
                             onClick = onCloseDrawer,
                             testTag = "drawerButtonMenu",
-                            isActive = isActive
+                            focusRequester = navigationFocusRequester
                         )
                     }
                 )
                 SongListMenuBody(
+                    navigationFocusRequester = navigationFocusRequester,
                     onCloseDrawer = onCloseDrawer
                 )
             }
@@ -60,17 +59,19 @@ internal fun SongListAppDrawer(
                     .background(theme.colorMain)
                     .fillMaxSize()
             ) {
+                val navigationFocusRequester = remember { FocusRequester() }
                 CommonSideAppBar(
                     title = stringResource(R.string.menu),
                     navigationIcon = {
                         SongListNavigationIcon(
                             onClick = onCloseDrawer,
                             testTag = "drawerButtonMenu",
-                            isActive = isActive
+                            focusRequester = navigationFocusRequester
                         )
                     }
                 )
                 SongListMenuBody(
+                    navigationFocusRequester = navigationFocusRequester,
                     onCloseDrawer = onCloseDrawer
                 )
             }

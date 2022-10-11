@@ -9,6 +9,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
@@ -26,7 +28,9 @@ import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import kotlinx.coroutines.delay
 
 @Composable
-internal fun SongListBody() {
+internal fun SongListBody(
+    navigationFocusRequester: FocusRequester
+) {
     val localViewModel: LocalViewModel = viewModel()
 
     val theme = localViewModel.settings.theme
@@ -42,10 +46,15 @@ internal fun SongListBody() {
     if (songList.isNotEmpty()) {
         val wasOrientationChanged by localViewModel.wasOrientationChanged.collectAsState()
         val needScroll by localViewModel.needScroll.collectAsState()
+        val modifier = Modifier
+            .testTag(SONG_LIST_LAZY_COLUMN)
+            .focusProperties {
+                left = navigationFocusRequester
+            }
         if (localViewModel.isTV) {
             val listState = rememberTvLazyListState()
             TvLazyColumn(
-                modifier = Modifier.testTag(SONG_LIST_LAZY_COLUMN),
+                modifier = modifier,
                 state = listState
             ) {
                 itemsIndexed(songList) { index, song ->
@@ -77,7 +86,7 @@ internal fun SongListBody() {
         } else {
             val listState = rememberLazyListState()
             LazyColumn(
-                modifier = Modifier.testTag(SONG_LIST_LAZY_COLUMN),
+                modifier = modifier,
                 state = listState
             ) {
                 itemsIndexed(songList) { index, song ->

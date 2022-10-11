@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.tv.foundation.lazy.list.rememberTvLazyListState
 import jatx.clickablewordstextview.api.Word
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
@@ -38,12 +39,17 @@ internal fun SongTextScreenImpl() {
 
     val isAutoPlayMode = localViewModel.isAutoPlayMode
     val listState = rememberLazyListState()
+    val tvListState = rememberTvLazyListState()
     val coroutineScope = rememberCoroutineScope()
     val dY = (10 * localViewModel.settings.scrollSpeed).toInt()
 
     val onSongChanged: () -> Unit = {
         coroutineScope.launch {
             listState.scrollToItem(
+                index = 0,
+                scrollOffset = 0
+            )
+            tvListState.scrollToItem(
                 index = 0,
                 scrollOffset = 0
             )
@@ -125,6 +131,7 @@ internal fun SongTextScreenImpl() {
                     text = text,
                     isEditorMode = isEditorMode,
                     listState = listState,
+                    tvListState = tvListState,
                     fontSizeTextSp = fontSizeTextSp,
                     fontSizeTitleSp = fontSizeTitleSp,
                     theme = theme,
