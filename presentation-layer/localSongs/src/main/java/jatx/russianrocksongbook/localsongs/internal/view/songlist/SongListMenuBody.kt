@@ -47,7 +47,7 @@ internal fun SongListMenuBody(
             modifier = modifier,
             state = menuState
         ) {
-            itemsIndexed(artistList) { index, artist ->
+            itemsIndexed(artistList) { _, artist ->
                 ArtistItem(
                     artist = artist,
                     fontSizeSp = fontSizeSp,
@@ -67,7 +67,7 @@ internal fun SongListMenuBody(
             modifier = modifier,
             state = menuState
         ) {
-            itemsIndexed(artistList) { index, artist ->
+            itemsIndexed(artistList) { _, artist ->
                 ArtistItem(
                     artist = artist,
                     fontSizeSp = fontSizeSp,
