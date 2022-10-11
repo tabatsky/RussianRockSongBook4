@@ -17,8 +17,6 @@ import jatx.russianrocksongbook.viewmodel.contracts.SongTextViewModelContract
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -109,7 +107,7 @@ internal open class LocalViewModel @Inject constructor(
                 withContext(Dispatchers.IO) {
                     getSongsByArtistUseCase
                         .execute(artist)
-                        .onEach {
+                        .collect {
                             withContext(Dispatchers.Main) {
                                 val oldArtist = currentSongList.value.getOrNull(0)?.artist
                                     ?: "null"
@@ -119,7 +117,7 @@ internal open class LocalViewModel @Inject constructor(
                                     onSuccess()
                                 }
                             }
-                        }.collect()
+                        }
                 }
             }
     }
@@ -141,11 +139,11 @@ internal open class LocalViewModel @Inject constructor(
                 withContext(Dispatchers.IO) {
                     getSongByArtistAndPositionUseCase
                         .execute(currentArtist.value, position)
-                        .onEach {
+                        .collect {
                             withContext(Dispatchers.Main) {
                                 localStateHolder.currentSong.value = it
                             }
-                        }.collect()
+                        }
                 }
             }
     }
