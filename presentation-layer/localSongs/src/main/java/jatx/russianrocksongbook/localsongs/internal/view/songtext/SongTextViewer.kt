@@ -16,8 +16,6 @@ import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.testing.SONG_TEXT_VIEWER
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @Composable
@@ -42,9 +40,9 @@ internal fun SongTextViewer(
             view.textSize = fontSizeTextSp.value
             view.typeface = Typeface.MONOSPACE
             localViewModel.viewModelScope.launch {
-                view.wordFlow.onEach {
+                view.wordFlow.collect {
                     onWordClick(it)
-                }.collect()
+                }
             }
         }
     )
