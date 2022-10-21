@@ -76,11 +76,11 @@ internal class AddSongViewModel @Inject constructor(
     }
 
     fun addSongToRepo(artist: String, title: String, text: String) {
-        val song = Song().apply {
-            this.artist = artist
-            this.title = title
-            this.text = text
-        }
+        val song = Song(
+            artist = artist,
+            title = title,
+            text = text
+        )
         val actualSong = insertReplaceUserSongUseCase.execute(song)
         showToast(R.string.toast_song_added)
         showUploadOfferForSong(actualSong)

@@ -12,14 +12,14 @@ class AddSongFromCloudUseCase @Inject constructor(
     private val localRepository: LocalRepository
 ) {
     fun execute(cloudSong: CloudSong) {
-        val song = Song().apply {
-            artist = cloudSong.artist
-            title = cloudSong.visibleTitle
-            text = cloudSong.text
-            favorite = true
-            outOfTheBox = true
+        val song = Song(
+            artist = cloudSong.artist,
+            title = cloudSong.visibleTitle,
+            text = cloudSong.text,
+            favorite = true,
+            outOfTheBox = true,
             origTextMD5 = songTextHash(cloudSong.text)
-        }
+        )
 
         localRepository.addSongFromCloud(song)
     }

@@ -146,6 +146,10 @@ internal open class LocalViewModel @Inject constructor(
             }
     }
 
+    fun updateCurrentSong(song: Song) {
+        localStateHolder.currentSong.value = song
+    }
+
     fun nextSong() {
         if (currentSongCount.value > 0) {
             selectSong((currentSongPosition.value + 1) % currentSongCount.value)
@@ -176,9 +180,9 @@ internal open class LocalViewModel @Inject constructor(
 
     fun setFavorite(value: Boolean) {
         Log.e("set favorite", value.toString())
-        currentSong.value?.apply {
-            this.favorite = value
-            saveSong(this)
+        currentSong.value?.copy(favorite = value)?.let {
+            updateCurrentSong(it)
+            saveSong(it)
             if (!value && currentArtist.value == ARTIST_FAVORITE) {
                 localStateHolder.currentSongCount.value = getCountByArtistUseCase.execute(
                     ARTIST_FAVORITE

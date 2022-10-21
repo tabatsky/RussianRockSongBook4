@@ -95,9 +95,9 @@ internal fun SongTextScreenImpl() {
     }
 
     val onSaveClick = {
-        song?.apply {
-            this.text = text
-            localViewModel.saveSong(this)
+        song?.copy(text = text)?.let {
+            localViewModel.updateCurrentSong(it)
+            localViewModel.saveSong(it)
         }
         localViewModel.setEditorMode(false)
     }
