@@ -105,8 +105,8 @@ class LocalRepositoryImpl @Inject constructor(
     override fun setFavorite(favorite: Boolean, artist: String, title: String) = songDao.setFavorite(favorite, artist, title)
 
     override fun updateSong(song: Song) {
-        song.outOfTheBox = (songTextHash(song.text) == song.origTextMD5)
-        songDao.updateSong(song.toSongEntity())
+        val outOfTheBox = (songTextHash(song.text) == song.origTextMD5)
+        songDao.updateSong(song.copy(outOfTheBox = outOfTheBox).toSongEntity())
     }
 
     override fun deleteSongToTrash(song: Song) = songDao.setDeleted(true, song.artist, song.title)
@@ -124,10 +124,11 @@ class LocalRepositoryImpl @Inject constructor(
 
     override fun insertReplaceUserSongs(songs: List<Song>): List<Song> {
         val actualSongs = songs.map {
-            it.favorite = isSongFavorite(it.artist, it.title)
-            it.origTextMD5 = USER_SONG_MD5
-            it.outOfTheBox = false
-            it
+            it.copy(
+                favorite = isSongFavorite(it.artist, it.title),
+                origTextMD5 = USER_SONG_MD5,
+                outOfTheBox = false
+            )
         }
         songDao.insertReplaceSongs(actualSongs.map { it.toSongEntity() })
         return actualSongs
@@ -137,11 +138,13 @@ class LocalRepositoryImpl @Inject constructor(
         .insertIgnoreSongs(songs.map { it.toSongEntity() })
 
     override fun insertReplaceUserSong(song: Song): Song {
-        song.favorite = isSongFavorite(song.artist, song.title)
-        song.origTextMD5 = USER_SONG_MD5
-        song.outOfTheBox = false
-        songDao.insertReplaceSong(song.toSongEntity())
-        return song
+        val songCopy = song.copy(
+            favorite = isSongFavorite(song.artist, song.title),
+            origTextMD5 = USER_SONG_MD5,
+            outOfTheBox = false
+        )
+        songDao.insertReplaceSong(songCopy.toSongEntity())
+        return songCopy
     }
 
     override fun deleteWrongSong(artist: String, title: String) = songDao.deleteWrongSong(artist, title)

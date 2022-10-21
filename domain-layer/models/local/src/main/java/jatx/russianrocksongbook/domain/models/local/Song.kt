@@ -3,14 +3,14 @@ package jatx.russianrocksongbook.domain.models.local
 const val USER_SONG_MD5 = "USER"
 
 data class Song(
-    var id: Long? = null,
-    var artist: String = "",
-    var title: String = "",
-    var text: String = "",
-    var favorite: Boolean = false,
-    var deleted: Boolean = false,
-    var outOfTheBox: Boolean = true,
-    var origTextMD5: String = ""
+    val id: Long? = null,
+    val artist: String = "",
+    val title: String = "",
+    val text: String = "",
+    val favorite: Boolean = false,
+    val deleted: Boolean = false,
+    val outOfTheBox: Boolean = true,
+    val origTextMD5: String = ""
 ) {
 
     // for correct MutableStateFlow working
