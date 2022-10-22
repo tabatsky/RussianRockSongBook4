@@ -72,9 +72,8 @@ internal class CloudRepositoryTestImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override fun addWarning(warning: Warning): Single<ResultWithoutData> {
-        TODO("Not yet implemented")
-    }
+    override fun addWarning(warning: Warning): Single<ResultWithoutData> =
+        Single.just(ResultWithoutData(STATUS_SUCCESS, null))
 
     override fun searchSongs(
         searchFor: String,

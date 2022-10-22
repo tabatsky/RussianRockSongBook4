@@ -8,7 +8,7 @@
     <string name="dialog_song_to_trash_title">Вы уверены?</string>
     <string name="dialog_song_to_trash_message">Песня будет удалена из локальной базы данных</string>
 
-    <string name="song_is_out_of_the_box">Нельзя залить в облако: данный вариант аккордов поставляется вместе с приложением либо был сохранен из облака</string>
+    <string name="toast_song_is_out_of_the_box">Нельзя залить в облако: данный вариант аккордов поставляется вместе с приложением либо был сохранен из облака</string>
 
     <string name="dialog_voice_help">
         Примеры голосовых команд:

@@ -5,6 +5,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -13,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.commonview.R
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
+import jatx.russianrocksongbook.testing.TEXT_FIELD_WARNING_COMMENT
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
 
 @Composable
@@ -56,6 +58,7 @@ fun WarningDialog(
                             comment = it
                         },
                         modifier = Modifier
+                            .testTag(TEXT_FIELD_WARNING_COMMENT)
                             .height(200.dp),
                         label = {
                             Text(
@@ -93,7 +96,7 @@ fun WarningDialog(
                         onConfirm(comment)
                     } else {
                         commonViewModel
-                            .showToast(R.string.comment_cannot_be_empty)
+                            .showToast(R.string.toast_comment_cannot_be_empty)
                     }
                 }) {
                 Text(text = stringResource(id = R.string.ok))

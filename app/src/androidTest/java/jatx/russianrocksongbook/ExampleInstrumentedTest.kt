@@ -61,6 +61,8 @@ val TEXT_NEW = """
     Аккордами
 """.trimIndent()
 
+const val WARNING_COMMENT = "Комментарий"
+
 class HiltTestRunner : AndroidJUnitRunner() {
     override fun newApplication(
         cl: ClassLoader?,
@@ -478,9 +480,27 @@ class ExampleInstrumentedTest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "$stringConst.cancel is displayed")
         composeTestRule
+            .onNodeWithText(stringConst.ok)
+            .performClick()
+        Log.e("test $testNumber click", stringConst.ok)
+        composeTestRule
             .onNodeWithText(stringConst.cancel)
             .performClick()
         Log.e("test $testNumber click", stringConst.cancel)
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule
+            .onNodeWithTag(WARNING_BUTTON)
+            .performClick()
+        Log.e("test $testNumber click", WARNING_BUTTON)
+        composeTestRule.waitFor(timeout)
+        composeTestRule
+            .onNodeWithTag(TEXT_FIELD_WARNING_COMMENT)
+            .performTextReplacement(WARNING_COMMENT)
+        composeTestRule
+            .onNodeWithText(stringConst.ok)
+            .performClick()
+        Log.e("test $testNumber click", stringConst.ok)
         composeTestRule.waitFor(timeout)
 
         composeTestRule
@@ -516,12 +536,16 @@ class ExampleInstrumentedTest {
 
         if (toastMockIsWorkingFine) {
             composeTestRule.waitFor(timeout)
-            verifyOrder {
+            verifySequence {
                 Toast.makeText(any(), stringConst.toastAddedToFavorite, any())
                 toast.show()
                 Toast.makeText(any(), stringConst.toastRemovedFromFavorite, any())
                 toast.show()
                 Toast.makeText(any(), stringConst.toastSongIsOutOfTheBox, any())
+                toast.show()
+                Toast.makeText(any(), stringConst.toastCommentCannotBeEmpty, any())
+                toast.show()
+                Toast.makeText(any(), stringConst.toastSendWarningSuccess, any())
                 toast.show()
             }
             Log.e("test $testNumber toast", "toasts shown")
@@ -550,7 +574,7 @@ class ExampleInstrumentedTest {
                 .onNodeWithText(ARTIST_CLOUD_SONGS)
                 .performClick()
             Log.e("test $testNumber click", ARTIST_CLOUD_SONGS)
-            composeTestRule.waitFor(timeout)
+            composeTestRule.waitFor(1000L)
             composeTestRule
                 .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
                 .assertIsDisplayed()
@@ -848,6 +872,19 @@ class ExampleInstrumentedTest {
                 .onNodeWithText(list[2].visibleTitleWithRating)
                 .assertIsDisplayed()
             Log.e("test $testNumber assert", "${list[2].visibleTitleWithRating} is displayed")
+
+            if (toastMockIsWorkingFine) {
+                composeTestRule.waitFor(timeout)
+                verifySequence {
+                    Toast.makeText(any(), stringConst.toastChordsSavedAndAddedToFavorite, any())
+                    toast.show()
+                    Toast.makeText(any(), stringConst.toastVoteSuccess, any())
+                    toast.show()
+                    Toast.makeText(any(), stringConst.toastVoteSuccess, any())
+                    toast.show()
+                }
+                Log.e("test $testNumber toast", "toasts shown")
+            }
         }
     }
 
@@ -996,6 +1033,19 @@ class ExampleInstrumentedTest {
         val artists = localRepo.getArtistsAsList()
         assert(!artists.contains(ARTIST_NEW))
         Log.e("test $testNumber assert", "new artist deleted")
+
+        if (toastMockIsWorkingFine) {
+            composeTestRule.waitFor(timeout)
+            verifySequence {
+                Toast.makeText(any(), stringConst.toastSongAdded, any())
+                toast.show()
+                Toast.makeText(any(), stringConst.toastUploadToCloudSuccess, any())
+                toast.show()
+                Toast.makeText(any(), stringConst.toastDeletedToTrash, any())
+                toast.show()
+            }
+            Log.e("test $testNumber toast", "toasts shown")
+        }
     }
 
     @Test
@@ -1179,7 +1229,7 @@ class ExampleInstrumentedTest {
     }
 }
 
-const val timeout = 1200L
+const val timeout = 200L
 
 fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.waitFor(time: Long) {
     try {
@@ -1211,9 +1261,17 @@ class StringConst @Inject constructor(
     val saveAndRestart = context.getString(R.string.save_and_restart)
     val addArtistManual = context.getString(R.string.add_artist_manual)
     val choose = context.getString(R.string.choose)
-    val toastSongIsOutOfTheBox = context.getString(R.string.song_is_out_of_the_box)
+    val toastSongIsOutOfTheBox = context.getString(R.string.toast_song_is_out_of_the_box)
     val toastAddedToFavorite = context.getString(R.string.toast_added_to_favorite)
     val toastRemovedFromFavorite = context.getString(R.string.toast_removed_from_favorite)
+    val toastCommentCannotBeEmpty = context.getString(R.string.toast_comment_cannot_be_empty)
+    val toastSendWarningSuccess = context.getString(R.string.toast_send_warning_success)
+    val toastChordsSavedAndAddedToFavorite =
+        context.getString(R.string.toast_chords_saved_and_added_to_favorite)
+    val toastVoteSuccess = context.getString(R.string.toast_vote_success)
+    val toastSongAdded = context.getString(R.string.toast_song_added)
+    val toastUploadToCloudSuccess = context.getString(R.string.toast_upload_to_cloud_success)
+    val toastDeletedToTrash = context.getString(R.string.toast_deleted_to_trash)
 
     val themeList = context.resources.getStringArray(R.array.theme_list)
     val fontScaleList = context.resources.getStringArray(R.array.font_scale_list)
