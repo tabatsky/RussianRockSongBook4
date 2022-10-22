@@ -79,7 +79,7 @@ internal fun SongTextScreenImpl() {
     val onUploadClick = {
         if (isUploadButtonEnabled) {
             if (song!!.outOfTheBox) {
-                localViewModel.showToast(R.string.song_is_out_of_the_box)
+                localViewModel.showToast(R.string.toast_song_is_out_of_the_box)
             } else {
                 showUploadDialog = true
             }

@@ -16,7 +16,7 @@
         \nУточнить, что именно не так, можно в комментарии.
     </string>
     <string name="hint_comment">Комментарий</string>
-    <string name="comment_cannot_be_empty">Комментарий не должен быть пустым</string>
+    <string name="toast_comment_cannot_be_empty">Комментарий не должен быть пустым</string>
 
     <string name="dont_ask_more">Больше не спрашивать</string>
     <string name="question_search_at_yandex_music">Искать песню в Яндекс-Музыке?</string>
