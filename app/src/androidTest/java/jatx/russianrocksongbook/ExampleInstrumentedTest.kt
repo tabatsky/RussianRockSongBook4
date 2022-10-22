@@ -3,6 +3,7 @@ package jatx.russianrocksongbook
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
@@ -16,6 +17,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
+import io.mockk.*
+import io.mockk.junit4.MockKRule
 import jatx.russianrocksongbook.domain.repository.cloud.CloudRepository
 import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.domain.repository.local.*
@@ -78,6 +81,9 @@ class ExampleInstrumentedTest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
+    @get:Rule
+    val mockkRule = MockKRule(this)
+
     @Inject
     lateinit var localRepo: LocalRepository
 
@@ -93,6 +99,8 @@ class ExampleInstrumentedTest {
     @Before
     fun init() {
         TestingConfig.isTesting = true
+
+        mockkStatic(Toast::class)
 
         hiltRule.inject()
 
@@ -427,6 +435,10 @@ class ExampleInstrumentedTest {
             .onNodeWithTag(UPLOAD_BUTTON)
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "$UPLOAD_BUTTON is displayed")
+        composeTestRule
+            .onNodeWithTag(UPLOAD_BUTTON)
+            .performClick()
+        Log.e("test $testNumber click", UPLOAD_BUTTON)
 
         composeTestRule
             .onNodeWithTag(WARNING_BUTTON)
@@ -486,6 +498,14 @@ class ExampleInstrumentedTest {
             .onNodeWithText(stringConst.cancel)
             .performClick()
         Log.e("test $testNumber click", stringConst.cancel)
+
+        composeTestRule.waitFor(timeout)
+        verifyOrder {
+            Toast.makeText(any(), stringConst.toastAddedToFavorite, any())
+            Toast.makeText(any(), stringConst.toastRemovedFromFavorite, any())
+            Toast.makeText(any(), stringConst.toastSongIsOutOfTheBox, any())
+        }
+        Log.e("test $testNumber toast", "toasts shown")
     }
 
     @Test
@@ -1171,6 +1191,9 @@ class StringConst @Inject constructor(
     val saveAndRestart = context.getString(R.string.save_and_restart)
     val addArtistManual = context.getString(R.string.add_artist_manual)
     val choose = context.getString(R.string.choose)
+    val toastSongIsOutOfTheBox = context.getString(R.string.song_is_out_of_the_box)
+    val toastAddedToFavorite = context.getString(R.string.toast_added_to_favorite)
+    val toastRemovedFromFavorite = context.getString(R.string.toast_removed_from_favorite)
 
     val themeList = context.resources.getStringArray(R.array.theme_list)
     val fontScaleList = context.resources.getStringArray(R.array.font_scale_list)

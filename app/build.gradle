@@ -39,7 +39,13 @@ android {
     }
     packagingOptions {
         resources {
-            excludes += ['META-INF/AL2.0', 'META-INF/LGPL2.1']
+            excludes += [
+                    'META-INF/AL2.0',
+                    'META-INF/LGPL2.1',
+                    'MANIFEST.MF',
+                    'META-INF/LICENSE.md',
+                    'META-INF/LICENSE-notice.md'
+            ]
         }
     }
     namespace 'jatx.russianrocksongbook'
@@ -77,6 +83,9 @@ dependencies {
     api project(':core:testing')
 
     // testing
+
+    androidTestImplementation "io.mockk:mockk-android:1.13.2"
+    androidTestImplementation "io.mockk:mockk-agent:1.13.2"
 
     androidTestImplementation 'androidx.test:core:1.4.0'
     androidTestImplementation 'androidx.test:runner:1.4.0'
