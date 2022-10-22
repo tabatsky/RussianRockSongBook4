@@ -100,14 +100,14 @@ class ExampleInstrumentedTest {
     fun init() {
         TestingConfig.isTesting = true
 
-        mockkStatic(Toast::class)
-
         hiltRule.inject()
 
         settingsRepository.orientation = Orientation.RANDOM
         settingsRepository.defaultArtist = ARTIST_KINO
 
         composeTestRule.activityRule.scenario.recreate()
+
+        mockkStatic(Toast::class)
     }
 
     @Test
