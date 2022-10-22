@@ -15,16 +15,18 @@ import javax.inject.Singleton
 class VersionImpl @Inject constructor(
     @ApplicationContext context: Context
 ): Version {
-    override var appVersionName = "undefined"
-    override var appVersionCode = 0
+    override val appVersionName: String
+    override val appVersionCode: Int
 
     init {
-        try {
+        val info = try {
             val pInfo =
                 context.packageManager.getPackageInfo(context.packageName, 0)
-            appVersionName = pInfo.versionName
-            appVersionCode = pInfo.versionCode
+            pInfo.versionName to pInfo.versionCode
         } catch (e: PackageManager.NameNotFoundException) {
+            "undefined" to 0
         }
+        appVersionName = info.first
+        appVersionCode = info.second
     }
 }

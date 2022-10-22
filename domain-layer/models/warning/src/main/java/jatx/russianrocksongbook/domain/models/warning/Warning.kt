@@ -8,11 +8,11 @@ const val TYPE_OUT_OF_THE_BOX = "outOfTheBox"
 
 @Suppress("DataClassPrivateConstructor")
 data class Warning private constructor(
-    var warningType: String,
-    var artist: String,
-    var title: String,
-    var variant: Int,
-    var comment: String
+    val warningType: String,
+    val artist: String,
+    val title: String,
+    val variant: Int,
+    val comment: String
 ) {
 
     constructor(song: Song, comment: String): this(
