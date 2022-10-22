@@ -11,17 +11,11 @@ import jatx.russianrocksongbook.util.hashing.HashingUtil
 import javax.inject.Inject
 import javax.inject.Singleton
 
-const val USER_PREFS_NAME = "RussianRockUserPrefs"
-
-const val KEY_GOOGLE_ACCOUNT = "googleAccount"
-
 @Singleton
 @BoundTo(supertype = UserInfo::class, component = SingletonComponent::class)
 class UserInfoImpl @Inject constructor(
     @ApplicationContext private val context: Context)
     : UserInfo {
-
-    private val sp = context.getSharedPreferences(USER_PREFS_NAME, 0)
 
     override val deviceIdHash by lazy {
         @SuppressLint("HardwareIds")
@@ -32,12 +26,5 @@ class UserInfoImpl @Inject constructor(
         HashingUtil.hash(deviceId)
     }
 
-    override var googleAccount: String
-        get() = sp.getString(KEY_GOOGLE_ACCOUNT, null) ?: ""
-        @SuppressLint("ApplySharedPref")
-        set(value) {
-            val editor = sp.edit()
-            editor.putString(KEY_GOOGLE_ACCOUNT, value)
-            editor.commit()
-        }
+    override val googleAccount = ""
 }

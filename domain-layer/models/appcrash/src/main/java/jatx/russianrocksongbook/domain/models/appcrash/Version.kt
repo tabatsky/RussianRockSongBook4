@@ -1,6 +1,6 @@
 package jatx.russianrocksongbook.domain.models.appcrash
 
 interface Version {
-    var appVersionName: String
-    var appVersionCode: Int
+    val appVersionName: String
+    val appVersionCode: Int
 }
