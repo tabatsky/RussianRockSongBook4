@@ -28,6 +28,7 @@ import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
 import jatx.russianrocksongbook.donation.api.view.donationLabel
 import jatx.russianrocksongbook.donationhelper.api.DONATIONS
 import jatx.russianrocksongbook.testing.*
+import org.junit.After
 import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Rule
@@ -35,7 +36,6 @@ import org.junit.Test
 import org.junit.rules.TestRule
 import org.junit.runners.MethodSorters
 import javax.inject.Inject
-
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -96,6 +96,8 @@ class ExampleInstrumentedTest {
     @Inject
     lateinit var stringConst: StringConst
 
+    lateinit var toast: Toast
+
     @Before
     fun init() {
         TestingConfig.isTesting = true
@@ -108,6 +110,14 @@ class ExampleInstrumentedTest {
         composeTestRule.activityRule.scenario.recreate()
 
         mockkStatic(Toast::class)
+
+        toast = mockk(relaxed = true)
+        every { Toast.makeText(any(), any<CharSequence>(), any()) } returns toast
+    }
+
+    @After
+    fun clean() {
+        unmockkStatic(Toast::class)
     }
 
     @Test
@@ -502,8 +512,11 @@ class ExampleInstrumentedTest {
         composeTestRule.waitFor(timeout)
         verifyOrder {
             Toast.makeText(any(), stringConst.toastAddedToFavorite, any())
+            toast.show()
             Toast.makeText(any(), stringConst.toastRemovedFromFavorite, any())
+            toast.show()
             Toast.makeText(any(), stringConst.toastSongIsOutOfTheBox, any())
+            toast.show()
         }
         Log.e("test $testNumber toast", "toasts shown")
     }
