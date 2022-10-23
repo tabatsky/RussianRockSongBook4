@@ -34,6 +34,7 @@ internal class CloudRepositoryTestImpl @Inject constructor(
         addAll(list1)
         addAll(list2)
         addAll(list3)
+        reverse()
     }
 
     private var list: List<CloudSong> = arrayList
