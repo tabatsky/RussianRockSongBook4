@@ -716,7 +716,7 @@ class ExampleInstrumentedTest {
                 .onNodeWithText(ARTIST_CLOUD_SONGS)
                 .performClick()
             Log.e("test $testNumber click", ARTIST_CLOUD_SONGS)
-            composeTestRule.waitFor(timeout)
+            composeTestRule.waitFor(1000L)
 
             composeTestRule
                 .onNodeWithText(list[2].visibleTitleWithRating)
