@@ -6,7 +6,7 @@ import jatx.russianrocksongbook.domain.models.local.USER_SONG_MD5
 import jatx.russianrocksongbook.domain.models.cloud.UserInfo
 import jatx.russianrocksongbook.domain.models.local.songTextHash
 
-fun Song.toCloudSong(userInfo: UserInfo) = CloudSong(
+infix fun Song.withUserInfo(userInfo: UserInfo) = CloudSong(
     googleAccount = userInfo.googleAccount,
     deviceIdHash = userInfo.deviceIdHash,
     artist = artist,
