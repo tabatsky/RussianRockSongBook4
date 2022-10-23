@@ -6,7 +6,7 @@ import it.czerwinski.android.hilt.annotations.TestBoundTo
 import jatx.russianrocksongbook.domain.models.appcrash.AppCrash
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.models.cloud.UserInfo
-import jatx.russianrocksongbook.domain.models.converters.toCloudSong
+import jatx.russianrocksongbook.domain.models.converters.withUserInfo
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.models.warning.Warning
 import jatx.russianrocksongbook.domain.repository.cloud.CloudRepository
@@ -39,7 +39,7 @@ internal class CloudRepositoryTestImpl @Inject constructor(
 
     private var list: List<CloudSong> = arrayList
             .map {
-                it.toCloudSong(userInfo).copy(variant = 1)
+                (it withUserInfo userInfo).copy(variant = 1)
             }
 
     private val orderByLambda: (CloudSong, OrderBy) -> String = { cloudSong, orderBy ->
