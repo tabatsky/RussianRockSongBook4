@@ -18,6 +18,7 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import io.mockk.*
+import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit4.MockKRule
 import jatx.russianrocksongbook.domain.repository.cloud.CloudRepository
 import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
@@ -98,7 +99,9 @@ class ExampleInstrumentedTest {
     @Inject
     lateinit var stringConst: StringConst
 
+    @RelaxedMockK
     lateinit var toast: Toast
+
     var toastMockIsWorkingFine = false
 
     @Before
@@ -112,13 +115,26 @@ class ExampleInstrumentedTest {
 
         composeTestRule.activityRule.scenario.recreate()
 
-        try {
+        toastMockIsWorkingFine = try {
             mockkStatic(Toast::class)
-            toast = mockk(relaxed = true)
             every { Toast.makeText(any(), any<CharSequence>(), any()) } returns toast
-            toastMockIsWorkingFine = true
+            true
         } catch (e: MockKException) {
-            toastMockIsWorkingFine = false
+            false
+        }
+
+        val appWasUpdated = settingsRepository.appWasUpdated
+
+        while (settingsRepository.appWasUpdated) {
+            composeTestRule.waitFor(1000L)
+        }
+
+        if (appWasUpdated) {
+            composeTestRule
+                .onNodeWithText(stringConst.ok)
+                .performClick()
+            Log.e("before click", stringConst.ok)
+            composeTestRule.waitFor(timeout)
         }
     }
 
@@ -131,21 +147,7 @@ class ExampleInstrumentedTest {
     fun test1_menuAndSongList() {
         val testNumber = 1
 
-        val appWasUpdated = settingsRepository.appWasUpdated
-
-        while (settingsRepository.appWasUpdated) {
-            composeTestRule.waitFor(1000L)
-        }
-
         val artists = localRepo.getArtistsAsList()
-
-        if (appWasUpdated) {
-            composeTestRule
-                .onNodeWithText(stringConst.ok)
-                .performClick()
-            Log.e("test $testNumber click", stringConst.ok)
-            composeTestRule.waitFor(timeout)
-        }
 
         composeTestRule
             .onNodeWithTag(DRAWER_BUTTON_MAIN)
