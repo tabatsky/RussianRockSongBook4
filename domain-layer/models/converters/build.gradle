@@ -31,9 +31,10 @@ android {
 }
 
 dependencies {
-
     implementation "androidx.core:core-ktx:$core_ktx_version"
 
     api project(':domain-layer:models:cloud')
     api project(':domain-layer:models:local')
+
+    testImplementation 'junit:junit:4.13.2'
 }
