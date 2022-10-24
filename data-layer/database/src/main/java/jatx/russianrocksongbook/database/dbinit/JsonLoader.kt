@@ -3,7 +3,7 @@ package jatx.russianrocksongbook.database.dbinit
 import android.content.Context
 import com.google.gson.Gson
 import jatx.russianrocksongbook.database.R
-import jatx.russianrocksongbook.database.converters.toSong
+import jatx.russianrocksongbook.database.converters.asSongWithArtist
 import jatx.russianrocksongbook.database.gson.SongBookGson
 import jatx.russianrocksongbook.domain.models.local.Song
 import java.util.*
@@ -31,7 +31,7 @@ internal class JsonLoader(
 
                 val songbook = Gson().fromJson(jsonStr, SongBookGson::class.java)
 
-                songbook.songbook.map { it.toSong(artist) }
+                songbook.songbook.map { it asSongWithArtist artist }
             } ?: listOf()
         } catch (e: Throwable) {
             e.printStackTrace()
