@@ -4,7 +4,7 @@ import jatx.russianrocksongbook.database.gson.SongGson
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.models.local.songTextHash
 
-internal fun SongGson.toSong(artist: String) = Song(
+internal infix fun SongGson.asSongWithArtist(artist: String) = Song(
     artist = artist,
     title = title,
     text = text,
