@@ -59,4 +59,6 @@ dependencies {
     api project(':domain-layer:repository:local')
 
     api project(':net-library:SynchronousCallAdapterFactory')
+
+    testImplementation 'junit:junit:4.13.2'
 }
