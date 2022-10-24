@@ -23,7 +23,7 @@ class ExampleUnitTest {
             override val deviceIdHash = DEVICE_ID_HASH
             override val googleAccount = GOOGLE_ACCOUNT
         }
-        val cloudSong = song withUserInfo userInfo
+        val cloudSong = song asCloudSongWithUserInfo userInfo
 
         assertEquals(cloudSong.artist, ARTIST)
         assertEquals(cloudSong.title, TITLE)
