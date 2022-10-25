@@ -4,14 +4,14 @@ import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.networking.gson.CloudSongGson
 
 internal fun CloudSong.toCloudSongGson() = CloudSongGson(
-    songId,
-    googleAccount,
-    deviceIdHash,
-    artist,
-    title,
-    text,
-    textHash,
-    isUserSong,
-    variant,
-    raiting
+    songId = songId,
+    googleAccount = googleAccount,
+    deviceIdHash = deviceIdHash,
+    artist = artist,
+    title = title,
+    text = text,
+    textHash = textHash,
+    isUserSong = isUserSong,
+    variant = variant,
+    raiting = raiting
 )
