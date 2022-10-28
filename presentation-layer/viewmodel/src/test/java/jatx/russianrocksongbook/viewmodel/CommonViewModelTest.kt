@@ -5,6 +5,7 @@ import io.mockk.*
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit4.MockKRule
+import io.mockk.junit5.MockKExtension
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
 import jatx.russianrocksongbook.domain.usecase.local.GetArtistsUseCase
@@ -14,15 +15,15 @@ import jatx.russianrocksongbook.viewmodel.deps.Resources
 import jatx.russianrocksongbook.viewmodel.deps.TVDetector
 import jatx.russianrocksongbook.viewmodel.deps.Toasts
 import kotlinx.coroutines.flow.MutableStateFlow
-import org.junit.After
+import org.junit.*
 import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import org.junit.runners.MethodSorters
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
 
-class CommonViewModelTest {
+@MockKExtension.ConfirmVerification
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+open class CommonViewModelTest {
     @get:Rule
     val testViewModelScopeRule = TestViewModelScopeRule()
 
@@ -58,9 +59,18 @@ class CommonViewModelTest {
     private val artistsFlow = MutableStateFlow<List<String>>(listOf())
 
     @Before
-    fun init() {
+    fun initCommon() {
         mockkStatic(Log::class)
-        every { Log.e(any(), any()) } returns 0
+
+        val tagSlot = slot<String>()
+        val msgSlot = slot<String>()
+
+        every { Log.e(capture(tagSlot), capture(msgSlot)) } answers {
+            val tag = tagSlot.captured
+            val msg = msgSlot.captured
+            println("$tag : $msg")
+            0
+        }
 
         every { getArtistsUseCase.execute() } returns artistsFlow
 
@@ -73,7 +83,6 @@ class CommonViewModelTest {
             settingsRepository.defaultArtist
             tvDetector.isTV
         }
-        confirmVerified()
     }
 
     @After
@@ -82,7 +91,7 @@ class CommonViewModelTest {
     }
 
     @Test
-    fun selectScreen_SongList_isWorkingCorrect() {
+    fun test001_selectScreen_SongList_isWorkingCorrect() {
         val artists = listOf("Первый", "Второй", "Третий")
         commonViewModel.selectScreen(CurrentScreenVariant.SONG_LIST)
         artistsFlow.value = artists
@@ -95,11 +104,10 @@ class CommonViewModelTest {
             val onArtistSelected = callbacks.onArtistSelected
             onArtistSelected(defaultArtist)
         }
-        confirmVerified(getArtistsUseCase)
     }
 
     @Test
-    fun selectScreen_Favorite_isWorkingCorrect() {
+    fun test002_selectScreen_Favorite_isWorkingCorrect() {
         val artists = listOf("Первый", "Второй", "Третий")
         commonViewModel.selectScreen(CurrentScreenVariant.FAVORITE)
         artistsFlow.value = artists
@@ -111,11 +119,10 @@ class CommonViewModelTest {
             val onArtistSelected = callbacks.onArtistSelected
             onArtistSelected(ARTIST_FAVORITE)
         }
-        confirmVerified(getArtistsUseCase)
     }
 
     @Test
-    fun selectScreen_CloudSearch_isWorkingCorrect() {
+    fun test003_selectScreen_CloudSearch_isWorkingCorrect() {
         commonViewModel.selectScreen(CurrentScreenVariant.CLOUD_SEARCH, false)
         assertEquals(CurrentScreenVariant.CLOUD_SEARCH, commonViewModel.currentScreenVariant.value)
         commonViewModel.selectScreen(CurrentScreenVariant.CLOUD_SEARCH, true)
@@ -125,11 +132,10 @@ class CommonViewModelTest {
             onCloudSearchScreenSelected()
             Log.e("select screen", CurrentScreenVariant.CLOUD_SEARCH.toString())
         }
-        confirmVerified()
     }
 
     @Test
-    fun toasts_isWorkingCorrect() {
+    fun test004_toasts_isWorkingCorrect() {
         commonViewModel.showToast(137)
         commonViewModel.showToast("Hello, world!")
 
@@ -137,11 +143,10 @@ class CommonViewModelTest {
             toasts.showToast(137)
             toasts.showToast("Hello, world!")
         }
-        confirmVerified()
     }
 
     @Test
-    fun setAppWasUpdated_isWorkingCorrect() {
+    fun test005_setAppWasUpdated_isWorkingCorrect() {
         commonViewModel.setAppWasUpdated(true)
         assertEquals(commonViewModel.appWasUpdated.value, true)
         commonViewModel.setAppWasUpdated(false)
