@@ -11,7 +11,7 @@ const val TEXT = "some text"
 const val GOOGLE_ACCOUNT = "e.tabatsky@gmail.com"
 const val DEVICE_ID_HASH = "absals2341"
 
-class ExampleUnitTest {
+class ConvertersTest {
     @Test
     fun withUserInfo_isWorkingCorrect() {
         val song = Song(

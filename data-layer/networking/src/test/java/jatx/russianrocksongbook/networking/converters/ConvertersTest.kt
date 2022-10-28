@@ -1,14 +1,9 @@
-package jatx.russianrocksongbook.networking
+package jatx.russianrocksongbook.networking.converters
 
 import jatx.russianrocksongbook.domain.models.appcrash.AppCrash
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
-import jatx.russianrocksongbook.domain.models.local.songTextHash
 import jatx.russianrocksongbook.domain.models.warning.TYPE_CLOUD
 import jatx.russianrocksongbook.domain.models.warning.Warning
-import jatx.russianrocksongbook.networking.converters.toAppCrashJson
-import jatx.russianrocksongbook.networking.converters.toCloudSong
-import jatx.russianrocksongbook.networking.converters.toCloudSongGson
-import jatx.russianrocksongbook.networking.converters.toWarningGson
 import jatx.russianrocksongbook.networking.gson.CloudSongGson
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -36,7 +31,7 @@ const val DISLIKE_COUNT = 13
 
 const val COMMENT = "some comment"
 
-class ExampleUnitTest {
+class ConvertersTest {
     @Test
     fun appCrash_toAppCrashJson_isWorkingCorrect() {
         val appCrash = AppCrash(
@@ -48,7 +43,7 @@ class ExampleUnitTest {
             stackTrace = STACK_TRACE
         )
 
-        val appCrashGson = appCrash.toAppCrashJson()
+        val appCrashGson = appCrash.toAppCrashGson()
 
         assertEquals(appCrashGson.appVersionName, APP_VERSION_NAME)
         assertEquals(appCrashGson.appVersionCode, APP_VERSION_CODE)

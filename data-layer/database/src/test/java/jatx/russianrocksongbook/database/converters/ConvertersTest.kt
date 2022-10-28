@@ -1,8 +1,5 @@
-package jatx.russianrocksongbook.database
+package jatx.russianrocksongbook.database.converters
 
-import jatx.russianrocksongbook.database.converters.toSong
-import jatx.russianrocksongbook.database.converters.toSongEntity
-import jatx.russianrocksongbook.database.converters.asSongWithArtist
 import jatx.russianrocksongbook.database.db.entities.SongEntity
 import jatx.russianrocksongbook.database.gson.SongGson
 import jatx.russianrocksongbook.domain.models.local.Song
@@ -19,7 +16,7 @@ const val DELETED = false
 const val OUT_OF_THE_BOX = true
 val ORIG_TEXT_MD5 = songTextHash(TEXT)
 
-class ExampleUnitTest {
+class ConvertersTest {
     @Test
     fun song_toSongEntity_isWorkingCorrect() {
         val song = Song(
