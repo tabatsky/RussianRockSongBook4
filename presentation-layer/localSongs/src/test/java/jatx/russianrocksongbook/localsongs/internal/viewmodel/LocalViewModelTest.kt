@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit
 
 @MockKExtension.ConfirmVerification
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-class LocalViewModelTest: CommonViewModelTest() {
+open class LocalViewModelTest: CommonViewModelTest() {
     @RelaxedMockK
     lateinit var getSongsByArtistUseCase: GetSongsByArtistUseCase
 
@@ -48,9 +48,9 @@ class LocalViewModelTest: CommonViewModelTest() {
     @RelaxedMockK
     lateinit var addSongToCloudUseCase: AddSongToCloudUseCase
 
-    private lateinit var localViewModelDeps: LocalViewModelDeps
+    internal lateinit var localViewModelDeps: LocalViewModelDeps
 
-    private lateinit var localStateHolder: LocalStateHolder
+    internal lateinit var localStateHolder: LocalStateHolder
 
     private lateinit var localViewModel: LocalViewModel
 
@@ -88,7 +88,9 @@ class LocalViewModelTest: CommonViewModelTest() {
 
         onSuccess = mockk(relaxed = true)
 
-        every { getCountByArtistUseCase.execute(any()) } returns songsFlow.value.size
+        every { getCountByArtistUseCase.execute(any()) } answers {
+            songsFlow.value.size
+        }
         every { getSongsByArtistUseCase.execute(any()) } returns songsFlow
         every { getSongByArtistAndPositionUseCase.execute(any(), any()) } returns songFlow
         every { updateSongUseCase.execute(any()) } just runs
@@ -108,6 +110,7 @@ class LocalViewModelTest: CommonViewModelTest() {
 
         assertEquals("Кино", localViewModel.currentArtist.value)
         assertEquals(songList, localViewModel.currentSongList.value)
+        assertEquals(songList.size, localViewModel.currentSongCount.value)
 
         verifySequence {
             Log.e("select artist", "Кино")
@@ -204,7 +207,6 @@ class LocalViewModelTest: CommonViewModelTest() {
             Log.e("select artist", ARTIST_DONATION)
             Log.e("select screen", CurrentScreenVariant.DONATION.toString())
         }
-        confirmVerified()
     }
 
     @Test
@@ -221,6 +223,7 @@ class LocalViewModelTest: CommonViewModelTest() {
         assertEquals(13, localViewModel.scrollPosition.value)
         assertEquals(true, localViewModel.needScroll.value)
         assertEquals(songList[0], localViewModel.currentSong.value)
+        assertEquals(13, localViewModel.currentSongPosition.value)
 
         verifySequence {
             Log.e("select artist", "Кино")

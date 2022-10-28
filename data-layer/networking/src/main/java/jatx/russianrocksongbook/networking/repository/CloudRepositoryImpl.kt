@@ -13,7 +13,7 @@ import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithAddSongListResultData
 import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithCloudSongListData
 import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithoutData
-import jatx.russianrocksongbook.networking.converters.toAppCrashJson
+import jatx.russianrocksongbook.networking.converters.toAppCrashGson
 import jatx.russianrocksongbook.networking.converters.toCloudSongGson
 import jatx.russianrocksongbook.networking.converters.toWarningGson
 import jatx.russianrocksongbook.networking.gson.toResultWithCloudSongListData
@@ -30,7 +30,7 @@ class CloudRepositoryImpl @Inject constructor(
 
     override fun sendCrash(appCrash: AppCrash): Single<ResultWithoutData> {
         val params = mapOf(
-            "appCrashJSON" to Gson().toJson(appCrash.toAppCrashJson())
+            "appCrashJSON" to Gson().toJson(appCrash.toAppCrashGson())
         )
         return retrofitClient.songBookAPI.sendCrash(params)
     }

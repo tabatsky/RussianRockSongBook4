@@ -44,9 +44,9 @@ internal open class LocalViewModel @Inject constructor(
     private val addSongToCloudUseCase =
         localViewModelDeps.addSongToCloudUseCase
 
-    private val currentSongCount = localStateHolder.currentSongCount.asStateFlow()
+    val currentSongCount = localStateHolder.currentSongCount.asStateFlow()
     val currentSongList = localStateHolder.currentSongList.asStateFlow()
-    private val currentSongPosition = localStateHolder.currentSongPosition.asStateFlow()
+    val currentSongPosition = localStateHolder.currentSongPosition.asStateFlow()
     val currentSong = localStateHolder.currentSong.asStateFlow()
 
     val isEditorMode = localStateHolder.isEditorMode.asStateFlow()
