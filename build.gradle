@@ -6,7 +6,7 @@ buildscript {
         material_version = '1.7.0'
         coroutines_version = '1.6.4'
         compose_version = '1.3.0'
-        compose_compiler_version = '1.3.2'
+        compose_compiler_version = '1.3.1'
         tv_version = "1.0.0-alpha01"
         paging_compose_version = '1.0.0-alpha17'
         lifecycle_version = '2.5.1'
