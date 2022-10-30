@@ -42,6 +42,6 @@ dependencies {
     implementation "it.czerwinski.android.hilt:hilt-extensions:$hilt_extensions_version"
     kapt "it.czerwinski.android.hilt:hilt-processor:$hilt_extensions_version"
 
-    implementation 'com.obsez.android.lib.filechooser:filechooser:1.1.19'
+    implementation 'com.github.hedzr:android-file-chooser:v1.2.0-final'
     implementation "androidx.documentfile:documentfile:$document_file_version"
 }
