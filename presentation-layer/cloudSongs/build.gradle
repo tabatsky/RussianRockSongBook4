@@ -36,12 +36,6 @@ android {
         kotlinCompilerExtensionVersion compose_compiler_version
     }
     namespace 'jatx.russianrocksongbook.cloudsongs'
-
-    sourceSets {
-        test {
-            java.srcDir project(":presentation-layer:viewmodel").file("src/test/java")
-        }
-    }
 }
 
 dependencies {
@@ -75,11 +69,4 @@ dependencies {
     api project(':presentation-layer:commonview')
 
     api project(':core:testing')
-
-    testImplementation "junit:junit:$junit_version"
-    testImplementation "io.mockk:mockk:$mockk_version"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_test_version"
-    testImplementation "androidx.arch.core:core-testing:$core_testing_version"
-
-    testApi project(':presentation-layer:viewmodel')
 }
