@@ -36,5 +36,5 @@ dependencies {
     api project(':domain-layer:models:cloud')
     api project(':domain-layer:models:local')
 
-    testImplementation 'junit:junit:4.13.2'
+    testImplementation "junit:junit:$junit_version"
 }
