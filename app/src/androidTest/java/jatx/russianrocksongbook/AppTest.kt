@@ -77,7 +77,7 @@ class HiltTestRunner : AndroidJUnitRunner() {
 @ExperimentalTestApi
 @HiltAndroidTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-class ExampleInstrumentedTest {
+class AppTest {
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
