@@ -28,5 +28,6 @@ private val artistAliases = hashMapOf (
     "черный" to listOf("чёрный", "черный"),
     "animalджаз" to listOf("animalджаz", "animalджаз"),
     "вабанк" to listOf("вабанкъ", "вабанк"),
-    "пожертвование" to listOf("пожертвования", "пожертвование")
+    "пожертвование" to listOf("пожертвования", "пожертвование"),
+    "underwood" to listOf("ундервуд", "underwood")
 )
