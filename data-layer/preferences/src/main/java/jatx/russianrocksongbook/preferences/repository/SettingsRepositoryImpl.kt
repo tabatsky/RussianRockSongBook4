@@ -1,89 +1,172 @@
 package jatx.russianrocksongbook.preferences.repository
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.os.Build
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import it.czerwinski.android.hilt.annotations.BoundTo
 import jatx.russianrocksongbook.domain.repository.preferences.*
-import jatx.russianrocksongbook.preferences.storage.SettingsStorage
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.pow
+
+private const val PREFS_NAME = "RussianRockPreferences"
+
+private const val KEY_APK_VERSION = "apkVersion"
+private const val KEY_THEME = "theme_int"
+private const val KEY_ORIENTATION = "orientation_int"
+private const val KEY_DEFAULT_ARTIST = "defaultArtist"
+private const val KEY_FONT_SCALE = "fontScale"
+private const val KEY_LISTEN_TO_MUSIC_VARIANT = "listenToMusicVariant"
+private const val KEY_SCROLL_SPEED = "scrollSpeed"
+private const val KEY_YOUTUBE_MUSIC_DONT_ASK = "youtubeMusicDontAsk"
+private const val KEY_VK_MUSIC_DONT_ASK = "vkMusicDontAsk"
+private const val KEY_YANDEX_MUSIC_DONT_ASK = "yandexMusicDontAsk"
+private const val KEY_VOICE_HELP_DONT_ASK = "voiceHelpDontAsk"
 
 @Singleton
 @BoundTo(supertype = SettingsRepository::class, component = SingletonComponent::class)
 @SuppressLint("ApplySharedPref")
 class SettingsRepositoryImpl @Inject constructor(
-    private val storage: SettingsStorage
+    @ApplicationContext private val context: Context
 ): SettingsRepository {
+    private val sp = context.getSharedPreferences(PREFS_NAME, 0)
 
+    @Suppress("DEPRECATION")
     override val appWasUpdated: Boolean
-        get() = storage.appWasUpdated
+        get() {
+            return try {
+                val pInfo =
+                    context.packageManager.getPackageInfo(context.packageName, 0)
+                val newVersion = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    pInfo.longVersionCode.toInt()
+                } else {
+                    pInfo.versionCode
+                }
 
+                val oldVersion = sp.getInt(KEY_APK_VERSION, 0)
+
+                (newVersion > oldVersion)
+            } catch (e: Throwable) {
+                false
+            }
+        }
+
+
+    @Suppress("DEPRECATION")
     override fun confirmAppUpdate() {
-        storage.confirmAppUpdate()
+        try {
+            val pInfo =
+                context.packageManager.getPackageInfo(context.packageName, 0)
+            val newVersion = pInfo.versionCode
+
+            val editor = sp.edit()
+            editor.putInt(KEY_APK_VERSION, newVersion)
+            editor.commit()
+        } catch (e: Throwable) {
+        }
     }
 
     override var theme: Theme
-        get() = Theme.values()[storage.theme]
+        get() = Theme.values()[_theme]
         set(value) {
-            storage.theme = value.ordinal
+            _theme = value.ordinal
+        }
+
+    private var _theme: Int
+        get() = sp.getInt(KEY_THEME, 0)
+        set(value) {
+            val editor = sp.edit()
+            editor.putInt(KEY_THEME, value)
+            editor.commit()
         }
 
     override var orientation: Orientation
-        get() = Orientation.values()[storage.orientation]
+        get() = Orientation.values()[_orientation]
         set(value) {
-            storage.orientation = value.ordinal
+            _orientation = value.ordinal
+        }
+
+    private var _orientation: Int
+        get() = sp.getInt(KEY_ORIENTATION, 0)
+        set(value) {
+            val editor = sp.edit()
+            editor.putInt(KEY_ORIENTATION, value)
+            editor.commit()
         }
 
 
     override var listenToMusicVariant: ListenToMusicVariant
         get() = ListenToMusicVariant
-            .values()[storage.listenToMusicVariant]
+            .values()[_listenToMusicVariant]
         set(value) {
-            storage.listenToMusicVariant = value.ordinal
+            _listenToMusicVariant = value.ordinal
+        }
+
+    private var _listenToMusicVariant: Int
+        get() = sp.getInt(KEY_LISTEN_TO_MUSIC_VARIANT, 1)
+        set(value) {
+            val editor = sp.edit()
+            editor.putInt(KEY_LISTEN_TO_MUSIC_VARIANT, value)
+            editor.commit()
         }
 
     override var defaultArtist: String
-        get() = storage.defaultArtist ?: ARTIST_KINO
+        get() = sp.getString(KEY_DEFAULT_ARTIST, null) ?: ARTIST_KINO
         set(value) {
-            storage.defaultArtist = value
+            val editor = sp.edit()
+            editor.putString(KEY_DEFAULT_ARTIST, value)
+            editor.commit()
         }
 
     override var scrollSpeed: Float
-        get() = storage.scrollSpeed
+        get() = sp.getFloat(KEY_SCROLL_SPEED, 1.0f)
         set(value) {
-            storage.scrollSpeed = value
+            val editor = sp.edit()
+            editor.putFloat(KEY_SCROLL_SPEED, value)
+            editor.commit()
         }
 
     override var youtubeMusicDontAsk: Boolean
-        get() = storage.youtubeMusicDontAsk
+        get() = sp.getBoolean(KEY_YOUTUBE_MUSIC_DONT_ASK, false)
         set(value) {
-            storage.youtubeMusicDontAsk = value
+            val editor = sp.edit()
+            editor.putBoolean(KEY_YOUTUBE_MUSIC_DONT_ASK, value)
+            editor.commit()
         }
 
     override var vkMusicDontAsk: Boolean
-        get() = storage.vkMusicDontAsk
+        get() = sp.getBoolean(KEY_VK_MUSIC_DONT_ASK, false)
         set(value) {
-            storage.vkMusicDontAsk = value
+            val editor = sp.edit()
+            editor.putBoolean(KEY_VK_MUSIC_DONT_ASK, value)
+            editor.commit()
         }
 
     override var yandexMusicDontAsk: Boolean
-        get() = storage.yandexMusicDontAsk
+        get() = sp.getBoolean(KEY_YANDEX_MUSIC_DONT_ASK, false)
         set(value) {
-            storage.yandexMusicDontAsk = value
+            val editor = sp.edit()
+            editor.putBoolean(KEY_YANDEX_MUSIC_DONT_ASK, value)
+            editor.commit()
         }
 
     override var voiceHelpDontAsk: Boolean
-        get() = storage.voiceHelpDontAsk
+        get() = sp.getBoolean(KEY_VOICE_HELP_DONT_ASK, false)
         set(value) {
-            storage.voiceHelpDontAsk = value
+            val editor = sp.edit()
+            editor.putBoolean(KEY_VOICE_HELP_DONT_ASK, value)
+            editor.commit()
         }
 
 
     override var commonFontScale: Float
-        get() = storage.commonFontScale
+        get() = sp.getFloat(KEY_FONT_SCALE, 1.0f)
         set(value) {
-            storage.commonFontScale = value
+            val editor = sp.edit()
+            editor.putFloat(KEY_FONT_SCALE, value)
+            editor.commit()
         }
 
     override val commonFontScaleEnum: FontScale
