@@ -3,13 +3,15 @@ package jatx.russianrocksongbook.preferences.repository
 import android.content.Context
 import android.content.SharedPreferences
 import io.mockk.every
+import io.mockk.impl.annotations.RelaxedMockK
+import io.mockk.junit4.MockKRule
 import io.mockk.junit5.MockKExtension
-import io.mockk.mockk
 import io.mockk.verifySequence
 import jatx.russianrocksongbook.domain.repository.preferences.*
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.FixMethodOrder
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runners.MethodSorters
 import kotlin.math.pow
@@ -17,20 +19,22 @@ import kotlin.math.pow
 @MockKExtension.ConfirmVerification
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class SettingsRepositoryImplTest {
+    @get:Rule
+    val mockkRule = MockKRule(this)
+
+    @RelaxedMockK
     lateinit var context: Context
 
+    @RelaxedMockK
     lateinit var sp: SharedPreferences
 
+    @RelaxedMockK
     lateinit var editor: SharedPreferences.Editor
 
     lateinit var settingsRepository: SettingsRepository
 
     @Before
     fun init() {
-        context = mockk(relaxed = true)
-        sp = mockk(relaxed = true)
-        editor = mockk(relaxed = true)
-
         every { context.getSharedPreferences(any(), any()) } returns sp
         every { sp.edit() } returns editor
 

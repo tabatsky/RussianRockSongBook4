@@ -2,8 +2,9 @@ package jatx.russianrocksongbook.networking.repository
 
 import com.google.gson.Gson
 import io.mockk.every
+import io.mockk.impl.annotations.RelaxedMockK
+import io.mockk.junit4.MockKRule
 import io.mockk.junit5.MockKExtension
-import io.mockk.mockk
 import io.mockk.verifySequence
 import io.reactivex.Single
 import jatx.russianrocksongbook.domain.models.appcrash.AppCrash
@@ -22,14 +23,20 @@ import jatx.russianrocksongbook.networking.songbookapi.SongBookAPI
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.FixMethodOrder
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runners.MethodSorters
 
 @MockKExtension.ConfirmVerification
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class CloudRepositoryImplTest {
-    private lateinit var retrofitClient: RetrofitClient
-    private lateinit var songBookAPI: SongBookAPI
+    @get:Rule
+    val mockkRule = MockKRule(this)
+
+    @RelaxedMockK
+    lateinit var retrofitClient: RetrofitClient
+    @RelaxedMockK
+    internal lateinit var songBookAPI: SongBookAPI
     private lateinit var cloudRepository: CloudRepository
 
     private val appCrash = AppCrash(
@@ -60,8 +67,6 @@ class CloudRepositoryImplTest {
 
     @Before
     fun init() {
-        retrofitClient = mockk(relaxed = true)
-        songBookAPI = mockk(relaxed = true)
         every { retrofitClient.songBookAPI } returns songBookAPI
         cloudRepository = CloudRepositoryImpl(retrofitClient)
     }
