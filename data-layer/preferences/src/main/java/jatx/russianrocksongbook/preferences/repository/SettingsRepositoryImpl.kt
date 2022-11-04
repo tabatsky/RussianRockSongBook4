@@ -11,19 +11,19 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.pow
 
-private const val PREFS_NAME = "RussianRockPreferences"
+internal const val PREFS_NAME = "RussianRockPreferences"
 
-private const val KEY_APK_VERSION = "apkVersion"
-private const val KEY_THEME = "theme_int"
-private const val KEY_ORIENTATION = "orientation_int"
-private const val KEY_DEFAULT_ARTIST = "defaultArtist"
-private const val KEY_FONT_SCALE = "fontScale"
-private const val KEY_LISTEN_TO_MUSIC_VARIANT = "listenToMusicVariant"
-private const val KEY_SCROLL_SPEED = "scrollSpeed"
-private const val KEY_YOUTUBE_MUSIC_DONT_ASK = "youtubeMusicDontAsk"
-private const val KEY_VK_MUSIC_DONT_ASK = "vkMusicDontAsk"
-private const val KEY_YANDEX_MUSIC_DONT_ASK = "yandexMusicDontAsk"
-private const val KEY_VOICE_HELP_DONT_ASK = "voiceHelpDontAsk"
+internal const val KEY_APK_VERSION = "apkVersion"
+internal const val KEY_THEME = "theme_int"
+internal const val KEY_ORIENTATION = "orientation_int"
+internal const val KEY_DEFAULT_ARTIST = "defaultArtist"
+internal const val KEY_FONT_SCALE = "fontScale"
+internal const val KEY_LISTEN_TO_MUSIC_VARIANT = "listenToMusicVariant"
+internal const val KEY_SCROLL_SPEED = "scrollSpeed"
+internal const val KEY_YOUTUBE_MUSIC_DONT_ASK = "youtubeMusicDontAsk"
+internal const val KEY_VK_MUSIC_DONT_ASK = "vkMusicDontAsk"
+internal const val KEY_YANDEX_MUSIC_DONT_ASK = "yandexMusicDontAsk"
+internal const val KEY_VOICE_HELP_DONT_ASK = "voiceHelpDontAsk"
 
 @Singleton
 @BoundTo(supertype = SettingsRepository::class, component = SingletonComponent::class)
@@ -170,7 +170,9 @@ class SettingsRepositoryImpl @Inject constructor(
         }
 
     override val commonFontScaleEnum: FontScale
-        get() = FontScale.values().find { it.scale == commonFontScale } ?: FontScale.M
+        get() = commonFontScale.let { scale ->
+            FontScale.values().find { it.scale == scale }
+        } ?: FontScale.M
 
     override fun getSpecificFontScale(scalePow: ScalePow) = commonFontScale.pow(scalePow.pow)
 }
