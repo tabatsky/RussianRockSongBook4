@@ -51,6 +51,7 @@ internal val artistMap = mapOf(
     "The Matrixx" to R.raw.samoiloff,
     "Znaki" to R.raw.znaki,
     "Агата Кристи" to R.raw.agata,
+    "Адаптация" to R.raw.adaptacia,
     "Аквариум" to R.raw.akvarium,
     "Алиса" to R.raw.alisa,
     "АнимациЯ" to R.raw.animatsya,
@@ -123,7 +124,8 @@ internal val artistMap = mapOf(
     "Чиж и Ко" to R.raw.chizh,
     "Эпидемия" to R.raw.epidemia,
     "Юта" to R.raw.uta,
-    "Янка Дягилева" to R.raw.yanka
+    "Янка Дягилева" to R.raw.yanka,
+    "Ясвена" to R.raw.yasvena
 )
 
 private val artists = artistMap.keys.toTypedArray()
