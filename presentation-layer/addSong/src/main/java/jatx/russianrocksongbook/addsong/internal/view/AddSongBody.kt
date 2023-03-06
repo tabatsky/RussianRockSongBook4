@@ -49,6 +49,7 @@ internal fun AddSongBody() {
             onValueChange = {
                 artist = it
             },
+            maxLines = 1,
             modifier = Modifier
                 .testTag(TEXT_FIELD_ARTIST)
                 .fillMaxWidth()
@@ -79,6 +80,7 @@ internal fun AddSongBody() {
             onValueChange = {
                 title = it
             },
+            maxLines = 1,
             modifier = Modifier
                 .testTag(TEXT_FIELD_TITLE)
                 .fillMaxWidth()
@@ -152,7 +154,7 @@ internal fun AddSongBody() {
                     addSongViewModel.showToast(R.string.toast_fill_all_fields)
                 } else {
                     addSongViewModel.addSongToRepo(
-                        artist, title, text
+                        artist.trim(), title.trim(), text
                     )
                 }
             }) {
