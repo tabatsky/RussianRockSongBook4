@@ -47,9 +47,8 @@ internal fun AddSongBody() {
         TextField(
             value = artist,
             onValueChange = {
-                artist = it
+                artist = it.replace("\n", " ")
             },
-            maxLines = 1,
             modifier = Modifier
                 .testTag(TEXT_FIELD_ARTIST)
                 .fillMaxWidth()
@@ -78,9 +77,8 @@ internal fun AddSongBody() {
         TextField(
             value = title,
             onValueChange = {
-                title = it
+                title = it.replace("\n", " ")
             },
-            maxLines = 1,
             modifier = Modifier
                 .testTag(TEXT_FIELD_TITLE)
                 .fillMaxWidth()
