@@ -34,18 +34,18 @@ android {
 
 dependencies {
 
-    implementation "androidx.core:core-ktx:$core_ktx_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation commonDeps.coreKtx
+    implementation commonDeps.coroutines
+    implementation commonDeps.lifecycleRuntime
+    implementation commonDeps.lifecycleViewmodel
 
-    implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-compiler:$hilt_version"
-    implementation "it.czerwinski.android.hilt:hilt-extensions:$hilt_extensions_version"
-    kapt "it.czerwinski.android.hilt:hilt-processor:$hilt_extensions_version"
+    implementation diDeps.hiltAndroid
+    kapt diDeps.hiltCompiler
+    implementation diDeps.hiltExtensions
+    kapt diDeps.hiltExtensionsProcessor
 
-    implementation "androidx.documentfile:documentfile:$document_file_version"
-    implementation "org.apache.commons:commons-lang3:$commons_lang_version"
+    implementation commonDeps.documentFile
+    implementation commonDeps.commonsLang
 
     api project(':domain-layer:usecase:local')
     api project(':data-layer:database')
@@ -53,8 +53,8 @@ dependencies {
     api project(':data-layer:filesystem')
     api project(':data-layer:preferences')
 
-    testImplementation "junit:junit:$junit_version"
-    testImplementation "io.mockk:mockk:$mockk_version"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_test_version"
-    testImplementation "androidx.arch.core:core-testing:$core_testing_version"
+    testImplementation testDeps.junit
+    testImplementation testDeps.mockk
+    testImplementation testDeps.coroutinesTest
+    testImplementation testDeps.coreTesting
 }

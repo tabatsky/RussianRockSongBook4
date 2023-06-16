@@ -33,22 +33,22 @@ android {
 }
 
 dependencies {
-    implementation "androidx.core:core-ktx:$core_ktx_version"
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
+    implementation commonDeps.coreKtx
+    implementation networkDeps.retrofit
+    implementation networkDeps.retrofitConverterGson
+    implementation networkDeps.retrofitAdapterRxJava
 
-    implementation "com.google.dagger:hilt-android:$hilt_version"
-    implementation "com.google.dagger:hilt-android-testing:$hilt_version"
-    kapt "com.google.dagger:hilt-compiler:$hilt_version"
-    implementation "it.czerwinski.android.hilt:hilt-extensions:$hilt_extensions_version"
-    kapt "it.czerwinski.android.hilt:hilt-processor:$hilt_extensions_version"
+    implementation diDeps.hiltAndroid
+    implementation testDeps.hiltAndroidTesting
+    kapt diDeps.hiltCompiler
+    implementation diDeps.hiltExtensions
+    kapt diDeps.hiltExtensionsProcessor
 
-    implementation "androidx.documentfile:documentfile:$document_file_version"
-    implementation "org.apache.commons:commons-lang3:$commons_lang_version"
+    implementation commonDeps.documentFile
+    implementation commonDeps.commonsLang
 
-    api "io.reactivex.rxjava2:rxjava:$rxjava_version"
-    api "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
+    api rxDeps.rxJava
+    api rxDeps.rxAndroid
 
     api project(':domain-layer:models:appcrash')
     api project(':domain-layer:models:cloud')
@@ -60,9 +60,9 @@ dependencies {
 
     api project(':net-library:SynchronousCallAdapterFactory')
 
-    testImplementation "junit:junit:$junit_version"
-    testImplementation "io.mockk:mockk:$mockk_version"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_test_version"
-    testImplementation "androidx.arch.core:core-testing:$core_testing_version"
+    testImplementation testDeps.junit
+    testImplementation testDeps.mockk
+    testImplementation testDeps.coroutinesTest
+    testImplementation testDeps.coreTesting
 
 }
