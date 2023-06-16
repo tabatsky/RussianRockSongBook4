@@ -33,30 +33,30 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion compose_compiler_version
+        versions.composeCompiler
     }
     namespace 'jatx.russianrocksongbook.cloudsongs'
 }
 
 dependencies {
 
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
-    implementation "androidx.core:core-ktx:$core_ktx_version"
-    implementation "com.google.android.material:material:$material_version"
-    implementation "androidx.activity:activity-compose:$activity_compose_version"
-    implementation "androidx.compose.ui:ui:$compose_version"
-    implementation "androidx.compose.material:material:$compose_version"
-    implementation "androidx.compose.ui:ui-tooling:$compose_version"
-    implementation "androidx.navigation:navigation-compose:$navigation_compose_version"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation commonDeps.coroutines
+    implementation commonDeps.coreKtx
+    implementation commonDeps.material
+    implementation commonDeps.activityCompose
+    implementation commonDeps.composeUi
+    implementation commonDeps.composeMaterial
+    implementation commonDeps.composeUiTooling
+    implementation commonDeps.navigationCompose
+    implementation commonDeps.lifecycleRuntime
+    implementation commonDeps.lifecycleViewmodel
 
-    implementation "androidx.paging:paging-compose:$paging_compose_version"
+    implementation commonDeps.pagingCompose
 
-    implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-compiler:$hilt_version"
-    implementation "it.czerwinski.android.hilt:hilt-extensions:$hilt_extensions_version"
-    kapt "it.czerwinski.android.hilt:hilt-processor:$hilt_extensions_version"
+    implementation diDeps.hiltAndroid
+    kapt diDeps.hiltCompiler
+    implementation diDeps.hiltExtensions
+    kapt diDeps.hiltExtensionsProcessor
 
     api project(':ui-library:clickablewordstextview')
 

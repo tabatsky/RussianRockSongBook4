@@ -22,9 +22,9 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
-    implementation "androidx.appcompat:appcompat:$appcompat_version"
-    implementation "androidx.core:core-ktx:$core_ktx_version"
+    implementation commonDeps.coroutines
+    implementation commonDeps.appCompat
+    implementation commonDeps.coreKtx
 
-    testImplementation "junit:junit:$junit_version"
+    testImplementation testDeps.junit
 }

@@ -33,15 +33,15 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
-    implementation "androidx.core:core-ktx:$core_ktx_version"
-    implementation "androidx.appcompat:appcompat:$appcompat_version"
+    implementation commonDeps.coroutines
+    implementation commonDeps.coreKtx
+    implementation commonDeps.appCompat
 
-    implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-compiler:$hilt_version"
-    implementation "it.czerwinski.android.hilt:hilt-extensions:$hilt_extensions_version"
-    kapt "it.czerwinski.android.hilt:hilt-processor:$hilt_extensions_version"
+    implementation diDeps.hiltAndroid
+    kapt diDeps.hiltCompiler
+    implementation diDeps.hiltExtensions
+    kapt diDeps.hiltExtensionsProcessor
 
     implementation 'com.github.hedzr:android-file-chooser:v1.2.0-final'
-    implementation "androidx.documentfile:documentfile:$document_file_version"
+    implementation commonDeps.documentFile
 }

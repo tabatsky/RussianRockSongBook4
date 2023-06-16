@@ -31,5 +31,5 @@ android {
 }
 
 dependencies {
-    implementation "androidx.core:core-ktx:$core_ktx_version"
+    implementation commonDeps.coreKtx
 }
