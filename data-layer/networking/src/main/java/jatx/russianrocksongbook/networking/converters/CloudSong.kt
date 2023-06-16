@@ -1,9 +1,9 @@
 package jatx.russianrocksongbook.networking.converters
 
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
-import jatx.russianrocksongbook.networking.gson.CloudSongGson
+import jatx.russianrocksongbook.networking.apimodels.CloudSongApiModel
 
-internal fun CloudSong.toCloudSongGson() = CloudSongGson(
+internal fun CloudSong.toCloudSongApiModel() = CloudSongApiModel(
     songId = songId,
     googleAccount = googleAccount,
     deviceIdHash = deviceIdHash,

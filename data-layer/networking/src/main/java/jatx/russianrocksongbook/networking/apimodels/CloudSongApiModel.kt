@@ -1,6 +1,6 @@
-package jatx.russianrocksongbook.networking.gson
+package jatx.russianrocksongbook.networking.apimodels
 
-internal data class CloudSongGson(
+internal data class CloudSongApiModel(
     val songId: Int = -1,
     val googleAccount: String = "",
     val deviceIdHash: String = "",

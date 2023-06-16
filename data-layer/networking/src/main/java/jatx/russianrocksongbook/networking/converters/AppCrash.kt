@@ -1,9 +1,9 @@
 package jatx.russianrocksongbook.networking.converters
 
 import jatx.russianrocksongbook.domain.models.appcrash.AppCrash
-import jatx.russianrocksongbook.networking.gson.AppCrashGson
+import jatx.russianrocksongbook.networking.apimodels.AppCrashApiModel
 
-internal fun AppCrash.toAppCrashGson() = AppCrashGson(
+internal fun AppCrash.toAppCrashApiModel() = AppCrashApiModel(
     appVersionName = appVersionName,
     appVersionCode = appVersionCode,
     androidVersion = androidVersion,

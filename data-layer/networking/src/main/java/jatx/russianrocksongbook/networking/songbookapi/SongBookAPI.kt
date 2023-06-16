@@ -4,7 +4,7 @@ import io.reactivex.Single
 import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithAddSongListResultData
 import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithNumber
 import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithoutData
-import jatx.russianrocksongbook.networking.gson.ResultWithCloudSongGsonListData
+import jatx.russianrocksongbook.networking.apimodels.ResultWithCloudSongApiModelListData
 import retrofit2.http.*
 
 const val BASE_URL = "http://tabatsky.ru/SongBook2/api/"
@@ -30,7 +30,7 @@ internal interface SongBookAPI {
     fun searchSongs(
         @Path("searchFor") searchFor: String,
         @Path("orderBy") orderBy: String
-    ): Single<ResultWithCloudSongGsonListData>
+    ): Single<ResultWithCloudSongApiModelListData>
 
     @GET("songs/vote/{googleAccount}/{deviceIdHash}/{artist}/{title}/{variant}/{voteValue}")
     fun vote(
@@ -62,5 +62,5 @@ internal interface SongBookAPI {
         @Path("searchFor") searchFor: String,
         @Path("orderBy") orderBy: String,
         @Path("page") page: Int
-    ): ResultWithCloudSongGsonListData
+    ): ResultWithCloudSongApiModelListData
 }

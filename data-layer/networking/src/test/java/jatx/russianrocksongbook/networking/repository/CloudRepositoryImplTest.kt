@@ -14,10 +14,10 @@ import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.models.warning.Warning
 import jatx.russianrocksongbook.domain.repository.cloud.CloudRepository
 import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
-import jatx.russianrocksongbook.networking.converters.toAppCrashGson
-import jatx.russianrocksongbook.networking.converters.toCloudSongGson
-import jatx.russianrocksongbook.networking.converters.toWarningGson
-import jatx.russianrocksongbook.networking.gson.ResultWithCloudSongGsonListData
+import jatx.russianrocksongbook.networking.converters.toAppCrashApiModel
+import jatx.russianrocksongbook.networking.converters.toCloudSongApiModel
+import jatx.russianrocksongbook.networking.converters.toWarningApiModel
+import jatx.russianrocksongbook.networking.apimodels.ResultWithCloudSongApiModelListData
 import jatx.russianrocksongbook.networking.songbookapi.RetrofitClient
 import jatx.russianrocksongbook.networking.songbookapi.SongBookAPI
 import org.junit.Assert.assertEquals
@@ -76,7 +76,7 @@ class CloudRepositoryImplTest {
         cloudRepository.sendCrash(appCrash)
 
         val params = mapOf(
-            "appCrashJSON" to Gson().toJson(appCrash.toAppCrashGson())
+            "appCrashJSON" to Gson().toJson(appCrash.toAppCrashApiModel())
         )
 
         verifySequence {
@@ -89,7 +89,7 @@ class CloudRepositoryImplTest {
         cloudRepository.addCloudSong(cloudSong)
 
         val params = mapOf(
-            "cloudSongJSON" to Gson().toJson(cloudSong.toCloudSongGson())
+            "cloudSongJSON" to Gson().toJson(cloudSong.toCloudSongApiModel())
         )
 
         verifySequence {
@@ -101,7 +101,7 @@ class CloudRepositoryImplTest {
     fun test003_addCloudSongList_isWorkingCorrect() {
         cloudRepository.addCloudSongList(cloudSongList)
 
-        val cloudSongsGson = cloudSongList.map { it.toCloudSongGson() }
+        val cloudSongsGson = cloudSongList.map { it.toCloudSongApiModel() }
         val params = mapOf(
             "cloudSongListJSON" to Gson().toJson(cloudSongsGson)
         )
@@ -121,7 +121,7 @@ class CloudRepositoryImplTest {
         cloudRepository.addWarning(warning)
 
         val params = mapOf(
-            "warningJSON" to Gson().toJson(warning.toWarningGson())
+            "warningJSON" to Gson().toJson(warning.toWarningApiModel())
         )
 
         verifySequence {
@@ -133,10 +133,10 @@ class CloudRepositoryImplTest {
     fun test005_searchSongs_isWorkingCorrect() {
         every { songBookAPI.searchSongs(any(), any()) } returns
                 Single.just(
-                    ResultWithCloudSongGsonListData(
+                    ResultWithCloudSongApiModelListData(
                         status = "success",
                         message = null,
-                        data = cloudSongList.map { it.toCloudSongGson() }
+                        data = cloudSongList.map { it.toCloudSongApiModel() }
                     )
                 )
 
@@ -183,10 +183,10 @@ class CloudRepositoryImplTest {
     @Test
     fun test008_pagedSearch_isWorkingCorrect() {
         every { songBookAPI.pagedSearch(any(), any(), any()) } returns
-                ResultWithCloudSongGsonListData(
+                ResultWithCloudSongApiModelListData(
                     status = "success",
                     message = null,
-                    data = cloudSongList.map { it.toCloudSongGson() }
+                    data = cloudSongList.map { it.toCloudSongApiModel() }
                 )
 
         val result = cloudRepository.pagedSearch("Сплин", OrderBy.BY_ARTIST, 3)
@@ -202,10 +202,10 @@ class CloudRepositoryImplTest {
     fun test009_search_isWorkingCorrect() {
         every { songBookAPI.searchSongs(any(), any()) } returns
                 Single.just(
-                    ResultWithCloudSongGsonListData(
+                    ResultWithCloudSongApiModelListData(
                         status = "success",
                         message = null,
-                        data = cloudSongList.map { it.toCloudSongGson() }
+                        data = cloudSongList.map { it.toCloudSongApiModel() }
                     )
                 )
 
