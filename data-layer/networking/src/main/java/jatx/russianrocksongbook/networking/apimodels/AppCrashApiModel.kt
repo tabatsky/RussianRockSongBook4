@@ -1,6 +1,6 @@
-package jatx.russianrocksongbook.networking.gson
+package jatx.russianrocksongbook.networking.apimodels
 
-internal data class AppCrashGson(
+internal data class AppCrashApiModel(
     val appVersionName: String,
     val appVersionCode: Int,
     val androidVersion: String,

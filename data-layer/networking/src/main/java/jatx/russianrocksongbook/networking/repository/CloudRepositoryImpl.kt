@@ -13,10 +13,10 @@ import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithAddSongListResultData
 import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithCloudSongListData
 import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithoutData
-import jatx.russianrocksongbook.networking.converters.toAppCrashGson
-import jatx.russianrocksongbook.networking.converters.toCloudSongGson
-import jatx.russianrocksongbook.networking.converters.toWarningGson
-import jatx.russianrocksongbook.networking.gson.toResultWithCloudSongListData
+import jatx.russianrocksongbook.networking.converters.toAppCrashApiModel
+import jatx.russianrocksongbook.networking.converters.toCloudSongApiModel
+import jatx.russianrocksongbook.networking.converters.toWarningApiModel
+import jatx.russianrocksongbook.networking.apimodels.toResultWithCloudSongListData
 import jatx.russianrocksongbook.networking.songbookapi.RetrofitClient
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,20 +30,20 @@ class CloudRepositoryImpl @Inject constructor(
 
     override fun sendCrash(appCrash: AppCrash): Single<ResultWithoutData> {
         val params = mapOf(
-            "appCrashJSON" to Gson().toJson(appCrash.toAppCrashGson())
+            "appCrashJSON" to Gson().toJson(appCrash.toAppCrashApiModel())
         )
         return retrofitClient.songBookAPI.sendCrash(params)
     }
 
     override fun addCloudSong(cloudSong: CloudSong): Single<ResultWithoutData> {
         val params = mapOf(
-            "cloudSongJSON" to Gson().toJson(cloudSong.toCloudSongGson())
+            "cloudSongJSON" to Gson().toJson(cloudSong.toCloudSongApiModel())
         )
         return retrofitClient.songBookAPI.addSong(params)
     }
 
     override fun addCloudSongList(cloudSongs: List<CloudSong>): Single<ResultWithAddSongListResultData> {
-        val cloudSongsGson = cloudSongs.map { it.toCloudSongGson() }
+        val cloudSongsGson = cloudSongs.map { it.toCloudSongApiModel() }
         val params = mapOf(
             "cloudSongListJSON" to Gson().toJson(cloudSongsGson)
         )
@@ -52,7 +52,7 @@ class CloudRepositoryImpl @Inject constructor(
 
     override fun addWarning(warning: Warning): Single<ResultWithoutData> {
         val params = mapOf(
-            "warningJSON" to Gson().toJson(warning.toWarningGson())
+            "warningJSON" to Gson().toJson(warning.toWarningApiModel())
         )
         return retrofitClient.songBookAPI.addWarning(params)
     }

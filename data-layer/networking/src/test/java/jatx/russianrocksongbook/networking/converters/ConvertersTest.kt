@@ -4,7 +4,7 @@ import jatx.russianrocksongbook.domain.models.appcrash.AppCrash
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.models.warning.TYPE_CLOUD
 import jatx.russianrocksongbook.domain.models.warning.Warning
-import jatx.russianrocksongbook.networking.gson.CloudSongGson
+import jatx.russianrocksongbook.networking.apimodels.CloudSongApiModel
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -33,7 +33,7 @@ const val COMMENT = "some comment"
 
 class ConvertersTest {
     @Test
-    fun appCrash_toAppCrashJson_isWorkingCorrect() {
+    fun appCrash_toAppCrashApiModel_isWorkingCorrect() {
         val appCrash = AppCrash(
             appVersionName = APP_VERSION_NAME,
             appVersionCode = APP_VERSION_CODE,
@@ -43,7 +43,7 @@ class ConvertersTest {
             stackTrace = STACK_TRACE
         )
 
-        val appCrashGson = appCrash.toAppCrashGson()
+        val appCrashGson = appCrash.toAppCrashApiModel()
 
         assertEquals(appCrashGson.appVersionName, APP_VERSION_NAME)
         assertEquals(appCrashGson.appVersionCode, APP_VERSION_CODE)
@@ -54,7 +54,7 @@ class ConvertersTest {
     }
 
     @Test
-    fun cloudSong_toCloudSongGson_isWorkingCorrect() {
+    fun cloudSong_toCloudSongApiModel_isWorkingCorrect() {
         val cloudSong = CloudSong(
             songId = ID,
             googleAccount = GOOGLE_ACCOUNT,
@@ -67,7 +67,7 @@ class ConvertersTest {
             raiting = RAITING
         )
 
-        val cloudSongGson = cloudSong.toCloudSongGson()
+        val cloudSongGson = cloudSong.toCloudSongApiModel()
 
         assertEquals(cloudSongGson.songId, ID)
         assertEquals(cloudSongGson.googleAccount, GOOGLE_ACCOUNT)
@@ -81,8 +81,8 @@ class ConvertersTest {
     }
 
     @Test
-    fun cloudSongGson_toCloudSong_isWorkingCorrect() {
-        val cloudSongGson = CloudSongGson(
+    fun cloudSongApiModel_toCloudSong_isWorkingCorrect() {
+        val cloudSongApiModel = CloudSongApiModel(
             songId = ID,
             googleAccount = GOOGLE_ACCOUNT,
             deviceIdHash = DEVICE_ID_HASH,
@@ -96,7 +96,7 @@ class ConvertersTest {
             dislikeCount = DISLIKE_COUNT
         )
 
-        val cloudSong = cloudSongGson.toCloudSong()
+        val cloudSong = cloudSongApiModel.toCloudSong()
 
         assertEquals(cloudSong.songId, ID)
         assertEquals(cloudSong.googleAccount, GOOGLE_ACCOUNT)
@@ -112,7 +112,7 @@ class ConvertersTest {
     }
 
     @Test
-    fun warning_toWarningGson_isWorkingCorrect() {
+    fun warning_toWarningApiModel_isWorkingCorrect() {
         val cloudSong = CloudSong(
             artist = ARTIST,
             title = TITLE,
@@ -124,7 +124,7 @@ class ConvertersTest {
             comment = COMMENT
         )
 
-        val warningGson = warning.toWarningGson()
+        val warningGson = warning.toWarningApiModel()
 
         assertEquals(warningGson.warningType, TYPE_CLOUD)
         assertEquals(warningGson.artist, ARTIST)
