@@ -39,6 +39,11 @@ internal fun SongListBody(
 
     val songList by localViewModel.currentSongList.collectAsState()
 
+    val scrollPositionWrapper by localViewModel.scrollPosition.collectAsState()
+    val scrollPosition = scrollPositionWrapper.value
+    val needScrollWrapper by localViewModel.needScroll.collectAsState()
+    val needScroll = needScrollWrapper.value
+
     val fontScale = localViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
     val fontSizeSp = with(LocalDensity.current) {
@@ -46,7 +51,6 @@ internal fun SongListBody(
     }
 
     if (songList.isNotEmpty()) {
-        val needScroll by localViewModel.needScroll.collectAsState()
         val modifier = Modifier
             .testTag(SONG_LIST_LAZY_COLUMN)
             .focusProperties {
@@ -71,7 +75,6 @@ internal fun SongListBody(
                     )
                 }
             }
-            val scrollPosition by localViewModel.scrollPosition.collectAsState()
             LaunchedEffect(needScroll) {
                 if (needScroll) {
                     if (TestingConfig.isTesting) {
@@ -80,6 +83,7 @@ internal fun SongListBody(
                     listState.scrollToItem(scrollPosition)
                     localViewModel.updateNeedScroll(false)
                 } else {
+                    delay(500L)
                     snapshotFlow {
                         listState.firstVisibleItemIndex
                     }.collectLatest {
@@ -106,7 +110,6 @@ internal fun SongListBody(
                     )
                 }
             }
-            val scrollPosition by localViewModel.scrollPosition.collectAsState()
             LaunchedEffect(needScroll) {
                 if (needScroll) {
                     if (TestingConfig.isTesting) {

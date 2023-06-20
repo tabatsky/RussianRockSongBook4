@@ -38,12 +38,15 @@ internal fun SongListContent(
         val isPortrait = W < H
         var isLastOrientationPortrait by remember { mutableStateOf(isPortrait) }
 
+        val wasOrientationChanged = isPortrait != isLastOrientationPortrait
         LaunchedEffect(isPortrait) {
-            if (isPortrait != isLastOrientationPortrait) {
+            if (wasOrientationChanged) {
                 isLastOrientationPortrait = isPortrait
                 localViewModel.updateNeedScroll(true)
             }
         }
+
+        if (wasOrientationChanged) return@BoxWithConstraints
 
         if (W < H) {
             val visibleArtist = artist.crop(MAX_ARTIST_LENGTH_PORTRAIT)
