@@ -54,8 +54,6 @@ internal open class LocalViewModel @Inject constructor(
     val isUploadButtonEnabled = localStateHolder.isUploadButtonEnabled.asStateFlow()
 
     val scrollPosition = localStateHolder.scrollPosition.asStateFlow()
-    var isLastOrientationPortrait = localStateHolder.isLastOrientationPortrait.asStateFlow()
-    val wasOrientationChanged = localStateHolder.wasOrientationChanged.asStateFlow()
     val needScroll = localStateHolder.needScroll.asStateFlow()
 
     private var showSongsJob: Job? = null
@@ -209,17 +207,8 @@ internal open class LocalViewModel @Inject constructor(
         localStateHolder.scrollPosition.value = position
     }
 
-    fun updateOrientationWasChanged(value: Boolean) {
-        localStateHolder.wasOrientationChanged.value = value
-        if (value) updateNeedScroll(true)
-    }
-
     fun updateNeedScroll(value: Boolean) {
         localStateHolder.needScroll.value = value
-    }
-
-    fun updateLastOrientationIsPortrait(value: Boolean) {
-        localStateHolder.isLastOrientationPortrait.value = value
     }
 
     fun deleteCurrentToTrash() {

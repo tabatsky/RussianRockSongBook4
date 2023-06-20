@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
@@ -26,6 +27,7 @@ import jatx.russianrocksongbook.testing.SONG_LIST_LAZY_COLUMN
 import jatx.russianrocksongbook.testing.TestingConfig
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 internal fun SongListBody(
@@ -44,7 +46,6 @@ internal fun SongListBody(
     }
 
     if (songList.isNotEmpty()) {
-        val wasOrientationChanged by localViewModel.wasOrientationChanged.collectAsState()
         val needScroll by localViewModel.needScroll.collectAsState()
         val modifier = Modifier
             .testTag(SONG_LIST_LAZY_COLUMN)
@@ -69,18 +70,21 @@ internal fun SongListBody(
                         }
                     )
                 }
-                if (!wasOrientationChanged && !needScroll) {
-                    localViewModel.updateScrollPosition(listState.firstVisibleItemIndex)
-                }
             }
-            if (needScroll) {
-                val scrollPosition by localViewModel.scrollPosition.collectAsState()
-                LaunchedEffect(Unit) {
+            val scrollPosition by localViewModel.scrollPosition.collectAsState()
+            LaunchedEffect(needScroll) {
+                if (needScroll) {
                     if (TestingConfig.isTesting) {
                         delay(100L)
                     }
                     listState.scrollToItem(scrollPosition)
                     localViewModel.updateNeedScroll(false)
+                } else {
+                    snapshotFlow {
+                        listState.firstVisibleItemIndex
+                    }.collectLatest {
+                        localViewModel.updateScrollPosition(it)
+                    }
                 }
             }
         } else {
@@ -101,18 +105,21 @@ internal fun SongListBody(
                         }
                     )
                 }
-                if (!wasOrientationChanged && !needScroll) {
-                    localViewModel.updateScrollPosition(listState.firstVisibleItemIndex)
-                }
             }
-            if (needScroll) {
-                val scrollPosition by localViewModel.scrollPosition.collectAsState()
-                LaunchedEffect(Unit) {
+            val scrollPosition by localViewModel.scrollPosition.collectAsState()
+            LaunchedEffect(needScroll) {
+                if (needScroll) {
                     if (TestingConfig.isTesting) {
                         delay(100L)
                     }
                     listState.scrollToItem(scrollPosition)
                     localViewModel.updateNeedScroll(false)
+                } else {
+                    snapshotFlow {
+                        listState.firstVisibleItemIndex
+                    }.collectLatest {
+                        localViewModel.updateScrollPosition(it)
+                    }
                 }
             }
         }
