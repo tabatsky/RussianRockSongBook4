@@ -204,11 +204,15 @@ internal open class LocalViewModel @Inject constructor(
     }
 
     fun updateScrollPosition(position: Int) {
-        localStateHolder.scrollPosition.value = position
+        with(localStateHolder.scrollPosition) {
+            value = value.withNewValue(position)
+        }
     }
 
-    fun updateNeedScroll(value: Boolean) {
-        localStateHolder.needScroll.value = value
+    fun updateNeedScroll(newValue: Boolean) {
+        with(localStateHolder.needScroll) {
+            value = value.withNewValue(newValue)
+        }
     }
 
     fun deleteCurrentToTrash() {
