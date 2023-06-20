@@ -41,6 +41,21 @@ internal fun SongListMenuBody(
             left = navigationFocusRequester
         }
 
+    @Composable
+    fun TheItem(artist: String) {
+        ArtistItem(
+            artist = artist,
+            fontSizeSp = fontSizeSp,
+            theme = theme,
+            onClick = {
+                localViewModel.selectArtist(artist) {
+                    localViewModel.selectSong(0)
+                }
+                onCloseDrawer()
+            }
+        )
+    }
+
     if (localViewModel.isTV) {
         val menuState = rememberTvLazyListState()
         TvLazyColumn(
@@ -48,17 +63,7 @@ internal fun SongListMenuBody(
             state = menuState
         ) {
             itemsIndexed(artistList) { _, artist ->
-                ArtistItem(
-                    artist = artist,
-                    fontSizeSp = fontSizeSp,
-                    theme = theme,
-                    onClick = {
-                        localViewModel.selectArtist(artist) {
-                            localViewModel.selectSong(0)
-                        }
-                        onCloseDrawer()
-                    }
-                )
+                TheItem(artist)
             }
         }
     } else {
@@ -68,17 +73,7 @@ internal fun SongListMenuBody(
             state = menuState
         ) {
             itemsIndexed(artistList) { _, artist ->
-                ArtistItem(
-                    artist = artist,
-                    fontSizeSp = fontSizeSp,
-                    theme = theme,
-                    onClick = {
-                        localViewModel.selectArtist(artist) {
-                            localViewModel.selectSong(0)
-                        }
-                        onCloseDrawer()
-                    }
-                )
+                TheItem(artist)
             }
         }
     }

@@ -20,6 +20,7 @@ import androidx.tv.foundation.lazy.list.TvLazyColumn
 import androidx.tv.foundation.lazy.list.itemsIndexed
 import androidx.tv.foundation.lazy.list.rememberTvLazyListState
 import jatx.russianrocksongbook.commonview.stub.CommonSongListStub
+import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
@@ -50,6 +51,42 @@ internal fun SongListBody(
         fontSizeDp.toSp()
     }
 
+    @Composable
+    fun TheItem(index: Int, song: Song) {
+        SongItem(
+            song = song,
+            theme = theme,
+            fontSizeSp = fontSizeSp,
+            onClick = {
+                Log.e("SongListBody", "selected: ${song.artist} - ${song.title}")
+                localViewModel.selectSong(index)
+                localViewModel.selectScreen(CurrentScreenVariant.SONG_TEXT)
+            }
+        )
+    }
+
+    @Composable
+    fun ScrollEffect(
+        onPerformScroll: suspend (Int) -> Unit,
+        getFirstVisibleItemIndex: () -> Int
+    ) {
+        LaunchedEffect(needScroll) {
+            if (needScroll) {
+                if (TestingConfig.isTesting) {
+                    delay(100L)
+                }
+                onPerformScroll(scrollPosition)
+                localViewModel.updateNeedScroll(false)
+            } else {
+                snapshotFlow {
+                    getFirstVisibleItemIndex()
+                }.collectLatest {
+                    localViewModel.updateScrollPosition(it)
+                }
+            }
+        }
+    }
+
     if (songList.isNotEmpty()) {
         val modifier = Modifier
             .testTag(SONG_LIST_LAZY_COLUMN)
@@ -63,34 +100,13 @@ internal fun SongListBody(
                 state = listState
             ) {
                 itemsIndexed(songList) { index, song ->
-                    SongItem(
-                        song = song,
-                        theme = theme,
-                        fontSizeSp = fontSizeSp,
-                        onClick = {
-                            Log.e("SongListBody", "selected: ${song.artist} - ${song.title}")
-                            localViewModel.selectSong(index)
-                            localViewModel.selectScreen(CurrentScreenVariant.SONG_TEXT)
-                        }
-                    )
+                    TheItem(index, song)
                 }
             }
-            LaunchedEffect(needScroll) {
-                if (needScroll) {
-                    if (TestingConfig.isTesting) {
-                        delay(100L)
-                    }
-                    listState.scrollToItem(scrollPosition)
-                    localViewModel.updateNeedScroll(false)
-                } else {
-                    delay(500L)
-                    snapshotFlow {
-                        listState.firstVisibleItemIndex
-                    }.collectLatest {
-                        localViewModel.updateScrollPosition(it)
-                    }
-                }
-            }
+            ScrollEffect(
+                onPerformScroll = { listState.scrollToItem(it) },
+                getFirstVisibleItemIndex = { listState.firstVisibleItemIndex }
+            )
         } else {
             val listState = rememberLazyListState()
             LazyColumn(
@@ -98,33 +114,13 @@ internal fun SongListBody(
                 state = listState
             ) {
                 itemsIndexed(songList) { index, song ->
-                    SongItem(
-                        song = song,
-                        theme = theme,
-                        fontSizeSp = fontSizeSp,
-                        onClick = {
-                            Log.e("SongListBody", "selected: ${song.artist} - ${song.title}")
-                            localViewModel.selectSong(index)
-                            localViewModel.selectScreen(CurrentScreenVariant.SONG_TEXT)
-                        }
-                    )
+                    TheItem(index, song)
                 }
             }
-            LaunchedEffect(needScroll) {
-                if (needScroll) {
-                    if (TestingConfig.isTesting) {
-                        delay(100L)
-                    }
-                    listState.scrollToItem(scrollPosition)
-                    localViewModel.updateNeedScroll(false)
-                } else {
-                    snapshotFlow {
-                        listState.firstVisibleItemIndex
-                    }.collectLatest {
-                        localViewModel.updateScrollPosition(it)
-                    }
-                }
-            }
+            ScrollEffect(
+                onPerformScroll = { listState.scrollToItem(it) },
+                getFirstVisibleItemIndex = { listState.firstVisibleItemIndex }
+            )
         }
     } else {
         CommonSongListStub(fontSizeSp, theme)
