@@ -35,15 +35,18 @@ internal fun SongListContent(
         val W = this.maxWidth
         val H = this.maxHeight
 
+        val isPortrait = W < H
+        var isLastOrientationPortrait by remember { mutableStateOf(isPortrait) }
+
+        LaunchedEffect(isPortrait) {
+            if (isPortrait != isLastOrientationPortrait) {
+                isLastOrientationPortrait = isPortrait
+                localViewModel.updateNeedScroll(true)
+            }
+        }
+
         if (W < H) {
             val visibleArtist = artist.crop(MAX_ARTIST_LENGTH_PORTRAIT)
-            val isPortrait = true
-            val isLastOrientationPortrait by localViewModel
-                .isLastOrientationPortrait.collectAsState()
-            localViewModel.updateOrientationWasChanged(
-                isPortrait != isLastOrientationPortrait
-            )
-            localViewModel.updateLastOrientationIsPortrait(true)
 
             Column(
                 modifier = Modifier
@@ -70,13 +73,6 @@ internal fun SongListContent(
             }
         } else {
             val visibleArtist = artist.crop(MAX_ARTIST_LENGTH_LANDSCAPE)
-            val isPortrait = false
-            val isLastOrientationPortrait by localViewModel
-                .isLastOrientationPortrait.collectAsState()
-            localViewModel.updateOrientationWasChanged(
-                isPortrait != isLastOrientationPortrait
-            )
-            localViewModel.updateLastOrientationIsPortrait(false)
 
             Row(
                 modifier = Modifier

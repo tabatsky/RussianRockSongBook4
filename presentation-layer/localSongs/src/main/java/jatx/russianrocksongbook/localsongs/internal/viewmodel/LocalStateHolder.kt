@@ -20,7 +20,5 @@ internal class LocalStateHolder @Inject constructor(
     val isUploadButtonEnabled = MutableStateFlow(true)
 
     val scrollPosition = MutableStateFlow(0)
-    val isLastOrientationPortrait = MutableStateFlow(true)
-    val wasOrientationChanged = MutableStateFlow(false)
     val needScroll = MutableStateFlow(false)
 }
