@@ -45,8 +45,6 @@ internal class CloudViewModel @Inject constructor(
     val cloudSongPosition = cloudStateHolder.cloudSongPosition.asStateFlow()
 
     val scrollPosition = cloudStateHolder.scrollPosition.asStateFlow()
-    var isLastOrientationPortrait = cloudStateHolder.isLastOrientationPortrait.asStateFlow()
-    val wasOrientationChanged = cloudStateHolder.wasOrientationChanged.asStateFlow()
     val needScroll = cloudStateHolder.needScroll.asStateFlow()
 
     val cloudSongsFlow = cloudStateHolder.cloudSongsFlow.asStateFlow()
@@ -82,17 +80,8 @@ internal class CloudViewModel @Inject constructor(
         cloudStateHolder.scrollPosition.value = position
     }
 
-    fun updateOrientationWasChanged(value: Boolean) {
-        cloudStateHolder.wasOrientationChanged.value = value
-        if (value) updateNeedScroll(true)
-    }
-
     fun updateNeedScroll(value: Boolean) {
         cloudStateHolder.needScroll.value = value
-    }
-
-    fun updateLastOrientationIsPortrait(value: Boolean) {
-        cloudStateHolder.isLastOrientationPortrait.value = value
     }
 
     fun updateCloudSong(cloudSong: CloudSong?) {

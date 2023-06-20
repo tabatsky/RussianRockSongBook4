@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -28,15 +26,17 @@ internal fun CloudSearchScreenImpl() {
         val W = this.maxWidth
         val H = this.maxHeight
 
-        if (W < H) {
-            val isPortrait = true
-            val isLastOrientationPortrait by cloudViewModel
-                .isLastOrientationPortrait.collectAsState()
-            cloudViewModel.updateOrientationWasChanged(
-                isPortrait != isLastOrientationPortrait
-            )
-            cloudViewModel.updateLastOrientationIsPortrait(true)
+        val isPortrait = W < H
+        var isLastOrientationPortrait by remember { mutableStateOf(isPortrait) }
 
+        LaunchedEffect(isPortrait) {
+            if (isPortrait != isLastOrientationPortrait) {
+                isLastOrientationPortrait = isPortrait
+                cloudViewModel.updateNeedScroll(true)
+            }
+        }
+
+        if (W < H) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -49,14 +49,6 @@ internal fun CloudSearchScreenImpl() {
                 )
             }
         } else {
-            val isPortrait = false
-            val isLastOrientationPortrait by cloudViewModel
-                .isLastOrientationPortrait.collectAsState()
-            cloudViewModel.updateOrientationWasChanged(
-                isPortrait != isLastOrientationPortrait
-            )
-            cloudViewModel.updateLastOrientationIsPortrait(false)
-
             Row(
                 modifier = Modifier
                     .fillMaxSize()

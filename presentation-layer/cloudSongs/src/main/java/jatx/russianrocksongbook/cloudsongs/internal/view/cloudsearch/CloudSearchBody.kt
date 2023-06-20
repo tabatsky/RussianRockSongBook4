@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
@@ -25,6 +26,7 @@ import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.testing.TestingConfig
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 internal fun CloudSearchBody(
@@ -112,7 +114,6 @@ internal fun CloudSearchBody(
             SearchState.ERROR -> ErrorSongListStub(fontSizeSongTitleSp, theme)
             SearchState.LOADING -> CloudSearchProgress(theme)
             SearchState.LOADED, SearchState.LOADING_NEXT_PAGE -> {
-                val wasOrientationChanged by cloudViewModel.wasOrientationChanged.collectAsState()
                 val needScroll by cloudViewModel.needScroll.collectAsState()
 
                 LazyColumn(
@@ -130,18 +131,21 @@ internal fun CloudSearchBody(
                             }
                         }
                     }
-                    if (!wasOrientationChanged && !needScroll) {
-                        cloudViewModel.updateScrollPosition(listState.firstVisibleItemIndex)
-                    }
                 }
-                if (needScroll) {
-                    LaunchedEffect(Unit) {
+                LaunchedEffect(needScroll) {
+                    if (needScroll) {
                         if (scrollPosition < itemsAdapter.size) {
                             if (TestingConfig.isTesting) {
                                 delay(100L)
                             }
                             listState.scrollToItem(scrollPosition)
                             cloudViewModel.updateNeedScroll(false)
+                        }
+                    } else {
+                        snapshotFlow {
+                            listState.firstVisibleItemIndex
+                        }.collectLatest {
+                            cloudViewModel.updateScrollPosition(it)
                         }
                     }
                 }

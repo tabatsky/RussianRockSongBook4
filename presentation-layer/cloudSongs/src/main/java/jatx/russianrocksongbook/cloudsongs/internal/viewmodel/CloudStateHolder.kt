@@ -24,7 +24,5 @@ internal class CloudStateHolder @Inject constructor(
     val invalidateCounter = MutableStateFlow(0)
 
     val scrollPosition = MutableStateFlow(0)
-    val isLastOrientationPortrait = MutableStateFlow(true)
-    val wasOrientationChanged = MutableStateFlow(false)
     val needScroll = MutableStateFlow(false)
 }
