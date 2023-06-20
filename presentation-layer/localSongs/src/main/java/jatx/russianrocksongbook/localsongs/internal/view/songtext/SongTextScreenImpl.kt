@@ -123,7 +123,8 @@ internal fun SongTextScreenImpl() {
             val W = this.maxWidth
             val H = this.maxHeight
 
-            val body: @Composable (Modifier) -> Unit = { modifier ->
+            @Composable
+            fun TheBody(modifier: Modifier) {
                 SongTextBody(
                     W = W,
                     H = H,
@@ -143,7 +144,8 @@ internal fun SongTextScreenImpl() {
                 )
             }
 
-            val panel: @Composable () -> Unit = {
+            @Composable
+            fun ThePanel() {
                 SongTextPanel(
                     W = W,
                     H = H,
@@ -180,8 +182,8 @@ internal fun SongTextScreenImpl() {
                         }
                     )
 
-                    body(Modifier.weight(1.0f))
-                    panel()
+                    TheBody(Modifier.weight(1.0f))
+                    ThePanel()
                 }
             } else {
                 Row(
@@ -199,8 +201,8 @@ internal fun SongTextScreenImpl() {
                         }
                     )
 
-                    body(Modifier.weight(1.0f))
-                    panel()
+                    TheBody(Modifier.weight(1.0f))
+                    ThePanel()
                 }
             }
 
