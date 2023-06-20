@@ -27,7 +27,8 @@ internal fun SongTextPanel(
 ) {
     val A = if (W < H) W * 3.0f / 21 else H * 3.0f / 21
 
-    val content: @Composable () -> Unit = {
+    @Composable
+    fun TheContent() {
         SongTextPanelContent(
             W = W,
             H = H,
@@ -52,7 +53,7 @@ internal fun SongTextPanel(
                 .height(A)
                 .background(Color.Transparent)
         ) {
-            content()
+            TheContent()
         }
     } else {
         Column (
@@ -61,7 +62,7 @@ internal fun SongTextPanel(
                 .width(A)
                 .background(Color.Transparent)
         ) {
-            content()
+            TheContent()
         }
     }
 }

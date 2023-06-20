@@ -111,7 +111,8 @@ internal fun CloudSongTextScreenImpl() {
             val W = this.maxWidth
             val H = this.minHeight
 
-            val body: @Composable (Modifier) -> Unit = { modifier ->
+            @Composable
+            fun TheBody(modifier: Modifier) {
                 CloudSongTextBody(
                     W = W,
                     H = H,
@@ -126,7 +127,9 @@ internal fun CloudSongTextScreenImpl() {
                 )
             }
 
-            val panel: @Composable () -> Unit = {
+
+            @Composable
+            fun ThePanel() {
                 CloudSongTextPanel(
                     W = W,
                     H = H,
@@ -163,8 +166,8 @@ internal fun CloudSongTextScreenImpl() {
                         }
                     )
 
-                    body(Modifier.weight(1.0f))
-                    panel()
+                    TheBody(Modifier.weight(1.0f))
+                    ThePanel()
                 }
             } else {
                 Row(
@@ -184,8 +187,8 @@ internal fun CloudSongTextScreenImpl() {
                         appBarWidth = CLOUD_SONG_TEXT_APP_BAR_WIDTH
                     )
 
-                    body(Modifier.weight(1.0f))
-                    panel()
+                    TheBody(Modifier.weight(1.0f))
+                    ThePanel()
                 }
             }
             if (showYandexDialog) {
