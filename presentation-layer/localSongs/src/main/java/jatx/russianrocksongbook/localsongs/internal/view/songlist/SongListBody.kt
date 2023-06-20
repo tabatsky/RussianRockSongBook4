@@ -40,10 +40,8 @@ internal fun SongListBody(
 
     val songList by localViewModel.currentSongList.collectAsState()
 
-    val scrollPositionWrapper by localViewModel.scrollPosition.collectAsState()
-    val scrollPosition = scrollPositionWrapper.value
-    val needScrollWrapper by localViewModel.needScroll.collectAsState()
-    val needScroll = needScrollWrapper.value
+    val scrollPosition by localViewModel.scrollPosition.collectAsState()
+    val needScroll by localViewModel.needScroll.collectAsState()
 
     val fontScale = localViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeDp = dimensionResource(id = R.dimen.text_size_20) * fontScale

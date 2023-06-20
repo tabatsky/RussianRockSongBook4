@@ -3,7 +3,6 @@ package jatx.russianrocksongbook.localsongs.internal.viewmodel
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.viewmodel.CommonStateHolder
-import jatx.russianrocksongbook.viewmodel.ValueWrapper
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
@@ -20,6 +19,6 @@ internal class LocalStateHolder @Inject constructor(
     val isAutoPlayMode = MutableStateFlow(false)
     val isUploadButtonEnabled = MutableStateFlow(true)
 
-    val scrollPosition = MutableStateFlow(ValueWrapper(0))
-    val needScroll = MutableStateFlow(ValueWrapper(false))
+    val scrollPosition = MutableStateFlow(0)
+    val needScroll = MutableStateFlow(false)
 }
