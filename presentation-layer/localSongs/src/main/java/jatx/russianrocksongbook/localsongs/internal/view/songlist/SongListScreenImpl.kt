@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 internal fun SongListScreenImpl(
     artist: String,
     isBackFromSong: Boolean,
-    onSuccess: (() -> Unit)? = null
+    passToSongWithTitle: String?
 ) {
     val localViewModel: LocalViewModel = viewModel()
 
@@ -25,8 +25,8 @@ internal fun SongListScreenImpl(
         }
     }
 
-    LaunchedEffect(artist to onSuccess) {
-        localViewModel.showSongs(artist, onSuccess)
+    LaunchedEffect(artist to passToSongWithTitle) {
+        localViewModel.showSongs(artist, passToSongWithTitle)
     }
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)

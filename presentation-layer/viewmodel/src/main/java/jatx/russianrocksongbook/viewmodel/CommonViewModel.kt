@@ -58,10 +58,10 @@ open class CommonViewModel @Inject constructor(
             is CurrentScreenVariant.FAVORITE -> {
                 onFinish()
             }
-            CurrentScreenVariant.CLOUD_SONG_TEXT -> {
+            is CurrentScreenVariant.CLOUD_SONG_TEXT -> {
                 selectScreen(CurrentScreenVariant.CLOUD_SEARCH(isBackFromSong = true))
             }
-            CurrentScreenVariant.SONG_TEXT -> {
+            is CurrentScreenVariant.SONG_TEXT -> {
                 if (currentArtist.value != ARTIST_FAVORITE) {
                     selectScreen(CurrentScreenVariant.SONG_LIST(
                         artist = currentArtist.value,

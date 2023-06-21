@@ -27,8 +27,20 @@ import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-internal fun SongTextScreenImpl() {
+internal fun SongTextScreenImpl(artist: String, position: Int) {
     val localViewModel: LocalViewModel = viewModel()
+
+    val key = artist to position
+    var lastKey by remember { mutableStateOf(key) }
+    val keyChanged = key != lastKey
+
+    if (keyChanged) {
+        lastKey = key
+    }
+
+    LaunchedEffect(key) {
+        localViewModel.selectSong(position)
+    }
 
     val song by localViewModel.currentSong.collectAsState()
     var text by rememberSaveable { mutableStateOf("") }
@@ -125,23 +137,25 @@ internal fun SongTextScreenImpl() {
 
             @Composable
             fun TheBody(modifier: Modifier) {
-                SongTextBody(
-                    W = W,
-                    H = H,
-                    song = _song,
-                    text = text,
-                    isEditorMode = isEditorMode,
-                    listState = listState,
-                    tvListState = tvListState,
-                    fontSizeTextSp = fontSizeTextSp,
-                    fontSizeTitleSp = fontSizeTitleSp,
-                    theme = theme,
-                    modifier = modifier,
-                    isAutoPlayMode = isAutoPlayMode,
-                    dY = dY,
-                    onTextChange = onTextChange,
-                    onWordClick = onWordClick
-                )
+                if (!keyChanged) {
+                    SongTextBody(
+                        W = W,
+                        H = H,
+                        song = _song,
+                        text = text,
+                        isEditorMode = isEditorMode,
+                        listState = listState,
+                        tvListState = tvListState,
+                        fontSizeTextSp = fontSizeTextSp,
+                        fontSizeTitleSp = fontSizeTitleSp,
+                        theme = theme,
+                        modifier = modifier,
+                        isAutoPlayMode = isAutoPlayMode,
+                        dY = dY,
+                        onTextChange = onTextChange,
+                        onWordClick = onWordClick
+                    )
+                }
             }
 
             @Composable
