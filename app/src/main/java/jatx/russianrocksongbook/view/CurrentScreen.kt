@@ -1,6 +1,6 @@
 package jatx.russianrocksongbook.view
 
-import androidx.compose.foundation.ExperimentalFoundationApi
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -8,6 +8,7 @@ import jatx.russianrocksongbook.addartist.api.view.AddArtistScreen
 import jatx.russianrocksongbook.addsong.api.view.AddSongScreen
 import jatx.russianrocksongbook.cloudsongs.api.view.CloudSearchScreen
 import jatx.russianrocksongbook.cloudsongs.api.view.CloudSongTextScreen
+import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import jatx.russianrocksongbook.donation.api.view.DonationScreen
 import jatx.russianrocksongbook.localsongs.api.view.SongListScreen
 import jatx.russianrocksongbook.localsongs.api.view.SongTextScreen
@@ -19,16 +20,32 @@ import jatx.russianrocksongbook.viewmodel.CommonViewModel
 @Composable
 fun CurrentScreen() {
     val commonViewModel: CommonViewModel = viewModel()
-    when (commonViewModel.currentScreenVariant.collectAsState().value) {
-        CurrentScreenVariant.START -> StartScreen()
-        CurrentScreenVariant.SONG_LIST, CurrentScreenVariant.FAVORITE ->
-            SongListScreen()
-        CurrentScreenVariant.SONG_TEXT -> SongTextScreen()
-        CurrentScreenVariant.SETTINGS -> SettingsScreen()
-        CurrentScreenVariant.CLOUD_SEARCH -> CloudSearchScreen()
-        CurrentScreenVariant.CLOUD_SONG_TEXT -> CloudSongTextScreen()
-        CurrentScreenVariant.ADD_ARTIST -> AddArtistScreen()
-        CurrentScreenVariant.ADD_SONG -> AddSongScreen()
-        CurrentScreenVariant.DONATION -> DonationScreen()
+    when (
+        val screenVariant =
+            commonViewModel.currentScreenVariant.collectAsState().value.also {
+                Log.e("screenVariant", it.toString())
+            }
+    ) {
+        is CurrentScreenVariant.START -> StartScreen()
+        is CurrentScreenVariant.SONG_LIST ->
+            SongListScreen(
+                artist = screenVariant.artist,
+                isBackFromSong = screenVariant.isBackFromSong,
+                onSuccess = screenVariant.onSuccess
+            )
+        is CurrentScreenVariant.FAVORITE ->
+            SongListScreen(
+                artist = ARTIST_FAVORITE,
+                isBackFromSong = screenVariant.isBackFromSong
+            )
+        is CurrentScreenVariant.SONG_TEXT -> SongTextScreen()
+        is CurrentScreenVariant.SETTINGS -> SettingsScreen()
+        is CurrentScreenVariant.CLOUD_SEARCH -> CloudSearchScreen(
+            isBackFromSong = screenVariant.isBackFromSong
+        )
+        is CurrentScreenVariant.CLOUD_SONG_TEXT -> CloudSongTextScreen()
+        is CurrentScreenVariant.ADD_ARTIST -> AddArtistScreen()
+        is CurrentScreenVariant.ADD_SONG -> AddSongScreen()
+        is CurrentScreenVariant.DONATION -> DonationScreen()
     }
 }

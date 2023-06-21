@@ -15,7 +15,6 @@ import jatx.russianrocksongbook.addartist.internal.viewmodel.AddArtistViewModel
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.dialogs.confirm.UploadDialog
-import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 
 @Composable
 internal fun AddArtistScreenImpl() {
@@ -52,7 +51,6 @@ internal fun AddArtistScreenImpl() {
                 onDismiss = {
                     addArtistViewModel.hideUploadOfferForDir()
                     addArtistViewModel.callbacks.onArtistSelected(uploadArtist)
-                    addArtistViewModel.selectScreen(CurrentScreenVariant.SONG_LIST)
                 }
             )
         }

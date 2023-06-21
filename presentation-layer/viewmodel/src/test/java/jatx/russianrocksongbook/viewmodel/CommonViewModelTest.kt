@@ -6,7 +6,6 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit4.MockKRule
 import io.mockk.junit5.MockKExtension
-import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
 import jatx.russianrocksongbook.domain.usecase.local.GetArtistsUseCase
 import jatx.russianrocksongbook.testutils.TestViewModelScopeRule
@@ -93,44 +92,42 @@ open class CommonViewModelTest {
     @Test
     fun test001_selectScreen_SongList_isWorkingCorrect() {
         val artists = listOf("Первый", "Второй", "Третий")
-        commonViewModel.selectScreen(CurrentScreenVariant.SONG_LIST)
+        val defaultArtist = settingsRepository.defaultArtist
+        commonViewModel.selectScreen(CurrentScreenVariant.SONG_LIST(defaultArtist))
+        commonViewModel.updateArtists()
         artistsFlow.value = artists
-        assertEquals(CurrentScreenVariant.SONG_LIST, commonViewModel.currentScreenVariant.value)
+        assertEquals(CurrentScreenVariant.SONG_LIST(defaultArtist), commonViewModel.currentScreenVariant.value)
         assertEquals(artists, commonViewModel.artistList.value)
         verifySequence {
+            settingsRepository.defaultArtist
             val defaultArtist = settingsRepository.defaultArtist
-            Log.e("select screen", CurrentScreenVariant.SONG_LIST.toString())
+            Log.e("select screen", CurrentScreenVariant.SONG_LIST(defaultArtist).toString())
             getArtistsUseCase.execute()
-            val onArtistSelected = callbacks.onArtistSelected
-            onArtistSelected(defaultArtist)
         }
     }
 
     @Test
     fun test002_selectScreen_Favorite_isWorkingCorrect() {
         val artists = listOf("Первый", "Второй", "Третий")
-        commonViewModel.selectScreen(CurrentScreenVariant.FAVORITE)
+        commonViewModel.selectScreen(CurrentScreenVariant.FAVORITE())
+        commonViewModel.updateArtists()
         artistsFlow.value = artists
-        assertEquals(CurrentScreenVariant.FAVORITE, commonViewModel.currentScreenVariant.value)
+        assertEquals(CurrentScreenVariant.FAVORITE(), commonViewModel.currentScreenVariant.value)
         assertEquals(artists, commonViewModel.artistList.value)
         verifySequence {
-            Log.e("select screen", CurrentScreenVariant.FAVORITE.toString())
+            Log.e("select screen", CurrentScreenVariant.FAVORITE().toString())
             getArtistsUseCase.execute()
-            val onArtistSelected = callbacks.onArtistSelected
-            onArtistSelected(ARTIST_FAVORITE)
         }
     }
 
     @Test
     fun test003_selectScreen_CloudSearch_isWorkingCorrect() {
-        commonViewModel.selectScreen(CurrentScreenVariant.CLOUD_SEARCH, false)
-        assertEquals(CurrentScreenVariant.CLOUD_SEARCH, commonViewModel.currentScreenVariant.value)
-        commonViewModel.selectScreen(CurrentScreenVariant.CLOUD_SEARCH, true)
+        commonViewModel.selectScreen(CurrentScreenVariant.CLOUD_SEARCH(false))
+        assertEquals(CurrentScreenVariant.CLOUD_SEARCH(), commonViewModel.currentScreenVariant.value)
+        commonViewModel.selectScreen(CurrentScreenVariant.CLOUD_SEARCH(true))
         verifySequence {
-            Log.e("select screen", CurrentScreenVariant.CLOUD_SEARCH.toString())
-            val onCloudSearchScreenSelected = callbacks.onCloudSearchScreenSelected
-            onCloudSearchScreenSelected()
-            Log.e("select screen", CurrentScreenVariant.CLOUD_SEARCH.toString())
+            Log.e("select screen", CurrentScreenVariant.CLOUD_SEARCH(false).toString())
+            Log.e("select screen", CurrentScreenVariant.CLOUD_SEARCH(true).toString())
         }
     }
 

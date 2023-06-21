@@ -9,7 +9,7 @@ import javax.inject.Inject
 class CommonStateHolder @Inject constructor(
     settingsRepository: SettingsRepository
 ) {
-    val currentScreenVariant = MutableStateFlow(CurrentScreenVariant.START)
+    val currentScreenVariant = MutableStateFlow<CurrentScreenVariant>(CurrentScreenVariant.START)
     val currentArtist = MutableStateFlow(settingsRepository.defaultArtist)
     val artistList = MutableStateFlow(listOf<String>())
     val appWasUpdated = MutableStateFlow(false)

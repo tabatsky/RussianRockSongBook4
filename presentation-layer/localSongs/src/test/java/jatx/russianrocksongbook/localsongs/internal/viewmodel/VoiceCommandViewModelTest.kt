@@ -4,8 +4,13 @@ import android.util.Log
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.spyk
 import io.mockk.verifySequence
 import jatx.russianrocksongbook.domain.models.local.Song
+import jatx.russianrocksongbook.domain.repository.local.ARTIST_ADD_ARTIST
+import jatx.russianrocksongbook.domain.repository.local.ARTIST_ADD_SONG
+import jatx.russianrocksongbook.domain.repository.local.ARTIST_CLOUD_SONGS
+import jatx.russianrocksongbook.domain.repository.local.ARTIST_DONATION
 import jatx.russianrocksongbook.domain.usecase.local.GetArtistsAsListUseCase
 import jatx.russianrocksongbook.domain.usecase.local.GetSongsByVoiceSearchUseCase
 import jatx.russianrocksongbook.localsongs.R
@@ -39,11 +44,25 @@ class VoiceCommandViewModelTest: LocalViewModelTest() {
             getArtistsAsListUseCase = getArtistsAsListUseCase,
             getSongsByVoiceSearchUseCase = getSongsByVoiceSearchUseCase
         )
-        voiceCommandViewModel = VoiceCommandViewModel(
+        val _voiceCommandViewModel = VoiceCommandViewModel(
             localStateHolder = localStateHolder,
             voiceCommandViewModelDeps = voiceCommandViewModelDeps
         )
+        voiceCommandViewModel = spyk(_voiceCommandViewModel)
 
+        every { voiceCommandViewModel.selectArtist(any(), any()) } answers {
+            if (arg(0) in listOf(
+                    ARTIST_ADD_ARTIST,
+                    ARTIST_ADD_SONG,
+                    ARTIST_CLOUD_SONGS,
+                    ARTIST_DONATION
+                )
+            ) {
+                _voiceCommandViewModel.selectArtist(arg(0), arg(1))
+            } else {
+                _voiceCommandViewModel.showSongs(arg(0), arg(1))
+            }
+        }
         every { getArtistsAsListUseCase.execute() } returns artistList
     }
 
@@ -57,7 +76,7 @@ class VoiceCommandViewModelTest: LocalViewModelTest() {
 
         verifySequence {
             Log.e("voice command", "открой группу немного нервно")
-            Log.e("select artist", "Немного Нервно")
+            Log.e("show songs", "Немного Нервно")
             getCountByArtistUseCase.execute("Немного Нервно")
             getSongsByArtistUseCase.execute("Немного Нервно")
         }

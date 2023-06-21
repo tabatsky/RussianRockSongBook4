@@ -73,7 +73,7 @@ internal fun SongListBody(
                 if (TestingConfig.isTesting) {
                     delay(100L)
                 }
-                onPerformScroll(scrollPosition)
+                if (scrollPosition >= 0) onPerformScroll(scrollPosition)
                 localViewModel.updateNeedScroll(false)
             } else {
                 snapshotFlow {

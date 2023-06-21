@@ -17,6 +17,7 @@ import jatx.russianrocksongbook.viewmodel.CommonViewModelTest
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 
 import org.junit.Before
 import org.junit.FixMethodOrder
@@ -81,13 +82,26 @@ open class LocalViewModelTest: CommonViewModelTest() {
             addWarningLocalUseCase = addWarningLocalUseCase,
             addSongToCloudUseCase = addSongToCloudUseCase
         )
-        localViewModel = LocalViewModel(
+        val _localViewModel = LocalViewModel(
             localStateHolder = localStateHolder,
             localViewModelDeps = localViewModelDeps
         )
+        localViewModel = spyk(_localViewModel)
 
         onSuccess = mockk(relaxed = true)
 
+        every { localViewModel.selectArtist(any(), any()) } answers {
+            if (arg(0) in listOf(
+                    ARTIST_ADD_ARTIST,
+                    ARTIST_ADD_SONG,
+                    ARTIST_CLOUD_SONGS,
+                    ARTIST_DONATION)
+            ) {
+                _localViewModel.selectArtist(arg(0), arg(1))
+            } else {
+                _localViewModel.showSongs(arg(0), arg(1))
+            }
+        }
         every { getCountByArtistUseCase.execute(any()) } answers {
             songsFlow.value.size
         }
@@ -113,7 +127,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
         assertEquals(songList.size, localViewModel.currentSongCount.value)
 
         verifySequence {
-            Log.e("select artist", "Кино")
+            Log.e("show songs", "Кино")
             getCountByArtistUseCase.execute("Кино")
             getSongsByArtistUseCase.execute("Кино")
             onSuccess()
@@ -151,7 +165,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
         assertEquals(songList3, localViewModel.currentSongList.value)
 
         verifySequence {
-            Log.e("select artist", "Кино")
+            Log.e("show songs", "Кино")
             getCountByArtistUseCase.execute("Кино")
             getSongsByArtistUseCase.execute("Кино")
             Log.e("select song", "0")
@@ -187,13 +201,11 @@ open class LocalViewModelTest: CommonViewModelTest() {
     fun test105_selectArtist_cloudSongs_isWorkingCorrect() {
         localViewModel.selectArtist(ARTIST_CLOUD_SONGS)
 
-        assertEquals(CurrentScreenVariant.CLOUD_SEARCH, localViewModel.currentScreenVariant.value)
+        assertTrue(localViewModel.currentScreenVariant.value is CurrentScreenVariant.CLOUD_SEARCH)
 
         verifySequence {
             Log.e("select artist", ARTIST_CLOUD_SONGS)
-            Log.e("select screen", CurrentScreenVariant.CLOUD_SEARCH.toString())
-            val onCloudSearchScreenSelected = callbacks.onCloudSearchScreenSelected
-            onCloudSearchScreenSelected()
+            Log.e("select screen", CurrentScreenVariant.CLOUD_SEARCH().toString())
         }
     }
 
@@ -226,7 +238,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
         assertEquals(13, localViewModel.currentSongPosition.value)
 
         verifySequence {
-            Log.e("select artist", "Кино")
+            Log.e("show songs", "Кино")
             getCountByArtistUseCase.execute("Кино")
             getSongsByArtistUseCase.execute("Кино")
             onSuccess()
