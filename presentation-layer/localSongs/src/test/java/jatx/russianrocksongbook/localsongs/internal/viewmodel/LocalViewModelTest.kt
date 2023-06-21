@@ -116,7 +116,6 @@ open class LocalViewModelTest: CommonViewModelTest() {
             Log.e("select artist", "Кино")
             getCountByArtistUseCase.execute("Кино")
             getSongsByArtistUseCase.execute("Кино")
-            Log.e("select song", "0")
             onSuccess()
         }
     }
@@ -230,9 +229,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
             Log.e("select artist", "Кино")
             getCountByArtistUseCase.execute("Кино")
             getSongsByArtistUseCase.execute("Кино")
-            Log.e("select song", "0")
             onSuccess()
-            getSongByArtistAndPositionUseCase.execute("Кино", 0)
             Log.e("select song", "13")
             getSongByArtistAndPositionUseCase.execute("Кино", 13)
         }
