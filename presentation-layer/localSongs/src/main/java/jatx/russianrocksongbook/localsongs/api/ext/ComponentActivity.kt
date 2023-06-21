@@ -20,7 +20,6 @@ fun ComponentActivity.selectSongByArtistAndTitle(artist: String, title: String) 
     val localViewModel: LocalViewModel by viewModels()
     localViewModel.selectArtist(
         artist = artist,
-        forceOnSuccess = true,
         onSuccess = {
             val position = localViewModel
                 .currentSongList

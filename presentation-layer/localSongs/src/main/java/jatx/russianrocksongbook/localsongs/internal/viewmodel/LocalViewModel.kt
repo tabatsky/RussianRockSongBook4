@@ -62,7 +62,6 @@ internal open class LocalViewModel @Inject constructor(
 
     fun selectArtist(
         artist: String,
-        forceOnSuccess: Boolean = false,
         onSuccess: () -> Unit = {}
     ) {
         Log.e("select artist", artist)
@@ -83,14 +82,13 @@ internal open class LocalViewModel @Inject constructor(
                 selectScreen(CurrentScreenVariant.DONATION)
             }
             else -> {
-                showSongs(artist, forceOnSuccess, onSuccess)
+                showSongs(artist, onSuccess)
             }
         }
     }
 
     private fun showSongs(
         artist: String,
-        forceOnSuccess: Boolean,
         onSuccess: () -> Unit
     ) {
         localStateHolder
@@ -109,9 +107,10 @@ internal open class LocalViewModel @Inject constructor(
                                     ?: "null"
                                 val newArtist = it.getOrNull(0)?.artist ?: "null"
                                 localStateHolder.currentSongList.value = it
-                                if (oldArtist != newArtist || forceOnSuccess) {
-                                    onSuccess()
+                                if (oldArtist != newArtist) {
+                                    selectSong(0)
                                 }
+                                onSuccess()
                             }
                         }
                 }

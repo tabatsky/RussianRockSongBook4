@@ -102,9 +102,9 @@ open class LocalViewModelTest: CommonViewModelTest() {
     }
 
     @Test
-    fun test101_selectArtist_Kino_forceOnSuccess_isWorkingCorrect() {
+    fun test101_selectArtist_Kino_withOnSuccess_isWorkingCorrect() {
         songsFlow.value = songList
-        localViewModel.selectArtist("Кино", true, onSuccess)
+        localViewModel.selectArtist("Кино", onSuccess)
 
         TimeUnit.MILLISECONDS.sleep(200)
 
@@ -116,12 +116,13 @@ open class LocalViewModelTest: CommonViewModelTest() {
             Log.e("select artist", "Кино")
             getCountByArtistUseCase.execute("Кино")
             getSongsByArtistUseCase.execute("Кино")
+            Log.e("select song", "0")
             onSuccess()
         }
     }
 
     @Test
-    fun test102_selectArtist_Kino_and_Alisa_dontForceOnSuccess_isWorkingCorrect() {
+    fun test102_selectArtist_Kino_and_Alisa_withoutOnSuccess_isWorkingCorrect() {
         val songList2 = listOf(
             Song(artist = "Кино", title = "title 6", text = "text text text"),
             Song(artist = "Кино", title = "title 7", text = "text text text"),
@@ -138,7 +139,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
         )
 
         songsFlow.value = songList
-        localViewModel.selectArtist("Кино", false, onSuccess)
+        localViewModel.selectArtist("Кино")
 
         assertEquals("Кино", localViewModel.currentArtist.value)
         TimeUnit.MILLISECONDS.sleep(200)
@@ -154,8 +155,8 @@ open class LocalViewModelTest: CommonViewModelTest() {
             Log.e("select artist", "Кино")
             getCountByArtistUseCase.execute("Кино")
             getSongsByArtistUseCase.execute("Кино")
-            onSuccess()
-            onSuccess()
+            Log.e("select song", "0")
+            Log.e("select song", "0")
         }
     }
 
@@ -212,7 +213,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
     @Test
     fun test107_selectSong_isWorkingCorrect() {
         songsFlow.value = songList
-        localViewModel.selectArtist("Кино", true, onSuccess)
+        localViewModel.selectArtist("Кино", onSuccess)
 
         TimeUnit.MILLISECONDS.sleep(200)
 
@@ -229,7 +230,9 @@ open class LocalViewModelTest: CommonViewModelTest() {
             Log.e("select artist", "Кино")
             getCountByArtistUseCase.execute("Кино")
             getSongsByArtistUseCase.execute("Кино")
+            Log.e("select song", "0")
             onSuccess()
+            getSongByArtistAndPositionUseCase.execute("Кино", 0)
             Log.e("select song", "13")
             getSongByArtistAndPositionUseCase.execute("Кино", 13)
         }
