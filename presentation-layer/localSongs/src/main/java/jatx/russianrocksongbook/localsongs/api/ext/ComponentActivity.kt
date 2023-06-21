@@ -1,5 +1,6 @@
 package jatx.russianrocksongbook.localsongs.api.ext
 
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
@@ -21,6 +22,7 @@ fun ComponentActivity.selectSongByArtistAndTitle(artist: String, title: String) 
     localViewModel.selectArtist(
         artist = artist,
         onSuccess = {
+            Log.e("onSuccess", "fired")
             val position = localViewModel
                 .currentSongList
                 .value

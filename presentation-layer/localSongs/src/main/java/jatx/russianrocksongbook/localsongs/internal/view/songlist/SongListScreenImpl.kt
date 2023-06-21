@@ -4,11 +4,31 @@ import androidx.compose.material.DrawerValue
 import androidx.compose.material.ModalDrawer
 import androidx.compose.material.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-internal fun SongListScreenImpl() {
+internal fun SongListScreenImpl(
+    artist: String,
+    isBackFromSong: Boolean,
+    onSuccess: (() -> Unit)? = null
+) {
+    val localViewModel: LocalViewModel = viewModel()
+
+    LaunchedEffect(Unit) {
+        if (!isBackFromSong || artist == ARTIST_FAVORITE) {
+            localViewModel.updateArtists()
+        }
+    }
+
+    LaunchedEffect(artist to onSuccess) {
+        localViewModel.showSongs(artist, onSuccess)
+    }
+
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 

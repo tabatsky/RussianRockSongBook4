@@ -53,50 +53,40 @@ open class CommonViewModel @Inject constructor(
     fun back(onFinish: () -> Unit = {}) {
         Log.e("current screen", currentScreenVariant.value.toString())
         when (currentScreenVariant.value) {
-            CurrentScreenVariant.START,
-            CurrentScreenVariant.SONG_LIST,
-            CurrentScreenVariant.FAVORITE -> {
+            is CurrentScreenVariant.START,
+            is CurrentScreenVariant.SONG_LIST,
+            is CurrentScreenVariant.FAVORITE -> {
                 onFinish()
             }
             CurrentScreenVariant.CLOUD_SONG_TEXT -> {
-                selectScreen(CurrentScreenVariant.CLOUD_SEARCH, true)
+                selectScreen(CurrentScreenVariant.CLOUD_SEARCH(isBackFromSong = true))
             }
             CurrentScreenVariant.SONG_TEXT -> {
                 if (currentArtist.value != ARTIST_FAVORITE) {
-                    selectScreen(CurrentScreenVariant.SONG_LIST, true)
+                    selectScreen(CurrentScreenVariant.SONG_LIST(
+                        artist = currentArtist.value,
+                        isBackFromSong = true))
                 } else {
-                    selectScreen(CurrentScreenVariant.FAVORITE, true)
+                    selectScreen(CurrentScreenVariant.FAVORITE(isBackFromSong = true))
                 }
             }
             else -> {
                 if (currentArtist.value != ARTIST_FAVORITE) {
-                    selectScreen(CurrentScreenVariant.SONG_LIST, false)
+                    selectScreen(CurrentScreenVariant.SONG_LIST(
+                        artist = currentArtist.value,
+                        isBackFromSong = false))
                 } else {
-                    selectScreen(CurrentScreenVariant.FAVORITE, false)
+                    selectScreen(CurrentScreenVariant.FAVORITE(isBackFromSong = false))
                 }
             }
         }
     }
 
     fun selectScreen(
-        screen: CurrentScreenVariant,
-        isBackFromSong: Boolean = false
+        screen: CurrentScreenVariant
     ) {
         commonStateHolder.currentScreenVariant.value = screen
         Log.e("select screen", currentScreenVariant.value.toString())
-        if (screen == CurrentScreenVariant.SONG_LIST) {
-            if (!isBackFromSong) {
-                getArtists()
-            }
-            callbacks.onArtistSelected(currentArtist.value)
-        }
-        if (screen == CurrentScreenVariant.FAVORITE) {
-            getArtists()
-            callbacks.onArtistSelected(ARTIST_FAVORITE)
-        }
-        if (screen == CurrentScreenVariant.CLOUD_SEARCH && !isBackFromSong) {
-            callbacks.onCloudSearchScreenSelected()
-        }
     }
 
     fun setAppWasUpdated(value: Boolean) {
@@ -119,7 +109,7 @@ open class CommonViewModel @Inject constructor(
     fun sendWarning(comment: String) =
         (this as? SongTextViewModelContract)?.sendWarningImpl(comment)
 
-    private fun getArtists() {
+    fun updateArtists() {
         getArtistsJob?.let {
             if (!it.isCancelled) it.cancel()
         }

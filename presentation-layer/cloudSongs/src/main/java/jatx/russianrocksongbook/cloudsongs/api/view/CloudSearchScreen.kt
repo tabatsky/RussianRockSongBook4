@@ -4,4 +4,5 @@ import androidx.compose.runtime.Composable
 import jatx.russianrocksongbook.cloudsongs.internal.view.cloudsearch.CloudSearchScreenImpl
 
 @Composable
-fun CloudSearchScreen() = CloudSearchScreenImpl()
+fun CloudSearchScreen(isBackFromSong: Boolean) =
+    CloudSearchScreenImpl(isBackFromSong)

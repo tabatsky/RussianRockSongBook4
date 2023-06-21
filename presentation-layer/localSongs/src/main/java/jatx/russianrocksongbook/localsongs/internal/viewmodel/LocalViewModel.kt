@@ -76,26 +76,43 @@ internal open class LocalViewModel @Inject constructor(
                 selectScreen(CurrentScreenVariant.ADD_SONG)
             }
             ARTIST_CLOUD_SONGS -> {
-                selectScreen(CurrentScreenVariant.CLOUD_SEARCH)
+                selectScreen(CurrentScreenVariant.CLOUD_SEARCH())
             }
             ARTIST_DONATION -> {
                 selectScreen(CurrentScreenVariant.DONATION)
             }
+            ARTIST_FAVORITE -> {
+                selectScreen(
+                    CurrentScreenVariant.FAVORITE(
+                        isBackFromSong = false
+                    )
+                )
+            }
             else -> {
-                showSongs(artist, onSuccess)
+                selectScreen(
+                    CurrentScreenVariant.SONG_LIST(
+                        artist = artist,
+                        isBackFromSong = false,
+                        onSuccess = onSuccess
+                    )
+                )
             }
         }
     }
 
-    private fun showSongs(
+    fun showSongs(
         artist: String,
         onSuccess: (() -> Unit)? = null
     ) {
+        Log.e("show songs", artist)
         localStateHolder
             .commonStateHolder
             .currentArtist.value = artist
         localStateHolder.currentSongCount.value =
             getCountByArtistUseCase.execute(artist)
+        showSongsJob?.let {
+            if (!it.isCancelled) it.cancel()
+        }
         showSongsJob = viewModelScope
             .launch {
                 withContext(Dispatchers.IO) {
@@ -107,10 +124,12 @@ internal open class LocalViewModel @Inject constructor(
                                     ?: "null"
                                 val newArtist = it.getOrNull(0)?.artist ?: "null"
                                 localStateHolder.currentSongList.value = it
-                                if (onSuccess != null) {
-                                    onSuccess()
-                                } else if (oldArtist != newArtist) {
-                                    selectSong(0)
+                                if (newArtist != "null") {
+                                    if (onSuccess != null) {
+                                        onSuccess()
+                                    } else if (oldArtist != newArtist) {
+                                        selectSong(0)
+                                    }
                                 }
                             }
                         }

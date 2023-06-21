@@ -15,8 +15,15 @@ import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 
 @Composable
-internal fun CloudSearchScreenImpl() {
+internal fun CloudSearchScreenImpl(isBackFromSong: Boolean) {
     val cloudViewModel: CloudViewModel = viewModel()
+
+    LaunchedEffect(Unit) {
+        if (!isBackFromSong) {
+            cloudViewModel.callbacks.onCloudSearchScreenSelected()
+        }
+    }
+
     val theme = cloudViewModel.settings.theme
 
     BoxWithConstraints(

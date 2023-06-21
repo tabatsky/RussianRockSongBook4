@@ -9,7 +9,6 @@ import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_ERROR
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
-import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import jatx.russianrocksongbook.viewmodel.R
 import kotlinx.coroutines.flow.asStateFlow
 import java.io.File
@@ -67,7 +66,6 @@ internal class AddArtistViewModel @Inject constructor(
                             )
                             showToast(toastText)
                             callbacks.onArtistSelected(uploadArtist.value)
-                            selectScreen(CurrentScreenVariant.SONG_LIST)
                         }
                     }
                     STATUS_ERROR -> showToast(result.message ?: "")
