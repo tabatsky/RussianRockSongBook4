@@ -39,7 +39,7 @@ internal class VoiceCommandViewModel @Inject constructor(
             if (index < 0) {
                 showToast(R.string.toast_artist_not_found)
             } else {
-                selectArtist(allArtists[index]) { selectSong(0) }
+                selectArtist(artist = allArtists[index])
             }
         } else if (command.lowercase().startsWith("открой песню ")) {
             val voiceSearch = command

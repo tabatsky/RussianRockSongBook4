@@ -48,9 +48,7 @@ internal fun SongListMenuBody(
             fontSizeSp = fontSizeSp,
             theme = theme,
             onClick = {
-                localViewModel.selectArtist(artist) {
-                    localViewModel.selectSong(0)
-                }
+                localViewModel.selectArtist(artist = artist)
                 onCloseDrawer()
             }
         )
