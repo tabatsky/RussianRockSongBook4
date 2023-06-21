@@ -62,7 +62,7 @@ internal open class LocalViewModel @Inject constructor(
 
     fun selectArtist(
         artist: String,
-        onSuccess: () -> Unit = {}
+        onSuccess: (() -> Unit)? = null
     ) {
         Log.e("select artist", artist)
         showSongsJob?.let {
@@ -89,7 +89,7 @@ internal open class LocalViewModel @Inject constructor(
 
     private fun showSongs(
         artist: String,
-        onSuccess: () -> Unit
+        onSuccess: (() -> Unit)? = null
     ) {
         localStateHolder
             .commonStateHolder
@@ -107,10 +107,11 @@ internal open class LocalViewModel @Inject constructor(
                                     ?: "null"
                                 val newArtist = it.getOrNull(0)?.artist ?: "null"
                                 localStateHolder.currentSongList.value = it
-                                if (oldArtist != newArtist) {
+                                if (onSuccess != null) {
+                                    onSuccess()
+                                } else if (oldArtist != newArtist) {
                                     selectSong(0)
                                 }
-                                onSuccess()
                             }
                         }
                 }
