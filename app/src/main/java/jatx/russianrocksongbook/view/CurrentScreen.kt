@@ -30,15 +30,23 @@ fun CurrentScreen() {
         is CurrentScreenVariant.SONG_LIST ->
             SongListScreen(
                 artist = screenVariant.artist,
-                isBackFromSong = screenVariant.isBackFromSong,
-                onSuccess = screenVariant.onSuccess
+                isBackFromSong = screenVariant.isBackFromSong
             )
         is CurrentScreenVariant.FAVORITE ->
             SongListScreen(
                 artist = ARTIST_FAVORITE,
                 isBackFromSong = screenVariant.isBackFromSong
             )
-        is CurrentScreenVariant.SONG_TEXT -> SongTextScreen()
+        is CurrentScreenVariant.SONG_TEXT ->
+            SongTextScreen(
+                artist = screenVariant.artist,
+                position = screenVariant.position
+            )
+        is CurrentScreenVariant.SONG_TEXT_BY_ARTIST_AND_TITLE ->
+            SongListScreen(
+                artist = screenVariant.artist,
+                passToSongWithTitle = screenVariant.title
+            )
         is CurrentScreenVariant.SETTINGS -> SettingsScreen()
         is CurrentScreenVariant.CLOUD_SEARCH -> CloudSearchScreen(
             isBackFromSong = screenVariant.isBackFromSong

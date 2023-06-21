@@ -38,6 +38,7 @@ internal fun SongListBody(
 
     val theme = localViewModel.settings.theme
 
+    val currentArtist by localViewModel.currentArtist.collectAsState()
     val songList by localViewModel.currentSongList.collectAsState()
 
     val scrollPosition by localViewModel.scrollPosition.collectAsState()
@@ -57,8 +58,9 @@ internal fun SongListBody(
             fontSizeSp = fontSizeSp,
             onClick = {
                 Log.e("SongListBody", "selected: ${song.artist} - ${song.title}")
-                localViewModel.selectSong(index)
-                localViewModel.selectScreen(CurrentScreenVariant.SONG_TEXT)
+                localViewModel.selectScreen(
+                    CurrentScreenVariant
+                        .SONG_TEXT(currentArtist, index))
             }
         )
     }

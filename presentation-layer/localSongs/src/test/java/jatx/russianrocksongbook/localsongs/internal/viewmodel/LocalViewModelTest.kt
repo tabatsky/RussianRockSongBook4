@@ -67,8 +67,6 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
     private val songFlow = MutableStateFlow(songList[0])
 
-    private lateinit var onSuccess: () -> Unit
-
     @Before
     fun initLocal() {
         localStateHolder = LocalStateHolder(commonStateHolder)
@@ -88,18 +86,16 @@ open class LocalViewModelTest: CommonViewModelTest() {
         )
         localViewModel = spyk(_localViewModel)
 
-        onSuccess = mockk(relaxed = true)
-
-        every { localViewModel.selectArtist(any(), any()) } answers {
+        every { localViewModel.selectArtist(any()) } answers {
             if (arg(0) in listOf(
                     ARTIST_ADD_ARTIST,
                     ARTIST_ADD_SONG,
                     ARTIST_CLOUD_SONGS,
                     ARTIST_DONATION)
             ) {
-                _localViewModel.selectArtist(arg(0), arg(1))
+                _localViewModel.selectArtist(arg(0))
             } else {
-                _localViewModel.showSongs(arg(0), arg(1))
+                _localViewModel.showSongs(arg(0), null)
             }
         }
         every { getCountByArtistUseCase.execute(any()) } answers {
@@ -116,9 +112,9 @@ open class LocalViewModelTest: CommonViewModelTest() {
     }
 
     @Test
-    fun test101_selectArtist_Kino_withOnSuccess_isWorkingCorrect() {
+    fun test101_showSongs_Kino_withPassToSong_isWorkingCorrect() {
         songsFlow.value = songList
-        localViewModel.selectArtist("Кино", onSuccess)
+        localViewModel.showSongs("Кино", "Кукушка")
 
         TimeUnit.MILLISECONDS.sleep(200)
 
@@ -130,12 +126,11 @@ open class LocalViewModelTest: CommonViewModelTest() {
             Log.e("show songs", "Кино")
             getCountByArtistUseCase.execute("Кино")
             getSongsByArtistUseCase.execute("Кино")
-            onSuccess()
         }
     }
 
     @Test
-    fun test102_selectArtist_Kino_and_Alisa_withoutOnSuccess_isWorkingCorrect() {
+    fun test102_selectArtist_Kino_and_Alisa_withoutPassToSong_isWorkingCorrect() {
         val songList2 = listOf(
             Song(artist = "Кино", title = "title 6", text = "text text text"),
             Song(artist = "Кино", title = "title 7", text = "text text text"),
@@ -224,7 +219,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
     @Test
     fun test107_selectSong_isWorkingCorrect() {
         songsFlow.value = songList
-        localViewModel.selectArtist("Кино", onSuccess)
+        localViewModel.selectArtist("Кино")
 
         TimeUnit.MILLISECONDS.sleep(200)
 
@@ -241,7 +236,8 @@ open class LocalViewModelTest: CommonViewModelTest() {
             Log.e("show songs", "Кино")
             getCountByArtistUseCase.execute("Кино")
             getSongsByArtistUseCase.execute("Кино")
-            onSuccess()
+            Log.e("select song", "0")
+            getSongByArtistAndPositionUseCase.execute("Кино", 0)
             Log.e("select song", "13")
             getSongByArtistAndPositionUseCase.execute("Кино", 13)
         }

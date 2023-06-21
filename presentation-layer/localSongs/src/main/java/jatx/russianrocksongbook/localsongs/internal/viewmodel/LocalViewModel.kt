@@ -60,10 +60,7 @@ internal open class LocalViewModel @Inject constructor(
     private var selectSongJob: Job? = null
     private var uploadSongDisposable: Disposable? = null
 
-    fun selectArtist(
-        artist: String,
-        onSuccess: (() -> Unit)? = null
-    ) {
+    fun selectArtist(artist: String) {
         Log.e("select artist", artist)
         showSongsJob?.let {
             if (!it.isCancelled) it.cancel()
@@ -92,8 +89,7 @@ internal open class LocalViewModel @Inject constructor(
                 selectScreen(
                     CurrentScreenVariant.SONG_LIST(
                         artist = artist,
-                        isBackFromSong = false,
-                        onSuccess = onSuccess
+                        isBackFromSong = false
                     )
                 )
             }
@@ -102,7 +98,7 @@ internal open class LocalViewModel @Inject constructor(
 
     fun showSongs(
         artist: String,
-        onSuccess: (() -> Unit)? = null
+        passToSongWithTitle: String? = null
     ) {
         Log.e("show songs", artist)
         localStateHolder
@@ -125,8 +121,17 @@ internal open class LocalViewModel @Inject constructor(
                                 val newArtist = it.getOrNull(0)?.artist ?: "null"
                                 localStateHolder.currentSongList.value = it
                                 if (newArtist != "null") {
-                                    if (onSuccess != null) {
-                                        onSuccess()
+                                    if (passToSongWithTitle != null) {
+                                        currentSongList
+                                            .value
+                                            .map { it.title }
+                                            .indexOf(passToSongWithTitle)
+                                            .takeIf { it >= 0 }
+                                            ?.let { position ->
+                                                selectScreen(
+                                                    CurrentScreenVariant
+                                                        .SONG_TEXT(newArtist, position))
+                                            }
                                     } else if (oldArtist != newArtist) {
                                         selectSong(0)
                                     }
@@ -169,16 +174,28 @@ internal open class LocalViewModel @Inject constructor(
 
     fun nextSong() {
         if (currentSongCount.value > 0) {
-            selectSong((currentSongPosition.value + 1) % currentSongCount.value)
+            selectScreen(CurrentScreenVariant
+                .SONG_TEXT(
+                    artist = currentArtist.value,
+                    position = (currentSongPosition.value + 1) % currentSongCount.value
+                ))
         }
     }
 
     fun prevSong() {
         if (currentSongCount.value > 0) {
             if (currentSongPosition.value > 0) {
-                selectSong((currentSongPosition.value - 1) % currentSongCount.value)
+                selectScreen(CurrentScreenVariant
+                    .SONG_TEXT(
+                        artist = currentArtist.value,
+                        position = (currentSongPosition.value - 1) % currentSongCount.value
+                    ))
             } else {
-                selectSong(currentSongCount.value - 1)
+                selectScreen(CurrentScreenVariant
+                    .SONG_TEXT(
+                        artist = currentArtist.value,
+                        position = currentSongCount.value - 1
+                    ))
             }
         }
     }
@@ -206,9 +223,17 @@ internal open class LocalViewModel @Inject constructor(
                 )
                 if (currentSongCount.value > 0) {
                     if (currentSongPosition.value >= currentSongCount.value) {
-                        selectSong(currentSongPosition.value - 1)
+                        selectScreen(CurrentScreenVariant
+                            .SONG_TEXT(
+                                artist = currentArtist.value,
+                                position = currentSongPosition.value - 1
+                            ))
                     } else {
-                        selectSong(currentSongPosition.value)
+                        selectScreen(CurrentScreenVariant
+                            .SONG_TEXT(
+                                artist = currentArtist.value,
+                                position = currentSongPosition.value
+                            ))
                     }
                 } else {
                     back {}
@@ -241,9 +266,17 @@ internal open class LocalViewModel @Inject constructor(
                 .execute(currentArtist.value)
             if (currentSongCount.value > 0) {
                 if (currentSongPosition.value >= currentSongCount.value) {
-                    selectSong(currentSongPosition.value - 1)
+                    selectScreen(CurrentScreenVariant
+                        .SONG_TEXT(
+                            artist = currentArtist.value,
+                            position = currentSongPosition.value - 1
+                        ))
                 } else {
-                    selectSong(currentSongPosition.value)
+                    selectScreen(CurrentScreenVariant
+                        .SONG_TEXT(
+                            artist = currentArtist.value,
+                            position = currentSongPosition.value
+                        ))
                 }
             } else {
                 back {}

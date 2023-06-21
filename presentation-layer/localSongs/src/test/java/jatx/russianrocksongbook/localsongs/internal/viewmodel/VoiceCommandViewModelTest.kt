@@ -50,7 +50,7 @@ class VoiceCommandViewModelTest: LocalViewModelTest() {
         )
         voiceCommandViewModel = spyk(_voiceCommandViewModel)
 
-        every { voiceCommandViewModel.selectArtist(any(), any()) } answers {
+        every { voiceCommandViewModel.selectArtist(any()) } answers {
             if (arg(0) in listOf(
                     ARTIST_ADD_ARTIST,
                     ARTIST_ADD_SONG,
@@ -58,9 +58,9 @@ class VoiceCommandViewModelTest: LocalViewModelTest() {
                     ARTIST_DONATION
                 )
             ) {
-                _voiceCommandViewModel.selectArtist(arg(0), arg(1))
+                _voiceCommandViewModel.selectArtist(arg(0))
             } else {
-                _voiceCommandViewModel.showSongs(arg(0), arg(1))
+                _voiceCommandViewModel.showSongs(arg(0), null)
             }
         }
         every { getArtistsAsListUseCase.execute() } returns artistList

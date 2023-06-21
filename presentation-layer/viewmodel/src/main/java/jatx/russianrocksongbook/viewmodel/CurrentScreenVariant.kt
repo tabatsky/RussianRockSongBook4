@@ -4,11 +4,19 @@ sealed class CurrentScreenVariant {
     object START: CurrentScreenVariant()
     data class SONG_LIST(
         val artist: String,
-        val isBackFromSong: Boolean = false,
-        val onSuccess: (() -> Unit)? = null
+        val isBackFromSong: Boolean = false
     ): CurrentScreenVariant()
-    data class FAVORITE(val isBackFromSong: Boolean = false): CurrentScreenVariant()
-    object SONG_TEXT: CurrentScreenVariant()
+    data class FAVORITE(
+        val isBackFromSong: Boolean = false
+    ): CurrentScreenVariant()
+    data class SONG_TEXT(
+        val artist: String,
+        val position: Int
+        ): CurrentScreenVariant()
+    data class SONG_TEXT_BY_ARTIST_AND_TITLE(
+        val artist: String,
+        val title: String
+        ): CurrentScreenVariant()
     object ADD_ARTIST: CurrentScreenVariant()
     object ADD_SONG: CurrentScreenVariant()
     data class CLOUD_SEARCH(val isBackFromSong: Boolean = false): CurrentScreenVariant()
