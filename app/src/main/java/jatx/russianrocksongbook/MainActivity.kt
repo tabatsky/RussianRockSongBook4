@@ -60,11 +60,10 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             CurrentScreen()
+            asyncInit()
         }
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-
-        asyncInit()
     }
 
     @Inject

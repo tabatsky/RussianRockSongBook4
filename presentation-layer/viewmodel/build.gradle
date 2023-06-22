@@ -29,6 +29,12 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        versions.composeCompiler
+    }
     namespace 'jatx.russianrocksongbook.viewmodel'
 }
 
@@ -43,9 +49,16 @@ dependencies {
     kapt diDeps.hiltCompiler
     implementation diDeps.hiltExtensions
     kapt diDeps.hiltExtensionsProcessor
+    implementation diDeps.hiltNavigationCompose
 
     implementation commonDeps.documentFile
     implementation commonDeps.commonsLang
+
+    implementation commonDeps.activityCompose
+    implementation commonDeps.composeUi
+    implementation commonDeps.composeMaterial
+    implementation commonDeps.composeUiTooling
+    implementation commonDeps.navigationCompose
 
     api project(':domain-layer:usecase:local')
     api project(':data-layer:database')

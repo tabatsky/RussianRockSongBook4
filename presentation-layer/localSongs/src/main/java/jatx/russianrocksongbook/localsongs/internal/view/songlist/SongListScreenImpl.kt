@@ -6,7 +6,7 @@ import androidx.compose.material.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import kotlinx.coroutines.launch
@@ -17,7 +17,7 @@ internal fun SongListScreenImpl(
     isBackFromSong: Boolean,
     passToSongWithTitle: String?
 ) {
-    val localViewModel: LocalViewModel = viewModel()
+    val localViewModel = hiltViewModel<LocalViewModel>()
 
     LaunchedEffect(Unit) {
         if (!isBackFromSong || artist == ARTIST_FAVORITE) {
