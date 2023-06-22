@@ -4,4 +4,5 @@ import androidx.compose.runtime.*
 import jatx.russianrocksongbook.cloudsongs.internal.view.cloudsongtext.CloudSongTextScreenImpl
 
 @Composable
-fun CloudSongTextScreen() = CloudSongTextScreenImpl()
+fun CloudSongTextScreen(position: Int) =
+    CloudSongTextScreenImpl(position)

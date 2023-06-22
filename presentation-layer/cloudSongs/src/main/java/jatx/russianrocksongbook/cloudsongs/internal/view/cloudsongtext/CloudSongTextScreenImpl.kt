@@ -29,10 +29,20 @@ import kotlinx.coroutines.launch
 private val CLOUD_SONG_TEXT_APP_BAR_WIDTH = 96.dp
 
 @Composable
-internal fun CloudSongTextScreenImpl() {
+internal fun CloudSongTextScreenImpl(position: Int) {
     val cloudViewModel: CloudViewModel = viewModel()
 
-    val position by cloudViewModel.cloudSongPosition.collectAsState()
+    val key = position
+    var lastKey by remember { mutableStateOf(key) }
+    val keyChanged = key != lastKey
+
+    if (keyChanged) {
+        lastKey = key
+    }
+
+    LaunchedEffect(key) {
+        cloudViewModel.selectCloudSong(position)
+    }
 
     val cloudSongsFlow by cloudViewModel
         .cloudSongsFlow.collectAsState()
@@ -113,18 +123,20 @@ internal fun CloudSongTextScreenImpl() {
 
             @Composable
             fun TheBody(modifier: Modifier) {
-                CloudSongTextBody(
-                    W = W,
-                    H = H,
-                    cloudSong = _cloudSong,
-                    invalidateCounter = invalidateCounter,
-                    listState = listState,
-                    fontSizeTextSp = fontSizeTextSp,
-                    fontSizeTitleSp = fontSizeTitleSp,
-                    theme = theme,
-                    modifier = modifier,
-                    onWordClick = onWordClick
-                )
+                if (!keyChanged) {
+                    CloudSongTextBody(
+                        W = W,
+                        H = H,
+                        cloudSong = _cloudSong,
+                        invalidateCounter = invalidateCounter,
+                        listState = listState,
+                        fontSizeTextSp = fontSizeTextSp,
+                        fontSizeTitleSp = fontSizeTitleSp,
+                        theme = theme,
+                        modifier = modifier,
+                        onWordClick = onWordClick
+                    )
+                }
             }
 
 
