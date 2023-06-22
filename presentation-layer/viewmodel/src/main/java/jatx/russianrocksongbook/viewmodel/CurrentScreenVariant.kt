@@ -17,10 +17,14 @@ sealed class CurrentScreenVariant {
         val artist: String,
         val title: String
         ): CurrentScreenVariant()
+    data class CLOUD_SEARCH(
+        val isBackFromSong: Boolean = false
+    ): CurrentScreenVariant()
+    data class CLOUD_SONG_TEXT(
+        val position: Int
+    ): CurrentScreenVariant()
     object ADD_ARTIST: CurrentScreenVariant()
     object ADD_SONG: CurrentScreenVariant()
-    data class CLOUD_SEARCH(val isBackFromSong: Boolean = false): CurrentScreenVariant()
-    object CLOUD_SONG_TEXT: CurrentScreenVariant()
     object DONATION: CurrentScreenVariant()
     object SETTINGS: CurrentScreenVariant()
 }

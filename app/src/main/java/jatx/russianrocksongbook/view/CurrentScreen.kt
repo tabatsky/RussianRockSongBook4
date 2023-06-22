@@ -51,7 +51,9 @@ fun CurrentScreen() {
         is CurrentScreenVariant.CLOUD_SEARCH -> CloudSearchScreen(
             isBackFromSong = screenVariant.isBackFromSong
         )
-        is CurrentScreenVariant.CLOUD_SONG_TEXT -> CloudSongTextScreen()
+        is CurrentScreenVariant.CLOUD_SONG_TEXT -> CloudSongTextScreen(
+            position = screenVariant.position
+        )
         is CurrentScreenVariant.ADD_ARTIST -> AddArtistScreen()
         is CurrentScreenVariant.ADD_SONG -> AddSongScreen()
         is CurrentScreenVariant.DONATION -> DonationScreen()

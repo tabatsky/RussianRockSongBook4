@@ -78,8 +78,7 @@ internal fun CloudSearchBody(
 
     val onItemClick: (Int, CloudSong) -> Unit = { index, cloudSong ->
         println("selected: ${cloudSong.artist} - ${cloudSong.title}")
-        cloudViewModel.selectScreen(CurrentScreenVariant.CLOUD_SONG_TEXT)
-        cloudViewModel.selectCloudSong(index)
+        cloudViewModel.selectScreen(CurrentScreenVariant.CLOUD_SONG_TEXT(index))
     }
 
     Column(
