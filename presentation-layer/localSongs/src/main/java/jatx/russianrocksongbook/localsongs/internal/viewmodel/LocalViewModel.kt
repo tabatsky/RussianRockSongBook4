@@ -111,6 +111,7 @@ internal open class LocalViewModel @Inject constructor(
         }
         showSongsJob = viewModelScope
             .launch {
+                var _passToSongWithTitle: String? = passToSongWithTitle
                 withContext(Dispatchers.IO) {
                     getSongsByArtistUseCase
                         .execute(artist)
@@ -121,13 +122,14 @@ internal open class LocalViewModel @Inject constructor(
                                 val newArtist = it.getOrNull(0)?.artist ?: "null"
                                 localStateHolder.currentSongList.value = it
                                 if (newArtist != "null") {
-                                    if (passToSongWithTitle != null) {
+                                    if (_passToSongWithTitle != null) {
                                         currentSongList
                                             .value
                                             .map { it.title }
-                                            .indexOf(passToSongWithTitle)
+                                            .indexOf(_passToSongWithTitle)
                                             .takeIf { it >= 0 }
                                             ?.let { position ->
+                                                _passToSongWithTitle = null
                                                 selectScreen(
                                                     CurrentScreenVariant
                                                         .SONG_TEXT(newArtist, position))
@@ -213,7 +215,7 @@ internal open class LocalViewModel @Inject constructor(
     }
 
     fun setFavorite(value: Boolean) {
-        Log.e("set favorite", value.toString())
+        Log.e("set favorite", value.toString() + " " + currentArtist.value)
         currentSong.value?.copy(favorite = value)?.let {
             updateCurrentSong(it)
             saveSong(it)
