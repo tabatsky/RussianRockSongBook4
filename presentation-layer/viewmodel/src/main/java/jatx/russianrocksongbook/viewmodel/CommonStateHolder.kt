@@ -2,6 +2,7 @@ package jatx.russianrocksongbook.viewmodel
 
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
+import jatx.russianrocksongbook.viewmodel.view.destinationStart
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 

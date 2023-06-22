@@ -4,6 +4,11 @@ import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import jatx.russianrocksongbook.addartist.api.view.AddArtistScreen
 import jatx.russianrocksongbook.addsong.api.view.AddSongScreen
 import jatx.russianrocksongbook.cloudsongs.api.view.CloudSearchScreen
@@ -16,6 +21,12 @@ import jatx.russianrocksongbook.settings.api.view.SettingsScreen
 import jatx.russianrocksongbook.start.api.view.StartScreen
 import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
+import jatx.russianrocksongbook.viewmodel.view.argArtist
+import jatx.russianrocksongbook.viewmodel.view.argIsBackFromSong
+import jatx.russianrocksongbook.viewmodel.view.destinationSongList
+import jatx.russianrocksongbook.viewmodel.view.destinationStart
+import jatx.russianrocksongbook.viewmodel.view.injectNavController
+import java.lang.IllegalStateException
 
 @Composable
 fun CurrentScreen() {
@@ -57,5 +68,30 @@ fun CurrentScreen() {
         is CurrentScreenVariant.ADD_ARTIST -> AddArtistScreen()
         is CurrentScreenVariant.ADD_SONG -> AddSongScreen()
         is CurrentScreenVariant.DONATION -> DonationScreen()
+    }
+}
+
+@Composable
+fun CurrentScreenNew() {
+    val navController = rememberNavController()
+    injectNavController(navController)
+    NavHost(navController, startDestination = destinationStart) {
+        composable(destinationStart) {
+            StartScreen()
+        }
+        composable(
+            "$destinationSongList/{artist}/{isBackFromSong}",
+            arguments = listOf(
+                navArgument(argArtist) { type = NavType.StringType },
+                navArgument(argIsBackFromSong) { type = NavType.BoolType },
+            )
+        ) { backStackEntry ->
+            SongListScreen(
+                artist = backStackEntry.arguments?.getString(argArtist)
+                    ?: throw IllegalStateException(),
+                isBackFromSong = backStackEntry.arguments?.getBoolean(argIsBackFromSong)
+                    ?: throw IllegalStateException()
+            )
+        }
     }
 }

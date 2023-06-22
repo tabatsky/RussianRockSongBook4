@@ -2,8 +2,10 @@ package jatx.russianrocksongbook.start.internal.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
+import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
+import jatx.russianrocksongbook.viewmodel.view.NavControllerHolder
+import jatx.russianrocksongbook.viewmodel.view.destinationSongList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -43,6 +45,8 @@ internal class StartViewModel @Inject constructor(
                 }
                 settings.confirmAppUpdate()
                 selectScreen(CurrentScreenVariant.SONG_LIST(settings.defaultArtist))
+                //NavControllerHolder.navController
+                //    .navigate("$destinationSongList/${settings.defaultArtist}/false")
             }
         }
     }

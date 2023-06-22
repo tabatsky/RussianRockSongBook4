@@ -54,6 +54,7 @@ dependencies {
     kapt diDeps.hiltCompiler
     implementation diDeps.hiltExtensions
     kapt diDeps.hiltExtensionsProcessor
+    implementation diDeps.hiltNavigationCompose
 
     api project(':domain-layer:models:cloud')
     api project(':domain-layer:models:local')

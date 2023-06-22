@@ -61,6 +61,7 @@ dependencies {
     kapt diDeps.hiltCompiler
     implementation diDeps.hiltExtensions
     kapt diDeps.hiltExtensionsProcessor
+    implementation diDeps.hiltNavigationCompose
 
     implementation tvDeps.tvFoundation
     implementation tvDeps.tvMaterial
