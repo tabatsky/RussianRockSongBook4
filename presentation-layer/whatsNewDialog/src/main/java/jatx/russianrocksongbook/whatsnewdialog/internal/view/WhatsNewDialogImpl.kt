@@ -16,14 +16,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.hilt.navigation.compose.hiltViewModel
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
 import jatx.russianrocksongbook.whatsnewdialog.R
 
 @Composable
 internal fun WhatsNewDialogImpl() {
-    val commonViewModel = hiltViewModel<CommonViewModel>()
+    val commonViewModel = CommonViewModel.getInstance()
 
     val theme = commonViewModel.settings.theme
     val fontScale = commonViewModel.settings.getSpecificFontScale(ScalePow.TEXT)

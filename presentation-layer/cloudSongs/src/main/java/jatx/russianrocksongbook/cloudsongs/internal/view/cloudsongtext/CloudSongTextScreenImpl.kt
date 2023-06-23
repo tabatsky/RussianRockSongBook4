@@ -5,11 +5,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import jatx.clickablewordstextview.api.Word
 import jatx.russianrocksongbook.cloudsongs.R
@@ -30,10 +30,10 @@ private val CLOUD_SONG_TEXT_APP_BAR_WIDTH = 96.dp
 
 @Composable
 internal fun CloudSongTextScreenImpl(position: Int) {
-    val cloudViewModel: CloudViewModel = viewModel()
+    val cloudViewModel = CloudViewModel.getInstance()
 
     val key = position
-    var lastKey by remember { mutableStateOf(key) }
+    var lastKey by rememberSaveable { mutableStateOf(key) }
     val keyChanged = key != lastKey
 
     if (keyChanged) {
@@ -70,14 +70,14 @@ internal fun CloudSongTextScreenImpl(position: Int) {
         }
     }
 
-    var showYandexDialog by remember { mutableStateOf(false) }
-    var showVkDialog by remember { mutableStateOf(false) }
-    var showYoutubeMusicDialog by remember { mutableStateOf(false) }
+    var showYandexDialog by rememberSaveable { mutableStateOf(false) }
+    var showVkDialog by rememberSaveable { mutableStateOf(false) }
+    var showYoutubeMusicDialog by rememberSaveable { mutableStateOf(false) }
 
-    var showWarningDialog by remember { mutableStateOf(false) }
+    var showWarningDialog by rememberSaveable { mutableStateOf(false) }
 
-    var showChordDialog by remember { mutableStateOf(false) }
-    var selectedChord by remember { mutableStateOf("") }
+    var showChordDialog by rememberSaveable { mutableStateOf(false) }
+    var selectedChord by rememberSaveable { mutableStateOf("") }
     val onWordClick: (Word) -> Unit = {
         selectedChord = it.text
         showChordDialog = true
@@ -91,7 +91,7 @@ internal fun CloudSongTextScreenImpl(position: Int) {
     val onLikeClick = { cloudViewModel.voteForCurrent(1) }
     val onDislikeClick = { cloudViewModel.voteForCurrent(-1) }
 
-    var showDeleteDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
     val onDislikeLongClick = {
         Log.e("dislike", "long click")
         showDeleteDialog = true

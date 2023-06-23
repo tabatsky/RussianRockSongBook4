@@ -17,10 +17,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.settings.R
+import jatx.russianrocksongbook.settings.internal.viewmodel.SettingsViewModel
 import jatx.russianrocksongbook.testing.TEXT_FIELD_SCROLL_SPEED
+
+// TODO: remove settingsRepository from param
 
 @Composable
 internal fun ScrollSpeedRow(
@@ -30,11 +34,13 @@ internal fun ScrollSpeedRow(
     fontSize: TextUnit,
     onValueChanged: (Float) -> Unit
 ) {
+    val settingsViewModel: SettingsViewModel = hiltViewModel()
+
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        var text by remember { mutableStateOf(settingsRepository.scrollSpeed.toString()) }
+        var text by settingsViewModel.stringScrollSpeed
         Text(
             text = stringResource(id = R.string.scroll_speed),
             modifier = Modifier
@@ -71,7 +77,7 @@ internal fun ScrollSpeedRow(
                         onValueChanged(0f)
                         ""
                     }
-                } catch (e: NumberFormatException) { }
+                } catch (_: NumberFormatException) { }
             }
         )
     }

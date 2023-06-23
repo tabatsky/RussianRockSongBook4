@@ -12,11 +12,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import jatx.russianrocksongbook.commonview.spinner.Spinner
 import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.settings.R
+import jatx.russianrocksongbook.settings.internal.viewmodel.SettingsViewModel
 import jatx.russianrocksongbook.testing.FONT_SCALE_SPINNER
+
+// TODO: remove settingsRepository from param
 
 @Composable
 internal fun FontScaleRow(
@@ -26,6 +30,8 @@ internal fun FontScaleRow(
     fontSize: TextUnit,
     onPositionChanged: (Int) -> Unit
 ) {
+    val settingsViewModel: SettingsViewModel = hiltViewModel()
+
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
@@ -49,8 +55,10 @@ internal fun FontScaleRow(
             testTag = FONT_SCALE_SPINNER,
             fontSize = fontSize,
             valueList = valueList,
-            initialPosition = settingsRepository.commonFontScaleEnum.ordinal,
-            onPositionChanged = onPositionChanged
+            initialPosition = settingsViewModel.valueFontScale.value.ordinal,
+            onPositionChanged = onPositionChanged,
+            positionState = settingsViewModel.positionFontScale,
+            isExpandedState = settingsViewModel.isExpandedFontScale
         )
     }
 }

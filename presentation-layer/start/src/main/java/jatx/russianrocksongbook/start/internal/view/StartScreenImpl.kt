@@ -13,14 +13,14 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.start.R
 import jatx.russianrocksongbook.start.internal.viewmodel.StartViewModel
 
 @Composable
 internal fun StartScreenImpl() {
-    val startViewModel = hiltViewModel<StartViewModel>()
+    val startViewModel = StartViewModel.getInstance()
+    startViewModel.asyncInit()
 
     val theme = startViewModel.settings.theme
     val currentProgress by startViewModel.stubCurrentProgress.collectAsState()

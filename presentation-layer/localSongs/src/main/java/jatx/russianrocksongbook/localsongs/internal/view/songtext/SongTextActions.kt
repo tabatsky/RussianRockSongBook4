@@ -2,7 +2,6 @@ package jatx.russianrocksongbook.localsongs.internal.view.songtext
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.commonview.buttons.CommonIconButton
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
@@ -16,7 +15,7 @@ internal fun SongTextActions(
     isFavorite: Boolean,
     onSongChanged: () -> Unit
 ) {
-    val localViewModel: LocalViewModel = viewModel()
+    val localViewModel = LocalViewModel.getInstance()
 
     if (localViewModel.isAutoPlayMode.collectAsState().value) {
         val onPauseClick = {

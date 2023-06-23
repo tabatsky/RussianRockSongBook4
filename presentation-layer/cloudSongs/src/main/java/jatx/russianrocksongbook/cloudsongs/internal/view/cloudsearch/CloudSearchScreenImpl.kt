@@ -6,9 +6,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.CloudViewModel
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
@@ -16,13 +16,7 @@ import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 
 @Composable
 internal fun CloudSearchScreenImpl(isBackFromSong: Boolean) {
-    val cloudViewModel: CloudViewModel = viewModel()
-
-    LaunchedEffect(Unit) {
-        if (!isBackFromSong) {
-            cloudViewModel.callbacks.onCloudSearchScreenSelected()
-        }
-    }
+    val cloudViewModel = CloudViewModel.getInstance()
 
     val theme = cloudViewModel.settings.theme
 
@@ -34,11 +28,25 @@ internal fun CloudSearchScreenImpl(isBackFromSong: Boolean) {
         val H = this.maxHeight
 
         val isPortrait = W < H
-        var isLastOrientationPortrait by remember { mutableStateOf(isPortrait) }
+        var isLastOrientationPortrait by rememberSaveable { mutableStateOf(isPortrait) }
+
+        val wasOrientationChanged = isPortrait != isLastOrientationPortrait
 
         LaunchedEffect(isPortrait) {
-            if (isPortrait != isLastOrientationPortrait) {
+            if (wasOrientationChanged) {
                 isLastOrientationPortrait = isPortrait
+                cloudViewModel.updateNeedScroll(true)
+            }
+        }
+
+        LaunchedEffect(Unit) {
+            if (!isBackFromSong && !wasOrientationChanged) {
+                cloudViewModel.callbacks.onCloudSearchScreenSelected()
+            }
+        }
+
+        LaunchedEffect(Unit) {
+            if (isBackFromSong) {
                 cloudViewModel.updateNeedScroll(true)
             }
         }

@@ -15,14 +15,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.commonview.R
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
 
 @Composable
 fun ConfirmDialog(
-    commonViewModel: CommonViewModel = viewModel(),
+    commonViewModel: CommonViewModel = CommonViewModel.getInstance(),
     @StringRes titleRes: Int,
     @StringRes messageRes: Int,
     invertColors: Boolean = false,

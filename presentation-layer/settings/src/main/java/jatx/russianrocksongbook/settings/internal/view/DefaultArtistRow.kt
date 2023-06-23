@@ -13,7 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import jatx.russianrocksongbook.commonview.spinner.Spinner
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_ADD_ARTIST
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_ADD_SONG
@@ -25,6 +25,8 @@ import jatx.russianrocksongbook.settings.R
 import jatx.russianrocksongbook.settings.internal.viewmodel.SettingsViewModel
 import jatx.russianrocksongbook.testing.DEFAULT_ARTIST_SPINNER
 
+// TODO: remove settingsRepository from param
+
 @Composable
 internal fun DefaultArtistRow(
     modifier: Modifier,
@@ -33,7 +35,7 @@ internal fun DefaultArtistRow(
     fontSize: TextUnit,
     onValueChanged: (String) -> Unit
 ) {
-    val settingsViewModel: SettingsViewModel = viewModel()
+    val settingsViewModel: SettingsViewModel = hiltViewModel()
 
     val artistList by settingsViewModel.artistList.collectAsState()
     val artists = ArrayList(artistList).apply {
@@ -42,7 +44,7 @@ internal fun DefaultArtistRow(
         remove(ARTIST_ADD_ARTIST)
         remove(ARTIST_DONATION)
     }
-    val initialPosition = artists.indexOf(settingsRepository.defaultArtist)
+    val initialPosition = artists.indexOf(settingsViewModel.valueDefaultArtist.value)
 
     Row(
         modifier = modifier,
@@ -70,7 +72,9 @@ internal fun DefaultArtistRow(
             initialPosition = initialPosition,
             onPositionChanged = {
                 onValueChanged(artists[it])
-            }
+            },
+            positionState = settingsViewModel.positionDefaultArtist,
+            isExpandedState = settingsViewModel.isExpandedDefaultArtist
         )
     }
 }

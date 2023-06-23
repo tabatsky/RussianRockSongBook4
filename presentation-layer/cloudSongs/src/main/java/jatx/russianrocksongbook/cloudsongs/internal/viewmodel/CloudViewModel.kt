@@ -1,6 +1,9 @@
 package jatx.russianrocksongbook.cloudsongs.internal.viewmodel
 
 import android.annotation.SuppressLint
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.cachedIn
@@ -15,7 +18,7 @@ import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_ERROR
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
-import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
+import jatx.russianrocksongbook.viewmodel.navigation.CurrentScreenVariant
 import jatx.russianrocksongbook.viewmodel.contracts.SongTextViewModelContract
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
@@ -54,6 +57,21 @@ internal class CloudViewModel @Inject constructor(
     val orderBy = cloudStateHolder.orderBy.asStateFlow()
 
     val invalidateCounter = cloudStateHolder.invalidateCounter.asStateFlow()
+
+    val positionOrderBy = mutableStateOf(0)
+    val isExpandedOrderBy = mutableStateOf(false)
+
+    companion object {
+        private const val key = "Cloud"
+
+        @Composable
+        fun getInstance(): CloudViewModel {
+            if (!storage.containsKey(key)){
+                storage[key] = hiltViewModel<CloudViewModel>()
+            }
+            return storage[key] as CloudViewModel
+        }
+    }
 
     fun cloudSearch(searchFor: String, orderBy: OrderBy) {
         updateSearchState(SearchState.LOADING)
@@ -109,13 +127,15 @@ internal class CloudViewModel @Inject constructor(
 
     fun nextCloudSong() {
         if (cloudSongPosition.value + 1 < cloudSongCount.value)
-            selectScreen(CurrentScreenVariant
+            selectScreen(
+                CurrentScreenVariant
                 .CLOUD_SONG_TEXT(cloudSongPosition.value + 1))
     }
 
     fun prevCloudSong() {
         if (cloudSongPosition.value > 0)
-            selectScreen(CurrentScreenVariant
+            selectScreen(
+                CurrentScreenVariant
                 .CLOUD_SONG_TEXT(cloudSongPosition.value - 1))
     }
 

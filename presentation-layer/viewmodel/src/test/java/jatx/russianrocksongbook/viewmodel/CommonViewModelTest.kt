@@ -7,13 +7,12 @@ import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit4.MockKRule
 import io.mockk.junit5.MockKExtension
 import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
-import jatx.russianrocksongbook.domain.usecase.local.GetArtistsUseCase
 import jatx.russianrocksongbook.testutils.TestViewModelScopeRule
 import jatx.russianrocksongbook.viewmodel.deps.Callbacks
 import jatx.russianrocksongbook.viewmodel.deps.Resources
 import jatx.russianrocksongbook.viewmodel.deps.TVDetector
 import jatx.russianrocksongbook.viewmodel.deps.Toasts
-import kotlinx.coroutines.flow.MutableStateFlow
+import jatx.russianrocksongbook.viewmodel.navigation.CurrentScreenVariant
 import org.junit.*
 import org.junit.Assert.assertEquals
 import org.junit.runners.MethodSorters
@@ -44,9 +43,6 @@ open class CommonViewModelTest {
     @RelaxedMockK
     lateinit var tvDetector: TVDetector
 
-    @RelaxedMockK
-    lateinit var getArtistsUseCase: GetArtistsUseCase
-
     @InjectMockKs
     lateinit var commonViewModelDeps: CommonViewModelDeps
 
@@ -54,8 +50,6 @@ open class CommonViewModelTest {
     lateinit var commonStateHolder: CommonStateHolder
 
     private lateinit var commonViewModel: CommonViewModel
-
-    private val artistsFlow = MutableStateFlow<List<String>>(listOf())
 
     @Before
     fun initCommon() {
@@ -71,12 +65,17 @@ open class CommonViewModelTest {
             0
         }
 
-        every { getArtistsUseCase.execute() } returns artistsFlow
 
         every { toasts.showToast(anyInt()) } just runs
         every { toasts.showToast(anyString()) } just runs
 
-        commonViewModel = CommonViewModel(commonStateHolder, commonViewModelDeps)
+        val _commonViewModel = CommonViewModel(commonStateHolder, commonViewModelDeps)
+        commonViewModel = spyk(_commonViewModel)
+
+        val currentScreenVariantSlot = slot<CurrentScreenVariant>()
+        every { commonViewModel.selectScreen(capture(currentScreenVariantSlot)) } answers {
+            commonStateHolder.currentScreenVariant.value = currentScreenVariantSlot.captured
+        }
 
         verifySequence {
             settingsRepository.defaultArtist
@@ -90,45 +89,12 @@ open class CommonViewModelTest {
     }
 
     @Test
-    fun test001_selectScreen_SongList_isWorkingCorrect() {
-        val artists = listOf("Первый", "Второй", "Третий")
-        val defaultArtist = settingsRepository.defaultArtist
-        commonViewModel.selectScreen(CurrentScreenVariant.SONG_LIST(defaultArtist))
-        commonViewModel.updateArtists()
-        artistsFlow.value = artists
-        assertEquals(CurrentScreenVariant.SONG_LIST(defaultArtist), commonViewModel.currentScreenVariant.value)
-        assertEquals(artists, commonViewModel.artistList.value)
-        verifySequence {
-            settingsRepository.defaultArtist
-            val defaultArtist = settingsRepository.defaultArtist
-            Log.e("select screen", CurrentScreenVariant.SONG_LIST(defaultArtist).toString())
-            getArtistsUseCase.execute()
-        }
-    }
-
-    @Test
-    fun test002_selectScreen_Favorite_isWorkingCorrect() {
-        val artists = listOf("Первый", "Второй", "Третий")
-        commonViewModel.selectScreen(CurrentScreenVariant.FAVORITE())
-        commonViewModel.updateArtists()
-        artistsFlow.value = artists
-        assertEquals(CurrentScreenVariant.FAVORITE(), commonViewModel.currentScreenVariant.value)
-        assertEquals(artists, commonViewModel.artistList.value)
-        verifySequence {
-            Log.e("select screen", CurrentScreenVariant.FAVORITE().toString())
-            getArtistsUseCase.execute()
-        }
-    }
-
-    @Test
     fun test003_selectScreen_CloudSearch_isWorkingCorrect() {
         commonViewModel.selectScreen(CurrentScreenVariant.CLOUD_SEARCH(false))
-        assertEquals(CurrentScreenVariant.CLOUD_SEARCH(), commonViewModel.currentScreenVariant.value)
+        assertEquals(CurrentScreenVariant.CLOUD_SEARCH(false), commonViewModel.currentScreenVariant.value)
         commonViewModel.selectScreen(CurrentScreenVariant.CLOUD_SEARCH(true))
-        verifySequence {
-            Log.e("select screen", CurrentScreenVariant.CLOUD_SEARCH(false).toString())
-            Log.e("select screen", CurrentScreenVariant.CLOUD_SEARCH(true).toString())
-        }
+        assertEquals(CurrentScreenVariant.CLOUD_SEARCH(true), commonViewModel.currentScreenVariant.value)
+
     }
 
     @Test

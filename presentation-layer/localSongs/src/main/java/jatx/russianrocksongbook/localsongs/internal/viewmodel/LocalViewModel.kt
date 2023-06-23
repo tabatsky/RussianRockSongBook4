@@ -1,6 +1,9 @@
 package jatx.russianrocksongbook.localsongs.internal.viewmodel
 
 import android.util.Log
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -12,7 +15,7 @@ import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.domain.repository.local.*
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
-import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
+import jatx.russianrocksongbook.viewmodel.navigation.CurrentScreenVariant
 import jatx.russianrocksongbook.viewmodel.contracts.SongTextViewModelContract
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -43,6 +46,8 @@ internal open class LocalViewModel @Inject constructor(
         localViewModelDeps.addWarningLocalUseCase
     private val addSongToCloudUseCase =
         localViewModelDeps.addSongToCloudUseCase
+    private val getArtistsUseCase =
+        localViewModelDeps.getArtistsUseCase
 
     val currentSongCount = localStateHolder.currentSongCount.asStateFlow()
     val currentSongList = localStateHolder.currentSongList.asStateFlow()
@@ -56,15 +61,27 @@ internal open class LocalViewModel @Inject constructor(
     val scrollPosition = localStateHolder.scrollPosition.asStateFlow()
     val needScroll = localStateHolder.needScroll.asStateFlow()
 
+    val editorText = mutableStateOf("")
+
     private var showSongsJob: Job? = null
     private var selectSongJob: Job? = null
+    private var getArtistsJob: Job? = null
     private var uploadSongDisposable: Disposable? = null
+
+    companion object {
+        private const val key = "Local"
+
+        @Composable
+        fun getInstance(): LocalViewModel {
+            if (!storage.containsKey(key)){
+                storage[key] = hiltViewModel<LocalViewModel>()
+            }
+            return storage[key] as LocalViewModel
+        }
+    }
 
     fun selectArtist(artist: String) {
         Log.e("select artist", artist)
-        showSongsJob?.let {
-            if (!it.isCancelled) it.cancel()
-        }
         when (artist) {
             ARTIST_ADD_ARTIST -> {
                 selectScreen(CurrentScreenVariant.ADD_ARTIST)
@@ -109,9 +126,9 @@ internal open class LocalViewModel @Inject constructor(
         showSongsJob?.let {
             if (!it.isCancelled) it.cancel()
         }
+        var _passToSongWithTitle = passToSongWithTitle
         showSongsJob = viewModelScope
             .launch {
-                var _passToSongWithTitle: String? = passToSongWithTitle
                 withContext(Dispatchers.IO) {
                     getSongsByArtistUseCase
                         .execute(artist)
@@ -120,8 +137,8 @@ internal open class LocalViewModel @Inject constructor(
                                 val oldArtist = currentSongList.value.getOrNull(0)?.artist
                                     ?: "null"
                                 val newArtist = it.getOrNull(0)?.artist ?: "null"
-                                localStateHolder.currentSongList.value = it
-                                if (newArtist != "null") {
+                                if (newArtist == artist || newArtist == "null") {
+                                    localStateHolder.currentSongList.value = it
                                     if (_passToSongWithTitle != null) {
                                         currentSongList
                                             .value
@@ -129,12 +146,14 @@ internal open class LocalViewModel @Inject constructor(
                                             .indexOf(_passToSongWithTitle)
                                             .takeIf { it >= 0 }
                                             ?.let { position ->
-                                                _passToSongWithTitle = null
                                                 selectScreen(
                                                     CurrentScreenVariant
-                                                        .SONG_TEXT(newArtist, position))
+                                                        .SONG_TEXT(newArtist, position)
+                                                )
                                             }
+                                        _passToSongWithTitle = null
                                     } else if (oldArtist != newArtist) {
+                                        Log.e("artists", "$oldArtist $newArtist")
                                         selectSong(0)
                                     }
                                 }
@@ -153,17 +172,29 @@ internal open class LocalViewModel @Inject constructor(
         updateScrollPosition(position)
         updateNeedScroll(true)
         localStateHolder.currentSongPosition.value = position
-        localStateHolder.isAutoPlayMode.value = false
-        localStateHolder.isEditorMode.value = false
+
+        val oldArtist = currentSong.value?.artist
+        val oldTitle = currentSong.value?.title
 
         selectSongJob = viewModelScope
-            .launch {
+            .launch() {
                 withContext(Dispatchers.IO) {
                     getSongByArtistAndPositionUseCase
                         .execute(currentArtist.value, position)
                         .collect {
                             withContext(Dispatchers.Main) {
                                 localStateHolder.currentSong.value = it
+
+                                val newArtist = currentSong.value?.artist
+                                val newTitle = currentSong.value?.title
+
+                                if (newArtist != oldArtist || newTitle != oldTitle) {
+                                    localStateHolder.isAutoPlayMode.value = false
+                                    localStateHolder.isEditorMode.value = false
+                                    currentSong.value?.let {
+                                        editorText.value = it.text
+                                    }
+                                }
                             }
                         }
                 }
@@ -176,7 +207,8 @@ internal open class LocalViewModel @Inject constructor(
 
     fun nextSong() {
         if (currentSongCount.value > 0) {
-            selectScreen(CurrentScreenVariant
+            selectScreen(
+                CurrentScreenVariant
                 .SONG_TEXT(
                     artist = currentArtist.value,
                     position = (currentSongPosition.value + 1) % currentSongCount.value
@@ -187,13 +219,15 @@ internal open class LocalViewModel @Inject constructor(
     fun prevSong() {
         if (currentSongCount.value > 0) {
             if (currentSongPosition.value > 0) {
-                selectScreen(CurrentScreenVariant
+                selectScreen(
+                    CurrentScreenVariant
                     .SONG_TEXT(
                         artist = currentArtist.value,
                         position = (currentSongPosition.value - 1) % currentSongCount.value
                     ))
             } else {
-                selectScreen(CurrentScreenVariant
+                selectScreen(
+                    CurrentScreenVariant
                     .SONG_TEXT(
                         artist = currentArtist.value,
                         position = currentSongCount.value - 1
@@ -215,7 +249,7 @@ internal open class LocalViewModel @Inject constructor(
     }
 
     fun setFavorite(value: Boolean) {
-        Log.e("set favorite", value.toString() + " " + currentArtist.value)
+        Log.e("set favorite", value.toString())
         currentSong.value?.copy(favorite = value)?.let {
             updateCurrentSong(it)
             saveSong(it)
@@ -225,13 +259,15 @@ internal open class LocalViewModel @Inject constructor(
                 )
                 if (currentSongCount.value > 0) {
                     if (currentSongPosition.value >= currentSongCount.value) {
-                        selectScreen(CurrentScreenVariant
+                        selectScreen(
+                            CurrentScreenVariant
                             .SONG_TEXT(
                                 artist = currentArtist.value,
                                 position = currentSongPosition.value - 1
                             ))
                     } else {
-                        selectScreen(CurrentScreenVariant
+                        selectScreen(
+                            CurrentScreenVariant
                             .SONG_TEXT(
                                 artist = currentArtist.value,
                                 position = currentSongPosition.value
@@ -268,13 +304,15 @@ internal open class LocalViewModel @Inject constructor(
                 .execute(currentArtist.value)
             if (currentSongCount.value > 0) {
                 if (currentSongPosition.value >= currentSongCount.value) {
-                    selectScreen(CurrentScreenVariant
+                    selectScreen(
+                        CurrentScreenVariant
                         .SONG_TEXT(
                             artist = currentArtist.value,
                             position = currentSongPosition.value - 1
                         ))
                 } else {
-                    selectScreen(CurrentScreenVariant
+                    selectScreen(
+                        CurrentScreenVariant
                         .SONG_TEXT(
                             artist = currentArtist.value,
                             position = currentSongPosition.value
@@ -362,5 +400,21 @@ internal open class LocalViewModel @Inject constructor(
     fun showDevSite() {
         callbacks.onShowDevSite()
     }
-}
 
+    fun updateArtists() {
+        getArtistsJob?.let {
+            if (!it.isCancelled) it.cancel()
+        }
+        getArtistsJob = viewModelScope.launch {
+            getArtistsUseCase
+                .execute()
+                .collect {
+                    withContext(Dispatchers.Main) {
+                        localStateHolder
+                            .commonStateHolder
+                            .artistList.value = it
+                    }
+                }
+        }
+    }
+}

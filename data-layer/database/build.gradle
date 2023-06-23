@@ -29,11 +29,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
     namespace 'jatx.russianrocksongbook.database'
 }
@@ -55,6 +55,15 @@ dependencies {
     api project(':domain-layer:repository:local')
 
     testImplementation testDeps.junit
+
+    testImplementation testDeps.androidXCore
+    testImplementation testDeps.androidXRunner
+    testImplementation testDeps.androidXTruth
+    testImplementation testDeps.androidXRules
+
+    testImplementation testDeps.androidXJUnit
+
+    testImplementation testDeps.androidXCoreTesting
 
     androidTestImplementation testDeps.androidXCore
     androidTestImplementation testDeps.androidXRunner

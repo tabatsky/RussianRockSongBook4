@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.domain.repository.preferences.*
@@ -19,38 +19,38 @@ import jatx.russianrocksongbook.settings.internal.viewmodel.SettingsViewModel
 
 @Composable
 internal fun SettingsScreenImpl() {
-    val settingsViewModel: SettingsViewModel = viewModel()
+    val settingsViewModel: SettingsViewModel = hiltViewModel()
 
     val theme = settingsViewModel.settings.theme
     val settings = settingsViewModel.settings
 
-    var themeToSave by remember { mutableStateOf(theme) }
+    var themeToSave by settingsViewModel.valueTheme
     val onThemePositionChanged: (Int) -> Unit = {
         themeToSave = Theme.values()[it]
     }
 
-    var fontScaleToSave by remember { mutableStateOf(settings.commonFontScaleEnum) }
+    var fontScaleToSave by settingsViewModel.valueFontScale
     val onFontScalePositionChanged: (Int) -> Unit = {
         fontScaleToSave = FontScale.values()[it]
     }
 
-    var defaultArtistToSave by remember { mutableStateOf(settings.defaultArtist) }
+    var defaultArtistToSave by settingsViewModel.valueDefaultArtist
     val onDefaultArtistValueChanged: (String) -> Unit = {
         defaultArtistToSave = it
     }
 
-    var orientationToSave by remember { mutableStateOf(settings.orientation) }
+    var orientationToSave by settingsViewModel.valueOrientation
     val onOrientationPositionChanged: (Int) -> Unit = {
         orientationToSave = Orientation.values()[it]
     }
 
-    var listenToMusicVariantToSave by remember { mutableStateOf(settings.listenToMusicVariant) }
+    var listenToMusicVariantToSave by settingsViewModel.valueListenToMusicVariant
     val onListenToMusicVariantPositionChanged: (Int) -> Unit = {
         listenToMusicVariantToSave =
             ListenToMusicVariant.values()[it]
     }
 
-    var scrollSpeedToSave by remember { mutableStateOf(settings.scrollSpeed) }
+    var scrollSpeedToSave by settingsViewModel.valueScrollSpeed
     val onScrollSpeedValueChanged: (Float) -> Unit = {
         scrollSpeedToSave = it
     }

@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.runtime.Composable
 import dagger.hilt.android.AndroidEntryPoint
 import jatx.russianrocksongbook.addartist.api.ext.copySongsFromDirToRepoWithPath
 import jatx.russianrocksongbook.addartist.api.ext.copySongsFromDirToRepoWithPickedDir
@@ -26,7 +27,6 @@ import jatx.russianrocksongbook.domain.models.appcrash.Version
 import jatx.russianrocksongbook.domain.repository.preferences.Orientation
 import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
 import jatx.russianrocksongbook.donationhelper.api.DonationHelper
-import jatx.russianrocksongbook.start.api.ext.asyncInit
 import jatx.russianrocksongbook.view.CurrentScreen
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
 import jatx.russianrocksongbook.voicecommands.api.VoiceCommandHelper
@@ -59,17 +59,17 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
+            initActions()
             CurrentScreen()
-            asyncInit()
         }
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
-    @Inject
+    @Composable
     fun initActions() {
         Log.e("inject init", "actions")
-        val commonViewModel: CommonViewModel by viewModels()
+        val commonViewModel = CommonViewModel.getInstance()
         commonViewModel.callbacks.onRestartApp = ::restartApp
         commonViewModel.callbacks.onReviewApp = ::reviewApp
         commonViewModel.callbacks.onShowDevSite = ::showDevSite

@@ -12,7 +12,6 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.paging.ItemsAdapter
@@ -24,7 +23,7 @@ import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.testing.TestingConfig
-import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
+import jatx.russianrocksongbook.viewmodel.navigation.CurrentScreenVariant
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
@@ -33,7 +32,7 @@ internal fun CloudSearchBody(
     modifier: Modifier,
     isPortrait: Boolean
 ) {
-    val cloudViewModel: CloudViewModel = viewModel()
+    val cloudViewModel = CloudViewModel.getInstance()
     val theme = cloudViewModel.settings.theme
 
     val scrollPosition by cloudViewModel.scrollPosition.collectAsState()

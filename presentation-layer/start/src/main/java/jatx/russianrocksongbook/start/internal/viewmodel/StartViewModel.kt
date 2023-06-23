@@ -1,12 +1,14 @@
 package jatx.russianrocksongbook.start.internal.viewmodel
 
+import android.util.Log
+import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
-import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
-import jatx.russianrocksongbook.viewmodel.view.NavControllerHolder
-import jatx.russianrocksongbook.viewmodel.view.destinationSongList
+import jatx.russianrocksongbook.viewmodel.navigation.CurrentScreenVariant
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -28,11 +30,33 @@ internal class StartViewModel @Inject constructor(
     val stubTotalProgress = startStateHolder
         .stubTotalProgress.asStateFlow()
 
+    var asyncInitDone = false
+
+    private var asyncInitJob: Job? = null
+
+    companion object {
+        private const val key = "Start"
+
+        @Composable
+        fun getInstance(): StartViewModel {
+            if (!storage.containsKey(key)){
+                storage[key] = hiltViewModel<StartViewModel>()
+            }
+            return storage[key] as StartViewModel
+        }
+    }
+
     fun asyncInit() {
-        viewModelScope.launch {
-            withContext(Dispatchers.Main) {
-                if (settings.appWasUpdated) {
-                    withContext(Dispatchers.IO) {
+        if (!asyncInitDone) {
+            Log.e("async", "init")
+            asyncInitJob?.let {
+                if (!it.isCancelled) it.cancel()
+            }
+            asyncInitJob = viewModelScope.launch {
+                Log.e("async", "init2")
+                withContext(Dispatchers.IO) {
+                    Log.e("async", "init3")
+                    if (settings.appWasUpdated) {
                         localRepoInitializer.fillDbFromJSON().collect {
                             updateStubProgress(it.first, it.second)
                         }
@@ -40,13 +64,15 @@ internal class StartViewModel @Inject constructor(
                         localRepoInitializer.deleteWrongArtists()
                         localRepoInitializer.patchWrongArtists()
                         localRepoInitializer.applySongPatches()
+                        setAppWasUpdated(true)
                     }
-                    setAppWasUpdated(true)
+                    withContext(Dispatchers.Main) {
+                        settings.confirmAppUpdate()
+                        selectScreen(CurrentScreenVariant.SONG_LIST(settings.defaultArtist))
+                        asyncInitDone = true
+                        Log.e("async", "init4")
+                    }
                 }
-                settings.confirmAppUpdate()
-                selectScreen(CurrentScreenVariant.SONG_LIST(settings.defaultArtist))
-                //NavControllerHolder.navController
-                //    .navigate("$destinationSongList/${settings.defaultArtist}/false")
             }
         }
     }

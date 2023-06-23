@@ -12,6 +12,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.cloudsongs.R
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.CloudViewModel
 import jatx.russianrocksongbook.commonview.spinner.Spinner
 import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
@@ -28,6 +29,8 @@ internal fun CloudSearchPanelPortrait(
     onOrderByValueChange: (OrderBy) -> Unit,
     onSearchClick: () -> Unit
 ) {
+    val cloudViewModel = CloudViewModel.getInstance()
+
     val size1 = dimensionResource(id = R.dimen.search_button_size) * 0.5f
     val size2 = dimensionResource(id = R.dimen.search_button_size) * 0.75f
     val size3 = dimensionResource(id = R.dimen.search_button_size) * 1.25f
@@ -68,10 +71,11 @@ internal fun CloudSearchPanelPortrait(
                 theme = theme,
                 fontSize = fontSizeTextSp,
                 valueList = OrderBy.values().map { it.orderByRus }.toTypedArray(),
-                initialPosition = orderBy.ordinal
-            ) {
-                onOrderByValueChange(OrderBy.values()[it])
-            }
+                initialPosition = orderBy.ordinal,
+                onPositionChanged = { onOrderByValueChange(OrderBy.values()[it]) },
+                positionState = cloudViewModel.positionOrderBy,
+                isExpandedState = cloudViewModel.isExpandedOrderBy
+            )
         }
         Box (
             modifier = Modifier

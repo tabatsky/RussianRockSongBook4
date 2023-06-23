@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
@@ -13,7 +14,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.CloudViewModel
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
@@ -23,7 +23,7 @@ internal fun DeleteCloudSongDialog(
     onConfirm: (String, String) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val cloudViewModel: CloudViewModel = viewModel()
+    val cloudViewModel = CloudViewModel.getInstance()
     val theme = cloudViewModel.settings.theme
     val fontScale = cloudViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTextDp = dimensionResource(id = R.dimen.text_size_12) * fontScale
@@ -31,8 +31,8 @@ internal fun DeleteCloudSongDialog(
         fontSizeTextDp.toSp()
     }
 
-    var secret1 by remember { mutableStateOf("") }
-    var secret2 by remember { mutableStateOf("") }
+    var secret1 by rememberSaveable { mutableStateOf("") }
+    var secret2 by rememberSaveable { mutableStateOf("") }
 
     AlertDialog(
         onDismissRequest = {

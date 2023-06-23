@@ -11,7 +11,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
@@ -21,7 +20,7 @@ internal fun VoiceHelpDialog(
     onConfirm: (Boolean) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val localViewModel: LocalViewModel = viewModel()
+    val localViewModel = LocalViewModel.getInstance()
 
     val theme = localViewModel.settings.theme
     val fontScale = localViewModel.settings.getSpecificFontScale(ScalePow.TEXT)

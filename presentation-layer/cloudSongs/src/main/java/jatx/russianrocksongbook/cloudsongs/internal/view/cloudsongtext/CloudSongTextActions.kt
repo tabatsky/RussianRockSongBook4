@@ -6,7 +6,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.CloudViewModel
 import jatx.russianrocksongbook.commonview.buttons.CommonIconButton
@@ -20,7 +19,7 @@ internal fun CloudSongTextActions(
     count: Int,
     onCloudSongChanged: () -> Unit
 ) {
-    val cloudViewModel: CloudViewModel = viewModel()
+    val cloudViewModel = CloudViewModel.getInstance()
 
     CommonIconButton(
         resId = R.drawable.ic_left,

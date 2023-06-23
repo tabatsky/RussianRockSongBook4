@@ -15,7 +15,6 @@ import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.tv.foundation.lazy.list.TvLazyColumn
 import androidx.tv.foundation.lazy.list.itemsIndexed
 import androidx.tv.foundation.lazy.list.rememberTvLazyListState
@@ -26,7 +25,7 @@ import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.testing.SONG_LIST_LAZY_COLUMN
 import jatx.russianrocksongbook.testing.TestingConfig
-import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
+import jatx.russianrocksongbook.viewmodel.navigation.CurrentScreenVariant
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
@@ -34,7 +33,7 @@ import kotlinx.coroutines.flow.collectLatest
 internal fun SongListBody(
     navigationFocusRequester: FocusRequester
 ) {
-    val localViewModel: LocalViewModel = viewModel()
+    val localViewModel = LocalViewModel.getInstance()
 
     val theme = localViewModel.settings.theme
 

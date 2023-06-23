@@ -2,16 +2,15 @@ package jatx.russianrocksongbook.viewmodel
 
 import android.util.Log
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import jatx.russianrocksongbook.viewmodel.contracts.SongTextViewModelContract
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import jatx.russianrocksongbook.viewmodel.navigation.CurrentScreenVariant
+import jatx.russianrocksongbook.viewmodel.navigation.NavControllerHolder
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,8 +29,6 @@ open class CommonViewModel @Inject constructor(
 
     val isTV = commonViewModelDeps.tvDetector.isTV
 
-    private val getArtistsUseCase = commonViewModelDeps.getArtistsUseCase
-
     val currentScreenVariant = commonStateHolder
         .currentScreenVariant
         .asStateFlow()
@@ -40,15 +37,30 @@ open class CommonViewModel @Inject constructor(
         .currentArtist
         .asStateFlow()
 
-    val artistList = commonStateHolder
-        .artistList
-        .asStateFlow()
-
     val appWasUpdated = commonStateHolder
         .appWasUpdated
         .asStateFlow()
 
-    private var getArtistsJob: Job? = null
+    val artistList = commonStateHolder
+        .artistList
+        .asStateFlow()
+
+
+    companion object {
+        private const val key = "Common"
+
+        val storage = hashMapOf<String, CommonViewModel>()
+
+        @Composable
+        fun getInstance(): CommonViewModel {
+            if (!storage.containsKey(key)) storage[key] = hiltViewModel()
+            return storage[key] as CommonViewModel
+        }
+
+        fun getStoredInstance() = storage[key]
+
+        fun cleanStorage() = storage.clear()
+    }
 
     fun back(onFinish: () -> Unit = {}) {
         Log.e("current screen", currentScreenVariant.value.toString())
@@ -57,13 +69,15 @@ open class CommonViewModel @Inject constructor(
             is CurrentScreenVariant.SONG_LIST,
             is CurrentScreenVariant.FAVORITE -> {
                 onFinish()
+                cleanStorage()
             }
             is CurrentScreenVariant.CLOUD_SONG_TEXT -> {
                 selectScreen(CurrentScreenVariant.CLOUD_SEARCH(isBackFromSong = true))
             }
             is CurrentScreenVariant.SONG_TEXT -> {
                 if (currentArtist.value != ARTIST_FAVORITE) {
-                    selectScreen(CurrentScreenVariant.SONG_LIST(
+                    selectScreen(
+                        CurrentScreenVariant.SONG_LIST(
                         artist = currentArtist.value,
                         isBackFromSong = true))
                 } else {
@@ -72,7 +86,8 @@ open class CommonViewModel @Inject constructor(
             }
             else -> {
                 if (currentArtist.value != ARTIST_FAVORITE) {
-                    selectScreen(CurrentScreenVariant.SONG_LIST(
+                    selectScreen(
+                        CurrentScreenVariant.SONG_LIST(
                         artist = currentArtist.value,
                         isBackFromSong = false))
                 } else {
@@ -86,7 +101,8 @@ open class CommonViewModel @Inject constructor(
         screen: CurrentScreenVariant
     ) {
         commonStateHolder.currentScreenVariant.value = screen
-        Log.e("select screen", currentScreenVariant.value.toString())
+        NavControllerHolder.navController.navigate(screen.destination)
+        Log.e("navigate", screen.destination)
     }
 
     fun setAppWasUpdated(value: Boolean) {
@@ -108,19 +124,4 @@ open class CommonViewModel @Inject constructor(
 
     fun sendWarning(comment: String) =
         (this as? SongTextViewModelContract)?.sendWarningImpl(comment)
-
-    fun updateArtists() {
-        getArtistsJob?.let {
-            if (!it.isCancelled) it.cancel()
-        }
-        getArtistsJob = viewModelScope.launch {
-            getArtistsUseCase
-                .execute()
-                .collect {
-                    withContext(Dispatchers.Main) {
-                        commonStateHolder.artistList.value = it
-                    }
-                }
-        }
-    }
 }

@@ -10,7 +10,6 @@ import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.tv.foundation.lazy.list.TvLazyColumn
 import androidx.tv.foundation.lazy.list.itemsIndexed
 import androidx.tv.foundation.lazy.list.rememberTvLazyListState
@@ -24,7 +23,7 @@ internal fun SongListMenuBody(
     navigationFocusRequester: FocusRequester,
     onCloseDrawer: () -> Unit
 ) {
-    val localViewModel: LocalViewModel = viewModel()
+    val localViewModel = LocalViewModel.getInstance()
 
     val theme = localViewModel.settings.theme
     val artistList by localViewModel.artistList.collectAsState()

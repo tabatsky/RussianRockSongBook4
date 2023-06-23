@@ -22,14 +22,18 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
     buildFeatures {
         compose true
     }
     composeOptions {
-        versions.composeCompiler
+        kotlinCompilerExtensionVersion versions.composeCompiler
     }
     namespace 'jatx.russianrocksongbook.donation'
 }
@@ -50,7 +54,7 @@ dependencies {
     kapt diDeps.hiltCompiler
     implementation diDeps.hiltExtensions
     kapt diDeps.hiltExtensionsProcessor
-
+    implementation diDeps.hiltNavigationCompose
 
 
 

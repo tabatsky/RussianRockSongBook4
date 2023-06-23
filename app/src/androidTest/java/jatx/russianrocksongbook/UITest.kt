@@ -29,6 +29,7 @@ import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
 import jatx.russianrocksongbook.donation.api.view.donationLabel
 import jatx.russianrocksongbook.donationhelper.api.DONATIONS
 import jatx.russianrocksongbook.testing.*
+import jatx.russianrocksongbook.viewmodel.CommonViewModel
 import org.junit.After
 import org.junit.Before
 import org.junit.FixMethodOrder
@@ -140,6 +141,7 @@ class UITest {
 
     @After
     fun clean() {
+        CommonViewModel.cleanStorage()
         unmockkStatic(Toast::class)
     }
 
@@ -148,6 +150,8 @@ class UITest {
         val testNumber = 1
 
         val artists = localRepo.getArtistsAsList()
+
+        composeTestRule.waitFor(timeout)
 
         composeTestRule
             .onNodeWithTag(DRAWER_BUTTON_MAIN)
@@ -262,6 +266,8 @@ class UITest {
         val testNumber = 2
 
         val artists = localRepo.getArtistsAsList()
+
+        composeTestRule.waitFor(timeout)
 
         composeTestRule
             .onNodeWithTag(DRAWER_BUTTON_MAIN)
@@ -558,6 +564,8 @@ class UITest {
     fun test3_cloudSearch() {
         val testNumber = 3
 
+        composeTestRule.waitFor(timeout)
+
         with (cloudRepository) {
             var list = search("", OrderBy.BY_ID_DESC)
             var titleList = list.map { "${it.artist} - ${it.title}" }
@@ -699,6 +707,8 @@ class UITest {
     @Test
     fun test4_cloudSongText() {
         val testNumber = 4
+
+        composeTestRule.waitFor(timeout)
 
         with (cloudRepository) {
             val list = search("", OrderBy.BY_ID_DESC)
@@ -894,6 +904,8 @@ class UITest {
     fun test5_addSong() {
         val testNumber = 5
 
+        composeTestRule.waitFor(timeout)
+
         composeTestRule
             .onNodeWithTag(DRAWER_BUTTON_MAIN)
             .performClick()
@@ -1054,6 +1066,8 @@ class UITest {
     fun test6_settings() {
         val testNumber = 6
 
+        composeTestRule.waitFor(timeout)
+
         composeTestRule
             .onNodeWithTag(SETTINGS_BUTTON)
             .assertIsDisplayed()
@@ -1176,6 +1190,8 @@ class UITest {
     fun test7_donation() {
         val testNumber = 7
 
+        composeTestRule.waitFor(timeout)
+
         composeTestRule
             .onNodeWithTag(DRAWER_BUTTON_MAIN)
             .performClick()
@@ -1204,6 +1220,8 @@ class UITest {
     @Test
     fun test8_addArtist() {
         val testNumber = 8
+
+        composeTestRule.waitFor(timeout)
 
         composeTestRule
             .onNodeWithTag(DRAWER_BUTTON_MAIN)

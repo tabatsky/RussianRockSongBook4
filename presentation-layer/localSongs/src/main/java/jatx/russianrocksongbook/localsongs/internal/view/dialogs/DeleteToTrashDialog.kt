@@ -1,7 +1,6 @@
 package jatx.russianrocksongbook.localsongs.internal.view.dialogs
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.commonview.dialogs.confirm.ConfirmDialog
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
@@ -10,7 +9,7 @@ import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 internal fun DeleteToTrashDialog(
     onDismiss: () -> Unit
 ) {
-    val localViewModel: LocalViewModel = viewModel()
+    val localViewModel = LocalViewModel.getInstance()
 
     ConfirmDialog(
         titleRes = R.string.dialog_song_to_trash_title,
