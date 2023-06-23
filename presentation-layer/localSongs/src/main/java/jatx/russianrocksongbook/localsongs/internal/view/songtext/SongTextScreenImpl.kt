@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.tv.foundation.lazy.list.rememberTvLazyListState
 import jatx.clickablewordstextview.api.Word
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
@@ -28,10 +27,10 @@ import kotlinx.coroutines.launch
 
 @Composable
 internal fun SongTextScreenImpl(artist: String, position: Int) {
-    val localViewModel: LocalViewModel = viewModel()
+    val localViewModel = LocalViewModel.getInstance()
 
     val key = artist to position
-    var lastKey by remember { mutableStateOf(key) }
+    var lastKey by rememberSaveable { mutableStateOf(key) }
     val keyChanged = key != lastKey
 
     if (keyChanged) {
@@ -43,10 +42,8 @@ internal fun SongTextScreenImpl(artist: String, position: Int) {
     }
 
     val song by localViewModel.currentSong.collectAsState()
-    var text by rememberSaveable { mutableStateOf("") }
-    song?.let {
-        text = it.text
-    }
+    var text by localViewModel.editorText
+
     val onTextChange: (String) -> Unit = { text = it }
 
     val isAutoPlayMode = localViewModel.isAutoPlayMode
@@ -68,16 +65,16 @@ internal fun SongTextScreenImpl(artist: String, position: Int) {
         }
     }
 
-    var showYandexDialog by remember { mutableStateOf(false) }
-    var showVkDialog by remember { mutableStateOf(false) }
-    var showYoutubeMusicDialog by remember { mutableStateOf(false) }
+    var showYandexDialog by rememberSaveable { mutableStateOf(false) }
+    var showVkDialog by rememberSaveable { mutableStateOf(false) }
+    var showYoutubeMusicDialog by rememberSaveable { mutableStateOf(false) }
 
-    var showUploadDialog by remember { mutableStateOf(false) }
-    var showDeleteToTrashDialog by remember { mutableStateOf(false) }
-    var showWarningDialog by remember { mutableStateOf(false) }
+    var showUploadDialog by rememberSaveable { mutableStateOf(false) }
+    var showDeleteToTrashDialog by rememberSaveable { mutableStateOf(false) }
+    var showWarningDialog by rememberSaveable { mutableStateOf(false) }
 
-    var showChordDialog by remember { mutableStateOf(false) }
-    var selectedChord by remember { mutableStateOf("") }
+    var showChordDialog by rememberSaveable { mutableStateOf(false) }
+    var selectedChord by rememberSaveable { mutableStateOf("") }
     val onWordClick: (Word) -> Unit = {
         selectedChord = it.text
         showChordDialog = true

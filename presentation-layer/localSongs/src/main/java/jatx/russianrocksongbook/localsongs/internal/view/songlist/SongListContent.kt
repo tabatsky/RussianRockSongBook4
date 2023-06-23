@@ -3,12 +3,12 @@ package jatx.russianrocksongbook.localsongs.internal.view.songlist
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.ext.crop
@@ -23,7 +23,7 @@ private const val MAX_ARTIST_LENGTH_PORTRAIT = 15
 internal fun SongListContent(
     openDrawer: () -> Unit
 ) {
-    val localViewModel: LocalViewModel = viewModel()
+    val localViewModel = LocalViewModel.getInstance()
 
     val theme = localViewModel.settings.theme
     val artist by localViewModel.currentArtist.collectAsState()
@@ -36,9 +36,10 @@ internal fun SongListContent(
         val H = this.maxHeight
 
         val isPortrait = W < H
-        var isLastOrientationPortrait by remember { mutableStateOf(isPortrait) }
+        var isLastOrientationPortrait by rememberSaveable { mutableStateOf(isPortrait) }
 
         val wasOrientationChanged = isPortrait != isLastOrientationPortrait
+
         LaunchedEffect(isPortrait) {
             if (wasOrientationChanged) {
                 isLastOrientationPortrait = isPortrait
@@ -102,7 +103,7 @@ internal fun SongListContent(
             }
         }
 
-        var showVoiceHelpDialog by remember { mutableStateOf(false) }
+        var showVoiceHelpDialog by rememberSaveable { mutableStateOf(false) }
         val onVoiceButtonClick = {
             showVoiceHelpDialog = true
         }

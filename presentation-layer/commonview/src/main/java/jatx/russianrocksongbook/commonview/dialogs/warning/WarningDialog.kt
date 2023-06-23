@@ -3,6 +3,7 @@ package jatx.russianrocksongbook.commonview.dialogs.warning
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
@@ -11,7 +12,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.commonview.R
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.testing.TEXT_FIELD_WARNING_COMMENT
@@ -19,7 +19,7 @@ import jatx.russianrocksongbook.viewmodel.CommonViewModel
 
 @Composable
 fun WarningDialog(
-    commonViewModel: CommonViewModel = viewModel(),
+    commonViewModel: CommonViewModel = CommonViewModel.getInstance(),
     onConfirm: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -30,7 +30,7 @@ fun WarningDialog(
         fontSizeTextDp.toSp()
     }
 
-    var comment by remember { mutableStateOf("") }
+    var comment by rememberSaveable { mutableStateOf("") }
 
     AlertDialog(
         onDismissRequest = {

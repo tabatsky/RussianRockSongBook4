@@ -1,14 +1,13 @@
 package jatx.russianrocksongbook.commonview.buttons
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
 import jatx.russianrocksongbook.commonview.R
 import jatx.russianrocksongbook.testing.BACK_BUTTON
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
 
 @Composable
 fun CommonBackButton(
-    commonViewModel: CommonViewModel = viewModel()
+    commonViewModel: CommonViewModel = CommonViewModel.getInstance()
 ) {
     val onBackClick = { commonViewModel.back() }
     CommonIconButton(

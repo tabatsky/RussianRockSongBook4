@@ -16,5 +16,6 @@ internal class LocalViewModelDeps @Inject constructor(
     val updateSongUseCase: UpdateSongUseCase,
     val deleteSongToTrashUseCase: DeleteSongToTrashUseCase,
     val addWarningLocalUseCase: AddWarningLocalUseCase,
-    val addSongToCloudUseCase: AddSongToCloudUseCase
+    val addSongToCloudUseCase: AddSongToCloudUseCase,
+    val getArtistsUseCase: GetArtistsUseCase
 )

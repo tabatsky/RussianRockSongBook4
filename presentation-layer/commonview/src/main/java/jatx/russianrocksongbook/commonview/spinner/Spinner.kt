@@ -1,5 +1,6 @@
 package jatx.russianrocksongbook.commonview.spinner
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,10 +21,16 @@ fun Spinner(
     fontSize: TextUnit,
     valueList: Array<String>,
     initialPosition: Int,
-    onPositionChanged: (Int) -> Unit
+    onPositionChanged: (Int) -> Unit,
+    positionState: MutableState<Int> = mutableStateOf(0),
+    isExpandedState: MutableState<Boolean> = mutableStateOf(false)
 ) {
-    var position by remember { mutableStateOf(initialPosition) }
-    var isExpanded by remember { mutableStateOf(false) }
+    var position by positionState
+    var isExpanded by isExpandedState
+
+    position = initialPosition
+
+    Log.e("initialPosition", initialPosition.toString())
 
     Column(
         modifier = modifier,

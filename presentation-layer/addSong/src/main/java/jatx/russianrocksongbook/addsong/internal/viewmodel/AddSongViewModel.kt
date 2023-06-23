@@ -1,6 +1,7 @@
 package jatx.russianrocksongbook.addsong.internal.viewmodel
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -32,6 +33,10 @@ internal class AddSongViewModel @Inject constructor(
         .newSong.asStateFlow()
 
     private var uploadSongDisposable: Disposable? = null
+
+    val artist = mutableStateOf("")
+    val title = mutableStateOf("")
+    val text = mutableStateOf("")
 
     private fun showUploadOfferForSong(song: Song) {
         Log.e("upload", "show offer")

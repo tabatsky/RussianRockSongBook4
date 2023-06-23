@@ -8,7 +8,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dqt.libs.chorddroid.classes.ChordLibrary
 import jatx.clickablewordstextview.api.ClickableWordsTextView
 import jatx.clickablewordstextview.api.Word
@@ -25,7 +24,7 @@ internal fun CloudSongTextViewer(
     fontSizeTextSp: TextUnit,
     onWordClick: (Word) -> Unit
 ) {
-    val cloudViewModel: CloudViewModel = viewModel()
+    val cloudViewModel = CloudViewModel.getInstance()
     AndroidView(
         modifier = Modifier.testTag(CLOUD_SONG_TEXT_VIEWER),
         factory = { context ->

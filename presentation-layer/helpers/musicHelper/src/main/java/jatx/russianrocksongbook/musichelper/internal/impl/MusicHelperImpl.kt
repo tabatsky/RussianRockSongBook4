@@ -4,8 +4,6 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
-import androidx.activity.ComponentActivity
-import androidx.activity.viewModels
 import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.scopes.ActivityScoped
 import it.czerwinski.android.hilt.annotations.BoundTo
@@ -21,10 +19,7 @@ import javax.inject.Inject
 internal class MusicHelperImpl @Inject constructor(
     private val activity: Activity
 ): MusicHelper {
-    private val mvvmViewModel = (activity as? ComponentActivity)?.let {
-        val commonViewModel: CommonViewModel by it.viewModels()
-        commonViewModel
-    }
+    private val mvvmViewModel = CommonViewModel.getStoredInstance()
 
     override fun openYandexMusic(searchFor: String) {
         try {

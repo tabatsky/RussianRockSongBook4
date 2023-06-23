@@ -21,17 +21,17 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
     buildFeatures {
         compose true
     }
     composeOptions {
-        versions.composeCompiler
+        kotlinCompilerExtensionVersion versions.composeCompiler
     }
     namespace 'jatx.russianrocksongbook.commonview'
 }
@@ -47,6 +47,8 @@ dependencies {
     implementation commonDeps.composeUiTooling
     implementation commonDeps.navigationCompose
     implementation commonDeps.lifecycleRuntime
+
+    implementation diDeps.hiltNavigationCompose
 
     api project(':ui-library:sideAppBar')
     api project(':ui-library:ChordDroidLibrary')

@@ -1,9 +1,6 @@
 package jatx.russianrocksongbook.view
 
-import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,68 +16,36 @@ import jatx.russianrocksongbook.localsongs.api.view.SongListScreen
 import jatx.russianrocksongbook.localsongs.api.view.SongTextScreen
 import jatx.russianrocksongbook.settings.api.view.SettingsScreen
 import jatx.russianrocksongbook.start.api.view.StartScreen
-import jatx.russianrocksongbook.viewmodel.CurrentScreenVariant
-import jatx.russianrocksongbook.viewmodel.CommonViewModel
-import jatx.russianrocksongbook.viewmodel.view.argArtist
-import jatx.russianrocksongbook.viewmodel.view.argIsBackFromSong
-import jatx.russianrocksongbook.viewmodel.view.destinationSongList
-import jatx.russianrocksongbook.viewmodel.view.destinationStart
-import jatx.russianrocksongbook.viewmodel.view.injectNavController
-import java.lang.IllegalStateException
+import jatx.russianrocksongbook.viewmodel.navigation.NavControllerHolder
+import jatx.russianrocksongbook.viewmodel.navigation.argArtist
+import jatx.russianrocksongbook.viewmodel.navigation.argIsBackFromSong
+import jatx.russianrocksongbook.viewmodel.navigation.argPosition
+import jatx.russianrocksongbook.viewmodel.navigation.argTitle
+import jatx.russianrocksongbook.viewmodel.navigation.destinationAddArtist
+import jatx.russianrocksongbook.viewmodel.navigation.destinationAddSong
+import jatx.russianrocksongbook.viewmodel.navigation.destinationCloudSearch
+import jatx.russianrocksongbook.viewmodel.navigation.destinationCloudSongText
+import jatx.russianrocksongbook.viewmodel.navigation.destinationDonation
+import jatx.russianrocksongbook.viewmodel.navigation.destinationFavorite
+import jatx.russianrocksongbook.viewmodel.navigation.destinationSettings
+import jatx.russianrocksongbook.viewmodel.navigation.destinationSongList
+import jatx.russianrocksongbook.viewmodel.navigation.destinationSongText
+import jatx.russianrocksongbook.viewmodel.navigation.destinationSongTextByArtistAndTitle
+import jatx.russianrocksongbook.viewmodel.navigation.destinationStart
 
 @Composable
 fun CurrentScreen() {
-    val commonViewModel: CommonViewModel = viewModel()
-    when (
-        val screenVariant =
-            commonViewModel.currentScreenVariant.collectAsState().value.also {
-                Log.e("screenVariant", it.toString())
-            }
-    ) {
-        is CurrentScreenVariant.START -> StartScreen()
-        is CurrentScreenVariant.SONG_LIST ->
-            SongListScreen(
-                artist = screenVariant.artist,
-                isBackFromSong = screenVariant.isBackFromSong
-            )
-        is CurrentScreenVariant.FAVORITE ->
-            SongListScreen(
-                artist = ARTIST_FAVORITE,
-                isBackFromSong = screenVariant.isBackFromSong
-            )
-        is CurrentScreenVariant.SONG_TEXT ->
-            SongTextScreen(
-                artist = screenVariant.artist,
-                position = screenVariant.position
-            )
-        is CurrentScreenVariant.SONG_TEXT_BY_ARTIST_AND_TITLE ->
-            SongListScreen(
-                artist = screenVariant.artist,
-                passToSongWithTitle = screenVariant.title
-            )
-        is CurrentScreenVariant.SETTINGS -> SettingsScreen()
-        is CurrentScreenVariant.CLOUD_SEARCH -> CloudSearchScreen(
-            isBackFromSong = screenVariant.isBackFromSong
-        )
-        is CurrentScreenVariant.CLOUD_SONG_TEXT -> CloudSongTextScreen(
-            position = screenVariant.position
-        )
-        is CurrentScreenVariant.ADD_ARTIST -> AddArtistScreen()
-        is CurrentScreenVariant.ADD_SONG -> AddSongScreen()
-        is CurrentScreenVariant.DONATION -> DonationScreen()
-    }
-}
-
-@Composable
-fun CurrentScreenNew() {
     val navController = rememberNavController()
-    injectNavController(navController)
+    NavControllerHolder.injectNavController(navController)
+
     NavHost(navController, startDestination = destinationStart) {
+
         composable(destinationStart) {
             StartScreen()
         }
+
         composable(
-            "$destinationSongList/{artist}/{isBackFromSong}",
+            "$destinationSongList/{$argArtist}/{$argIsBackFromSong}",
             arguments = listOf(
                 navArgument(argArtist) { type = NavType.StringType },
                 navArgument(argIsBackFromSong) { type = NavType.BoolType },
@@ -88,10 +53,93 @@ fun CurrentScreenNew() {
         ) { backStackEntry ->
             SongListScreen(
                 artist = backStackEntry.arguments?.getString(argArtist)
-                    ?: throw IllegalStateException(),
+                    ?: throw IllegalArgumentException("No such argument"),
                 isBackFromSong = backStackEntry.arguments?.getBoolean(argIsBackFromSong)
-                    ?: throw IllegalStateException()
+                    ?: throw IllegalArgumentException("No such argument")
             )
+        }
+
+        composable(
+            "$destinationFavorite/{$argIsBackFromSong}",
+            arguments = listOf(
+                navArgument(argIsBackFromSong) { type = NavType.BoolType },
+            )
+        ) { backStackEntry ->
+            SongListScreen(
+                artist = ARTIST_FAVORITE,
+                isBackFromSong = backStackEntry.arguments?.getBoolean(argIsBackFromSong)
+                    ?: throw IllegalArgumentException("No such argument")
+            )
+        }
+
+        composable(
+            "$destinationSongText/{$argArtist}/{$argPosition}",
+            arguments = listOf(
+                navArgument(argArtist) { type = NavType.StringType },
+                navArgument(argPosition) { type = NavType.IntType },
+            )
+        ) { backStackEntry ->
+            SongTextScreen(
+                artist = backStackEntry.arguments?.getString(argArtist)
+                    ?: throw IllegalArgumentException("No such argument"),
+                position = backStackEntry.arguments?.getInt(argPosition)
+                    ?: throw IllegalArgumentException("No such argument")
+            )
+        }
+
+        composable(
+            "$destinationSongTextByArtistAndTitle/{$argArtist}/{$argTitle}",
+            arguments = listOf(
+                navArgument(argArtist) { type = NavType.StringType },
+                navArgument(argTitle) { type = NavType.StringType },
+            )
+        ) { backStackEntry ->
+            SongListScreen(
+                artist = backStackEntry.arguments?.getString(argArtist)
+                    ?: throw IllegalArgumentException("No such argument"),
+                passToSongWithTitle = backStackEntry.arguments?.getString(argTitle)
+                    ?: throw IllegalArgumentException("No such argument")
+            )
+        }
+
+        composable(
+            "$destinationCloudSearch/{$argIsBackFromSong}",
+            arguments = listOf(
+                navArgument(argIsBackFromSong) { type = NavType.BoolType },
+            )
+        ) { backStackEntry ->
+            CloudSearchScreen(
+                isBackFromSong = backStackEntry.arguments?.getBoolean(argIsBackFromSong)
+                    ?: throw IllegalArgumentException("No such argument")
+            )
+        }
+
+        composable(
+            "$destinationCloudSongText/{$argPosition}",
+            arguments = listOf(
+                navArgument(argPosition) { type = NavType.IntType },
+            )
+        ) { backStackEntry ->
+            CloudSongTextScreen(
+                position = backStackEntry.arguments?.getInt(argPosition)
+                    ?: throw IllegalArgumentException("No such argument")
+            )
+        }
+
+        composable(destinationAddArtist) {
+            AddArtistScreen()
+        }
+
+        composable(destinationAddSong) {
+            AddSongScreen()
+        }
+
+        composable(destinationDonation) {
+            DonationScreen()
+        }
+
+        composable(destinationSettings) {
+            SettingsScreen()
         }
     }
 }

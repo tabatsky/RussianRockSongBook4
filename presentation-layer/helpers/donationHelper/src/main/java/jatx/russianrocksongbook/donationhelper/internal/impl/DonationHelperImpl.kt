@@ -2,8 +2,6 @@ package jatx.russianrocksongbook.donationhelper.internal.impl
 
 import android.app.Activity
 import android.util.Log
-import androidx.activity.ComponentActivity
-import androidx.activity.viewModels
 import com.android.billingclient.api.*
 import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.scopes.ActivityScoped
@@ -20,10 +18,7 @@ import javax.inject.Inject
 internal class DonationHelperImpl @Inject constructor(
     private val activity: Activity
 ): PurchasesUpdatedListener, DonationHelper {
-    private val mvvmViewModel = (activity as? ComponentActivity)?.let {
-        val commonViewModel: CommonViewModel by it.viewModels()
-        commonViewModel
-    }
+    private val mvvmViewModel = CommonViewModel.getStoredInstance()
 
     private var billingClient: BillingClient = BillingClient
         .newBuilder(activity)
