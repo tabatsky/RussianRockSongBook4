@@ -64,8 +64,8 @@ internal class StartViewModel @Inject constructor(
                         setAppWasUpdated(true)
                     }
                     withContext(Dispatchers.Main) {
-                        settings.confirmAppUpdate()
                         selectScreen(CurrentScreenVariant.SONG_LIST(settings.defaultArtist))
+                        settings.confirmAppUpdate()
                     }
                 }
             }

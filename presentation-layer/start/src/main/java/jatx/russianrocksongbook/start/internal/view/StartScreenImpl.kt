@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -20,7 +21,9 @@ import jatx.russianrocksongbook.start.internal.viewmodel.StartViewModel
 @Composable
 internal fun StartScreenImpl() {
     val startViewModel = StartViewModel.getInstance()
-    startViewModel.asyncInit()
+    LaunchedEffect(Unit) {
+        startViewModel.asyncInit()
+    }
 
     val theme = startViewModel.settings.theme
     val currentProgress by startViewModel.stubCurrentProgress.collectAsState()

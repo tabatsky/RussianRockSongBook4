@@ -124,7 +124,7 @@ class UITest {
 
     @After
     fun clean() {
-        CommonViewModel.cleanStorage()
+        CommonViewModel.clearStorage()
         NavControllerHolder.cleanNavController()
     }
 
