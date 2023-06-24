@@ -70,6 +70,7 @@ open class CommonViewModel @Inject constructor(
             is CurrentScreenVariant.FAVORITE -> {
                 onFinish()
                 cleanStorage()
+                NavControllerHolder.cleanNavController()
             }
             is CurrentScreenVariant.CLOUD_SONG_TEXT -> {
                 selectScreen(CurrentScreenVariant.CLOUD_SEARCH(isBackFromSong = true))
