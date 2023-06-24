@@ -18,7 +18,9 @@ import javax.inject.Inject
 internal class DonationHelperImpl @Inject constructor(
     private val activity: Activity
 ): PurchasesUpdatedListener, DonationHelper {
-    private val mvvmViewModel = CommonViewModel.getStoredInstance()
+    private val commonViewModel by lazy {
+        CommonViewModel.getStoredInstance()
+    }
 
     private var billingClient: BillingClient = BillingClient
         .newBuilder(activity)
@@ -95,7 +97,9 @@ internal class DonationHelperImpl @Inject constructor(
                 billingClient.consumeAsync(consumeParams) { responseCode, _ ->
                     Log.e("consume", responseCode.responseCode.toString())
                     activity.runOnUiThread {
-                        mvvmViewModel?.showToast(R.string.thanks_for_donation)
+                        if (responseCode.responseCode == 0) {
+                            commonViewModel?.showToast(R.string.thanks_for_donation)
+                        }
                     }
                 }
             }
