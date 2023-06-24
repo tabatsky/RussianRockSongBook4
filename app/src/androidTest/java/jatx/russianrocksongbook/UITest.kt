@@ -3,7 +3,6 @@ package jatx.russianrocksongbook
 import android.app.Application
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
@@ -17,9 +16,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
-import io.mockk.*
-import io.mockk.impl.annotations.RelaxedMockK
-import io.mockk.junit4.MockKRule
 import jatx.russianrocksongbook.domain.repository.cloud.CloudRepository
 import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.domain.repository.local.*
@@ -28,9 +24,12 @@ import jatx.russianrocksongbook.domain.repository.preferences.Orientation
 import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
 import jatx.russianrocksongbook.donation.api.view.donationLabel
 import jatx.russianrocksongbook.donationhelper.api.DONATIONS
+import jatx.russianrocksongbook.viewmodel.deps.impl.ToastsTestImpl
 import jatx.russianrocksongbook.testing.*
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
+import jatx.russianrocksongbook.viewmodel.navigation.NavControllerHolder
 import org.junit.After
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Rule
@@ -85,9 +84,6 @@ class UITest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
-    @get:Rule
-    val mockkRule = MockKRule(this)
-
     @Inject
     lateinit var localRepo: LocalRepository
 
@@ -100,11 +96,6 @@ class UITest {
     @Inject
     lateinit var stringConst: StringConst
 
-    @RelaxedMockK
-    lateinit var toast: Toast
-
-    var toastMockIsWorkingFine = false
-
     @Before
     fun init() {
         TestingConfig.isTesting = true
@@ -115,14 +106,6 @@ class UITest {
         settingsRepository.defaultArtist = ARTIST_KINO
 
         composeTestRule.activityRule.scenario.recreate()
-
-        toastMockIsWorkingFine = try {
-            mockkStatic(Toast::class)
-            every { Toast.makeText(any(), any<CharSequence>(), any()) } returns toast
-            true
-        } catch (e: MockKException) {
-            false
-        }
 
         val appWasUpdated = settingsRepository.appWasUpdated
 
@@ -142,7 +125,7 @@ class UITest {
     @After
     fun clean() {
         CommonViewModel.cleanStorage()
-        unmockkStatic(Toast::class)
+        NavControllerHolder.cleanNavController()
     }
 
     @Test
@@ -542,22 +525,14 @@ class UITest {
             .performClick()
         Log.e("test $testNumber click", stringConst.cancel)
 
-        if (toastMockIsWorkingFine) {
-            composeTestRule.waitFor(timeout)
-            verifySequence {
-                Toast.makeText(any(), stringConst.toastAddedToFavorite, any())
-                toast.show()
-                Toast.makeText(any(), stringConst.toastRemovedFromFavorite, any())
-                toast.show()
-                Toast.makeText(any(), stringConst.toastSongIsOutOfTheBox, any())
-                toast.show()
-                Toast.makeText(any(), stringConst.toastCommentCannotBeEmpty, any())
-                toast.show()
-                Toast.makeText(any(), stringConst.toastSendWarningSuccess, any())
-                toast.show()
-            }
-            Log.e("test $testNumber toast", "toasts shown")
-        }
+        composeTestRule.waitFor(timeout)
+
+        assertTrue(ToastsTestImpl.verifyText(stringConst.toastAddedToFavorite))
+        assertTrue(ToastsTestImpl.verifyText(stringConst.toastRemovedFromFavorite))
+        assertTrue(ToastsTestImpl.verifyText(stringConst.toastSongIsOutOfTheBox))
+        assertTrue(ToastsTestImpl.verifyText(stringConst.toastCommentCannotBeEmpty))
+        assertTrue(ToastsTestImpl.verifyText(stringConst.toastSendWarningSuccess))
+        Log.e("test $testNumber toast", "toasts shown")
     }
 
     @Test
@@ -885,18 +860,10 @@ class UITest {
                 .assertIsDisplayed()
             Log.e("test $testNumber assert", "${list[2].visibleTitleWithRating} is displayed")
 
-            if (toastMockIsWorkingFine) {
-                composeTestRule.waitFor(timeout)
-                verifySequence {
-                    Toast.makeText(any(), stringConst.toastChordsSavedAndAddedToFavorite, any())
-                    toast.show()
-                    Toast.makeText(any(), stringConst.toastVoteSuccess, any())
-                    toast.show()
-                    Toast.makeText(any(), stringConst.toastVoteSuccess, any())
-                    toast.show()
-                }
-                Log.e("test $testNumber toast", "toasts shown")
-            }
+            assertTrue(ToastsTestImpl.verifyText(stringConst.toastChordsSavedAndAddedToFavorite))
+            assertTrue(ToastsTestImpl.verifyText(stringConst.toastVoteSuccess))
+            assertTrue(ToastsTestImpl.verifyText(stringConst.toastVoteSuccess))
+            Log.e("test $testNumber toast", "toasts shown")
         }
     }
 
@@ -1048,18 +1015,10 @@ class UITest {
         assert(!artists.contains(ARTIST_NEW))
         Log.e("test $testNumber assert", "new artist deleted")
 
-        if (toastMockIsWorkingFine) {
-            composeTestRule.waitFor(timeout)
-            verifySequence {
-                Toast.makeText(any(), stringConst.toastSongAdded, any())
-                toast.show()
-                Toast.makeText(any(), stringConst.toastUploadToCloudSuccess, any())
-                toast.show()
-                Toast.makeText(any(), stringConst.toastDeletedToTrash, any())
-                toast.show()
-            }
-            Log.e("test $testNumber toast", "toasts shown")
-        }
+        assertTrue(ToastsTestImpl.verifyText(stringConst.toastSongAdded))
+        assertTrue(ToastsTestImpl.verifyText(stringConst.toastUploadToCloudSuccess))
+        assertTrue(ToastsTestImpl.verifyText(stringConst.toastDeletedToTrash))
+        Log.e("test $testNumber toast", "toasts shown")
     }
 
     @Test
