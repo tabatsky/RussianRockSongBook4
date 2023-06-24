@@ -12,14 +12,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.settings.R
 
 @Composable
 internal fun SettingsBodyLandscape(
     theme: Theme,
-    settingsRepository: SettingsRepository,
     fontSizeLabelSp: TextUnit,
     fontSizeButtonSp: TextUnit,
     onThemePositionChanged: (Int) -> Unit,
@@ -42,7 +40,6 @@ internal fun SettingsBodyLandscape(
         ) {
             ThemeRow(
                 theme = theme,
-                settingsRepository = settingsRepository,
                 modifier = Modifier
                     .weight(1.0f)
                     .wrapContentHeight(),
@@ -51,7 +48,6 @@ internal fun SettingsBodyLandscape(
             )
             FontScaleRow(
                 theme = theme,
-                settingsRepository = settingsRepository,
                 modifier = Modifier
                     .weight(1.0f)
                     .wrapContentHeight(),
@@ -71,7 +67,6 @@ internal fun SettingsBodyLandscape(
         ) {
             DefaultArtistRow(
                 theme = theme,
-                settingsRepository = settingsRepository,
                 modifier = Modifier
                     .weight(1.0f)
                     .wrapContentHeight(),
@@ -80,7 +75,6 @@ internal fun SettingsBodyLandscape(
             )
             OrientationRow(
                 theme = theme,
-                settingsRepository = settingsRepository,
                 modifier = Modifier
                     .weight(1.0f)
                     .wrapContentHeight(),
@@ -100,7 +94,6 @@ internal fun SettingsBodyLandscape(
         ) {
             ListenToMusicVariantRow(
                 theme = theme,
-                settingsRepository = settingsRepository,
                 modifier = Modifier
                     .weight(1.0f)
                     .wrapContentHeight(),
@@ -109,7 +102,6 @@ internal fun SettingsBodyLandscape(
             )
             ScrollSpeedRow(
                 theme = theme,
-                settingsRepository = settingsRepository,
                 modifier = Modifier
                     .weight(1.0f)
                     .wrapContentHeight(),

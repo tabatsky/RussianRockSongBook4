@@ -11,14 +11,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.settings.R
 
 @Composable
 internal fun SettingsBodyPortrait(
     theme: Theme,
-    settingsRepository: SettingsRepository,
     fontSizeLabelSp: TextUnit,
     fontSizeButtonSp: TextUnit,
     onThemePositionChanged: (Int) -> Unit,
@@ -35,7 +33,6 @@ internal fun SettingsBodyPortrait(
             .padding(4.dp)) {
         ThemeRow(
             theme = theme,
-            settingsRepository = settingsRepository,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(),
@@ -48,7 +45,6 @@ internal fun SettingsBodyPortrait(
         )
         FontScaleRow(
             theme = theme,
-            settingsRepository = settingsRepository,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(),
@@ -61,7 +57,6 @@ internal fun SettingsBodyPortrait(
         )
         DefaultArtistRow(
             theme = theme,
-            settingsRepository = settingsRepository,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(),
@@ -74,7 +69,6 @@ internal fun SettingsBodyPortrait(
         )
         OrientationRow(
             theme = theme,
-            settingsRepository = settingsRepository,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(),
@@ -87,7 +81,6 @@ internal fun SettingsBodyPortrait(
         )
         ListenToMusicVariantRow(
             theme = theme,
-            settingsRepository = settingsRepository,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(),
@@ -100,7 +93,6 @@ internal fun SettingsBodyPortrait(
         )
         ScrollSpeedRow(
             theme = theme,
-            settingsRepository = settingsRepository,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(),

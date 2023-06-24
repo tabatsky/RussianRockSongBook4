@@ -19,19 +19,15 @@ import jatx.russianrocksongbook.domain.repository.local.ARTIST_ADD_ARTIST
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_ADD_SONG
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_CLOUD_SONGS
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_DONATION
-import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.settings.R
 import jatx.russianrocksongbook.settings.internal.viewmodel.SettingsViewModel
 import jatx.russianrocksongbook.testing.DEFAULT_ARTIST_SPINNER
 
-// TODO: remove settingsRepository from param
-
 @Composable
 internal fun DefaultArtistRow(
     modifier: Modifier,
     theme: Theme,
-    settingsRepository: SettingsRepository,
     fontSize: TextUnit,
     onValueChanged: (String) -> Unit
 ) {
