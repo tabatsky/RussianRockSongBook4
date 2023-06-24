@@ -11,4 +11,8 @@ object NavControllerHolder {
     fun injectNavController(navController: NavHostController) {
         _navController = navController
     }
+
+    fun cleanNavController() {
+        _navController = null
+    }
 }
