@@ -19,7 +19,9 @@ import javax.inject.Inject
 internal class MusicHelperImpl @Inject constructor(
     private val activity: Activity
 ): MusicHelper {
-    private val mvvmViewModel = CommonViewModel.getStoredInstance()
+    private val commonViewModel by lazy {
+        CommonViewModel.getStoredInstance()
+    }
 
     override fun openYandexMusic(searchFor: String) {
         try {
@@ -34,7 +36,7 @@ internal class MusicHelperImpl @Inject constructor(
                 )
             }
         } catch (e: UnsupportedEncodingException) {
-            mvvmViewModel?.showToast(R.string.utf8_not_supported)
+            commonViewModel?.showToast(R.string.utf8_not_supported)
         }
     }
 
@@ -76,9 +78,9 @@ internal class MusicHelperImpl @Inject constructor(
                 startActivity(chooserIntent)
             }
         } catch (e: UnsupportedEncodingException) {
-            mvvmViewModel?.showToast(R.string.utf8_not_supported)
+            commonViewModel?.showToast(R.string.utf8_not_supported)
         } catch (e: ActivityNotFoundException) {
-            mvvmViewModel?.showToast(R.string.vk_app_not_installed)
+            commonViewModel?.showToast(R.string.vk_app_not_installed)
         }
     }
 
@@ -95,7 +97,7 @@ internal class MusicHelperImpl @Inject constructor(
                 )
             }
         } catch (e: UnsupportedEncodingException) {
-            mvvmViewModel?.showToast(R.string.utf8_not_supported)
+            commonViewModel?.showToast(R.string.utf8_not_supported)
         }
     }
 }
