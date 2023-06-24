@@ -1,6 +1,5 @@
 package jatx.russianrocksongbook.start.internal.viewmodel
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
@@ -48,14 +47,12 @@ internal class StartViewModel @Inject constructor(
 
     fun asyncInit() {
         if (!asyncInitDone) {
-            Log.e("async", "init")
+            asyncInitDone = true
             asyncInitJob?.let {
                 if (!it.isCancelled) it.cancel()
             }
             asyncInitJob = viewModelScope.launch {
-                Log.e("async", "init2")
                 withContext(Dispatchers.IO) {
-                    Log.e("async", "init3")
                     if (settings.appWasUpdated) {
                         localRepoInitializer.fillDbFromJSON().collect {
                             updateStubProgress(it.first, it.second)
@@ -69,8 +66,6 @@ internal class StartViewModel @Inject constructor(
                     withContext(Dispatchers.Main) {
                         settings.confirmAppUpdate()
                         selectScreen(CurrentScreenVariant.SONG_LIST(settings.defaultArtist))
-                        asyncInitDone = true
-                        Log.e("async", "init4")
                     }
                 }
             }
