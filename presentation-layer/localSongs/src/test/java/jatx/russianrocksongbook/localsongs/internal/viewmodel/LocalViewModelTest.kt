@@ -336,7 +336,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
             Log.e("select song", "13")
             getSongByArtistAndPositionUseCase.execute("", 13)
             deleteSongToTrashUseCase.execute(song)
-            Log.e("current screen", CurrentScreenVariant.START.toString())
+            Log.e("back from", CurrentScreenVariant.START.toString())
             toasts.showToast(R.string.toast_deleted_to_trash)
         }
     }
