@@ -93,7 +93,6 @@ internal fun SettingsScreenImpl() {
                 CommonTopAppBar(title = stringResource(id = R.string.title_settings))
                 SettingsBodyPortrait(
                     theme = theme,
-                    settingsRepository = settings,
                     fontSizeLabelSp = fontSizeLabelSp,
                     fontSizeButtonSp = fontSizeButtonSp,
                     onThemePositionChanged = onThemePositionChanged,
@@ -114,7 +113,6 @@ internal fun SettingsScreenImpl() {
                 CommonSideAppBar(title = stringResource(id = R.string.title_settings))
                 SettingsBodyLandscape(
                     theme = theme,
-                    settingsRepository = settings,
                     fontSizeLabelSp = fontSizeLabelSp,
                     fontSizeButtonSp = fontSizeButtonSp,
                     onThemePositionChanged = onThemePositionChanged,

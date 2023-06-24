@@ -14,19 +14,15 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import jatx.russianrocksongbook.commonview.spinner.Spinner
-import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.settings.R
 import jatx.russianrocksongbook.settings.internal.viewmodel.SettingsViewModel
 import jatx.russianrocksongbook.testing.ORIENTATION_SPINNER
 
-// TODO: remove settingsRepository from param
-
 @Composable
 internal fun OrientationRow(
     modifier: Modifier,
     theme: Theme,
-    settingsRepository: SettingsRepository,
     fontSize: TextUnit,
     onPositionChanged: (Int) -> Unit
 ) {
