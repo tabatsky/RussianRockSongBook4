@@ -16,22 +16,22 @@ import jatx.russianrocksongbook.localsongs.api.view.SongListScreen
 import jatx.russianrocksongbook.localsongs.api.view.SongTextScreen
 import jatx.russianrocksongbook.settings.api.view.SettingsScreen
 import jatx.russianrocksongbook.start.api.view.StartScreen
-import jatx.russianrocksongbook.viewmodel.navigation.NavControllerHolder
-import jatx.russianrocksongbook.viewmodel.navigation.argArtist
-import jatx.russianrocksongbook.viewmodel.navigation.argIsBackFromSong
-import jatx.russianrocksongbook.viewmodel.navigation.argPosition
-import jatx.russianrocksongbook.viewmodel.navigation.argTitle
-import jatx.russianrocksongbook.viewmodel.navigation.destinationAddArtist
-import jatx.russianrocksongbook.viewmodel.navigation.destinationAddSong
-import jatx.russianrocksongbook.viewmodel.navigation.destinationCloudSearch
-import jatx.russianrocksongbook.viewmodel.navigation.destinationCloudSongText
-import jatx.russianrocksongbook.viewmodel.navigation.destinationDonation
-import jatx.russianrocksongbook.viewmodel.navigation.destinationFavorite
-import jatx.russianrocksongbook.viewmodel.navigation.destinationSettings
-import jatx.russianrocksongbook.viewmodel.navigation.destinationSongList
-import jatx.russianrocksongbook.viewmodel.navigation.destinationSongText
-import jatx.russianrocksongbook.viewmodel.navigation.destinationSongTextByArtistAndTitle
-import jatx.russianrocksongbook.viewmodel.navigation.destinationStart
+import jatx.russianrocksongbook.navigation.NavControllerHolder
+import jatx.russianrocksongbook.navigation.argArtist
+import jatx.russianrocksongbook.navigation.argIsBackFromSong
+import jatx.russianrocksongbook.navigation.argPosition
+import jatx.russianrocksongbook.navigation.argTitle
+import jatx.russianrocksongbook.navigation.destinationAddArtist
+import jatx.russianrocksongbook.navigation.destinationAddSong
+import jatx.russianrocksongbook.navigation.destinationCloudSearch
+import jatx.russianrocksongbook.navigation.destinationCloudSongText
+import jatx.russianrocksongbook.navigation.destinationDonation
+import jatx.russianrocksongbook.navigation.destinationFavorite
+import jatx.russianrocksongbook.navigation.destinationSettings
+import jatx.russianrocksongbook.navigation.destinationSongList
+import jatx.russianrocksongbook.navigation.destinationSongText
+import jatx.russianrocksongbook.navigation.destinationSongTextByArtistAndTitle
+import jatx.russianrocksongbook.navigation.destinationStart
 
 @Composable
 fun CurrentScreen() {

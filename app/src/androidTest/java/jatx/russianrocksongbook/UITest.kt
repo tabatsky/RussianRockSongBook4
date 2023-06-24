@@ -27,7 +27,7 @@ import jatx.russianrocksongbook.donationhelper.api.DONATIONS
 import jatx.russianrocksongbook.viewmodel.deps.impl.ToastsTestImpl
 import jatx.russianrocksongbook.testing.*
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
-import jatx.russianrocksongbook.viewmodel.navigation.NavControllerHolder
+import jatx.russianrocksongbook.navigation.NavControllerHolder
 import org.junit.After
 import org.junit.Assert.assertTrue
 import org.junit.Before

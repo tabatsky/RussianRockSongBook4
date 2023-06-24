@@ -1,11 +1,10 @@
 plugins {
     id 'com.android.library'
-    id 'kotlin-android'
-    id 'kotlin-kapt'
-    id 'dagger.hilt.android.plugin'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
+    namespace 'jatx.russianrocksongbook.navigation'
     compileSdk 33
 
     defaultConfig {
@@ -35,41 +34,14 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion versions.composeCompiler
     }
-    namespace 'jatx.russianrocksongbook.viewmodel'
 }
 
 dependencies {
-
     implementation commonDeps.coreKtx
-    implementation commonDeps.coroutines
-    implementation commonDeps.lifecycleRuntime
-    implementation commonDeps.lifecycleViewmodel
-
-    implementation diDeps.hiltAndroid
-    kapt diDeps.hiltCompiler
-    implementation diDeps.hiltExtensions
-    kapt diDeps.hiltExtensionsProcessor
-    implementation diDeps.hiltNavigationCompose
-    implementation testDeps.hiltAndroidTesting
-
-    implementation commonDeps.documentFile
-    implementation commonDeps.commonsLang
 
     implementation commonDeps.activityCompose
     implementation commonDeps.composeUi
     implementation commonDeps.composeMaterial
     implementation commonDeps.composeUiTooling
     implementation commonDeps.navigationCompose
-
-    api project(':domain-layer:usecase:local')
-    api project(':data-layer:database')
-    api project(':data-layer:networking')
-    api project(':data-layer:filesystem')
-    api project(':data-layer:preferences')
-    api project(':presentation-layer:navigation')
-
-    testImplementation testDeps.junit
-    testImplementation testDeps.mockk
-    testImplementation testDeps.coroutinesTest
-    testImplementation testDeps.coreTesting
 }

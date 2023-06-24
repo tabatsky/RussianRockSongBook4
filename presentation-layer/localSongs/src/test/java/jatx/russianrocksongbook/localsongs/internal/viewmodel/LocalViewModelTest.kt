@@ -14,7 +14,7 @@ import jatx.russianrocksongbook.domain.usecase.cloud.AddWarningLocalUseCase
 import jatx.russianrocksongbook.domain.usecase.local.*
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.viewmodel.CommonViewModelTest
-import jatx.russianrocksongbook.viewmodel.navigation.CurrentScreenVariant
+import jatx.russianrocksongbook.navigation.CurrentScreenVariant
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue

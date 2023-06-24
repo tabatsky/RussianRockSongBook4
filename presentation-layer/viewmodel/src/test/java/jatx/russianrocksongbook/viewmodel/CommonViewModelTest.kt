@@ -12,7 +12,7 @@ import jatx.russianrocksongbook.viewmodel.deps.Callbacks
 import jatx.russianrocksongbook.viewmodel.deps.Resources
 import jatx.russianrocksongbook.viewmodel.deps.TVDetector
 import jatx.russianrocksongbook.viewmodel.deps.Toasts
-import jatx.russianrocksongbook.viewmodel.navigation.CurrentScreenVariant
+import jatx.russianrocksongbook.navigation.CurrentScreenVariant
 import org.junit.*
 import org.junit.Assert.assertEquals
 import org.junit.runners.MethodSorters

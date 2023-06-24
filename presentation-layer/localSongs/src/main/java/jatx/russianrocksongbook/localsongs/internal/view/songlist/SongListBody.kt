@@ -25,7 +25,7 @@ import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.testing.SONG_LIST_LAZY_COLUMN
 import jatx.russianrocksongbook.testing.TestingConfig
-import jatx.russianrocksongbook.viewmodel.navigation.CurrentScreenVariant
+import jatx.russianrocksongbook.navigation.CurrentScreenVariant
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 

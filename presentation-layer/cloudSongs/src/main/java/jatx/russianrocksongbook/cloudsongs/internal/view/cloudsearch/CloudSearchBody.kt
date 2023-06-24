@@ -23,7 +23,7 @@ import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.testing.TestingConfig
-import jatx.russianrocksongbook.viewmodel.navigation.CurrentScreenVariant
+import jatx.russianrocksongbook.navigation.CurrentScreenVariant
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
