@@ -18,7 +18,7 @@ import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_ERROR
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
-import jatx.russianrocksongbook.viewmodel.navigation.CurrentScreenVariant
+import jatx.russianrocksongbook.navigation.CurrentScreenVariant
 import jatx.russianrocksongbook.viewmodel.contracts.SongTextViewModelContract
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
@@ -129,14 +129,14 @@ internal class CloudViewModel @Inject constructor(
         if (cloudSongPosition.value + 1 < cloudSongCount.value)
             selectScreen(
                 CurrentScreenVariant
-                .CLOUD_SONG_TEXT(cloudSongPosition.value + 1))
+                    .CLOUD_SONG_TEXT(cloudSongPosition.value + 1))
     }
 
     fun prevCloudSong() {
         if (cloudSongPosition.value > 0)
             selectScreen(
                 CurrentScreenVariant
-                .CLOUD_SONG_TEXT(cloudSongPosition.value - 1))
+                    .CLOUD_SONG_TEXT(cloudSongPosition.value - 1))
     }
 
     @SuppressLint("CheckResult")

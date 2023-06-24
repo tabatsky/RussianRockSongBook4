@@ -8,8 +8,8 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import jatx.russianrocksongbook.viewmodel.contracts.SongTextViewModelContract
-import jatx.russianrocksongbook.viewmodel.navigation.CurrentScreenVariant
-import jatx.russianrocksongbook.viewmodel.navigation.NavControllerHolder
+import jatx.russianrocksongbook.navigation.CurrentScreenVariant
+import jatx.russianrocksongbook.navigation.NavControllerHolder
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 

@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.viewmodel.navigation
+package jatx.russianrocksongbook.navigation
 
 const val destinationStart = "Start"
 const val destinationSongList = "SongList"

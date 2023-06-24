@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.viewmodel.navigation
+package jatx.russianrocksongbook.navigation
 
 sealed interface CurrentScreenVariant {
     val destination: String

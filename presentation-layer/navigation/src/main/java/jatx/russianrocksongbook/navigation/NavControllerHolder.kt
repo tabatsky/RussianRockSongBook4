@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.viewmodel.navigation
+package jatx.russianrocksongbook.navigation
 
 import androidx.navigation.NavHostController
 import java.lang.IllegalStateException
