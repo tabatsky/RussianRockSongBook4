@@ -11,6 +11,7 @@ import jatx.russianrocksongbook.viewmodel.contracts.SongTextViewModelContract
 import jatx.russianrocksongbook.navigation.CurrentScreenVariant
 import jatx.russianrocksongbook.navigation.NavControllerHolder
 import kotlinx.coroutines.flow.asStateFlow
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 
 @HiltViewModel
@@ -49,7 +50,7 @@ open class CommonViewModel @Inject constructor(
     companion object {
         private const val key = "Common"
 
-        val storage = hashMapOf<String, CommonViewModel>()
+        val storage = ConcurrentHashMap<String, CommonViewModel>()
 
         @Composable
         fun getInstance(): CommonViewModel {
@@ -59,18 +60,16 @@ open class CommonViewModel @Inject constructor(
 
         fun getStoredInstance() = storage[key]
 
-        fun cleanStorage() = storage.clear()
+        fun clearStorage() = storage.clear()
     }
 
     fun back(onFinish: () -> Unit = {}) {
-        Log.e("current screen", currentScreenVariant.value.toString())
+        Log.e("back from", currentScreenVariant.value.toString())
         when (currentScreenVariant.value) {
             is CurrentScreenVariant.START,
             is CurrentScreenVariant.SONG_LIST,
             is CurrentScreenVariant.FAVORITE -> {
                 onFinish()
-                cleanStorage()
-                NavControllerHolder.cleanNavController()
             }
             is CurrentScreenVariant.CLOUD_SONG_TEXT -> {
                 selectScreen(CurrentScreenVariant.CLOUD_SEARCH(isBackFromSong = true))

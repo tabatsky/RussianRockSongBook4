@@ -10,7 +10,6 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import dagger.hilt.android.AndroidEntryPoint
 import jatx.russianrocksongbook.addartist.api.ext.copySongsFromDirToRepoWithPath
@@ -27,6 +26,7 @@ import jatx.russianrocksongbook.domain.models.appcrash.Version
 import jatx.russianrocksongbook.domain.repository.preferences.Orientation
 import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
 import jatx.russianrocksongbook.donationhelper.api.DonationHelper
+import jatx.russianrocksongbook.navigation.NavControllerHolder
 import jatx.russianrocksongbook.view.CurrentScreen
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
 import jatx.russianrocksongbook.voicecommands.api.VoiceCommandHelper
@@ -92,8 +92,11 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onBackPressed() {
-        val commonViewModel: CommonViewModel by viewModels()
-        commonViewModel.back {
+        val commonViewModel = CommonViewModel.getStoredInstance()
+        commonViewModel?.back {
+            CommonViewModel.clearStorage()
+            viewModelStore.clear()
+            NavControllerHolder.cleanNavController()
             finish()
         }
     }
