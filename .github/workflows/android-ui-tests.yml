@@ -17,6 +17,11 @@ jobs:
   uiTestsMacos:
     runs-on: macos-latest
     
+    strategy:
+        matrix:
+          api-level: [21, 23, 29, 33]
+          target: [default, google_apis]
+    
     steps:
       - uses: actions/checkout@v2
       
@@ -33,9 +38,10 @@ jobs:
         run: gradle wrapper
 
       - name: Android Tests
-        uses: tabatsky/android-emulator-runner@release/v2
+        uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
+          api-level: api-level: ${{ matrix.api-level }}
+          target: ${{ matrix.target }}
           profile: Nexus 6
           arch: x86_64
           ram-size: 2048
