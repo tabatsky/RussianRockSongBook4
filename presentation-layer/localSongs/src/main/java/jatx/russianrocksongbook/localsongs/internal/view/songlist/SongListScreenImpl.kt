@@ -1,6 +1,5 @@
 package jatx.russianrocksongbook.localsongs.internal.view.songlist
 
-import android.util.Log
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.DrawerValue
@@ -21,7 +20,6 @@ internal fun SongListScreenImpl(
     passToSongWithTitle: String?
 ) {
     val localViewModel = LocalViewModel.getInstance()
-    Log.e("viewModel", localViewModel.toString())
 
     LaunchedEffect(Unit) {
         if (!isBackFromSong || artist == ARTIST_FAVORITE) {
