@@ -137,7 +137,7 @@ internal open class LocalViewModel @Inject constructor(
                                 val oldArtist = currentSongList.value.getOrNull(0)?.artist
                                     ?: "null"
                                 val newArtist = it.getOrNull(0)?.artist ?: "null"
-                                if (newArtist == artist || newArtist == "null") {
+                                if (newArtist == artist || newArtist == "null" || artist == ARTIST_FAVORITE) {
                                     localStateHolder.currentSongList.value = it
                                     if (_passToSongWithTitle != null) {
                                         currentSongList
