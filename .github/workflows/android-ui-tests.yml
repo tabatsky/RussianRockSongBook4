@@ -19,7 +19,7 @@ jobs:
     
     strategy:
         matrix:
-          api-level: [21, 23, 29, 31]
+          api-level: [21, 23, 29]
           target: [default]
     
     steps:
