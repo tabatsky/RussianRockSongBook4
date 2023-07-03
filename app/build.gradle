@@ -84,7 +84,7 @@ dependencies {
 
     // testing
 
-    debugImplementation "io.mockk:mockk-android:1.13.2"
+    debugImplementation testDeps.mockkAndroid
 
     testImplementation testDeps.androidXCore
     testImplementation testDeps.androidXRunner
@@ -109,7 +109,7 @@ dependencies {
     androidTestImplementation testDeps.espressoCore
     androidTestImplementation testDeps.espressoContrib
 
-    androidTestImplementation "org.hamcrest:hamcrest:2.2"
+    androidTestImplementation testDeps.hamcrest
 
     androidTestImplementation testDeps.hiltAndroidTesting
     kaptAndroidTest testDeps.hiltAndroidCompiler
