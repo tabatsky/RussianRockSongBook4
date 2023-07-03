@@ -51,5 +51,5 @@ dependencies {
     testImplementation testDeps.junit
     testImplementation testDeps.mockk
     testImplementation testDeps.coroutinesTest
-    testImplementation testDeps.coreTesting
+    testImplementation testDeps.androidXCoreTesting
 }

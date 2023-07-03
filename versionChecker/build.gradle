@@ -1,0 +1,86 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+}
+
+android {
+    namespace 'jatx.russianrocksongbook.versionchecker'
+    compileSdk 33
+
+    defaultConfig {
+        minSdk 21
+        targetSdk 33
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutines}"
+    implementation "androidx.core:core-ktx:${versions.coreKtx}"
+    implementation "androidx.appcompat:appcompat:${versions.appCompat}"
+    implementation "com.google.android.material:material:${versions.material}"
+    implementation "androidx.activity:activity-compose:${versions.activityCompose}"
+    implementation "androidx.compose.ui:ui:${versions.compose}"
+    implementation "androidx.compose.material:material:${versions.compose}"
+    implementation "androidx.compose.material3:material3:${versions.composeMaterial3}"
+    implementation "androidx.compose.ui:ui-tooling:${versions.compose}"
+    implementation "androidx.navigation:navigation-compose:${versions.navigationCompose}"
+    implementation "androidx.paging:paging-compose:${versions.pagingCompose}"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:${versions.lifecycle}"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.lifecycle}"
+    implementation "org.apache.commons:commons-lang3:${versions.commonsLang}"
+    implementation "com.google.code.gson:gson:${versions.gson}"
+    implementation "androidx.documentfile:documentfile:${versions.documentFile}"
+    implementation "com.google.dagger:hilt-android:${versions.hilt}"
+    implementation "com.google.dagger:hilt-compiler:${versions.hilt}"
+    implementation "it.czerwinski.android.hilt:hilt-extensions:${versions.hiltExtensions}"
+    implementation "it.czerwinski.android.hilt:hilt-processor:${versions.hiltExtensions}"
+    implementation "androidx.hilt:hilt-navigation-compose:${versions.hiltNavigationCompose}"
+    implementation "androidx.room:room-runtime:${versions.room}"
+    implementation "androidx.room:room-ktx:${versions.room}"
+    kapt "androidx.room:room-compiler:${versions.room}"
+    implementation "com.squareup.retrofit2:retrofit:${versions.retrofit}"
+    implementation "com.squareup.retrofit2:converter-gson:${versions.retrofit}"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:${versions.retrofit}"
+    implementation "io.reactivex.rxjava2:rxjava:${versions.rxjava}"
+    implementation "io.reactivex.rxjava2:rxandroid:${versions.rxandroid}"
+    implementation "androidx.tv:tv-foundation:${versions.tv}"
+    implementation "androidx.tv:tv-material:${versions.tv}"
+    implementation "com.android.billingclient:billing:${versions.billing}"
+    implementation "com.android.billingclient:billing-ktx:${versions.billing}"
+    implementation "com.google.dagger:hilt-android-testing:${versions.hilt}"
+    implementation "com.google.dagger:hilt-android-compiler:${versions.hilt}"
+    implementation "androidx.compose.ui:ui-test:${versions.compose}"
+    implementation "androidx.compose.ui:ui-test-junit4:${versions.compose}"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:${versions.compose}"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin}"
+    implementation "junit:junit:${versions.junit}"
+    implementation "io.mockk:mockk:${versions.mockk}"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:${versions.coroutinesTest}"
+    implementation "androidx.arch.core:core-testing:${versions.coreTesting}"
+    implementation "androidx.test:core:${versions.androidXTest}"
+    implementation "androidx.test:rules:${versions.androidXTest}"
+    implementation "androidx.test.ext:truth:${versions.androidXTest}"
+    implementation "androidx.test:runner:${versions.androidXTestRunner}"
+    implementation "androidx.test.ext:junit:${versions.androidXJUnit}"
+    implementation "androidx.test:monitor:${versions.monitor}"
+    implementation "androidx.test.espresso:espresso-core:${versions.espresso}"
+    implementation "androidx.test.espresso:espresso-contrib:${versions.espresso}"
+}
