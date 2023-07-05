@@ -53,8 +53,7 @@ internal fun ListenToMusicVariantRow(
             valueList = valueList,
             initialPosition = settingsViewModel.valueListenToMusicVariant.value.ordinal,
             onPositionChanged = onPositionChanged,
-            positionState = settingsViewModel.positionListenToMusicVariant,
-            isExpandedState = settingsViewModel.isExpandedListenToMusicVariant
+            spinnerState = settingsViewModel.spinnerStateListenToMusicVariant
         )
     }
 }

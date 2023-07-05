@@ -65,9 +65,8 @@ internal fun CloudSearchPanelLandscape(
             fontSize = fontSizeTextSp,
             valueList = OrderBy.values().map { it.orderByRus }.toTypedArray(),
             initialPosition = orderBy.ordinal,
-            onPositionChanged = {onOrderByValueChange(OrderBy.values()[it]) },
-            positionState = cloudViewModel.positionOrderBy,
-            isExpandedState = cloudViewModel.isExpandedOrderBy
+            onPositionChanged = { onOrderByValueChange(OrderBy.values()[it]) },
+            spinnerState = cloudViewModel.spinnerStateOrderBy
         )
         Box (
             modifier = Modifier
