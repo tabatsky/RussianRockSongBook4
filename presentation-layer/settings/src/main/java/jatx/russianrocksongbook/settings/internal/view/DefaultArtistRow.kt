@@ -69,8 +69,7 @@ internal fun DefaultArtistRow(
             onPositionChanged = {
                 onValueChanged(artists[it])
             },
-            positionState = settingsViewModel.positionDefaultArtist,
-            isExpandedState = settingsViewModel.isExpandedDefaultArtist
+            spinnerState = settingsViewModel.spinnerStateDefaultArtist
         )
     }
 }

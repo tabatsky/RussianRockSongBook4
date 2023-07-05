@@ -13,6 +13,7 @@ import io.reactivex.schedulers.Schedulers
 import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.paging.CONFIG
 import jatx.russianrocksongbook.cloudsongs.internal.paging.CloudSongSource
+import jatx.russianrocksongbook.commonview.spinner.SpinnerState
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_ERROR
@@ -58,8 +59,7 @@ internal class CloudViewModel @Inject constructor(
 
     val invalidateCounter = cloudStateHolder.invalidateCounter.asStateFlow()
 
-    val positionOrderBy = mutableStateOf(0)
-    val isExpandedOrderBy = mutableStateOf(false)
+    val spinnerStateOrderBy = mutableStateOf(SpinnerState(0, false))
 
     companion object {
         private const val key = "Cloud"

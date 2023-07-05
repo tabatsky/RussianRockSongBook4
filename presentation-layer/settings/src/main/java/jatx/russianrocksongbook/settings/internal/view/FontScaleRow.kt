@@ -53,8 +53,7 @@ internal fun FontScaleRow(
             valueList = valueList,
             initialPosition = settingsViewModel.valueFontScale.value.ordinal,
             onPositionChanged = onPositionChanged,
-            positionState = settingsViewModel.positionFontScale,
-            isExpandedState = settingsViewModel.isExpandedFontScale
+            spinnerState = settingsViewModel.spinnerStateFontScale
         )
     }
 }

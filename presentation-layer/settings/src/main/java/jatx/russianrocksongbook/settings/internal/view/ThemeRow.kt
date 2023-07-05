@@ -53,8 +53,7 @@ internal fun ThemeRow(
             valueList = valueList,
             initialPosition = settingsViewModel.valueTheme.value.ordinal,
             onPositionChanged = onPositionChanged,
-            positionState = settingsViewModel.positionTheme,
-            isExpandedState = settingsViewModel.isExpandedTheme
+            spinnerState = settingsViewModel.spinnerStateTheme
         )
     }
 }

@@ -1,12 +1,12 @@
 package jatx.russianrocksongbook.commonview.spinner
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
@@ -22,26 +22,32 @@ fun Spinner(
     valueList: Array<String>,
     initialPosition: Int,
     onPositionChanged: (Int) -> Unit,
-    positionState: MutableState<Int> = mutableStateOf(0),
-    isExpandedState: MutableState<Boolean> = mutableStateOf(false)
+    spinnerState: MutableState<SpinnerState> = rememberSaveable {
+        mutableStateOf(SpinnerState(0, false))
+    }
 ) {
-    var position by positionState
-    var isExpanded by isExpandedState
+    var theState by spinnerState
 
-    position = initialPosition
+    fun setPosition(position: Int) {
+        theState = theState.copy(position = position)
+    }
 
-    Log.e("initialPosition", initialPosition.toString())
+    fun setExpanded(isExpanded: Boolean) {
+        theState = theState.copy(isExpanded = isExpanded)
+    }
+
+    setPosition(initialPosition)
 
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center
     ) {
-        val modifier = testTag?.let {
+        val modifierWithTestTag = testTag?.let {
             Modifier.testTag(it)
         } ?: Modifier
 
         Button(
-            modifier = modifier
+            modifier = modifierWithTestTag
                 .fillMaxSize(),
             colors = ButtonDefaults
                 .buttonColors(
@@ -49,11 +55,11 @@ fun Spinner(
                     contentColor = theme.colorMain
                 ),
             onClick = {
-                isExpanded = !isExpanded
+                setExpanded(!theState.isExpanded)
             }
         ) {
             Text(
-                text = valueList[position],
+                text = valueList[theState.position],
                 fontSize = fontSize,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -62,13 +68,13 @@ fun Spinner(
         DropdownMenu(
             modifier = Modifier
                 .background(theme.colorMain),
-            expanded = isExpanded,
-            onDismissRequest = { isExpanded = false }) {
+            expanded = theState.isExpanded,
+            onDismissRequest = { setExpanded(false) }) {
             valueList.forEachIndexed { index, string ->
                 DropdownMenuItem(
                     onClick = {
-                        isExpanded = false
-                        position = index
+                        setExpanded(false)
+                        setPosition(index)
                         onPositionChanged(index)
                     }
                 ) {
@@ -81,3 +87,8 @@ fun Spinner(
         }
     }
 }
+
+data class SpinnerState(
+    val position: Int,
+    val isExpanded: Boolean
+)

@@ -73,8 +73,7 @@ internal fun CloudSearchPanelPortrait(
                 valueList = OrderBy.values().map { it.orderByRus }.toTypedArray(),
                 initialPosition = orderBy.ordinal,
                 onPositionChanged = { onOrderByValueChange(OrderBy.values()[it]) },
-                positionState = cloudViewModel.positionOrderBy,
-                isExpandedState = cloudViewModel.isExpandedOrderBy
+                spinnerState = cloudViewModel.spinnerStateOrderBy
             )
         }
         Box (

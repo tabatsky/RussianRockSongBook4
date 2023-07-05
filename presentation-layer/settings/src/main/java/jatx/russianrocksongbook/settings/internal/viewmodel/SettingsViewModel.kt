@@ -2,6 +2,7 @@ package jatx.russianrocksongbook.settings.internal.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
 import dagger.hilt.android.lifecycle.HiltViewModel
+import jatx.russianrocksongbook.commonview.spinner.SpinnerState
 import jatx.russianrocksongbook.viewmodel.CommonStateHolder
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
 import jatx.russianrocksongbook.viewmodel.CommonViewModelDeps
@@ -18,20 +19,15 @@ internal class SettingsViewModel @Inject constructor(
     private val settingsRepository =
         commonViewModelDeps.settingsRepository
 
-    val positionDefaultArtist = mutableStateOf(0)
-    val isExpandedDefaultArtist = mutableStateOf(false)
+    val spinnerStateDefaultArtist = mutableStateOf(SpinnerState(0, false))
     val valueDefaultArtist = mutableStateOf(settingsRepository.defaultArtist)
-    val positionFontScale = mutableStateOf(0)
-    val isExpandedFontScale = mutableStateOf(false)
+    val spinnerStateFontScale = mutableStateOf(SpinnerState(0, false))
     val valueFontScale = mutableStateOf(settingsRepository.commonFontScaleEnum)
-    val positionListenToMusicVariant = mutableStateOf(0)
-    val isExpandedListenToMusicVariant = mutableStateOf(false)
+    val spinnerStateListenToMusicVariant = mutableStateOf(SpinnerState(0, false))
     val valueListenToMusicVariant = mutableStateOf(settingsRepository.listenToMusicVariant)
-    val positionOrientation = mutableStateOf(0)
-    val isExpandedOrientation = mutableStateOf(false)
+    val spinnerStateOrientation = mutableStateOf(SpinnerState(0, false))
     val valueOrientation = mutableStateOf(settingsRepository.orientation)
-    val positionTheme = mutableStateOf(0)
-    val isExpandedTheme = mutableStateOf(false)
+    val spinnerStateTheme = mutableStateOf(SpinnerState(0, false))
     val valueTheme = mutableStateOf(settingsRepository.theme)
 
     val stringScrollSpeed = mutableStateOf(settingsRepository.scrollSpeed.toString())

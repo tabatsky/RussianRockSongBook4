@@ -53,8 +53,7 @@ internal fun OrientationRow(
             valueList = valueList,
             initialPosition = settingsViewModel.valueOrientation.value.ordinal,
             onPositionChanged = onPositionChanged,
-            positionState = settingsViewModel.positionOrientation,
-            isExpandedState = settingsViewModel.isExpandedOrientation
+            spinnerState = settingsViewModel.spinnerStateOrientation
         )
     }
 }
