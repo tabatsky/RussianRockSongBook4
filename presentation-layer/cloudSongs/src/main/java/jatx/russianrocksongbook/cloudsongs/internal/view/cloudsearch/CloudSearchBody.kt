@@ -137,6 +137,7 @@ internal fun CloudSearchBody(
                                 delay(100L)
                             }
                             listState.scrollToItem(scrollPosition)
+                            delay(100L)
                             cloudViewModel.updateNeedScroll(false)
                         }
                     } else {

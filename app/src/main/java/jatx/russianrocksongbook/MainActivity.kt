@@ -15,17 +15,17 @@ import dagger.hilt.android.AndroidEntryPoint
 import jatx.russianrocksongbook.addartist.api.ext.copySongsFromDirToRepoWithPath
 import jatx.russianrocksongbook.addartist.api.ext.copySongsFromDirToRepoWithPickedDir
 import jatx.russianrocksongbook.addsongsfromdirhelper.api.AddSongsFromDirHelper
-import jatx.russianrocksongbook.cloudsongs.api.ext.initCloudSearch
+import jatx.russianrocksongbook.cloudsongs.api.methods.initCloudSearch
 import jatx.russianrocksongbook.debug.AppDebug
 import jatx.russianrocksongbook.domain.usecase.cloud.SendCrashUseCase
 import jatx.russianrocksongbook.musichelper.api.MusicHelper
 import jatx.russianrocksongbook.localsongs.api.ext.parseAndExecuteVoiceCommand
-import jatx.russianrocksongbook.localsongs.api.ext.selectArtist
-import jatx.russianrocksongbook.localsongs.api.ext.selectSongByArtistAndTitle
 import jatx.russianrocksongbook.domain.models.appcrash.Version
 import jatx.russianrocksongbook.domain.repository.preferences.Orientation
 import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
 import jatx.russianrocksongbook.donationhelper.api.DonationHelper
+import jatx.russianrocksongbook.localsongs.api.methods.selectArtist
+import jatx.russianrocksongbook.localsongs.api.methods.selectSongByArtistAndTitle
 import jatx.russianrocksongbook.navigation.NavControllerHolder
 import jatx.russianrocksongbook.view.CurrentScreen
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            initActions()
+            ActionsInjector()
             CurrentScreen()
         }
 
@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun initActions() {
+    fun ActionsInjector() {
         Log.e("inject init", "actions")
         val commonViewModel = CommonViewModel.getInstance()
         commonViewModel.callbacks.onRestartApp = ::restartApp

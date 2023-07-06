@@ -78,6 +78,8 @@ internal open class LocalViewModel @Inject constructor(
             }
             return storage[key] as LocalViewModel
         }
+
+        fun getStoredInstance() = storage[key] as? LocalViewModel
     }
 
     fun selectArtist(artist: String) {
