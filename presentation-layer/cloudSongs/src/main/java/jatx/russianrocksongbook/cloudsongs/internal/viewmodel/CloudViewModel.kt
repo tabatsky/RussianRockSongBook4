@@ -71,6 +71,8 @@ internal class CloudViewModel @Inject constructor(
             }
             return storage[key] as CloudViewModel
         }
+
+        fun getStoredInstance() = storage[key] as? CloudViewModel
     }
 
     fun cloudSearch(searchFor: String, orderBy: OrderBy) {
