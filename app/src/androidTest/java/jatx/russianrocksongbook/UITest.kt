@@ -24,11 +24,13 @@ import jatx.russianrocksongbook.domain.repository.preferences.Orientation
 import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
 import jatx.russianrocksongbook.donation.api.view.donationLabel
 import jatx.russianrocksongbook.donationhelper.api.DONATIONS
+import jatx.russianrocksongbook.localsongs.api.ext.parseAndExecuteVoiceCommand
 import jatx.russianrocksongbook.viewmodel.deps.impl.ToastsTestImpl
 import jatx.russianrocksongbook.testing.*
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
 import jatx.russianrocksongbook.navigation.NavControllerHolder
 import org.junit.After
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.FixMethodOrder
@@ -46,12 +48,15 @@ import javax.inject.Inject
 
 const val ARTIST_1 = "Немного Нервно"
 const val ARTIST_2 = "Чайф"
+const val ARTIST_3 = "Кино"
 
-const val TITLE_1 = "Santa Maria"
-const val TITLE_2 = "Яблочный остров"
-const val TITLE_3 = "17 лет"
-const val TITLE_4 = "Поплачь о нем"
-const val TITLE_5 = "Над мертвым городом сон"
+const val TITLE_1_1 = "Santa Maria"
+const val TITLE_1_2 = "Яблочный остров"
+const val TITLE_1_3 = "Над мертвым городом сон"
+const val TITLE_1_4 = "Atlantica"
+const val TITLE_2_1 = "17 лет"
+const val TITLE_2_2 = "Поплачь о нем"
+const val TITLE_3_1 = "Кукушка"
 
 const val ARTIST_NEW = "Новый исполнитель"
 const val TITLE_NEW = "Новая песня"
@@ -129,7 +134,7 @@ class UITest {
     }
 
     @Test
-    fun test1_menuAndSongList() {
+    fun test001_menuAndSongList() {
         val testNumber = 1
 
         val artists = localRepository.getArtistsAsList()
@@ -181,26 +186,26 @@ class UITest {
             .performClick()
         composeTestRule.waitFor(timeout)
         composeTestRule
-            .onNodeWithText(TITLE_1)
+            .onNodeWithText(TITLE_1_1)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "$TITLE_1 is displayed")
+        Log.e("test $testNumber assert", "$TITLE_1_1 is displayed")
         composeTestRule
-            .onNodeWithText(TITLE_2)
+            .onNodeWithText(TITLE_1_2)
             .assertDoesNotExist()
-        Log.e("test $testNumber assert", "$TITLE_2 does not exist")
+        Log.e("test $testNumber assert", "$TITLE_1_2 does not exist")
         val indexSong2 = localRepository
             .getSongsByArtistAsList(ARTIST_1)
             .map { it.title }
-            .indexOf(TITLE_2) - 3
+            .indexOf(TITLE_1_2) - 3
         composeTestRule
             .onNodeWithTag(SONG_LIST_LAZY_COLUMN)
             .performScrollToIndex(indexSong2)
         Log.e("test $testNumber scroll", "songList to index $indexSong2")
         composeTestRule.waitFor(timeout)
         composeTestRule
-            .onNodeWithText(TITLE_2)
+            .onNodeWithText(TITLE_1_2)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "$TITLE_2 is displayed")
+        Log.e("test $testNumber assert", "$TITLE_1_2 is displayed")
 
         composeTestRule
             .onNodeWithTag(DRAWER_BUTTON_MAIN)
@@ -222,30 +227,30 @@ class UITest {
             .performClick()
         composeTestRule.waitFor(timeout)
         composeTestRule
-            .onNodeWithText(TITLE_3)
+            .onNodeWithText(TITLE_2_1)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "$TITLE_3 is displayed")
+        Log.e("test $testNumber assert", "$TITLE_2_1 is displayed")
         composeTestRule
-            .onNodeWithText(TITLE_4)
+            .onNodeWithText(TITLE_2_2)
             .assertDoesNotExist()
-        Log.e("test $testNumber assert", "$TITLE_4 does not exist")
+        Log.e("test $testNumber assert", "$TITLE_2_2 does not exist")
         val indexSong4 = localRepository
             .getSongsByArtistAsList(ARTIST_2)
             .map { it.title }
-            .indexOf(TITLE_4) - 3
+            .indexOf(TITLE_2_2) - 3
         composeTestRule
             .onNodeWithTag(SONG_LIST_LAZY_COLUMN)
             .performScrollToIndex(indexSong4)
         Log.e("test $testNumber scroll", "songList to index $indexSong4")
         composeTestRule.waitFor(timeout)
         composeTestRule
-            .onNodeWithText(TITLE_4)
+            .onNodeWithText(TITLE_2_2)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "$TITLE_4 is displayed")
+        Log.e("test $testNumber assert", "$TITLE_2_2 is displayed")
     }
 
     @Test
-    fun test2_songText() {
+    fun test002_songText() {
         val testNumber = 2
 
         val artists = localRepository.getArtistsAsList()
@@ -275,7 +280,7 @@ class UITest {
         composeTestRule.waitFor(timeout)
 
         val songs = localRepository.getSongsByArtistAsList(ARTIST_1)
-        val songIndex1 = songs.indexOfFirst { it.title == TITLE_5 }
+        val songIndex1 = songs.indexOfFirst { it.title == TITLE_1_3 }
         val song1 = songs[songIndex1]
         composeTestRule
             .onNodeWithTag(SONG_LIST_LAZY_COLUMN)
@@ -284,14 +289,14 @@ class UITest {
         composeTestRule.waitFor(timeout)
 
         composeTestRule
-            .onNodeWithText(TITLE_5)
+            .onNodeWithText(TITLE_1_3)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "$TITLE_5 is displayed")
+        Log.e("test $testNumber assert", "$TITLE_1_3 is displayed")
         composeTestRule
-            .onNodeWithText(TITLE_5)
+            .onNodeWithText(TITLE_1_3)
             .performClick()
         composeTestRule.waitFor(timeout)
-        Log.e("test $testNumber click", TITLE_5)
+        Log.e("test $testNumber click", TITLE_1_3)
 
         composeTestRule
             .onNodeWithText("${song1.title} (${song1.artist})")
@@ -536,7 +541,7 @@ class UITest {
     }
 
     @Test
-    fun test3_cloudSearch() {
+    fun test003_cloudSearch() {
         val testNumber = 3
 
         composeTestRule.waitFor(timeout)
@@ -680,7 +685,7 @@ class UITest {
     }
 
     @Test
-    fun test4_cloudSongText() {
+    fun test004_cloudSongText() {
         val testNumber = 4
 
         composeTestRule.waitFor(timeout)
@@ -868,7 +873,7 @@ class UITest {
     }
 
     @Test
-    fun test5_addSong() {
+    fun test005_addSong() {
         val testNumber = 5
 
         composeTestRule.waitFor(timeout)
@@ -1022,7 +1027,7 @@ class UITest {
     }
 
     @Test
-    fun test6_settings() {
+    fun test006_settings() {
         val testNumber = 6
 
         composeTestRule.waitFor(timeout)
@@ -1146,7 +1151,7 @@ class UITest {
     }
 
     @Test
-    fun test7_donation() {
+    fun test007_donation() {
         val testNumber = 7
 
         composeTestRule.waitFor(timeout)
@@ -1177,7 +1182,7 @@ class UITest {
     }
 
     @Test
-    fun test8_addArtist() {
+    fun test008_addArtist() {
         val testNumber = 8
 
         composeTestRule.waitFor(timeout)
@@ -1208,19 +1213,19 @@ class UITest {
     }
 
     @Test
-    fun test9_favorite() {
+    fun test009_favorite() {
         val testNumber = 9
 
-        localRepository.setFavorite(true, ARTIST_1, TITLE_1)
-        val song1 = localRepository.getSongByArtistAndTitle(ARTIST_1, TITLE_1)!!
-        localRepository.setFavorite(true, ARTIST_1, TITLE_2)
-        val song2 = localRepository.getSongByArtistAndTitle(ARTIST_1, TITLE_2)!!
-        localRepository.setFavorite(true, ARTIST_2, TITLE_3)
-        val song3 = localRepository.getSongByArtistAndTitle(ARTIST_2, TITLE_3)!!
-        localRepository.setFavorite(true, ARTIST_2, TITLE_4)
-        val song4 = localRepository.getSongByArtistAndTitle(ARTIST_2, TITLE_4)!!
-        localRepository.setFavorite(true, ARTIST_1, TITLE_5)
-        val song5 = localRepository.getSongByArtistAndTitle(ARTIST_1, TITLE_5)!!
+        localRepository.setFavorite(true, ARTIST_1, TITLE_1_1)
+        val song1 = localRepository.getSongByArtistAndTitle(ARTIST_1, TITLE_1_1)!!
+        localRepository.setFavorite(true, ARTIST_1, TITLE_1_2)
+        val song2 = localRepository.getSongByArtistAndTitle(ARTIST_1, TITLE_1_2)!!
+        localRepository.setFavorite(true, ARTIST_2, TITLE_2_1)
+        val song3 = localRepository.getSongByArtistAndTitle(ARTIST_2, TITLE_2_1)!!
+        localRepository.setFavorite(true, ARTIST_2, TITLE_2_2)
+        val song4 = localRepository.getSongByArtistAndTitle(ARTIST_2, TITLE_2_2)!!
+        localRepository.setFavorite(true, ARTIST_1, TITLE_1_3)
+        val song5 = localRepository.getSongByArtistAndTitle(ARTIST_1, TITLE_1_3)!!
 
         val songs = localRepository.getSongsByArtistAsList(ARTIST_FAVORITE)
 
@@ -1259,9 +1264,9 @@ class UITest {
         Log.e("test $testNumber scroll", "songList to index $index1")
         composeTestRule.waitFor(timeout)
         composeTestRule
-            .onNodeWithText(TITLE_1)
+            .onNodeWithText(TITLE_1_1)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "$TITLE_1 is displayed")
+        Log.e("test $testNumber assert", "$TITLE_1_1 is displayed")
         composeTestRule.waitFor(timeout)
 
         composeTestRule
@@ -1270,9 +1275,9 @@ class UITest {
         Log.e("test $testNumber scroll", "songList to index $index2")
         composeTestRule.waitFor(timeout)
         composeTestRule
-            .onNodeWithText(TITLE_2)
+            .onNodeWithText(TITLE_1_2)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "$TITLE_2 is displayed")
+        Log.e("test $testNumber assert", "$TITLE_1_2 is displayed")
         composeTestRule.waitFor(timeout)
 
         composeTestRule
@@ -1281,9 +1286,9 @@ class UITest {
         Log.e("test $testNumber scroll", "songList to index $index3")
         composeTestRule.waitFor(timeout)
         composeTestRule
-            .onNodeWithText(TITLE_3)
+            .onNodeWithText(TITLE_2_1)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "$TITLE_3 is displayed")
+        Log.e("test $testNumber assert", "$TITLE_2_1 is displayed")
         composeTestRule.waitFor(timeout)
 
         composeTestRule
@@ -1292,9 +1297,9 @@ class UITest {
         Log.e("test $testNumber scroll", "songList to index $index4")
         composeTestRule.waitFor(timeout)
         composeTestRule
-            .onNodeWithText(TITLE_4)
+            .onNodeWithText(TITLE_2_2)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "$TITLE_4 is displayed")
+        Log.e("test $testNumber assert", "$TITLE_2_2 is displayed")
         composeTestRule.waitFor(timeout)
 
         composeTestRule
@@ -1303,18 +1308,93 @@ class UITest {
         Log.e("test $testNumber scroll", "songList to index $index5")
         composeTestRule.waitFor(timeout)
         composeTestRule
-            .onNodeWithText(TITLE_5)
+            .onNodeWithText(TITLE_1_3)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "$TITLE_5 is displayed")
+        Log.e("test $testNumber assert", "$TITLE_1_3 is displayed")
         composeTestRule.waitFor(timeout)
 
-        localRepository.setFavorite(false, ARTIST_1, TITLE_5)
+        localRepository.setFavorite(false, ARTIST_1, TITLE_1_3)
 
         composeTestRule.waitFor(timeout)
         composeTestRule
-            .onNodeWithText(TITLE_5)
+            .onNodeWithText(TITLE_1_3)
             .assertDoesNotExist()
-        Log.e("test $testNumber assert", "$TITLE_5 does not exist")
+        Log.e("test $testNumber assert", "$TITLE_1_3 does not exist")
+        composeTestRule.waitFor(timeout)
+    }
+
+    @Test
+    fun test010_voiceCommand() {
+        val testNumber = 9
+
+        composeTestRule.activityRule.scenario.onActivity {
+            it.parseAndExecuteVoiceCommand("открой группу $ARTIST_1")
+        }
+
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule
+            .onNodeWithText(TITLE_1_4)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$TITLE_1_4 is displayed")
+
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule.activityRule.scenario.onActivity {
+            it.parseAndExecuteVoiceCommand("открой группу $ARTIST_2")
+        }
+
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule
+            .onNodeWithText(TITLE_2_1)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$TITLE_2_1 is displayed")
+
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule.activityRule.scenario.onActivity {
+            it.parseAndExecuteVoiceCommand("открой песню $TITLE_1_1")
+        }
+
+        composeTestRule.waitFor(timeout)
+
+        val song1 = localRepository.getSongByArtistAndTitle(ARTIST_1, TITLE_1_1)
+        assertNotNull(song1)
+
+        composeTestRule
+            .onNodeWithText("$TITLE_1_1 ($ARTIST_1)")
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "song title with artist is displayed")
+        composeTestRule
+            .onNodeWithTag(SONG_TEXT_VIEWER)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$SONG_TEXT_VIEWER is displayed")
+        Espresso.onView(withText(song1!!.text)).check(matches(isDisplayed()))
+        Log.e("test $testNumber assert", "song text is displayed")
+
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule.activityRule.scenario.onActivity {
+            it.parseAndExecuteVoiceCommand("открой песню $ARTIST_3 $TITLE_3_1")
+        }
+
+        composeTestRule.waitFor(timeout)
+
+        val song2 = localRepository.getSongByArtistAndTitle(ARTIST_3, TITLE_3_1)
+        assertNotNull(song2)
+
+        composeTestRule
+            .onNodeWithText("$TITLE_3_1 ($ARTIST_3)")
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "song title with artist is displayed")
+        composeTestRule
+            .onNodeWithTag(SONG_TEXT_VIEWER)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$SONG_TEXT_VIEWER is displayed")
+        Espresso.onView(withText(song2!!.text)).check(matches(isDisplayed()))
+        Log.e("test $testNumber assert", "song text is displayed")
+
         composeTestRule.waitFor(timeout)
     }
 }
