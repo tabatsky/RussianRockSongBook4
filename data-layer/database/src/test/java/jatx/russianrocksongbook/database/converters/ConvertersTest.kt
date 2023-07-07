@@ -1,7 +1,7 @@
 package jatx.russianrocksongbook.database.converters
 
 import jatx.russianrocksongbook.database.db.entities.SongEntity
-import jatx.russianrocksongbook.database.gson.SongGson
+import jatx.russianrocksongbook.database.dbinit.jsonresourcemodel.SongJsonResourceModel
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.models.local.songTextHash
 import org.junit.Assert.assertEquals
@@ -68,13 +68,13 @@ class ConvertersTest {
     }
 
     @Test
-    fun songGson_asSongWithArtist_isWorkingCorrect() {
-        val songGson = SongGson(
+    fun songJsonResourceModel_asSongWithArtist_isWorkingCorrect() {
+        val songJsonResourceModel = SongJsonResourceModel(
             title = TITLE,
             text = TEXT
         )
 
-        val song = songGson asSongWithArtist ARTIST
+        val song = songJsonResourceModel asSongWithArtist ARTIST
 
         assertEquals(song.artist, ARTIST)
         assertEquals(song.title, TITLE)

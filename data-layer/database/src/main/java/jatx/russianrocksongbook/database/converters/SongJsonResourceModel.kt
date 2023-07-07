@@ -1,10 +1,10 @@
 package jatx.russianrocksongbook.database.converters
 
-import jatx.russianrocksongbook.database.gson.SongGson
+import jatx.russianrocksongbook.database.dbinit.jsonresourcemodel.SongJsonResourceModel
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.models.local.songTextHash
 
-internal infix fun SongGson.asSongWithArtist(artist: String) = Song(
+internal infix fun SongJsonResourceModel.asSongWithArtist(artist: String) = Song(
     artist = artist,
     title = title,
     text = text,

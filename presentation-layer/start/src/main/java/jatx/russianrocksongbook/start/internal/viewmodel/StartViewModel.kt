@@ -29,7 +29,7 @@ internal class StartViewModel @Inject constructor(
     val stubTotalProgress = startStateHolder
         .stubTotalProgress.asStateFlow()
 
-    var asyncInitDone = false
+    var skipAsyncInit = false
 
     private var asyncInitJob: Job? = null
 
@@ -46,15 +46,15 @@ internal class StartViewModel @Inject constructor(
     }
 
     fun asyncInit() {
-        if (!asyncInitDone) {
-            asyncInitDone = true
+        if (!skipAsyncInit) {
+            skipAsyncInit = true
             asyncInitJob?.let {
                 if (!it.isCancelled) it.cancel()
             }
             asyncInitJob = viewModelScope.launch {
                 withContext(Dispatchers.IO) {
                     if (settings.appWasUpdated) {
-                        localRepoInitializer.fillDbFromJSON().collect {
+                        localRepoInitializer.fillDbFromJSONResources().collect {
                             updateStubProgress(it.first, it.second)
                         }
                         localRepoInitializer.deleteWrongSongs()

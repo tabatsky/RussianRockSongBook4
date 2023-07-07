@@ -16,16 +16,16 @@ class LocalRepositoryInitializerImpl @Inject constructor(
     private val localRepo: LocalRepository,
     @ApplicationContext private val context: Context
 ): LocalRepositoryInitializer {
-    override fun fillDbFromJSON() = flow {
-        val jsonLoader = JsonLoader(context)
-        while (jsonLoader.hasNext()) {
-            val songs = jsonLoader.loadNext()
+    override fun fillDbFromJSONResources() = flow {
+        val jsonResourceLoader = JsonResourceLoader(context)
+        while (jsonResourceLoader.hasNext()) {
+            val songs = jsonResourceLoader.loadNext()
             localRepo.insertIgnoreSongs(songs)
-            emit(jsonLoader.current to jsonLoader.total)
+            emit(jsonResourceLoader.current to jsonResourceLoader.total)
         }
     }
 
-    override fun applySongPatches() {
+    override suspend fun applySongPatches() {
         patches.forEach {
             localRepo.getSongByArtistAndTitle(it.artist, it.title)?.let { song ->
                 val patchedText = song.text.replace(it.orig, it.patch)
@@ -34,19 +34,19 @@ class LocalRepositoryInitializerImpl @Inject constructor(
         }
     }
 
-    override fun deleteWrongSongs() {
+    override suspend fun deleteWrongSongs() {
         wrongSongs.forEach {
             localRepo.deleteWrongSong(it.artist, it.title)
         }
     }
 
-    override fun deleteWrongArtists() {
+    override suspend fun deleteWrongArtists() {
         wrongArtists.forEach {
             localRepo.deleteWrongArtist(it)
         }
     }
 
-    override fun patchWrongArtists() {
+    override suspend fun patchWrongArtists() {
         wrongArtistsPatch.keys.forEach { key ->
             localRepo.patchWrongArtist(key, wrongArtistsPatch[key]!!)
         }
