@@ -64,7 +64,7 @@ class LocalRepositoryImplTest {
             ApplicationProvider.getApplicationContext()
         )
         runBlocking {
-            localRepositoryInitializer.fillDbFromJSON().collect {
+            localRepositoryInitializer.fillDbFromJSONResources().collect {
                 Log.e("fillDbFromJSON", it.toString())
             }
         }
