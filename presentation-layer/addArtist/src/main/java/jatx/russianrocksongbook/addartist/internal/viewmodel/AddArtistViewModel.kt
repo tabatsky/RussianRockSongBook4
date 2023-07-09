@@ -1,6 +1,8 @@
 package jatx.russianrocksongbook.addartist.internal.viewmodel
 
+import androidx.compose.runtime.Composable
 import androidx.documentfile.provider.DocumentFile
+import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -37,6 +39,20 @@ internal class AddArtistViewModel @Inject constructor(
         .uploadSongList.asStateFlow()
 
     private var uploadListDisposable: Disposable? = null
+
+    companion object {
+        private const val key = "AddArtist"
+
+        @Composable
+        fun getInstance(): AddArtistViewModel {
+            if (!storage.containsKey(key)){
+                storage[key] = hiltViewModel<AddArtistViewModel>()
+            }
+            return storage[key] as AddArtistViewModel
+        }
+
+        fun getStoredInstance() = storage[key] as? AddArtistViewModel
+    }
 
     private fun showUploadOfferForDir(artist: String, songs: List<Song>) {
         addArtistStateHolder.uploadArtist.value = artist

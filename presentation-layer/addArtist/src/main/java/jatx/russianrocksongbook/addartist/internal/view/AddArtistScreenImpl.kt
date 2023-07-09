@@ -9,7 +9,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import jatx.russianrocksongbook.addartist.R
 import jatx.russianrocksongbook.addartist.internal.viewmodel.AddArtistViewModel
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
@@ -18,7 +17,7 @@ import jatx.russianrocksongbook.commonview.dialogs.confirm.UploadDialog
 
 @Composable
 internal fun AddArtistScreenImpl() {
-    val addArtistViewModel: AddArtistViewModel = hiltViewModel()
+    val addArtistViewModel = AddArtistViewModel.getInstance()
 
     val showUploadDialog by addArtistViewModel.showUploadDialogForDir.collectAsState()
     val uploadArtist by addArtistViewModel.uploadArtist.collectAsState()

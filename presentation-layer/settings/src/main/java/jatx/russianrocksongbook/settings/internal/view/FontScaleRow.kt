@@ -12,7 +12,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import jatx.russianrocksongbook.commonview.spinner.Spinner
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.settings.R
@@ -26,7 +25,7 @@ internal fun FontScaleRow(
     fontSize: TextUnit,
     onPositionChanged: (Int) -> Unit
 ) {
-    val settingsViewModel: SettingsViewModel = hiltViewModel()
+    val settingsViewModel = SettingsViewModel.getInstance()
 
     Row(
         modifier = modifier,

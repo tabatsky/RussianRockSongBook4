@@ -11,6 +11,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.VoiceCommandViewModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -20,6 +21,8 @@ internal fun SongListScreenImpl(
     passToSongWithTitle: String?
 ) {
     val localViewModel = LocalViewModel.getInstance()
+    // for VoiceCommandViewModel initializing:
+    VoiceCommandViewModel.getInstance()
 
     LaunchedEffect(Unit) {
         if (!isBackFromSong || artist == ARTIST_FAVORITE) {

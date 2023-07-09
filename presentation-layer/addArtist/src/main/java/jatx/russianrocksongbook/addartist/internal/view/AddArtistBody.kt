@@ -12,14 +12,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import jatx.russianrocksongbook.addartist.R
 import jatx.russianrocksongbook.addartist.internal.viewmodel.AddArtistViewModel
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 
 @Composable
 internal fun AddArtistBody() {
-    val addArtistViewModel: AddArtistViewModel = hiltViewModel()
+    val addArtistViewModel = AddArtistViewModel.getInstance()
 
     val theme = addArtistViewModel.settings.theme
 
