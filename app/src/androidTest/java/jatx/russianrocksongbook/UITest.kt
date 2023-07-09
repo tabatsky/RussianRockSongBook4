@@ -1241,7 +1241,6 @@ class UITest {
         val index5 = songs.indexOf(song5)
         assertTrue(index1 >= 0)
 
-
         composeTestRule.waitFor(timeout)
 
         composeTestRule
@@ -1326,7 +1325,7 @@ class UITest {
 
     @Test
     fun test010_voiceCommand() {
-        val testNumber = 9
+        val testNumber = 10
 
         composeTestRule.activityRule.scenario.onActivity {
             parseAndExecuteVoiceCommand("открой группу $ARTIST_1")
@@ -1400,7 +1399,7 @@ class UITest {
     }
 }
 
-const val timeout = 750L
+const val timeout = 1000L
 
 fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.waitFor(time: Long) {
     try {
