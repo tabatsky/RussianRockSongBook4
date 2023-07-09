@@ -21,8 +21,7 @@ internal fun SongListScreenImpl(
     passToSongWithTitle: String?
 ) {
     val localViewModel = LocalViewModel.getInstance()
-    // for VoiceCommandViewModel initializing:
-    VoiceCommandViewModel.getInstance()
+    InitVoiceCommandViewModel()
 
     LaunchedEffect(Unit) {
         if (!isBackFromSong || artist == ARTIST_FAVORITE) {
@@ -77,3 +76,7 @@ internal fun SongListScreenImpl(
     }
 }
 
+@Composable
+private fun InitVoiceCommandViewModel() {
+    VoiceCommandViewModel.getInstance()
+}
