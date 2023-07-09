@@ -1,6 +1,8 @@
 package jatx.russianrocksongbook.settings.internal.viewmodel
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jatx.russianrocksongbook.commonview.spinner.SpinnerState
 import jatx.russianrocksongbook.viewmodel.CommonStateHolder
@@ -32,6 +34,18 @@ internal class SettingsViewModel @Inject constructor(
 
     val stringScrollSpeed = mutableStateOf(settingsRepository.scrollSpeed.toString())
     val valueScrollSpeed = mutableStateOf(settingsRepository.scrollSpeed)
+
+    companion object {
+        private const val key = "Settings"
+
+        @Composable
+        fun getInstance(): SettingsViewModel {
+            if (!storage.containsKey(key)){
+                storage[key] = hiltViewModel<SettingsViewModel>()
+            }
+            return storage[key] as SettingsViewModel
+        }
+    }
 
     fun restartApp() {
         callbacks.onRestartApp()

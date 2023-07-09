@@ -24,7 +24,7 @@ import jatx.russianrocksongbook.domain.repository.preferences.Orientation
 import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
 import jatx.russianrocksongbook.donation.api.view.donationLabel
 import jatx.russianrocksongbook.donationhelper.api.DONATIONS
-import jatx.russianrocksongbook.localsongs.api.ext.parseAndExecuteVoiceCommand
+import jatx.russianrocksongbook.localsongs.api.methods.parseAndExecuteVoiceCommand
 import jatx.russianrocksongbook.viewmodel.deps.impl.ToastsTestImpl
 import jatx.russianrocksongbook.testing.*
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
@@ -111,6 +111,7 @@ class UITest {
         settingsRepository.defaultArtist = ARTIST_KINO
 
         composeTestRule.activityRule.scenario.recreate()
+        composeTestRule.waitFor(timeout)
 
         val appWasUpdated = settingsRepository.appWasUpdated
 
@@ -1328,7 +1329,7 @@ class UITest {
         val testNumber = 9
 
         composeTestRule.activityRule.scenario.onActivity {
-            it.parseAndExecuteVoiceCommand("открой группу $ARTIST_1")
+            parseAndExecuteVoiceCommand("открой группу $ARTIST_1")
         }
 
         composeTestRule.waitFor(timeout)
@@ -1341,7 +1342,7 @@ class UITest {
         composeTestRule.waitFor(timeout)
 
         composeTestRule.activityRule.scenario.onActivity {
-            it.parseAndExecuteVoiceCommand("открой группу $ARTIST_2")
+            parseAndExecuteVoiceCommand("открой группу $ARTIST_2")
         }
 
         composeTestRule.waitFor(timeout)
@@ -1354,7 +1355,7 @@ class UITest {
         composeTestRule.waitFor(timeout)
 
         composeTestRule.activityRule.scenario.onActivity {
-            it.parseAndExecuteVoiceCommand("открой песню $TITLE_1_1")
+            parseAndExecuteVoiceCommand("открой песню $TITLE_1_1")
         }
 
         composeTestRule.waitFor(timeout)
@@ -1376,7 +1377,7 @@ class UITest {
         composeTestRule.waitFor(timeout)
 
         composeTestRule.activityRule.scenario.onActivity {
-            it.parseAndExecuteVoiceCommand("открой песню $ARTIST_3 $TITLE_3_1")
+            parseAndExecuteVoiceCommand("открой песню $ARTIST_3 $TITLE_3_1")
         }
 
         composeTestRule.waitFor(timeout)

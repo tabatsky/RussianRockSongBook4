@@ -17,7 +17,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.settings.R
 import jatx.russianrocksongbook.settings.internal.viewmodel.SettingsViewModel
@@ -30,7 +29,7 @@ internal fun ScrollSpeedRow(
     fontSize: TextUnit,
     onValueChanged: (Float) -> Unit
 ) {
-    val settingsViewModel: SettingsViewModel = hiltViewModel()
+    val settingsViewModel = SettingsViewModel.getInstance()
 
     Row(
         modifier = modifier,

@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.domain.repository.preferences.*
@@ -19,7 +18,7 @@ import jatx.russianrocksongbook.settings.internal.viewmodel.SettingsViewModel
 
 @Composable
 internal fun SettingsScreenImpl() {
-    val settingsViewModel: SettingsViewModel = hiltViewModel()
+    val settingsViewModel = SettingsViewModel.getInstance()
 
     val theme = settingsViewModel.settings.theme
     val settings = settingsViewModel.settings

@@ -12,14 +12,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import dagger.hilt.android.AndroidEntryPoint
-import jatx.russianrocksongbook.addartist.api.ext.copySongsFromDirToRepoWithPath
-import jatx.russianrocksongbook.addartist.api.ext.copySongsFromDirToRepoWithPickedDir
+import jatx.russianrocksongbook.addartist.api.methods.copySongsFromDirToRepoWithPath
+import jatx.russianrocksongbook.addartist.api.methods.copySongsFromDirToRepoWithPickedDir
 import jatx.russianrocksongbook.addsongsfromdirhelper.api.AddSongsFromDirHelper
 import jatx.russianrocksongbook.cloudsongs.api.methods.initCloudSearch
 import jatx.russianrocksongbook.debug.AppDebug
 import jatx.russianrocksongbook.domain.usecase.cloud.SendCrashUseCase
 import jatx.russianrocksongbook.musichelper.api.MusicHelper
-import jatx.russianrocksongbook.localsongs.api.ext.parseAndExecuteVoiceCommand
+import jatx.russianrocksongbook.localsongs.api.methods.parseAndExecuteVoiceCommand
 import jatx.russianrocksongbook.domain.models.appcrash.Version
 import jatx.russianrocksongbook.domain.repository.preferences.Orientation
 import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository

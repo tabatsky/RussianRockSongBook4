@@ -13,7 +13,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import jatx.russianrocksongbook.commonview.spinner.Spinner
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_ADD_ARTIST
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_ADD_SONG
@@ -31,7 +30,7 @@ internal fun DefaultArtistRow(
     fontSize: TextUnit,
     onValueChanged: (String) -> Unit
 ) {
-    val settingsViewModel: SettingsViewModel = hiltViewModel()
+    val settingsViewModel = SettingsViewModel.getInstance()
 
     val artistList by settingsViewModel.artistList.collectAsState()
     val artists = ArrayList(artistList).apply {

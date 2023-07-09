@@ -1,6 +1,8 @@
 package jatx.russianrocksongbook.localsongs.internal.viewmodel
 
 import android.util.Log
+import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.localsongs.R
@@ -21,6 +23,20 @@ internal class VoiceCommandViewModel @Inject constructor(
 
     private val getSongsByVoiceSearchUseCase =
         voiceCommandViewModelDeps.getSongsByVoiceSearchUseCase
+
+    companion object {
+        private const val key = "VoiceCommand"
+
+        @Composable
+        fun getInstance(): VoiceCommandViewModel {
+            if (!storage.containsKey(key)){
+                storage[key] = hiltViewModel<VoiceCommandViewModel>()
+            }
+            return storage[key] as VoiceCommandViewModel
+        }
+
+        fun getStoredInstance() = storage[key] as? VoiceCommandViewModel
+    }
 
     fun parseAndExecuteVoiceCommand(command: String) {
         Log.e("voice command", command)

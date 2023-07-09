@@ -13,7 +13,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import jatx.russianrocksongbook.addsong.R
 import jatx.russianrocksongbook.addsong.internal.viewmodel.AddSongViewModel
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
@@ -23,7 +22,7 @@ import jatx.russianrocksongbook.testing.TEXT_FIELD_TITLE
 
 @Composable
 internal fun AddSongBody() {
-    val addSongViewModel: AddSongViewModel = hiltViewModel()
+    val addSongViewModel = AddSongViewModel.getInstance()
 
     var artist by addSongViewModel.artist
     var title by addSongViewModel.title

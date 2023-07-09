@@ -1,7 +1,9 @@
 package jatx.russianrocksongbook.addsong.internal.viewmodel
 
 import android.util.Log
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -37,6 +39,18 @@ internal class AddSongViewModel @Inject constructor(
     val artist = mutableStateOf("")
     val title = mutableStateOf("")
     val text = mutableStateOf("")
+
+    companion object {
+        private const val key = "AddSong"
+
+        @Composable
+        fun getInstance(): AddSongViewModel {
+            if (!storage.containsKey(key)){
+                storage[key] = hiltViewModel<AddSongViewModel>()
+            }
+            return storage[key] as AddSongViewModel
+        }
+    }
 
     private fun showUploadOfferForSong(song: Song) {
         Log.e("upload", "show offer")

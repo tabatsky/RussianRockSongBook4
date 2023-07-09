@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.donation.R
@@ -19,7 +18,7 @@ import jatx.russianrocksongbook.donationhelper.api.SKUS_LANDSCAPE
 
 @Composable
 internal fun DonationScreenImpl() {
-    val donationViewModel: DonationViewModel = hiltViewModel()
+    val donationViewModel = DonationViewModel.getInstance()
 
     val theme = donationViewModel.settings.theme
 
