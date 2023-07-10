@@ -25,7 +25,7 @@ import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.testing.SONG_LIST_LAZY_COLUMN
 import jatx.russianrocksongbook.testing.TestingConfig
-import jatx.russianrocksongbook.navigation.CurrentScreenVariant
+import jatx.russianrocksongbook.navigation.ScreenVariant
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
@@ -58,8 +58,8 @@ internal fun SongListBody(
             onClick = {
                 Log.e("SongListBody", "selected: ${song.artist} - ${song.title}")
                 localViewModel.selectScreen(
-                    CurrentScreenVariant
-                        .SONG_TEXT(currentArtist, index))
+                    ScreenVariant
+                        .SongText(currentArtist, index))
             }
         )
     }

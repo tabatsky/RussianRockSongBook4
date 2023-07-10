@@ -1,74 +1,74 @@
 package jatx.russianrocksongbook.navigation
 
-sealed interface CurrentScreenVariant {
+sealed interface ScreenVariant {
     val destination: String
 
-    object START: CurrentScreenVariant {
+    object Start: ScreenVariant {
         override val destination: String
             get() = destinationStart
     }
 
-    data class SONG_LIST(
+    data class SongList(
         val artist: String,
         val isBackFromSong: Boolean = false
-    ): CurrentScreenVariant {
+    ): ScreenVariant {
         override val destination: String
             get() = "$destinationSongList/$artist/$isBackFromSong"
     }
 
-    data class FAVORITE(
+    data class Favorite(
         val isBackFromSong: Boolean = false
-    ): CurrentScreenVariant {
+    ): ScreenVariant {
         override val destination: String
             get() = "$destinationFavorite/$isBackFromSong"
     }
 
-    data class SONG_TEXT(
+    data class SongText(
         val artist: String,
         val position: Int
-        ): CurrentScreenVariant {
+        ): ScreenVariant {
         override val destination: String
             get() = "$destinationSongText/$artist/$position"
     }
 
-    data class SONG_TEXT_BY_ARTIST_AND_TITLE(
+    data class SongTextByArtistAndTitle(
         val artist: String,
         val title: String
-        ): CurrentScreenVariant {
+        ): ScreenVariant {
         override val destination: String
             get() = "$destinationSongTextByArtistAndTitle/$artist/$title"
     }
 
-    data class CLOUD_SEARCH(
+    data class CloudSearch(
         val isBackFromSong: Boolean = false
-    ): CurrentScreenVariant {
+    ): ScreenVariant {
         override val destination: String
             get() = "$destinationCloudSearch/$isBackFromSong"
     }
 
-    data class CLOUD_SONG_TEXT(
+    data class CloudSongText(
         val position: Int
-    ): CurrentScreenVariant {
+    ): ScreenVariant {
         override val destination: String
             get() = "$destinationCloudSongText/$position"
     }
 
-    object ADD_ARTIST: CurrentScreenVariant {
+    object AddArtist: ScreenVariant {
         override val destination: String
             get() = destinationAddArtist
     }
 
-    object ADD_SONG: CurrentScreenVariant {
+    object AddSong: ScreenVariant {
         override val destination: String
             get() = destinationAddSong
     }
 
-    object DONATION: CurrentScreenVariant {
+    object Donation: ScreenVariant {
         override val destination: String
             get() = destinationDonation
     }
 
-    object SETTINGS: CurrentScreenVariant {
+    object Settings: ScreenVariant {
         override val destination: String
             get() = destinationSettings
     }

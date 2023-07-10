@@ -12,7 +12,7 @@ import jatx.russianrocksongbook.viewmodel.deps.Callbacks
 import jatx.russianrocksongbook.viewmodel.deps.Resources
 import jatx.russianrocksongbook.viewmodel.deps.TVDetector
 import jatx.russianrocksongbook.viewmodel.deps.Toasts
-import jatx.russianrocksongbook.navigation.CurrentScreenVariant
+import jatx.russianrocksongbook.navigation.ScreenVariant
 import org.junit.*
 import org.junit.Assert.assertEquals
 import org.junit.runners.MethodSorters
@@ -72,9 +72,9 @@ open class CommonViewModelTest {
         val _commonViewModel = CommonViewModel(commonStateHolder, commonViewModelDeps)
         commonViewModel = spyk(_commonViewModel)
 
-        val currentScreenVariantSlot = slot<CurrentScreenVariant>()
-        every { commonViewModel.selectScreen(capture(currentScreenVariantSlot)) } answers {
-            commonStateHolder.currentScreenVariant.value = currentScreenVariantSlot.captured
+        val screenVariantSlot = slot<ScreenVariant>()
+        every { commonViewModel.selectScreen(capture(screenVariantSlot)) } answers {
+            commonStateHolder.currentScreenVariant.value = screenVariantSlot.captured
         }
 
         verifySequence {
@@ -90,10 +90,10 @@ open class CommonViewModelTest {
 
     @Test
     fun test003_selectScreen_CloudSearch_isWorkingCorrect() {
-        commonViewModel.selectScreen(CurrentScreenVariant.CLOUD_SEARCH(false))
-        assertEquals(CurrentScreenVariant.CLOUD_SEARCH(false), commonViewModel.currentScreenVariant.value)
-        commonViewModel.selectScreen(CurrentScreenVariant.CLOUD_SEARCH(true))
-        assertEquals(CurrentScreenVariant.CLOUD_SEARCH(true), commonViewModel.currentScreenVariant.value)
+        commonViewModel.selectScreen(ScreenVariant.CloudSearch(false))
+        assertEquals(ScreenVariant.CloudSearch(false), commonViewModel.currentScreenVariant.value)
+        commonViewModel.selectScreen(ScreenVariant.CloudSearch(true))
+        assertEquals(ScreenVariant.CloudSearch(true), commonViewModel.currentScreenVariant.value)
 
     }
 

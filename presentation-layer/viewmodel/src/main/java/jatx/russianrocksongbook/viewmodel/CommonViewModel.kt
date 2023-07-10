@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import jatx.russianrocksongbook.viewmodel.contracts.SongTextViewModelContract
-import jatx.russianrocksongbook.navigation.CurrentScreenVariant
+import jatx.russianrocksongbook.navigation.ScreenVariant
 import jatx.russianrocksongbook.navigation.NavControllerHolder
 import kotlinx.coroutines.flow.asStateFlow
 import java.util.concurrent.ConcurrentHashMap
@@ -66,39 +66,39 @@ open class CommonViewModel @Inject constructor(
     fun back(onFinish: () -> Unit = {}) {
         Log.e("back from", currentScreenVariant.value.toString())
         when (currentScreenVariant.value) {
-            is CurrentScreenVariant.START,
-            is CurrentScreenVariant.SONG_LIST,
-            is CurrentScreenVariant.FAVORITE -> {
+            is ScreenVariant.Start,
+            is ScreenVariant.SongList,
+            is ScreenVariant.Favorite -> {
                 onFinish()
             }
-            is CurrentScreenVariant.CLOUD_SONG_TEXT -> {
-                selectScreen(CurrentScreenVariant.CLOUD_SEARCH(isBackFromSong = true))
+            is ScreenVariant.CloudSongText -> {
+                selectScreen(ScreenVariant.CloudSearch(isBackFromSong = true))
             }
-            is CurrentScreenVariant.SONG_TEXT -> {
+            is ScreenVariant.SongText -> {
                 if (currentArtist.value != ARTIST_FAVORITE) {
                     selectScreen(
-                        CurrentScreenVariant.SONG_LIST(
+                        ScreenVariant.SongList(
                         artist = currentArtist.value,
                         isBackFromSong = true))
                 } else {
-                    selectScreen(CurrentScreenVariant.FAVORITE(isBackFromSong = true))
+                    selectScreen(ScreenVariant.Favorite(isBackFromSong = true))
                 }
             }
             else -> {
                 if (currentArtist.value != ARTIST_FAVORITE) {
                     selectScreen(
-                        CurrentScreenVariant.SONG_LIST(
+                        ScreenVariant.SongList(
                         artist = currentArtist.value,
                         isBackFromSong = false))
                 } else {
-                    selectScreen(CurrentScreenVariant.FAVORITE(isBackFromSong = false))
+                    selectScreen(ScreenVariant.Favorite(isBackFromSong = false))
                 }
             }
         }
     }
 
     fun selectScreen(
-        screen: CurrentScreenVariant
+        screen: ScreenVariant
     ) {
         commonStateHolder.currentScreenVariant.value = screen
         NavControllerHolder.navController.navigate(screen.destination)

@@ -11,7 +11,7 @@ import jatx.russianrocksongbook.commonview.buttons.CommonIconButton
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.testing.SETTINGS_BUTTON
-import jatx.russianrocksongbook.navigation.CurrentScreenVariant
+import jatx.russianrocksongbook.navigation.ScreenVariant
 
 @Composable
 internal fun SongListActions() {
@@ -22,7 +22,7 @@ internal fun SongListActions() {
 
     val onSettingsClick = {
         println("selected: settings")
-        localViewModel.selectScreen(CurrentScreenVariant.SETTINGS)
+        localViewModel.selectScreen(ScreenVariant.Settings)
     }
     CommonIconButton(
         testTag = SETTINGS_BUTTON,

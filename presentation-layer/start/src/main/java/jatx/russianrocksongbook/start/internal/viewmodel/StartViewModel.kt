@@ -5,7 +5,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
-import jatx.russianrocksongbook.navigation.CurrentScreenVariant
+import jatx.russianrocksongbook.navigation.ScreenVariant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.asStateFlow
@@ -64,7 +64,7 @@ internal class StartViewModel @Inject constructor(
                         setAppWasUpdated(true)
                     }
                     withContext(Dispatchers.Main) {
-                        selectScreen(CurrentScreenVariant.SONG_LIST(settings.defaultArtist))
+                        selectScreen(ScreenVariant.SongList(settings.defaultArtist))
                         settings.confirmAppUpdate()
                     }
                 }

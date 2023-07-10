@@ -15,7 +15,7 @@ import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.domain.repository.local.*
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.viewmodel.CommonViewModel
-import jatx.russianrocksongbook.navigation.CurrentScreenVariant
+import jatx.russianrocksongbook.navigation.ScreenVariant
 import jatx.russianrocksongbook.viewmodel.contracts.SongTextViewModelContract
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -86,27 +86,27 @@ internal open class LocalViewModel @Inject constructor(
         Log.e("select artist", artist)
         when (artist) {
             ARTIST_ADD_ARTIST -> {
-                selectScreen(CurrentScreenVariant.ADD_ARTIST)
+                selectScreen(ScreenVariant.AddArtist)
             }
             ARTIST_ADD_SONG -> {
-                selectScreen(CurrentScreenVariant.ADD_SONG)
+                selectScreen(ScreenVariant.AddSong)
             }
             ARTIST_CLOUD_SONGS -> {
-                selectScreen(CurrentScreenVariant.CLOUD_SEARCH())
+                selectScreen(ScreenVariant.CloudSearch())
             }
             ARTIST_DONATION -> {
-                selectScreen(CurrentScreenVariant.DONATION)
+                selectScreen(ScreenVariant.Donation)
             }
             ARTIST_FAVORITE -> {
                 selectScreen(
-                    CurrentScreenVariant.FAVORITE(
+                    ScreenVariant.Favorite(
                         isBackFromSong = false
                     )
                 )
             }
             else -> {
                 selectScreen(
-                    CurrentScreenVariant.SONG_LIST(
+                    ScreenVariant.SongList(
                         artist = artist,
                         isBackFromSong = false
                     )
@@ -149,8 +149,8 @@ internal open class LocalViewModel @Inject constructor(
                                             .takeIf { it >= 0 }
                                             ?.let { position ->
                                                 selectScreen(
-                                                    CurrentScreenVariant
-                                                        .SONG_TEXT(newArtist, position)
+                                                    ScreenVariant
+                                                        .SongText(newArtist, position)
                                                 )
                                             }
                                         _passToSongWithTitle = null
@@ -210,8 +210,8 @@ internal open class LocalViewModel @Inject constructor(
     fun nextSong() {
         if (currentSongCount.value > 0) {
             selectScreen(
-                CurrentScreenVariant
-                .SONG_TEXT(
+                ScreenVariant
+                .SongText(
                     artist = currentArtist.value,
                     position = (currentSongPosition.value + 1) % currentSongCount.value
                 ))
@@ -222,15 +222,15 @@ internal open class LocalViewModel @Inject constructor(
         if (currentSongCount.value > 0) {
             if (currentSongPosition.value > 0) {
                 selectScreen(
-                    CurrentScreenVariant
-                    .SONG_TEXT(
+                    ScreenVariant
+                    .SongText(
                         artist = currentArtist.value,
                         position = (currentSongPosition.value - 1) % currentSongCount.value
                     ))
             } else {
                 selectScreen(
-                    CurrentScreenVariant
-                    .SONG_TEXT(
+                    ScreenVariant
+                    .SongText(
                         artist = currentArtist.value,
                         position = currentSongCount.value - 1
                     ))
@@ -262,15 +262,15 @@ internal open class LocalViewModel @Inject constructor(
                 if (currentSongCount.value > 0) {
                     if (currentSongPosition.value >= currentSongCount.value) {
                         selectScreen(
-                            CurrentScreenVariant
-                            .SONG_TEXT(
+                            ScreenVariant
+                            .SongText(
                                 artist = currentArtist.value,
                                 position = currentSongPosition.value - 1
                             ))
                     } else {
                         selectScreen(
-                            CurrentScreenVariant
-                            .SONG_TEXT(
+                            ScreenVariant
+                            .SongText(
                                 artist = currentArtist.value,
                                 position = currentSongPosition.value
                             ))
@@ -307,15 +307,15 @@ internal open class LocalViewModel @Inject constructor(
             if (currentSongCount.value > 0) {
                 if (currentSongPosition.value >= currentSongCount.value) {
                     selectScreen(
-                        CurrentScreenVariant
-                        .SONG_TEXT(
+                        ScreenVariant
+                        .SongText(
                             artist = currentArtist.value,
                             position = currentSongPosition.value - 1
                         ))
                 } else {
                     selectScreen(
-                        CurrentScreenVariant
-                        .SONG_TEXT(
+                        ScreenVariant
+                        .SongText(
                             artist = currentArtist.value,
                             position = currentSongPosition.value
                         ))
