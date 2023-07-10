@@ -2,11 +2,14 @@ package jatx.russianrocksongbook.cloudsongs.internal.viewmodel
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshotFlow
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.cachedIn
+import androidx.paging.map
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -22,6 +25,7 @@ import jatx.russianrocksongbook.viewmodel.CommonViewModel
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import jatx.russianrocksongbook.viewmodel.contracts.SongTextViewModelContract
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
 @HiltViewModel
@@ -61,6 +65,9 @@ internal class CloudViewModel @Inject constructor(
 
     val spinnerStateOrderBy = mutableStateOf(SpinnerState(0, false))
 
+    private val allLikes = mutableStateMapOf<CloudSong, Int>()
+    private val allDislikes = mutableStateMapOf<CloudSong, Int>()
+
     companion object {
         private const val key = "Cloud"
 
@@ -81,6 +88,8 @@ internal class CloudViewModel @Inject constructor(
         updateNeedScroll(true)
         updateSearchFor(searchFor)
         updateOrderBy(orderBy)
+        allLikes.clear()
+        allDislikes.clear()
         cloudStateHolder.cloudSongsFlow.value =
             Pager(CONFIG) {
                 CloudSongSource(
@@ -90,7 +99,18 @@ internal class CloudViewModel @Inject constructor(
                     onFetchDataError = { updateSearchState(SearchState.ERROR) },
                     onEmptyList = { updateSearchState(SearchState.EMPTY) }
                 )
-            }.flow.cachedIn(viewModelScope)
+            }.flow
+                .cachedIn(viewModelScope)
+                .combine(snapshotFlow { allLikes.values.sum() to allDislikes.values.sum() }) { pagingData, _ ->
+                    pagingData.map { cloudSong ->
+                        val likeCount = allLikes[cloudSong] ?: cloudSong.likeCount
+                        val dislikeCount = allDislikes[cloudSong] ?: cloudSong.dislikeCount
+                        cloudSong.copy(
+                            likeCount = likeCount,
+                            dislikeCount = dislikeCount
+                        )
+                    }
+                }
     }
 
     fun updateSearchState(searchState: SearchState) {
@@ -188,9 +208,9 @@ internal class CloudViewModel @Inject constructor(
                     when (result.status) {
                         STATUS_SUCCESS -> {
                             if (voteValue == 1) {
-                                cloudSong.likeCount += 1
+                                allLikes[cloudSong] = cloudSong.likeCount + 1
                             } else if (voteValue == -1) {
-                                cloudSong.dislikeCount += 1
+                                allDislikes[cloudSong] = cloudSong.dislikeCount + 1
                             }
                             cloudStateHolder.invalidateCounter.value += 1
                             showToast(R.string.toast_vote_success)

@@ -14,8 +14,8 @@ data class CloudSong(
     val isUserSong: Boolean = false,
     val variant: Int = -1,
     val raiting: Double = 0.0,
-    var likeCount: Int = 0,
-    var dislikeCount: Int = 0
+    val likeCount: Int = 0,
+    val dislikeCount: Int = 0
 ) {
 
     val visibleTitle = "$title${if (variant == 0) "" else " ($variant)"}"

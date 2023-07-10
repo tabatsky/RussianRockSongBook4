@@ -784,7 +784,8 @@ class UITest {
             Log.e("test $testNumber click", stringConst.cancel)
             composeTestRule.waitFor(timeout)
 
-            var cloudSong = list[2]
+            var cloudSong2 = list[2]
+            cloudSong2 = cloudSong2.copy(likeCount = cloudSong2.likeCount + 1)
 
             composeTestRule
                 .onNodeWithTag(LIKE_BUTTON)
@@ -796,10 +797,10 @@ class UITest {
             Log.e("test $testNumber click", LIKE_BUTTON)
             composeTestRule.waitFor(timeout)
             composeTestRule
-                .onNodeWithText(cloudSong.visibleTitleWithArtistAndRating)
+                .onNodeWithText(cloudSong2.visibleTitleWithArtistAndRating)
                 .assertIsDisplayed()
-            Log.e("test $testNumber assert", "${cloudSong.visibleTitleWithArtistAndRating} is displayed")
-            assert(cloudSong.likeCount == 1)
+            Log.e("test $testNumber assert", "${cloudSong2.visibleTitleWithArtistAndRating} is displayed")
+            assert(cloudSong2.likeCount == 1)
             Log.e("test $testNumber assert", "likeCount == 1")
 
             composeTestRule
@@ -822,7 +823,8 @@ class UITest {
                 .assertTextContains("4 /", substring = true)
             Log.e("test $testNumber assert", "$NUMBER_LABEL contains '4 /'")
 
-            cloudSong = list[3]
+            var cloudSong3 = list[3]
+            cloudSong3 = cloudSong3.copy(dislikeCount = cloudSong3.dislikeCount + 1)
 
             composeTestRule
                 .onNodeWithTag(DISLIKE_BUTTON)
@@ -834,10 +836,10 @@ class UITest {
             Log.e("test $testNumber click", DISLIKE_BUTTON)
             composeTestRule.waitFor(timeout)
             composeTestRule
-                .onNodeWithText(cloudSong.visibleTitleWithArtistAndRating)
+                .onNodeWithText(cloudSong3.visibleTitleWithArtistAndRating)
                 .assertIsDisplayed()
-            Log.e("test $testNumber assert", "${cloudSong.visibleTitleWithArtistAndRating} is displayed")
-            assert(cloudSong.dislikeCount == 1)
+            Log.e("test $testNumber assert", "${cloudSong3.visibleTitleWithArtistAndRating} is displayed")
+            assert(cloudSong3.dislikeCount == 1)
             Log.e("test $testNumber assert", "dislikeCount == 1")
 
             composeTestRule
@@ -847,9 +849,9 @@ class UITest {
             composeTestRule.waitFor(timeout)
 
             composeTestRule
-                .onNodeWithText(list[2].visibleTitleWithArtistAndRating)
+                .onNodeWithText(cloudSong2.visibleTitleWithArtistAndRating)
                 .assertIsDisplayed()
-            Log.e("test $testNumber assert", "${list[2].visibleTitleWithArtistAndRating} is displayed")
+            Log.e("test $testNumber assert", "${cloudSong2.visibleTitleWithArtistAndRating} is displayed")
             composeTestRule
                 .onNodeWithTag(NUMBER_LABEL)
                 .assertTextContains("3 /", substring = true)
@@ -862,9 +864,9 @@ class UITest {
             composeTestRule.waitFor(5000)
 
             composeTestRule
-                .onNodeWithText(list[2].visibleTitleWithRating)
+                .onNodeWithText(cloudSong2.visibleTitleWithRating)
                 .assertIsDisplayed()
-            Log.e("test $testNumber assert", "${list[2].visibleTitleWithRating} is displayed")
+            Log.e("test $testNumber assert", "${cloudSong2.visibleTitleWithRating} is displayed")
 
             assertTrue(ToastsTestImpl.verifyText(stringConst.toastChordsSavedAndAddedToFavorite))
             assertTrue(ToastsTestImpl.verifyText(stringConst.toastVoteSuccess))
