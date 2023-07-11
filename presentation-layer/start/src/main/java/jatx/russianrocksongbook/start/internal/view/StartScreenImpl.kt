@@ -63,24 +63,26 @@ internal fun StartScreenImpl() {
             color = theme.colorMain,
             fontSize = fontSizeLabel1Sp
         )
-        LinearProgressIndicator(
-            progress= progress,
-            modifier = Modifier
-                .height(20.dp)
-                .background(theme.colorBg),
-            color = theme.colorMain
-        )
-        Text(
-            text = "$currentProgress из $totalProgress",
-            color = theme.colorMain,
-            fontSize = fontSizeProgressSp
-        )
-        Text(
-            text = stringResource(id = R.string.wait_db_init),
-            color = theme.colorMain,
-            modifier = Modifier
-                .padding(dimensionResource(id = R.dimen.song_text_empty)),
-            fontSize = fontSizeLabel2Sp
-        )
+        if (startViewModel.needShowStartScreen) {
+            LinearProgressIndicator(
+                progress = progress,
+                modifier = Modifier
+                    .height(20.dp)
+                    .background(theme.colorBg),
+                color = theme.colorMain
+            )
+            Text(
+                text = "$currentProgress из $totalProgress",
+                color = theme.colorMain,
+                fontSize = fontSizeProgressSp
+            )
+            Text(
+                text = stringResource(id = R.string.wait_db_init),
+                color = theme.colorMain,
+                modifier = Modifier
+                    .padding(dimensionResource(id = R.dimen.song_text_empty)),
+                fontSize = fontSizeLabel2Sp
+            )
+        }
     }
 }
