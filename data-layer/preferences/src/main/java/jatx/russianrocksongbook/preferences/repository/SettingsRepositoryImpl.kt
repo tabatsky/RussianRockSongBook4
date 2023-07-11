@@ -64,8 +64,7 @@ class SettingsRepositoryImpl @Inject constructor(
             val editor = sp.edit()
             editor.putInt(KEY_APK_VERSION, newVersion)
             editor.commit()
-        } catch (e: Throwable) {
-        }
+        } catch (_: Throwable) {}
     }
 
     override var theme: Theme
