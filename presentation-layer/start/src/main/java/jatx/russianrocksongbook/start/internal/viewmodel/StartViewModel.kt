@@ -31,6 +31,8 @@ internal class StartViewModel @Inject constructor(
 
     var skipAsyncInit = false
 
+    val needShowStartScreen = settings.appWasUpdated
+
     private var asyncInitJob: Job? = null
 
     companion object {
