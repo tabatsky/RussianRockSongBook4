@@ -8,6 +8,18 @@ import io.mockk.junit4.MockKRule
 import io.mockk.junit5.MockKExtension
 import io.mockk.verifySequence
 import jatx.russianrocksongbook.domain.repository.preferences.*
+import jatx.russianrocksongbook.preferences.storage.impl.KEY_DEFAULT_ARTIST
+import jatx.russianrocksongbook.preferences.storage.impl.KEY_FONT_SCALE
+import jatx.russianrocksongbook.preferences.storage.impl.KEY_LISTEN_TO_MUSIC_VARIANT
+import jatx.russianrocksongbook.preferences.storage.impl.KEY_ORIENTATION
+import jatx.russianrocksongbook.preferences.storage.impl.KEY_SCROLL_SPEED
+import jatx.russianrocksongbook.preferences.storage.impl.KEY_THEME
+import jatx.russianrocksongbook.preferences.storage.impl.KEY_VK_MUSIC_DONT_ASK
+import jatx.russianrocksongbook.preferences.storage.impl.KEY_VOICE_HELP_DONT_ASK
+import jatx.russianrocksongbook.preferences.storage.impl.KEY_YANDEX_MUSIC_DONT_ASK
+import jatx.russianrocksongbook.preferences.storage.impl.KEY_YOUTUBE_MUSIC_DONT_ASK
+import jatx.russianrocksongbook.preferences.storage.impl.PREFS_NAME
+import jatx.russianrocksongbook.preferences.storage.impl.SettingsStorageImpl
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.FixMethodOrder
@@ -38,7 +50,8 @@ class SettingsRepositoryImplTest {
         every { context.getSharedPreferences(any(), any()) } returns sp
         every { sp.edit() } returns editor
 
-        settingsRepository = SettingsRepositoryImpl(context)
+        val settingsStorage = SettingsStorageImpl(context)
+        settingsRepository = SettingsRepositoryImpl(settingsStorage)
 
         verifySequence {
             context.getSharedPreferences(PREFS_NAME, 0)
