@@ -26,6 +26,10 @@ class ToastsTestImpl @Inject constructor(
     companion object {
         val textQueue = ArrayBlockingQueue<String>(100)
 
-        fun verifyText(toastText: String) = textQueue.poll()!! == toastText
+        fun verifyText(toastText: String) = try {
+            textQueue.poll()!! == toastText
+        } catch (_: Exception) {
+            false
+        }
     }
 }
