@@ -49,6 +49,9 @@ android {
         }
     }
     namespace 'jatx.russianrocksongbook'
+    testOptions {
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
+    }
 }
 
 dependencies {
@@ -119,4 +122,8 @@ dependencies {
     debugImplementation testDeps.composeUiTestManifest
 
     debugImplementation testDeps.kotlinReflect
+
+    androidTestImplementation testDeps.leakCanary
+
+    androidTestUtil testDeps.androidXOrchestrator
 }
