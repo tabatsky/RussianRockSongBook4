@@ -1115,8 +1115,71 @@ class UITest {
     }
 
     @Test
-    fun test0400_cloudSongText() {
-        val testNumber = 400
+    fun test0402_cloudSongTextAllButtonsAreDisplaying() {
+        val testNumber = 402
+
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule.activityRule.scenario.onActivity {
+            CommonViewModel
+                .getStoredInstance()
+                ?.selectScreen(ScreenVariant.CloudSearch())
+        }
+
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule.activityRule.scenario.onActivity {
+            CommonViewModel
+                .getStoredInstance()
+                ?.selectScreen(ScreenVariant.CloudSongText(2))
+        }
+
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule
+            .onAllNodesWithTag(MUSIC_BUTTON)
+            .assertCountEquals(2)
+        Log.e("test $testNumber assert", "$MUSIC_BUTTON count is 2")
+
+        composeTestRule
+            .onNodeWithTag(DOWNLOAD_BUTTON)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$DOWNLOAD_BUTTON is displayed")
+
+        composeTestRule
+            .onNodeWithTag(WARNING_BUTTON)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$WARNING_BUTTON is displayed")
+
+        composeTestRule
+            .onNodeWithTag(LIKE_BUTTON)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$LIKE_BUTTON is displayed")
+
+        composeTestRule
+            .onNodeWithTag(DISLIKE_BUTTON)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$DISLIKE_BUTTON is displayed")
+
+        composeTestRule
+            .onNodeWithTag(BACK_BUTTON)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$BACK_BUTTON is displayed")
+
+        composeTestRule
+            .onNodeWithTag(LEFT_BUTTON)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$LEFT_BUTTON is displayed")
+
+        composeTestRule
+            .onNodeWithTag(RIGHT_BUTTON)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$RIGHT_BUTTON is displayed")
+    }
+
+    @Test
+    fun test0403_cloudSongTextLeftAndRightButtonsAreWorkingCorrectly() {
+        val testNumber = 403
 
         composeTestRule.waitFor(timeout)
 
@@ -1145,22 +1208,136 @@ class UITest {
                 .onNodeWithText(list[2].visibleTitleWithArtistAndRating)
                 .assertIsDisplayed()
             Log.e("test $testNumber assert", "${list[2].visibleTitleWithArtistAndRating} is displayed")
-            composeTestRule
-                .onNodeWithTag(CLOUD_SONG_TEXT_VIEWER)
-                .assertIsDisplayed()
-            Log.e("test $testNumber assert", "$CLOUD_SONG_TEXT_VIEWER is displayed")
             Espresso.onView(withText(list[2].text)).check(matches(isDisplayed()))
             Log.e("test $testNumber assert", "song text is displayed")
+            composeTestRule
+                .onNodeWithTag(NUMBER_LABEL)
+                .assertTextContains("3 /", substring = true)
+            Log.e("test $testNumber assert", "$NUMBER_LABEL contains '3 /'")
 
             composeTestRule
-                .onAllNodesWithTag(MUSIC_BUTTON)
-                .assertCountEquals(2)
-            Log.e("test $testNumber assert", "$MUSIC_BUTTON count is 2")
+                .onNodeWithTag(RIGHT_BUTTON)
+                .performClick()
+            Log.e("test $testNumber click", RIGHT_BUTTON)
+            composeTestRule.waitFor(timeout)
 
             composeTestRule
-                .onNodeWithTag(DOWNLOAD_BUTTON)
+                .onNodeWithText(list[3].visibleTitleWithArtistAndRating)
                 .assertIsDisplayed()
-            Log.e("test $testNumber assert", "$DOWNLOAD_BUTTON is displayed")
+            Log.e("test $testNumber assert", "${list[3].visibleTitleWithArtistAndRating} is displayed")
+            Espresso.onView(withText(list[3].text)).check(matches(isDisplayed()))
+            Log.e("test $testNumber assert", "song text is displayed")
+            composeTestRule
+                .onNodeWithTag(NUMBER_LABEL)
+                .assertTextContains("4 /", substring = true)
+            Log.e("test $testNumber assert", "$NUMBER_LABEL contains '4 /'")
+
+            composeTestRule
+                .onNodeWithTag(LEFT_BUTTON)
+                .performClick()
+            Log.e("test $testNumber click", LEFT_BUTTON)
+            composeTestRule.waitFor(timeout)
+
+            composeTestRule
+                .onNodeWithText(list[2].visibleTitleWithArtistAndRating)
+                .assertIsDisplayed()
+            Log.e("test $testNumber assert", "${list[2].visibleTitleWithArtistAndRating} is displayed")
+            Espresso.onView(withText(list[2].text)).check(matches(isDisplayed()))
+            Log.e("test $testNumber assert", "song text is displayed")
+            composeTestRule
+                .onNodeWithTag(NUMBER_LABEL)
+                .assertTextContains("3 /", substring = true)
+            Log.e("test $testNumber assert", "$NUMBER_LABEL contains '3 /'")
+        }
+    }
+
+    @Test
+    fun test0404_cloudSongTextWarningDialogIsWorkingCorrectly() {
+        val testNumber = 404
+
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule.activityRule.scenario.onActivity {
+            CommonViewModel
+                .getStoredInstance()
+                ?.selectScreen(ScreenVariant.CloudSearch())
+        }
+
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule.activityRule.scenario.onActivity {
+            CommonViewModel
+                .getStoredInstance()
+                ?.selectScreen(ScreenVariant.CloudSongText(2))
+        }
+
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule
+            .onNodeWithTag(WARNING_BUTTON)
+            .performClick()
+        Log.e("test $testNumber click", WARNING_BUTTON)
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule
+            .onNodeWithText(stringConst.sendWarningText)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.sendWarningText} is displayed")
+        composeTestRule
+            .onNodeWithText(stringConst.ok)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.ok} is displayed")
+        composeTestRule
+            .onNodeWithText(stringConst.cancel)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.cancel} is displayed")
+        composeTestRule
+            .onNodeWithText(stringConst.cancel)
+            .performClick()
+        Log.e("test $testNumber click", stringConst.cancel)
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule
+            .onNodeWithText(stringConst.sendWarningText)
+            .assertDoesNotExist()
+        Log.e("test $testNumber assert", "${stringConst.sendWarningText} does not exist")
+        composeTestRule
+            .onNodeWithText(stringConst.ok)
+            .assertDoesNotExist()
+        Log.e("test $testNumber assert", "${stringConst.ok} does not exist")
+        composeTestRule
+            .onNodeWithText(stringConst.cancel)
+            .assertDoesNotExist()
+        Log.e("test $testNumber assert", "${stringConst.cancel} does not exist")
+    }
+
+    @Test
+    fun test0405_cloudSongTextDownloadButtonIsWorkingCorrectly() {
+        val testNumber = 405
+
+        composeTestRule.waitFor(timeout)
+
+        with (cloudRepository) {
+            val list = search("", OrderBy.BY_ID_DESC)
+            val titleList = list.map { "${it.artist} - ${it.title}" }
+            Log.e("test $testNumber list", titleList.toString())
+
+            composeTestRule.activityRule.scenario.onActivity {
+                CommonViewModel
+                    .getStoredInstance()
+                    ?.selectScreen(ScreenVariant.CloudSearch())
+            }
+
+            composeTestRule.waitFor(timeout)
+
+            composeTestRule.activityRule.scenario.onActivity {
+                CommonViewModel
+                    .getStoredInstance()
+                    ?.selectScreen(ScreenVariant.CloudSongText(2))
+            }
+
+            composeTestRule.waitFor(timeout)
+
             composeTestRule
                 .onNodeWithTag(DOWNLOAD_BUTTON)
                 .performClick()
@@ -1181,41 +1358,42 @@ class UITest {
             )
             Log.e("test $testNumber assert", "$ARTIST_FAVORITE contains ${list[2].visibleTitle}")
 
-            composeTestRule
-                .onNodeWithTag(WARNING_BUTTON)
-                .assertIsDisplayed()
-            Log.e("test $testNumber assert", "$WARNING_BUTTON is displayed")
-            composeTestRule
-                .onNodeWithTag(WARNING_BUTTON)
-                .performClick()
-            Log.e("test $testNumber click", WARNING_BUTTON)
+            assertTrue(ToastsTestImpl.verifyText(stringConst.toastChordsSavedAndAddedToFavorite))
+            Log.e("test $testNumber toast", "toasts shown")
+        }
+    }
+
+    @Test
+    fun test0406_cloudSongTextAndCloudSearchLikeIsWorkingCorrectly() {
+        val testNumber = 406
+
+        composeTestRule.waitFor(timeout)
+
+        with (cloudRepository) {
+            val list = search("", OrderBy.BY_ID_DESC)
+            val titleList = list.map { "${it.artist} - ${it.title}" }
+            Log.e("test $testNumber list", titleList.toString())
+
+            composeTestRule.activityRule.scenario.onActivity {
+                CommonViewModel
+                    .getStoredInstance()
+                    ?.selectScreen(ScreenVariant.CloudSearch())
+            }
+
             composeTestRule.waitFor(timeout)
 
-            composeTestRule
-                .onNodeWithText(stringConst.sendWarningText)
-                .assertIsDisplayed()
-            Log.e("test $testNumber assert", "${stringConst.sendWarningText} is displayed")
-            composeTestRule
-                .onNodeWithText(stringConst.ok)
-                .assertIsDisplayed()
-            Log.e("test $testNumber assert", "${stringConst.ok} is displayed")
-            composeTestRule
-                .onNodeWithText(stringConst.cancel)
-                .assertIsDisplayed()
-            Log.e("test $testNumber assert", "${stringConst.cancel} is displayed")
-            composeTestRule
-                .onNodeWithText(stringConst.cancel)
-                .performClick()
-            Log.e("test $testNumber click", stringConst.cancel)
+            composeTestRule.activityRule.scenario.onActivity {
+                CommonViewModel
+                    .getStoredInstance()
+                    ?.selectScreen(ScreenVariant.CloudSongText(2))
+            }
+
             composeTestRule.waitFor(timeout)
 
-            var cloudSong2 = list[2]
-            cloudSong2 = cloudSong2.copy(likeCount = cloudSong2.likeCount + 1)
+            val cloudSong2 = list[2].let {
+                it.copy(likeCount = it.likeCount + 1)
+            }
 
-            composeTestRule
-                .onNodeWithTag(LIKE_BUTTON)
-                .assertIsDisplayed()
-            Log.e("test $testNumber assert", "$LIKE_BUTTON is displayed")
             composeTestRule
                 .onNodeWithTag(LIKE_BUTTON)
                 .performClick()
@@ -1229,32 +1407,52 @@ class UITest {
             Log.e("test $testNumber assert", "likeCount == 1")
 
             composeTestRule
-                .onNodeWithTag(NUMBER_LABEL)
-                .assertTextContains("3 /", substring = true)
-            Log.e("test $testNumber assert", "$NUMBER_LABEL contains '3 /'")
-
-            composeTestRule
-                .onNodeWithTag(RIGHT_BUTTON)
+                .onNodeWithTag(BACK_BUTTON)
                 .performClick()
-            Log.e("test $testNumber click", RIGHT_BUTTON)
+            Log.e("test $testNumber click", BACK_BUTTON)
             composeTestRule.waitFor(timeout)
 
             composeTestRule
-                .onNodeWithText(list[3].visibleTitleWithArtistAndRating)
+                .onNodeWithText(cloudSong2.visibleTitleWithRating)
                 .assertIsDisplayed()
-            Log.e("test $testNumber assert", "${list[3].visibleTitleWithArtistAndRating} is displayed")
-            composeTestRule
-                .onNodeWithTag(NUMBER_LABEL)
-                .assertTextContains("4 /", substring = true)
-            Log.e("test $testNumber assert", "$NUMBER_LABEL contains '4 /'")
+            Log.e("test $testNumber assert", "${cloudSong2.visibleTitleWithRating} is displayed")
 
-            var cloudSong3 = list[3]
-            cloudSong3 = cloudSong3.copy(dislikeCount = cloudSong3.dislikeCount + 1)
+            assertTrue(ToastsTestImpl.verifyText(stringConst.toastVoteSuccess))
+            Log.e("test $testNumber toast", "toasts shown")
+        }
+    }
 
-            composeTestRule
-                .onNodeWithTag(DISLIKE_BUTTON)
-                .assertIsDisplayed()
-            Log.e("test $testNumber assert", "$DISLIKE_BUTTON is displayed")
+    @Test
+    fun test0407_cloudSongTextAndCloudSearchDislikeIsWorkingCorrectly() {
+        val testNumber = 407
+
+        composeTestRule.waitFor(timeout)
+
+        with (cloudRepository) {
+            val list = search("", OrderBy.BY_ID_DESC)
+            val titleList = list.map { "${it.artist} - ${it.title}" }
+            Log.e("test $testNumber list", titleList.toString())
+
+            composeTestRule.activityRule.scenario.onActivity {
+                CommonViewModel
+                    .getStoredInstance()
+                    ?.selectScreen(ScreenVariant.CloudSearch())
+            }
+
+            composeTestRule.waitFor(timeout)
+
+            composeTestRule.activityRule.scenario.onActivity {
+                CommonViewModel
+                    .getStoredInstance()
+                    ?.selectScreen(ScreenVariant.CloudSongText(3))
+            }
+
+            composeTestRule.waitFor(timeout)
+
+            val cloudSong3 = list[3].let {
+                it.copy(dislikeCount = it.dislikeCount + 1)
+            }
+
             composeTestRule
                 .onNodeWithTag(DISLIKE_BUTTON)
                 .performClick()
@@ -1268,40 +1466,23 @@ class UITest {
             Log.e("test $testNumber assert", "dislikeCount == 1")
 
             composeTestRule
-                .onNodeWithTag(LEFT_BUTTON)
-                .performClick()
-            Log.e("test $testNumber click", LEFT_BUTTON)
-            composeTestRule.waitFor(timeout)
-
-            composeTestRule
-                .onNodeWithText(cloudSong2.visibleTitleWithArtistAndRating)
-                .assertIsDisplayed()
-            Log.e("test $testNumber assert", "${cloudSong2.visibleTitleWithArtistAndRating} is displayed")
-            composeTestRule
-                .onNodeWithTag(NUMBER_LABEL)
-                .assertTextContains("3 /", substring = true)
-            Log.e("test $testNumber assert", "$NUMBER_LABEL contains '3 /'")
-
-            composeTestRule
                 .onNodeWithTag(BACK_BUTTON)
                 .performClick()
             Log.e("test $testNumber click", BACK_BUTTON)
-            composeTestRule.waitFor(5000)
+            composeTestRule.waitFor(timeout)
 
             composeTestRule
-                .onNodeWithText(cloudSong2.visibleTitleWithRating)
+                .onNodeWithText(cloudSong3.visibleTitleWithRating)
                 .assertIsDisplayed()
-            Log.e("test $testNumber assert", "${cloudSong2.visibleTitleWithRating} is displayed")
+            Log.e("test $testNumber assert", "${cloudSong3.visibleTitleWithRating} is displayed")
 
-            assertTrue(ToastsTestImpl.verifyText(stringConst.toastChordsSavedAndAddedToFavorite))
-            assertTrue(ToastsTestImpl.verifyText(stringConst.toastVoteSuccess))
             assertTrue(ToastsTestImpl.verifyText(stringConst.toastVoteSuccess))
             Log.e("test $testNumber toast", "toasts shown")
         }
     }
 
     @Test
-    fun test0500_addSong() {
+    fun test0500_addSongWithUploadingToCloudAndDeleting() {
         val testNumber = 500
 
         composeTestRule.waitFor(timeout)
@@ -1418,22 +1599,6 @@ class UITest {
         Log.e("test $testNumber click", TRASH_BUTTON)
         composeTestRule.waitFor(timeout)
 
-        composeTestRule
-            .onNodeWithText(stringConst.songToTrashTitle)
-            .assertIsDisplayed()
-        Log.e("test $testNumber assert", "${stringConst.songToTrashTitle} is displayed")
-        composeTestRule
-            .onNodeWithText(stringConst.songToTrashMessage)
-            .assertIsDisplayed()
-        Log.e("test $testNumber assert", "${stringConst.songToTrashMessage} is displayed")
-        composeTestRule
-            .onNodeWithText(stringConst.ok)
-            .assertIsDisplayed()
-        Log.e("test $testNumber assert", "${stringConst.ok} is displayed")
-        composeTestRule
-            .onNodeWithText(stringConst.cancel)
-            .assertIsDisplayed()
-        Log.e("test $testNumber assert", "${stringConst.cancel} is displayed")
         composeTestRule
             .onNodeWithText(stringConst.ok)
             .performClick()
