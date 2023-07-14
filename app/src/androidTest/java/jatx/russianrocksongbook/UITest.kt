@@ -29,8 +29,7 @@ import jatx.russianrocksongbook.localsongs.api.methods.selectArtist
 import jatx.russianrocksongbook.localsongs.api.methods.selectSongByArtistAndTitle
 import jatx.russianrocksongbook.viewmodel.deps.impl.ToastsTestImpl
 import jatx.russianrocksongbook.testing.*
-import jatx.russianrocksongbook.viewmodel.CommonViewModel
-import jatx.russianrocksongbook.navigation.NavControllerHolder
+import leakcanary.DetectLeaksAfterTestSuccess
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -93,6 +92,9 @@ class UITest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
+    @get:Rule
+    val rule = DetectLeaksAfterTestSuccess()
+
     @Inject
     lateinit var localRepository: LocalRepository
 
@@ -134,8 +136,10 @@ class UITest {
 
     @After
     fun clean() {
-        CommonViewModel.clearStorage()
-        NavControllerHolder.cleanNavController()
+        composeTestRule.activityRule.scenario.onActivity {
+            it.clean()
+        }
+        composeTestRule.activityRule.scenario.close()
     }
 
     @Test

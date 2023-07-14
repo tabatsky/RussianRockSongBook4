@@ -94,11 +94,15 @@ class MainActivity : ComponentActivity() {
     override fun onBackPressed() {
         val commonViewModel = CommonViewModel.getStoredInstance()
         commonViewModel?.back {
-            CommonViewModel.clearStorage()
-            viewModelStore.clear()
-            NavControllerHolder.cleanNavController()
+            clean()
             finish()
         }
+    }
+
+    fun clean() {
+        CommonViewModel.clearStorage()
+        viewModelStore.clear()
+        NavControllerHolder.cleanNavController()
     }
 
     private fun restartApp() {
