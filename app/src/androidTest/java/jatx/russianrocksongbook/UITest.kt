@@ -27,8 +27,10 @@ import jatx.russianrocksongbook.donationhelper.api.DONATIONS
 import jatx.russianrocksongbook.localsongs.api.methods.parseAndExecuteVoiceCommand
 import jatx.russianrocksongbook.localsongs.api.methods.selectArtist
 import jatx.russianrocksongbook.localsongs.api.methods.selectSongByArtistAndTitle
+import jatx.russianrocksongbook.navigation.ScreenVariant
 import jatx.russianrocksongbook.viewmodel.deps.impl.ToastsTestImpl
 import jatx.russianrocksongbook.testing.*
+import jatx.russianrocksongbook.viewmodel.CommonViewModel
 import leakcanary.DetectLeaksAfterTestSuccess
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -819,152 +821,8 @@ class UITest {
     }
 
     @Test
-    fun test0300_cloudSearch() {
-        val testNumber = 300
-
-        composeTestRule.waitFor(timeout)
-
-        with (cloudRepository) {
-            var list = search("", OrderBy.BY_ID_DESC)
-            var titleList = list.map { "${it.artist} - ${it.title}" }
-            Log.e("test $testNumber list", titleList.toString())
-
-            composeTestRule
-                .onNodeWithTag(DRAWER_BUTTON_MAIN)
-                .performClick()
-            Log.e("test $testNumber click", DRAWER_BUTTON_MAIN)
-            composeTestRule.waitFor(timeout)
-            composeTestRule
-                .onNodeWithText(ARTIST_CLOUD_SONGS)
-                .assertIsDisplayed()
-            Log.e("test $testNumber assert", "$ARTIST_CLOUD_SONGS is displayed")
-            composeTestRule
-                .onNodeWithText(ARTIST_CLOUD_SONGS)
-                .performClick()
-            Log.e("test $testNumber click", ARTIST_CLOUD_SONGS)
-            composeTestRule.waitFor(1000L)
-            composeTestRule
-                .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
-                .assertIsDisplayed()
-            Log.e("test $testNumber assert", "${OrderBy.BY_ID_DESC.orderByRus} is displayed")
-            composeTestRule
-                .onNodeWithText(list[2].visibleTitleWithRating)
-                .assertIsDisplayed()
-            Log.e("test $testNumber assert", "${list[2].visibleTitleWithRating} is displayed")
-            isOnline = false
-            composeTestRule
-                .onNodeWithTag(SEARCH_BUTTON)
-                .performClick()
-            Log.e("test $testNumber click", SEARCH_BUTTON)
-            composeTestRule.waitFor(timeout)
-            composeTestRule
-                .onNodeWithText(stringConst.fetchDataError)
-                .assertIsDisplayed()
-            Log.e("test $testNumber assert", "${stringConst.fetchDataError} получения данных is displayed")
-            isOnline = true
-            composeTestRule
-                .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
-                .performTextReplacement("Ло")
-            Log.e("test $testNumber input", "Ло")
-            composeTestRule
-                .onNodeWithTag(SEARCH_BUTTON)
-                .performClick()
-            Log.e("test $testNumber click", SEARCH_BUTTON)
-            composeTestRule.waitFor(timeout)
-
-            list = search("Ло", OrderBy.BY_ID_DESC)
-            titleList = list.map { "${it.artist} - ${it.title}" }
-            Log.e("test $testNumber list", titleList.toString())
-
-            composeTestRule
-                .onNodeWithText(list[2].visibleTitleWithRating)
-                .assertIsDisplayed()
-            Log.e("test $testNumber assert", "${list[2].visibleTitleWithRating} is displayed")
-            composeTestRule
-                .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
-                .performClick()
-            Log.e("test $testNumber click", OrderBy.BY_ID_DESC.orderByRus)
-            composeTestRule.waitFor(timeout)
-            composeTestRule
-                .onAllNodesWithText(OrderBy.BY_ID_DESC.orderByRus)
-                .assertCountEquals(2)
-            Log.e("test $testNumber assert", "${OrderBy.BY_ID_DESC.orderByRus} count is 2")
-            composeTestRule
-                .onNodeWithText(OrderBy.BY_ARTIST.orderByRus)
-                .assertIsDisplayed()
-            Log.e("test $testNumber assert", "${OrderBy.BY_ARTIST.orderByRus} is displayed")
-            composeTestRule
-                .onNodeWithText(OrderBy.BY_TITLE.orderByRus)
-                .performClick()
-            Log.e("test $testNumber click", OrderBy.BY_TITLE.orderByRus)
-            composeTestRule.waitFor(timeout)
-
-            list = search("Ло", OrderBy.BY_TITLE)
-            titleList = list.map { "${it.artist} - ${it.title}" }
-            Log.e("test $testNumber list", titleList.toString())
-
-            composeTestRule
-                .onNodeWithText(list[2].visibleTitleWithRating)
-                .assertIsDisplayed()
-            Log.e("test $testNumber assert", "${list[2].visibleTitleWithRating} is displayed")
-
-            Log.e("test $testNumber assert", "${list[2].visibleTitleWithRating} is displayed")
-            composeTestRule
-                .onNodeWithText(OrderBy.BY_TITLE.orderByRus)
-                .performClick()
-            Log.e("test $testNumber click", OrderBy.BY_ID_DESC.orderByRus)
-            composeTestRule.waitFor(timeout)
-            composeTestRule
-                .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
-                .assertIsDisplayed()
-            Log.e("test $testNumber assert", "${OrderBy.BY_ID_DESC.orderByRus} is displayed")
-            composeTestRule
-                .onAllNodesWithText(OrderBy.BY_TITLE.orderByRus)
-                .assertCountEquals(2)
-            Log.e("test $testNumber assert", "${OrderBy.BY_TITLE.orderByRus} count is 2")
-            composeTestRule
-                .onNodeWithText(OrderBy.BY_ARTIST.orderByRus)
-                .performClick()
-            Log.e("test $testNumber click", OrderBy.BY_ARTIST.orderByRus)
-            composeTestRule.waitFor(timeout)
-
-            list = search("Ло", OrderBy.BY_ARTIST)
-            titleList = list.map { "${it.artist} - ${it.title}" }
-            Log.e("test $testNumber list", titleList.toString())
-
-            composeTestRule
-                .onNodeWithText(list[2].visibleTitleWithRating)
-                .assertIsDisplayed()
-            Log.e("test $testNumber assert", "${list[2].visibleTitleWithRating} is displayed")
-
-            composeTestRule
-                .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
-                .performTextReplacement("Хзщшг")
-            Log.e("test $testNumber input", "Хзщшг")
-            composeTestRule
-                .onNodeWithTag(SEARCH_BUTTON)
-                .performClick()
-            Log.e("test $testNumber click", SEARCH_BUTTON)
-            composeTestRule.waitFor(timeout)
-            composeTestRule
-                .onNodeWithText(stringConst.listIsEmpty)
-                .assertIsDisplayed()
-            Log.e("test $testNumber assert", "${stringConst.listIsEmpty} is displayed")
-            composeTestRule
-                .onNodeWithTag(SEARCH_BUTTON)
-                .performClick()
-            Log.e("test $testNumber click", SEARCH_BUTTON)
-            composeTestRule.waitFor(timeout)
-            composeTestRule
-                .onNodeWithText(stringConst.listIsEmpty)
-                .assertIsDisplayed()
-            Log.e("test $testNumber assert", "${stringConst.listIsEmpty} is displayed")
-        }
-    }
-
-    @Test
-    fun test0400_cloudSongText() {
-        val testNumber = 400
+    fun test0301_cloudSearchIsOpeningFromMenuCorrectly() {
+        val testNumber = 301
 
         composeTestRule.waitFor(timeout)
 
@@ -986,13 +844,303 @@ class UITest {
                 .onNodeWithText(ARTIST_CLOUD_SONGS)
                 .performClick()
             Log.e("test $testNumber click", ARTIST_CLOUD_SONGS)
-            composeTestRule.waitFor(1000L)
+            composeTestRule.waitFor(timeout)
+            composeTestRule
+                .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
+                .assertIsDisplayed()
+            Log.e("test $testNumber assert", "${OrderBy.BY_ID_DESC.orderByRus} is displayed")
+            composeTestRule
+                .onNodeWithText(list[2].visibleTitleWithRating)
+                .assertIsDisplayed()
+            Log.e("test $testNumber assert", "${list[2].visibleTitleWithRating} is displayed")
+        }
+    }
+
+    @Test
+    fun test0302_cloudSearchOfflineIsWorkingCorrectly() {
+        val testNumber = 302
+
+        composeTestRule.waitFor(timeout)
+
+        with (cloudRepository) {
+            composeTestRule.activityRule.scenario.onActivity {
+                CommonViewModel
+                    .getStoredInstance()
+                    ?.selectScreen(ScreenVariant.CloudSearch())
+            }
+
+            isOnline = false
+            composeTestRule
+                .onNodeWithTag(SEARCH_BUTTON)
+                .performClick()
+            Log.e("test $testNumber click", SEARCH_BUTTON)
+            composeTestRule.waitFor(timeout)
+            composeTestRule
+                .onNodeWithText(stringConst.fetchDataError)
+                .assertIsDisplayed()
+            Log.e("test $testNumber assert", "${stringConst.fetchDataError} получения данных is displayed")
+            isOnline = true
+        }
+    }
+
+    @Test
+    fun test0303_cloudSearchNormalQueryIsWorkingCorrectly() {
+        val testNumber = 303
+
+        composeTestRule.waitFor(timeout)
+
+        with (cloudRepository) {
+            composeTestRule.activityRule.scenario.onActivity {
+                CommonViewModel
+                    .getStoredInstance()
+                    ?.selectScreen(ScreenVariant.CloudSearch())
+            }
+
+            composeTestRule
+                .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
+                .performTextReplacement("Ло")
+            Log.e("test $testNumber input", "Ло")
+            composeTestRule
+                .onNodeWithTag(SEARCH_BUTTON)
+                .performClick()
+            Log.e("test $testNumber click", SEARCH_BUTTON)
+            composeTestRule.waitFor(timeout)
+
+            val list = search("Ло", OrderBy.BY_ID_DESC)
+            val titleList = list.map { "${it.artist} - ${it.title}" }
+            Log.e("test $testNumber list", titleList.toString())
+
+            composeTestRule
+                .onNodeWithText(list[2].visibleTitleWithRating)
+                .assertIsDisplayed()
+            Log.e("test $testNumber assert", "${list[2].visibleTitleWithRating} is displayed")
+        }
+    }
+
+    @Test
+    fun test0304_cloudSearchOrderBySpinnerValuesAreDisplayingCorrectly() {
+        val testNumber = 304
+
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule.activityRule.scenario.onActivity {
+            CommonViewModel
+                .getStoredInstance()
+                ?.selectScreen(ScreenVariant.CloudSearch())
+        }
+
+        composeTestRule
+            .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
+            .performClick()
+        Log.e("test $testNumber click", OrderBy.BY_ID_DESC.orderByRus)
+        composeTestRule.waitFor(timeout)
+        composeTestRule
+            .onAllNodesWithText(OrderBy.BY_ID_DESC.orderByRus)
+            .assertCountEquals(2)
+        Log.e("test $testNumber assert", "${OrderBy.BY_ID_DESC.orderByRus} count is 2")
+        composeTestRule
+            .onNodeWithText(OrderBy.BY_ARTIST.orderByRus)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${OrderBy.BY_ARTIST.orderByRus} is displayed")
+        composeTestRule
+            .onNodeWithText(OrderBy.BY_TITLE.orderByRus)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${OrderBy.BY_TITLE.orderByRus} is displayed")
+        composeTestRule.waitFor(timeout)
+    }
+
+    @Test
+    fun test0305_cloudSearchOrderingByTitleIsWorkingCorrectly() {
+        val testNumber = 305
+
+        composeTestRule.waitFor(timeout)
+
+        with (cloudRepository) {
+            composeTestRule.activityRule.scenario.onActivity {
+                CommonViewModel
+                    .getStoredInstance()
+                    ?.selectScreen(ScreenVariant.CloudSearch())
+            }
+
+            composeTestRule
+                .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
+                .performTextReplacement("Ло")
+            Log.e("test $testNumber input", "Ло")
+            composeTestRule
+                .onNodeWithTag(SEARCH_BUTTON)
+                .performClick()
+            Log.e("test $testNumber click", SEARCH_BUTTON)
+            composeTestRule.waitFor(timeout)
+
+            composeTestRule
+                .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
+                .performClick()
+            Log.e("test $testNumber click", OrderBy.BY_ID_DESC.orderByRus)
+            composeTestRule.waitFor(timeout)
+            composeTestRule
+                .onNodeWithText(OrderBy.BY_TITLE.orderByRus)
+                .performClick()
+            Log.e("test $testNumber click", OrderBy.BY_TITLE.orderByRus)
+            composeTestRule.waitFor(timeout)
+
+            val list = search("Ло", OrderBy.BY_TITLE)
+            val titleList = list.map { "${it.artist} - ${it.title}" }
+            Log.e("test $testNumber list", titleList.toString())
+
+            composeTestRule
+                .onNodeWithText(list[2].visibleTitleWithRating)
+                .assertIsDisplayed()
+            Log.e("test $testNumber assert", "${list[2].visibleTitleWithRating} is displayed")
+        }
+    }
+
+    @Test
+    fun test0306_cloudSearchOrderingByArtistIsWorkingCorrectly() {
+        val testNumber = 306
+
+        composeTestRule.waitFor(timeout)
+
+        with (cloudRepository) {
+            composeTestRule.activityRule.scenario.onActivity {
+                CommonViewModel
+                    .getStoredInstance()
+                    ?.selectScreen(ScreenVariant.CloudSearch())
+            }
+
+            composeTestRule
+                .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
+                .performTextReplacement("Ло")
+            Log.e("test $testNumber input", "Ло")
+            composeTestRule
+                .onNodeWithTag(SEARCH_BUTTON)
+                .performClick()
+            Log.e("test $testNumber click", SEARCH_BUTTON)
+            composeTestRule.waitFor(timeout)
+
+            composeTestRule
+                .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
+                .performClick()
+            Log.e("test $testNumber click", OrderBy.BY_ID_DESC.orderByRus)
+            composeTestRule.waitFor(timeout)
+            composeTestRule
+                .onNodeWithText(OrderBy.BY_ARTIST.orderByRus)
+                .performClick()
+            Log.e("test $testNumber click", OrderBy.BY_ARTIST.orderByRus)
+            composeTestRule.waitFor(timeout)
+
+            val list = search("Ло", OrderBy.BY_ARTIST)
+            val titleList = list.map { "${it.artist} - ${it.title}" }
+            Log.e("test $testNumber list", titleList.toString())
+
+            composeTestRule
+                .onNodeWithText(list[2].visibleTitleWithRating)
+                .assertIsDisplayed()
+            Log.e("test $testNumber assert", "${list[2].visibleTitleWithRating} is displayed")
+        }
+    }
+
+    @Test
+    fun test0307_cloudSearchQueryWithEmptyResultIsWorkingCorrectly() {
+        val testNumber = 307
+
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule.activityRule.scenario.onActivity {
+            CommonViewModel
+                .getStoredInstance()
+                ?.selectScreen(ScreenVariant.CloudSearch())
+        }
+
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule
+            .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
+            .performTextReplacement("Хзщшг")
+        Log.e("test $testNumber input", "Хзщшг")
+        composeTestRule
+            .onNodeWithTag(SEARCH_BUTTON)
+            .performClick()
+        Log.e("test $testNumber click", SEARCH_BUTTON)
+        composeTestRule.waitFor(timeout)
+        composeTestRule
+            .onNodeWithText(stringConst.listIsEmpty)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.listIsEmpty} is displayed")
+        composeTestRule
+            .onNodeWithTag(SEARCH_BUTTON)
+            .performClick()
+        Log.e("test $testNumber click", SEARCH_BUTTON)
+        composeTestRule.waitFor(timeout)
+        composeTestRule
+            .onNodeWithText(stringConst.listIsEmpty)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.listIsEmpty} is displayed")
+    }
+
+    @Test
+    fun test0401_cloudSongTextIsOpeningFromCloudSearchCorrectly() {
+        val testNumber = 401
+
+        composeTestRule.waitFor(timeout)
+
+        with (cloudRepository) {
+            val list = search("", OrderBy.BY_ID_DESC)
+            val titleList = list.map { "${it.artist} - ${it.title}" }
+            Log.e("test $testNumber list", titleList.toString())
+
+            composeTestRule.activityRule.scenario.onActivity {
+                CommonViewModel
+                    .getStoredInstance()
+                    ?.selectScreen(ScreenVariant.CloudSearch())
+            }
+
+            composeTestRule.waitFor(timeout)
 
             composeTestRule
                 .onNodeWithText(list[2].visibleTitleWithRating)
                 .performClick()
             Log.e("test $testNumber click", list[2].visibleTitleWithRating)
             composeTestRule.waitFor(timeout)
+            composeTestRule
+                .onNodeWithText(list[2].visibleTitleWithArtistAndRating)
+                .assertIsDisplayed()
+            Log.e("test $testNumber assert", "${list[2].visibleTitleWithArtistAndRating} is displayed")
+            composeTestRule
+                .onNodeWithTag(CLOUD_SONG_TEXT_VIEWER)
+                .assertIsDisplayed()
+            Log.e("test $testNumber assert", "$CLOUD_SONG_TEXT_VIEWER is displayed")
+            Espresso.onView(withText(list[2].text)).check(matches(isDisplayed()))
+            Log.e("test $testNumber assert", "song text is displayed")
+        }
+    }
+
+    @Test
+    fun test0400_cloudSongText() {
+        val testNumber = 400
+
+        composeTestRule.waitFor(timeout)
+
+        with (cloudRepository) {
+            val list = search("", OrderBy.BY_ID_DESC)
+            val titleList = list.map { "${it.artist} - ${it.title}" }
+            Log.e("test $testNumber list", titleList.toString())
+
+            composeTestRule.activityRule.scenario.onActivity {
+                CommonViewModel
+                    .getStoredInstance()
+                    ?.selectScreen(ScreenVariant.CloudSearch())
+            }
+
+            composeTestRule.waitFor(timeout)
+
+            composeTestRule.activityRule.scenario.onActivity {
+                CommonViewModel
+                    .getStoredInstance()
+                    ?.selectScreen(ScreenVariant.CloudSongText(2))
+            }
+
+            composeTestRule.waitFor(timeout)
+
             composeTestRule
                 .onNodeWithText(list[2].visibleTitleWithArtistAndRating)
                 .assertIsDisplayed()
