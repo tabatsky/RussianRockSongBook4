@@ -83,4 +83,7 @@ dependencies {
     implementation "androidx.test:monitor:${versions.monitor}"
     implementation "androidx.test.espresso:espresso-core:${versions.espresso}"
     implementation "androidx.test.espresso:espresso-contrib:${versions.espresso}"
+    implementation "androidx.test:orchestrator:${versions.androidXOrchestrator}"
+    implementation "org.hamcrest:hamcrest:${versions.hamcrest}"
+    implementation "com.squareup.leakcanary:leakcanary-android-instrumentation:${versions.leakCanary}"
 }
