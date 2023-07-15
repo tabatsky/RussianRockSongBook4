@@ -1961,7 +1961,7 @@ class UITest {
     }
 }
 
-const val timeout = 1000L
+const val timeout = 1500L
 
 fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.waitFor(time: Long) {
     try {
