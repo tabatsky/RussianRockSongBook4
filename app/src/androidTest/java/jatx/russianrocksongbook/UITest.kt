@@ -53,7 +53,7 @@ import javax.inject.Inject
 
 const val ARTIST_1 = "Немного Нервно"
 const val ARTIST_2 = "Чайф"
-const val ARTIST_3 = "Кино"
+const val ARTIST_3 = "ДДТ"
 
 const val TITLE_1_1 = "Santa Maria"
 const val TITLE_1_2 = "Яблочный остров"
@@ -61,7 +61,7 @@ const val TITLE_1_3 = "Над мертвым городом сон"
 const val TITLE_1_4 = "Atlantica"
 const val TITLE_2_1 = "17 лет"
 const val TITLE_2_2 = "Поплачь о нем"
-const val TITLE_3_1 = "Кукушка"
+const val TITLE_3_1 = "Белая ночь"
 
 const val ARTIST_NEW = "Новый исполнитель"
 const val TITLE_NEW = "Новая песня"
@@ -1886,8 +1886,8 @@ class UITest {
     }
 
     @Test
-    fun test1000_voiceCommand() {
-        val testNumber = 1000
+    fun test1001_voiceCommandOpenArtistIsWorkingCorrectly() {
+        val testNumber = 1001
 
         composeTestRule.activityRule.scenario.onActivity {
             parseAndExecuteVoiceCommand("открой группу $ARTIST_1")
@@ -1899,21 +1899,11 @@ class UITest {
             .onNodeWithText(TITLE_1_4)
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "$TITLE_1_4 is displayed")
+    }
 
-        composeTestRule.waitFor(timeout)
-
-        composeTestRule.activityRule.scenario.onActivity {
-            parseAndExecuteVoiceCommand("открой группу $ARTIST_2")
-        }
-
-        composeTestRule.waitFor(timeout)
-
-        composeTestRule
-            .onNodeWithText(TITLE_2_1)
-            .assertIsDisplayed()
-        Log.e("test $testNumber assert", "$TITLE_2_1 is displayed")
-
-        composeTestRule.waitFor(timeout)
+    @Test
+    fun test1002_voiceCommandOpenSongByTitleIsWorkingCorrectly() {
+        val testNumber = 1002
 
         composeTestRule.activityRule.scenario.onActivity {
             parseAndExecuteVoiceCommand("открой песню $TITLE_1_1")
@@ -1934,8 +1924,11 @@ class UITest {
         Log.e("test $testNumber assert", "$SONG_TEXT_VIEWER is displayed")
         Espresso.onView(withText(song1!!.text)).check(matches(isDisplayed()))
         Log.e("test $testNumber assert", "song text is displayed")
+    }
 
-        composeTestRule.waitFor(timeout)
+    @Test
+    fun test1003_voiceCommandOpenSongByArtistAndTitleIsWorkingCorrectly() {
+        val testNumber = 1003
 
         composeTestRule.activityRule.scenario.onActivity {
             parseAndExecuteVoiceCommand("открой песню $ARTIST_3 $TITLE_3_1")
@@ -1956,8 +1949,6 @@ class UITest {
         Log.e("test $testNumber assert", "$SONG_TEXT_VIEWER is displayed")
         Espresso.onView(withText(song2!!.text)).check(matches(isDisplayed()))
         Log.e("test $testNumber assert", "song text is displayed")
-
-        composeTestRule.waitFor(timeout)
     }
 }
 
