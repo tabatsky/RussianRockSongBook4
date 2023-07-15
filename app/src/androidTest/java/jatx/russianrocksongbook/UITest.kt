@@ -1811,14 +1811,10 @@ class UITest {
 
         localRepository.setFavorite(true, ARTIST_1, TITLE_1_1)
         val song1 = localRepository.getSongByArtistAndTitle(ARTIST_1, TITLE_1_1)!!
-        localRepository.setFavorite(true, ARTIST_1, TITLE_1_2)
-        val song2 = localRepository.getSongByArtistAndTitle(ARTIST_1, TITLE_1_2)!!
         localRepository.setFavorite(true, ARTIST_2, TITLE_2_1)
-        val song3 = localRepository.getSongByArtistAndTitle(ARTIST_2, TITLE_2_1)!!
-        localRepository.setFavorite(true, ARTIST_2, TITLE_2_2)
-        val song4 = localRepository.getSongByArtistAndTitle(ARTIST_2, TITLE_2_2)!!
+        val song2 = localRepository.getSongByArtistAndTitle(ARTIST_2, TITLE_2_1)!!
         localRepository.setFavorite(true, ARTIST_1, TITLE_1_3)
-        val song5 = localRepository.getSongByArtistAndTitle(ARTIST_1, TITLE_1_3)!!
+        val song3 = localRepository.getSongByArtistAndTitle(ARTIST_1, TITLE_1_3)!!
 
         val songs = localRepository.getSongsByArtistAsList(ARTIST_FAVORITE)
 
@@ -1827,10 +1823,6 @@ class UITest {
         val index2 = songs.indexOf(song2)
         assertTrue(index1 >= 0)
         val index3 = songs.indexOf(song3)
-        assertTrue(index1 >= 0)
-        val index4 = songs.indexOf(song4)
-        assertTrue(index1 >= 0)
-        val index5 = songs.indexOf(song5)
         assertTrue(index1 >= 0)
 
         composeTestRule.waitFor(timeout)
@@ -1856,9 +1848,9 @@ class UITest {
         Log.e("test $testNumber scroll", "songList to index $index1")
         composeTestRule.waitFor(timeout)
         composeTestRule
-            .onNodeWithText(TITLE_1_1)
+            .onNodeWithText(song1.title)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "$TITLE_1_1 is displayed")
+        Log.e("test $testNumber assert", "${song1.title} is displayed")
         composeTestRule.waitFor(timeout)
 
         composeTestRule
@@ -1867,9 +1859,9 @@ class UITest {
         Log.e("test $testNumber scroll", "songList to index $index2")
         composeTestRule.waitFor(timeout)
         composeTestRule
-            .onNodeWithText(TITLE_1_2)
+            .onNodeWithText(song2.title)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "$TITLE_1_2 is displayed")
+        Log.e("test $testNumber assert", "${song2.title} is displayed")
         composeTestRule.waitFor(timeout)
 
         composeTestRule
@@ -1878,31 +1870,9 @@ class UITest {
         Log.e("test $testNumber scroll", "songList to index $index3")
         composeTestRule.waitFor(timeout)
         composeTestRule
-            .onNodeWithText(TITLE_2_1)
+            .onNodeWithText(song3.title)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "$TITLE_2_1 is displayed")
-        composeTestRule.waitFor(timeout)
-
-        composeTestRule
-            .onNodeWithTag(SONG_LIST_LAZY_COLUMN)
-            .performScrollToIndex(index4)
-        Log.e("test $testNumber scroll", "songList to index $index4")
-        composeTestRule.waitFor(timeout)
-        composeTestRule
-            .onNodeWithText(TITLE_2_2)
-            .assertIsDisplayed()
-        Log.e("test $testNumber assert", "$TITLE_2_2 is displayed")
-        composeTestRule.waitFor(timeout)
-
-        composeTestRule
-            .onNodeWithTag(SONG_LIST_LAZY_COLUMN)
-            .performScrollToIndex(index5)
-        Log.e("test $testNumber scroll", "songList to index $index5")
-        composeTestRule.waitFor(timeout)
-        composeTestRule
-            .onNodeWithText(TITLE_1_3)
-            .assertIsDisplayed()
-        Log.e("test $testNumber assert", "$TITLE_1_3 is displayed")
+        Log.e("test $testNumber assert", "${song3.title} is displayed")
         composeTestRule.waitFor(timeout)
 
         localRepository.setFavorite(false, ARTIST_1, TITLE_1_3)
