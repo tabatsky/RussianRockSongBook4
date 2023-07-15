@@ -72,4 +72,6 @@ dependencies {
     androidTestImplementation testDeps.androidXJUnit
 
     androidTestImplementation testDeps.androidXCoreTesting
+
+    debugImplementation testDeps.androidXMonitor
 }
