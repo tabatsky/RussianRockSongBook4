@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import dagger.hilt.android.AndroidEntryPoint
@@ -60,10 +61,27 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             ActionsInjector()
+            BackHandler(true) {
+                back()
+            }
             CurrentScreen()
         }
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    }
+
+    private fun back() {
+        val commonViewModel = CommonViewModel.getStoredInstance()
+        commonViewModel?.back {
+            clean()
+            finish()
+        }
+    }
+
+    fun clean() {
+        CommonViewModel.clearStorage()
+        viewModelStore.clear()
+        NavControllerHolder.cleanNavController()
     }
 
     @Composable
@@ -89,20 +107,6 @@ class MainActivity : ComponentActivity() {
     fun initAppDebug() {
         Log.e("inject init", "AppDebug")
         AppDebug.setAppCrashHandler(sendCrashUseCase, version)
-    }
-
-    override fun onBackPressed() {
-        val commonViewModel = CommonViewModel.getStoredInstance()
-        commonViewModel?.back {
-            clean()
-            finish()
-        }
-    }
-
-    fun clean() {
-        CommonViewModel.clearStorage()
-        viewModelStore.clear()
-        NavControllerHolder.cleanNavController()
     }
 
     private fun restartApp() {
