@@ -18,8 +18,8 @@ internal fun SongListNavigationIcon(
         .focusRequester(focusRequester)
     CommonIconButton(
         resId = R.drawable.ic_drawer,
-        testTag = testTag ?: DRAWER_BUTTON_MAIN,
         modifier = modifier,
+        testTag = testTag ?: DRAWER_BUTTON_MAIN,
         onClick = onClick
     )
 }
