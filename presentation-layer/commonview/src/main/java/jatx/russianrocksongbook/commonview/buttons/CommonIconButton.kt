@@ -11,8 +11,8 @@ import androidx.compose.ui.res.painterResource
 @Composable
 fun CommonIconButton(
     @DrawableRes resId: Int,
-    testTag: String? = null,
     modifier: Modifier = Modifier,
+    testTag: String? = null,
     onClick: () -> Unit
 ) {
     val theModifier = testTag?.let {
