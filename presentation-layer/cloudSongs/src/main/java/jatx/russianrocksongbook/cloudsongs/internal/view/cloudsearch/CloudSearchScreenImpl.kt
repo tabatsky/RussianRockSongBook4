@@ -13,6 +13,7 @@ import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.CloudViewModel
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
+import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 
 @Composable
 internal fun CloudSearchScreenImpl(isBackFromSong: Boolean) {
@@ -41,7 +42,7 @@ internal fun CloudSearchScreenImpl(isBackFromSong: Boolean) {
 
         LaunchedEffect(Unit) {
             if (!isBackFromSong && !wasOrientationChanged) {
-                cloudViewModel.callbacks.onCloudSearchScreenSelected()
+                cloudViewModel.cloudSearch("", OrderBy.BY_ID_DESC)
             }
         }
 

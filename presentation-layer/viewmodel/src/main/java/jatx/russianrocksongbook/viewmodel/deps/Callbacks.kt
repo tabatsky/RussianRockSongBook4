@@ -13,7 +13,6 @@ class Callbacks @Inject constructor() {
     var onRestartApp: () -> Unit = {}
     var onAddSongsFromDir: () -> Unit = {}
     var onPurchaseItem: (String) -> Unit = {}
-    var onCloudSearchScreenSelected: () -> Unit = {}
     var onArtistSelected: (String) -> Unit = {}
     var onSongByArtistAndTitleSelected: (String, String) -> Unit =
         { artist, title -> }
