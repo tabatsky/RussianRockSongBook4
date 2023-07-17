@@ -179,7 +179,7 @@ internal open class LocalViewModel @Inject constructor(
         val oldTitle = currentSong.value?.title
 
         selectSongJob = viewModelScope
-            .launch() {
+            .launch {
                 withContext(Dispatchers.IO) {
                     getSongByArtistAndPositionUseCase
                         .execute(currentArtist.value, position)

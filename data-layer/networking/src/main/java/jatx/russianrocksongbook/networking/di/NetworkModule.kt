@@ -22,5 +22,5 @@ internal class NetworkModule {
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .addCallAdapterFactory(SynchronousCallAdapterFactory.create())
         .addConverterFactory(GsonConverterFactory.create())
-        .build()!!
+        .build()
 }

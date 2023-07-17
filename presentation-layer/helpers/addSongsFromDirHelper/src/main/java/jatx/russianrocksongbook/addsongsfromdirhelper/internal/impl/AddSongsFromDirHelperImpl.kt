@@ -56,7 +56,6 @@ internal class AddSongsFromDirHelperImpl @Inject constructor(
         }
     }
 
-    @Suppress("DEPRECATION")
     private fun showFileSelectDialog() {
         ChooserDialog(activity)
             .withFilter(true, false)
