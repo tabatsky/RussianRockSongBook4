@@ -4,5 +4,7 @@ local.properties
 .idea
 .DS_Store
 build
-local.properties
 keystore.properties
+logErrors.txt
+myLogs.txt
+private_key.pepk
