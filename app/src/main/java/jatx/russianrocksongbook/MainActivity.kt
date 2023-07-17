@@ -16,7 +16,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import jatx.russianrocksongbook.addartist.api.methods.copySongsFromDirToRepoWithPath
 import jatx.russianrocksongbook.addartist.api.methods.copySongsFromDirToRepoWithPickedDir
 import jatx.russianrocksongbook.addsongsfromdirhelper.api.AddSongsFromDirHelper
-import jatx.russianrocksongbook.cloudsongs.api.methods.initCloudSearch
 import jatx.russianrocksongbook.debug.AppDebug
 import jatx.russianrocksongbook.domain.usecase.cloud.SendCrashUseCase
 import jatx.russianrocksongbook.musichelper.api.MusicHelper
@@ -96,7 +95,6 @@ class MainActivity : ComponentActivity() {
         commonViewModel.callbacks.onOpenYoutubeMusic = musicHelper::openYoutubeMusic
         commonViewModel.callbacks.onAddSongsFromDir = ::addSongsFromDir
         commonViewModel.callbacks.onPurchaseItem = donationHelper::purchaseItem
-        commonViewModel.callbacks.onCloudSearchScreenSelected = ::initCloudSearch
         commonViewModel.callbacks.onArtistSelected = ::selectArtist
         commonViewModel.callbacks.onSongByArtistAndTitleSelected =
             ::selectSongByArtistAndTitle
