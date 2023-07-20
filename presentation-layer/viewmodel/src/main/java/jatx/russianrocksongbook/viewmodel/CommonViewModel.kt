@@ -66,7 +66,9 @@ open class CommonViewModel @Inject constructor(
     fun back(onFinish: () -> Unit = {}) {
         Log.e("back from", currentScreenVariant.value.toString())
         when (currentScreenVariant.value) {
-            is ScreenVariant.Start,
+            is ScreenVariant.Start -> {
+                doNothing()
+            }
             is ScreenVariant.SongList,
             is ScreenVariant.Favorite -> {
                 onFinish()
@@ -78,8 +80,8 @@ open class CommonViewModel @Inject constructor(
                 if (currentArtist.value != ARTIST_FAVORITE) {
                     selectScreen(
                         ScreenVariant.SongList(
-                        artist = currentArtist.value,
-                        isBackFromSong = true))
+                            artist = currentArtist.value,
+                            isBackFromSong = true))
                 } else {
                     selectScreen(ScreenVariant.Favorite(isBackFromSong = true))
                 }
@@ -88,14 +90,16 @@ open class CommonViewModel @Inject constructor(
                 if (currentArtist.value != ARTIST_FAVORITE) {
                     selectScreen(
                         ScreenVariant.SongList(
-                        artist = currentArtist.value,
-                        isBackFromSong = false))
+                            artist = currentArtist.value,
+                            isBackFromSong = false))
                 } else {
                     selectScreen(ScreenVariant.Favorite(isBackFromSong = false))
                 }
             }
         }
     }
+
+    private fun doNothing() = Unit
 
     fun selectScreen(
         screen: ScreenVariant
