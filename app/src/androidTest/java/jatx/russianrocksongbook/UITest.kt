@@ -1482,7 +1482,7 @@ class UITest {
     }
 
     @Test
-    fun test0500_addSongWithUploadingToCloudAndDeleting() {
+    fun test0500_addingSongWithUploadingToCloudAndDeletingIsWorkingCorrectly() {
         val testNumber = 500
 
         composeTestRule.waitFor(timeout)
@@ -1620,7 +1620,7 @@ class UITest {
     }
 
     @Test
-    fun test0600_settings() {
+    fun test0600_settingsScreenIsDisplayingCorrectly() {
         val testNumber = 600
 
         composeTestRule.waitFor(timeout)
@@ -1744,7 +1744,7 @@ class UITest {
     }
 
     @Test
-    fun test0700_donation() {
+    fun test0700_donationScreenIsDisplayingCorrectly() {
         val testNumber = 700
 
         composeTestRule.waitFor(timeout)
@@ -1775,7 +1775,7 @@ class UITest {
     }
 
     @Test
-    fun test0800_addArtist() {
+    fun test0800_addArtistScreenIsDisplayingCorrectly() {
         val testNumber = 800
 
         composeTestRule.waitFor(timeout)
@@ -1806,7 +1806,7 @@ class UITest {
     }
 
     @Test
-    fun test0900_favorite() {
+    fun test0900_favoriteScreenIsWorkingCorrectly() {
         val testNumber = 900
 
         localRepository.setFavorite(true, ARTIST_1, TITLE_1_1)
