@@ -14,7 +14,7 @@ buildscript {
                 lifecycle : '2.5.1',
                 navigationCompose : '2.6.0',
                 activityCompose : '1.7.2',
-                hilt : '2.46.1',
+                hilt : '2.47',
                 hiltExtensions : '1.4.0',
                 hiltNavigationCompose: '1.0.0',
                 room : '2.5.2',
