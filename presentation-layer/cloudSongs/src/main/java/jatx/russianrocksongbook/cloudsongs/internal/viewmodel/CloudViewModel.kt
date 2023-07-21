@@ -21,9 +21,9 @@ import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_ERROR
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
-import jatx.russianrocksongbook.viewmodel.CommonViewModel
+import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
+import jatx.russianrocksongbook.commonviewmodel.contracts.SongTextViewModelContract
 import jatx.russianrocksongbook.navigation.ScreenVariant
-import jatx.russianrocksongbook.viewmodel.contracts.SongTextViewModelContract
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
@@ -78,8 +78,6 @@ internal class CloudViewModel @Inject constructor(
             }
             return storage[key] as CloudViewModel
         }
-
-        fun getStoredInstance() = storage[key] as? CloudViewModel
     }
 
     fun cloudSearch(searchFor: String, orderBy: OrderBy) {

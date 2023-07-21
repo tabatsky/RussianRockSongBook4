@@ -66,8 +66,8 @@ dependencies {
     api project(':data-layer:database')
     api project(':data-layer:networking')
     api project(':data-layer:preferences')
-    api project(':presentation-layer:viewmodel')
-    api project(':presentation-layer:commonview')
+    api project(':presentation-layer:commonViewModel')
+    api project(':presentation-layer:commonView')
 
     api project(':core:testing')
 }

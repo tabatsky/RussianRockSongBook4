@@ -28,9 +28,9 @@ import jatx.russianrocksongbook.localsongs.api.methods.parseAndExecuteVoiceComma
 import jatx.russianrocksongbook.localsongs.api.methods.selectArtist
 import jatx.russianrocksongbook.localsongs.api.methods.selectSongByArtistAndTitle
 import jatx.russianrocksongbook.navigation.ScreenVariant
-import jatx.russianrocksongbook.viewmodel.deps.impl.ToastsTestImpl
+import jatx.russianrocksongbook.commonviewmodel.deps.impl.ToastsTestImpl
 import jatx.russianrocksongbook.testing.*
-import jatx.russianrocksongbook.viewmodel.CommonViewModel
+import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import leakcanary.DetectLeaksAfterTestSuccess
 import org.junit.After
 import org.junit.Assert.assertEquals

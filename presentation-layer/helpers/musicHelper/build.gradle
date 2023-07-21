@@ -41,6 +41,6 @@ dependencies {
     kapt diDeps.hiltCompiler
     implementation diDeps.hiltExtensions
     kapt diDeps.hiltExtensionsProcessor
+    api project(':presentation-layer:commonViewModel')
 
-    api project(':presentation-layer:viewmodel')
 }

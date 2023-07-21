@@ -156,7 +156,7 @@ jobs:
       run: gradle wrapper
       
     - name: Assemble Debug
-      run: ./gradlew presentation-layer:viewmodel:test
+      run: ./gradlew presentation-layer:commonViewModel:test
 
   presentationLayerLocalSongsUnitTests:
     runs-on: ubuntu-latest

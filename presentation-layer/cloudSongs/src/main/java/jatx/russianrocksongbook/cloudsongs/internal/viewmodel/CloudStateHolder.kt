@@ -4,7 +4,7 @@ import androidx.paging.PagingData
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
-import jatx.russianrocksongbook.viewmodel.CommonStateHolder
+import jatx.russianrocksongbook.commonviewmodel.CommonStateHolder
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject

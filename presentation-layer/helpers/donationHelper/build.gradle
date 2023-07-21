@@ -44,6 +44,6 @@ dependencies {
 
     api billingDeps.billing
     api billingDeps.billingKtx
+    api project(':presentation-layer:commonViewModel')
 
-    api project(':presentation-layer:viewmodel')
 }
