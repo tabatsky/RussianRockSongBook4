@@ -6,8 +6,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import jatx.russianrocksongbook.addsong.R
@@ -19,6 +22,15 @@ import jatx.russianrocksongbook.commonview.dialogs.confirm.UploadDialog
 @Composable
 internal fun AddSongScreenImpl() {
     val addSongViewModel = AddSongViewModel.getInstance()
+
+    var screenInitDone by rememberSaveable { mutableStateOf(false) }
+
+    if (!screenInitDone) {
+        LaunchedEffect(Unit) {
+            screenInitDone = true
+            addSongViewModel.reset()
+        }
+    }
 
     val showUploadDialog by addSongViewModel.showUploadDialogForSong.collectAsState()
 
