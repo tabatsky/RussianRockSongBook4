@@ -246,7 +246,7 @@ class UITest {
     }
 
     @Test
-    fun test0104_menuArtistIsOpeningCorrectly() {
+    fun test0104_songListForArtistIsOpeningFromMenuCorrectly() {
         val testNumber = 104
 
         val artists = localRepository.getArtistsAsList()
@@ -364,7 +364,7 @@ class UITest {
     }
 
     @Test
-    fun test0201_songTextIsOpeningCorrectly() {
+    fun test0201_songTextIsOpeningFromSongListCorrectly() {
         val testNumber = 201
 
         composeTestRule.waitFor(timeout)
@@ -504,7 +504,7 @@ class UITest {
     }
 
     @Test
-    fun test0203_songTextMusicButtonsCountIsEqualsTwo() {
+    fun test0203_songTextMusicButtonsCountEqualsTwo() {
         val testNumber = 203
 
         composeTestRule.waitFor(timeout)
