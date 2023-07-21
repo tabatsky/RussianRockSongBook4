@@ -69,13 +69,7 @@ class MainActivity : ComponentActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
-    private fun back() {
-        val commonViewModel = CommonViewModel.getStoredInstance()
-        commonViewModel?.back {
-            clean()
-            finish()
-        }
-    }
+    private fun back() = CommonViewModel.getStoredInstance()?.back()
 
     fun clean() {
         CommonViewModel.clearStorage()
@@ -99,6 +93,10 @@ class MainActivity : ComponentActivity() {
         commonViewModel.callbacks.onSongByArtistAndTitleSelected =
             ::selectSongByArtistAndTitle
         commonViewModel.callbacks.onSpeechRecognize = ::speechRecognize
+        commonViewModel.callbacks.onFinish = {
+            clean()
+            finish()
+        }
     }
 
     @Inject
