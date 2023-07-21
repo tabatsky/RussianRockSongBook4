@@ -9,7 +9,7 @@ import dagger.hilt.android.scopes.ActivityScoped
 import it.czerwinski.android.hilt.annotations.BoundTo
 import jatx.russianrocksongbook.musichelper.api.MusicHelper
 import jatx.russianrocksongbook.musichelper.R
-import jatx.russianrocksongbook.viewmodel.CommonViewModel
+import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 import javax.inject.Inject

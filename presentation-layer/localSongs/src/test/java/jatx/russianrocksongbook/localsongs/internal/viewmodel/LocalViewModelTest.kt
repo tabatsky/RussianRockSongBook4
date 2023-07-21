@@ -13,7 +13,7 @@ import jatx.russianrocksongbook.domain.usecase.cloud.AddSongToCloudUseCase
 import jatx.russianrocksongbook.domain.usecase.cloud.AddWarningLocalUseCase
 import jatx.russianrocksongbook.domain.usecase.local.*
 import jatx.russianrocksongbook.localsongs.R
-import jatx.russianrocksongbook.viewmodel.CommonViewModelTest
+import jatx.russianrocksongbook.commonviewmodel.CommonViewModelTest
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Assert.assertEquals

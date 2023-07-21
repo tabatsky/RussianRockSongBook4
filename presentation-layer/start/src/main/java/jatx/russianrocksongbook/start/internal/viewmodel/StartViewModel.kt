@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jatx.russianrocksongbook.viewmodel.CommonViewModel
+import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

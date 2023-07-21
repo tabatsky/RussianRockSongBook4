@@ -3,7 +3,7 @@ package jatx.russianrocksongbook.addsong.internal.viewmodel
 import dagger.hilt.android.scopes.ViewModelScoped
 import jatx.russianrocksongbook.domain.usecase.cloud.AddSongToCloudUseCase
 import jatx.russianrocksongbook.domain.usecase.local.InsertReplaceUserSongUseCase
-import jatx.russianrocksongbook.viewmodel.CommonViewModelDeps
+import jatx.russianrocksongbook.commonviewmodel.CommonViewModelDeps
 import javax.inject.Inject
 
 @ViewModelScoped

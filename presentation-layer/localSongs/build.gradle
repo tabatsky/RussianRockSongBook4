@@ -39,7 +39,7 @@ android {
 
     sourceSets {
         test {
-            java.srcDir project(":presentation-layer:viewmodel").file("src/test/java")
+            java.srcDir project(":presentation-layer:commonViewModel").file("src/test/java")
         }
     }
 }
@@ -74,8 +74,8 @@ dependencies {
     api project(':data-layer:database')
     api project(':data-layer:networking')
     api project(':data-layer:preferences')
-    api project(':presentation-layer:viewmodel')
-    api project(':presentation-layer:commonview')
+    api project(':presentation-layer:commonViewModel')
+    api project(':presentation-layer:commonView')
     api project(':presentation-layer:whatsNewDialog')
     api project(':presentation-layer:helpers:voiceCommands')
 
@@ -85,6 +85,6 @@ dependencies {
     testImplementation testDeps.mockk
     testImplementation testDeps.coroutinesTest
     testImplementation testDeps.androidXCoreTesting
+    testApi project(':presentation-layer:commonViewModel')
 
-    testApi project(':presentation-layer:viewmodel')
 }

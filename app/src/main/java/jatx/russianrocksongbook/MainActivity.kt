@@ -28,7 +28,7 @@ import jatx.russianrocksongbook.localsongs.api.methods.selectArtist
 import jatx.russianrocksongbook.localsongs.api.methods.selectSongByArtistAndTitle
 import jatx.russianrocksongbook.navigation.NavControllerHolder
 import jatx.russianrocksongbook.view.CurrentScreen
-import jatx.russianrocksongbook.viewmodel.CommonViewModel
+import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.voicecommands.api.VoiceCommandHelper
 import javax.inject.Inject
 

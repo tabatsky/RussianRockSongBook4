@@ -10,8 +10,8 @@ import io.reactivex.schedulers.Schedulers
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_ERROR
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
-import jatx.russianrocksongbook.viewmodel.CommonViewModel
-import jatx.russianrocksongbook.viewmodel.R
+import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
+import jatx.russianrocksongbook.commonviewmodel.R
 import kotlinx.coroutines.flow.asStateFlow
 import java.io.File
 import javax.inject.Inject

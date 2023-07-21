@@ -14,9 +14,9 @@ import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_ERROR
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.domain.repository.local.*
 import jatx.russianrocksongbook.localsongs.R
-import jatx.russianrocksongbook.viewmodel.CommonViewModel
+import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.navigation.ScreenVariant
-import jatx.russianrocksongbook.viewmodel.contracts.SongTextViewModelContract
+import jatx.russianrocksongbook.commonviewmodel.contracts.SongTextViewModelContract
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.asStateFlow

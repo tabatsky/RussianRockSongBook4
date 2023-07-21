@@ -5,9 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jatx.russianrocksongbook.commonview.spinner.SpinnerState
-import jatx.russianrocksongbook.viewmodel.CommonStateHolder
-import jatx.russianrocksongbook.viewmodel.CommonViewModel
-import jatx.russianrocksongbook.viewmodel.CommonViewModelDeps
+import jatx.russianrocksongbook.commonviewmodel.CommonStateHolder
+import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
+import jatx.russianrocksongbook.commonviewmodel.CommonViewModelDeps
 import javax.inject.Inject
 
 @HiltViewModel

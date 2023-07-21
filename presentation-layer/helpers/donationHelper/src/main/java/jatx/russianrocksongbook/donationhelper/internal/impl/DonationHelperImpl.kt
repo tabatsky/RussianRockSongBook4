@@ -9,7 +9,7 @@ import it.czerwinski.android.hilt.annotations.BoundTo
 import jatx.russianrocksongbook.donationhelper.api.DonationHelper
 import jatx.russianrocksongbook.donationhelper.api.SKUS
 import jatx.russianrocksongbook.donationhelper.R
-import jatx.russianrocksongbook.viewmodel.CommonViewModel
+import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import java.util.*
 import javax.inject.Inject
 
