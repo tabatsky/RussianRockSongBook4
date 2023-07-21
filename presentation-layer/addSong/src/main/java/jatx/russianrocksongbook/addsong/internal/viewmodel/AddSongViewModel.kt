@@ -58,6 +58,12 @@ internal class AddSongViewModel @Inject constructor(
         addSongStateHolder.showUploadDialogForSong.value = true
     }
 
+    fun reset() {
+        artist.value = ""
+        title.value = ""
+        text.value = ""
+    }
+
     fun hideUploadOfferForSong() {
         Log.e("upload", "hide offer")
         addSongStateHolder.showUploadDialogForSong.value = false
