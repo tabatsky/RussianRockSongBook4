@@ -276,7 +276,7 @@ internal open class LocalViewModel @Inject constructor(
                             ))
                     }
                 } else {
-                    back {}
+                    back()
                 }
             }
             if (value) {
@@ -321,7 +321,7 @@ internal open class LocalViewModel @Inject constructor(
                         ))
                 }
             } else {
-                back {}
+                back()
             }
         }
         showToast(R.string.toast_deleted_to_trash)

@@ -63,7 +63,7 @@ open class CommonViewModel @Inject constructor(
         fun clearStorage() = storage.clear()
     }
 
-    fun back(onFinish: () -> Unit = {}) {
+    fun back() {
         Log.e("back from", currentScreenVariant.value.toString())
         when (currentScreenVariant.value) {
             is ScreenVariant.Start -> {
@@ -71,7 +71,7 @@ open class CommonViewModel @Inject constructor(
             }
             is ScreenVariant.SongList,
             is ScreenVariant.Favorite -> {
-                onFinish()
+                callbacks.onFinish()
             }
             is ScreenVariant.CloudSongText -> {
                 selectScreen(ScreenVariant.CloudSearch(isBackFromSong = true))
