@@ -76,6 +76,7 @@ internal val artistMap = mapOf(
     "Зоопарк" to R.raw.zoopark,
     "Игорь Тальков" to R.raw.talkov,
     "Калинов Мост" to R.raw.kalinovmost,
+    "Кафе" to R.raw.kafe,
     "Кино" to R.raw.kino,
     "КняZz" to R.raw.knazz,
     "Коридор" to R.raw.koridor,
