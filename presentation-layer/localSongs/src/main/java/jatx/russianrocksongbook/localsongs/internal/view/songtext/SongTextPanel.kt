@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import jatx.russianrocksongbook.domain.repository.preferences.ListenToMusicVariant
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
@@ -51,7 +50,8 @@ internal fun SongTextPanel(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(A)
-                .background(Color.Transparent)
+                .background(theme.colorBg),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             TheContent()
         }
@@ -60,7 +60,8 @@ internal fun SongTextPanel(
             modifier = Modifier
                 .fillMaxHeight()
                 .width(A)
-                .background(Color.Transparent)
+                .background(theme.colorBg),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
             TheContent()
         }
