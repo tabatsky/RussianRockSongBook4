@@ -3,7 +3,6 @@ package jatx.russianrocksongbook.localsongs.internal.view.songtext
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.Dp
 import jatx.russianrocksongbook.commonview.buttons.*
-import jatx.russianrocksongbook.commonview.divider.CommonPanelDivider
 import jatx.russianrocksongbook.domain.repository.preferences.ListenToMusicVariant
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 
@@ -31,7 +30,6 @@ internal fun SongTextPanelContent(
             theme = theme,
             onClick = onYandexMusicClick
         )
-        CommonPanelDivider(W = W, H = H, theme = theme)
     }
     if (listenToMusicVariant.isVk) {
         VkMusicButton(
@@ -39,7 +37,6 @@ internal fun SongTextPanelContent(
             theme = theme,
             onClick = onVkMusicClick
         )
-        CommonPanelDivider(W = W, H = H, theme = theme)
     }
     if (listenToMusicVariant.isYoutube) {
         YoutubeMusicButton(
@@ -47,26 +44,22 @@ internal fun SongTextPanelContent(
             theme = theme,
             onClick = onYoutubeMusicClick
         )
-        CommonPanelDivider(W = W, H = H, theme = theme)
     }
     UploadButton(
         size = A,
         theme = theme,
         onClick = onUploadClick
     )
-    CommonPanelDivider(W = W, H = H, theme = theme)
     WarningButton(
         size = A,
         theme = theme,
         onClick = onWarningClick
     )
-    CommonPanelDivider(W = W, H = H, theme = theme)
     TrashButton(
         size = A,
         theme = theme,
         onClick = onTrashClick
     )
-    CommonPanelDivider(W = W, H = H, theme = theme)
     if (isEditorMode) {
         SaveButton(
             size = A,
