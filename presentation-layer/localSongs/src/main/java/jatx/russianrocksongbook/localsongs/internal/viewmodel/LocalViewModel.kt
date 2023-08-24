@@ -9,17 +9,22 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import jatx.russianrocksongbook.commonviewmodel.CommonUIState
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_ERROR
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.domain.repository.local.*
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
+import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import jatx.russianrocksongbook.commonviewmodel.contracts.SongTextViewModelContract
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -63,6 +68,19 @@ internal open class LocalViewModel @Inject constructor(
 
     val editorText = mutableStateOf("")
 
+    val localState = localStateHolder
+        .localState
+        .combine(commonState) { local, common ->
+            local.copy(commonUIState = common)
+        }
+        .stateIn(
+            viewModelScope,
+            WhileSubscribed(),
+            LocalUIState.initial(
+                CommonUIState.initial(settings.defaultArtist)
+            )
+        )
+
     private var showSongsJob: Job? = null
     private var selectSongJob: Job? = null
     private var getArtistsJob: Job? = null
@@ -82,49 +100,62 @@ internal open class LocalViewModel @Inject constructor(
         fun getStoredInstance() = storage[key] as? LocalViewModel
     }
 
-    fun selectArtist(artist: String) {
-        Log.e("select artist", artist)
-        when (artist) {
-            ARTIST_ADD_ARTIST -> {
-                selectScreen(ScreenVariant.AddArtist)
-            }
-            ARTIST_ADD_SONG -> {
-                selectScreen(ScreenVariant.AddSong)
-            }
-            ARTIST_CLOUD_SONGS -> {
-                selectScreen(ScreenVariant.CloudSearch())
-            }
-            ARTIST_DONATION -> {
-                selectScreen(ScreenVariant.Donation)
-            }
-            ARTIST_FAVORITE -> {
-                selectScreen(
-                    ScreenVariant.Favorite(
-                        isBackFromSong = false
-                    )
-                )
-            }
-            else -> {
-                selectScreen(
-                    ScreenVariant.SongList(
-                        artist = artist,
-                        isBackFromSong = false
-                    )
-                )
-            }
+    override fun handleAction(action: UIAction) {
+        Log.e("action", action.toString())
+        when (action) {
+            is SelectArtist -> selectArtist(action.artist)
+            is ShowSongs -> showSongs(action.artist, action.passToSongWithTitle)
+            is SelectSong -> selectSong(action.position)
+            is NextSong -> nextSong()
+            is PrevSong -> prevSong()
+
+            is UpdateArtists -> updateArtists()
+            is UpdateCurrentSong -> updateCurrentSong(action.song)
+            is UpdateScrollPosition -> updateScrollPosition(action.position)
+            is UpdateNeedScroll -> updateNeedScroll(action.need)
+            is SetEditorMode -> setEditorMode(action.isEditor)
+            is SetAutoPlayMode -> setAutoPlayMode(action.isAutoPlay)
+            else -> super.handleAction(action)
         }
     }
 
-    fun showSongs(
+    protected fun selectArtist(artist: String) {
+        Log.e("select artist", artist)
+        val newScreenVariant = when (artist) {
+            ARTIST_ADD_ARTIST -> {
+                ScreenVariant.AddArtist
+            }
+            ARTIST_ADD_SONG -> {
+                ScreenVariant.AddSong
+            }
+            ARTIST_CLOUD_SONGS -> {
+                ScreenVariant.CloudSearch()
+            }
+            ARTIST_DONATION -> {
+                ScreenVariant.Donation
+            }
+            ARTIST_FAVORITE -> {
+                ScreenVariant.Favorite(
+                    isBackFromSong = false
+                )
+            }
+            else -> {
+                ScreenVariant.SongList(
+                    artist = artist,
+                    isBackFromSong = false
+                )
+            }
+        }
+        selectScreen(newScreenVariant)
+    }
+
+    private fun showSongs(
         artist: String,
         passToSongWithTitle: String? = null
     ) {
         Log.e("show songs", artist)
-        localStateHolder
-            .commonStateHolder
-            .currentArtist.value = artist
-        localStateHolder.currentSongCount.value =
-            getCountByArtistUseCase.execute(artist)
+        updateCurrentArtist(artist)
+        updateCurrentSongCount(getCountByArtistUseCase.execute(artist))
         showSongsJob?.let {
             if (!it.isCancelled) it.cancel()
         }
@@ -140,7 +171,7 @@ internal open class LocalViewModel @Inject constructor(
                                     ?: "null"
                                 val newArtist = it.getOrNull(0)?.artist ?: "null"
                                 if (newArtist == artist || newArtist == "null" || artist == ARTIST_FAVORITE) {
-                                    localStateHolder.currentSongList.value = it
+                                    updateCurrentSongList(it)
                                     if (_passToSongWithTitle != null) {
                                         currentSongList
                                             .value
@@ -150,8 +181,7 @@ internal open class LocalViewModel @Inject constructor(
                                             ?.let { position ->
                                                 selectScreen(
                                                     ScreenVariant
-                                                        .SongText(newArtist, position)
-                                                )
+                                                        .SongText(newArtist, position))
                                             }
                                         _passToSongWithTitle = null
                                     } else if (oldArtist != newArtist) {
@@ -165,7 +195,7 @@ internal open class LocalViewModel @Inject constructor(
             }
     }
 
-    fun selectSong(position: Int) {
+    private fun selectSong(position: Int) {
         selectSongJob?.let {
             if (!it.isCancelled) it.cancel()
         }
@@ -173,7 +203,7 @@ internal open class LocalViewModel @Inject constructor(
         Log.e("select song", position.toString())
         updateScrollPosition(position)
         updateNeedScroll(true)
-        localStateHolder.currentSongPosition.value = position
+        updateCurrentSongPosition(position)
 
         val oldArtist = currentSong.value?.artist
         val oldTitle = currentSong.value?.title
@@ -185,16 +215,16 @@ internal open class LocalViewModel @Inject constructor(
                         .execute(currentArtist.value, position)
                         .collect {
                             withContext(Dispatchers.Main) {
-                                localStateHolder.currentSong.value = it
+                                updateCurrentSong(it)
 
                                 val newArtist = currentSong.value?.artist
                                 val newTitle = currentSong.value?.title
 
                                 if (newArtist != oldArtist || newTitle != oldTitle) {
-                                    localStateHolder.isAutoPlayMode.value = false
-                                    localStateHolder.isEditorMode.value = false
+                                    setAutoPlayMode(false)
+                                    setEditorMode(false)
                                     currentSong.value?.let {
-                                        editorText.value = it.text
+                                        updateEditorText(it.text)
                                     }
                                 }
                             }
@@ -203,37 +233,33 @@ internal open class LocalViewModel @Inject constructor(
             }
     }
 
-    fun updateCurrentSong(song: Song) {
-        localStateHolder.currentSong.value = song
-    }
-
-    fun nextSong() {
+    private fun nextSong() {
         if (currentSongCount.value > 0) {
             selectScreen(
                 ScreenVariant
-                .SongText(
-                    artist = currentArtist.value,
-                    position = (currentSongPosition.value + 1) % currentSongCount.value
-                ))
+                    .SongText(
+                        artist = currentArtist.value,
+                        position = (currentSongPosition.value + 1) % currentSongCount.value
+                    ))
         }
     }
 
-    fun prevSong() {
+    private fun prevSong() {
         if (currentSongCount.value > 0) {
             if (currentSongPosition.value > 0) {
                 selectScreen(
                     ScreenVariant
-                    .SongText(
-                        artist = currentArtist.value,
-                        position = (currentSongPosition.value - 1) % currentSongCount.value
-                    ))
+                        .SongText(
+                            artist = currentArtist.value,
+                            position = (currentSongPosition.value - 1) % currentSongCount.value
+                        ))
             } else {
                 selectScreen(
                     ScreenVariant
-                    .SongText(
-                        artist = currentArtist.value,
-                        position = currentSongCount.value - 1
-                    ))
+                        .SongText(
+                            artist = currentArtist.value,
+                            position = currentSongCount.value - 1
+                        ))
             }
         }
     }
@@ -242,38 +268,29 @@ internal open class LocalViewModel @Inject constructor(
         updateSongUseCase.execute(song)
     }
 
-    fun setEditorMode(value: Boolean) {
-        localStateHolder.isEditorMode.value = value
-    }
-
-    fun setAutoPlayMode(value: Boolean) {
-        localStateHolder.isAutoPlayMode.value = value
-    }
-
     fun setFavorite(value: Boolean) {
         Log.e("set favorite", value.toString())
         currentSong.value?.copy(favorite = value)?.let {
             updateCurrentSong(it)
             saveSong(it)
             if (!value && currentArtist.value == ARTIST_FAVORITE) {
-                localStateHolder.currentSongCount.value = getCountByArtistUseCase.execute(
-                    ARTIST_FAVORITE
-                )
+                updateCurrentSongCount(
+                    getCountByArtistUseCase.execute(ARTIST_FAVORITE))
                 if (currentSongCount.value > 0) {
                     if (currentSongPosition.value >= currentSongCount.value) {
                         selectScreen(
                             ScreenVariant
-                            .SongText(
-                                artist = currentArtist.value,
-                                position = currentSongPosition.value - 1
-                            ))
+                                .SongText(
+                                    artist = currentArtist.value,
+                                    position = currentSongPosition.value - 1
+                                ))
                     } else {
                         selectScreen(
                             ScreenVariant
-                            .SongText(
-                                artist = currentArtist.value,
-                                position = currentSongPosition.value
-                            ))
+                                .SongText(
+                                    artist = currentArtist.value,
+                                    position = currentSongPosition.value
+                                ))
                     }
                 } else {
                     back()
@@ -287,38 +304,28 @@ internal open class LocalViewModel @Inject constructor(
         }
     }
 
-    fun updateScrollPosition(position: Int) {
-        with(localStateHolder.scrollPosition) {
-            value = position
-        }
-    }
-
-    fun updateNeedScroll(newValue: Boolean) {
-        with(localStateHolder.needScroll) {
-            value = newValue
-        }
-    }
-
     fun deleteCurrentToTrash() {
         currentSong.value?.let {
             deleteSongToTrashUseCase.execute(it)
-            localStateHolder.currentSongCount.value = getCountByArtistUseCase
-                .execute(currentArtist.value)
+            updateCurrentSongCount(
+                getCountByArtistUseCase.execute(currentArtist.value))
             if (currentSongCount.value > 0) {
                 if (currentSongPosition.value >= currentSongCount.value) {
                     selectScreen(
                         ScreenVariant
-                        .SongText(
-                            artist = currentArtist.value,
-                            position = currentSongPosition.value - 1
-                        ))
+                            .SongText(
+                                artist = currentArtist.value,
+                                position = currentSongPosition.value - 1
+                            )
+                    )
                 } else {
                     selectScreen(
                         ScreenVariant
-                        .SongText(
-                            artist = currentArtist.value,
-                            position = currentSongPosition.value
-                        ))
+                            .SongText(
+                                artist = currentArtist.value,
+                                position = currentSongPosition.value
+                            )
+                    )
                 }
             } else {
                 back()
@@ -373,7 +380,7 @@ internal open class LocalViewModel @Inject constructor(
 
     fun uploadCurrentToCloud() {
         currentSong.value?.let { song ->
-            localStateHolder.isUploadButtonEnabled.value = false
+            setUploadButtonEnabled(false)
             uploadSongDisposable?.let {
                 if (!it.isDisposed) it.dispose()
             }
@@ -386,11 +393,11 @@ internal open class LocalViewModel @Inject constructor(
                         STATUS_SUCCESS -> showToast(R.string.toast_upload_to_cloud_success)
                         STATUS_ERROR -> showToast(result.message ?: "")
                     }
-                    localStateHolder.isUploadButtonEnabled.value = true
+                    setUploadButtonEnabled(true)
                 }, { error ->
                     error.printStackTrace()
                     showToast(R.string.error_in_app)
-                    localStateHolder.isUploadButtonEnabled.value = true
+                    setUploadButtonEnabled(true)
                 })
         }
     }
@@ -403,7 +410,7 @@ internal open class LocalViewModel @Inject constructor(
         callbacks.onShowDevSite()
     }
 
-    fun updateArtists() {
+    private fun updateArtists() {
         getArtistsJob?.let {
             if (!it.isCancelled) it.cancel()
         }
@@ -412,11 +419,87 @@ internal open class LocalViewModel @Inject constructor(
                 .execute()
                 .collect {
                     withContext(Dispatchers.Main) {
-                        localStateHolder
-                            .commonStateHolder
-                            .artistList.value = it
+                        updateArtists(it)
                     }
                 }
         }
+    }
+
+    private fun updateCurrentSong(song: Song?) {
+        localStateHolder.currentSong.value = song
+        localStateHolder.localState.value =
+            localState.value.copy(currentSong = song)
+    }
+
+    private fun updateScrollPosition(position: Int) {
+        localStateHolder.scrollPosition.value = position
+        localStateHolder.localState.value =
+            localState.value.copy(scrollPosition = position)
+    }
+
+    private fun updateNeedScroll(newValue: Boolean) {
+        localStateHolder.needScroll.value = newValue
+        localStateHolder.localState.value =
+            localState.value.copy(needScroll = newValue)
+    }
+
+    private fun setEditorMode(value: Boolean) {
+        localStateHolder.isEditorMode.value = value
+        localStateHolder.localState.value =
+            localState.value.copy(isEditorMode = value)
+    }
+
+    private fun setAutoPlayMode(value: Boolean) {
+        localStateHolder.isAutoPlayMode.value = value
+        localStateHolder.localState.value =
+            localState.value.copy(isAutoPlayMode = value)
+    }
+
+    private fun updateCurrentSongList(songList: List<Song>) {
+        localStateHolder.currentSongList.value = songList
+        localStateHolder.localState.value =
+            localState.value.copy(currentSongList = songList)
+    }
+
+    private fun updateArtists(artists: List<String>) {
+        localStateHolder
+            .commonStateHolder
+            .artistList.value = artists
+        localStateHolder
+            .commonStateHolder
+            .commonState
+            .value = commonState.value.copy(artistList = artists)
+    }
+
+    private fun updateCurrentArtist(artist: String) {
+        localStateHolder
+            .commonStateHolder
+            .currentArtist.value = artist
+        localStateHolder
+            .commonStateHolder
+            .commonState
+            .value = commonState.value.copy(currentArtist = artist)
+    }
+
+    private fun updateCurrentSongCount(count: Int) {
+        localStateHolder.currentSongCount.value = count
+        localStateHolder.localState.value =
+            localState.value.copy(currentSongCount = count)
+    }
+
+    private fun updateCurrentSongPosition(position: Int) {
+        localStateHolder.currentSongPosition.value = position
+        localStateHolder.localState.value =
+            localState.value.copy(currentSongPosition = position)
+    }
+
+    private fun updateEditorText(text: String) {
+        editorText.value = text
+    }
+
+    private fun setUploadButtonEnabled(value: Boolean) {
+        localStateHolder.isUploadButtonEnabled.value = value
+        localStateHolder.localState.value =
+            localState.value.copy(isUploadButtonEnabled = value)
     }
 }

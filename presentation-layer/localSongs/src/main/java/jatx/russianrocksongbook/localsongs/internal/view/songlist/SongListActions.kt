@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import jatx.russianrocksongbook.commonview.buttons.CommonIconButton
+import jatx.russianrocksongbook.commonviewmodel.SelectScreen
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.testing.SETTINGS_BUTTON
@@ -22,7 +23,7 @@ internal fun SongListActions() {
 
     val onSettingsClick = {
         println("selected: settings")
-        localViewModel.selectScreen(ScreenVariant.Settings)
+        localViewModel.submitAction(SelectScreen(ScreenVariant.Settings))
     }
     CommonIconButton(
         testTag = SETTINGS_BUTTON,

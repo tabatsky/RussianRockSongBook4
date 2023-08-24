@@ -5,6 +5,9 @@ import androidx.compose.runtime.collectAsState
 import jatx.russianrocksongbook.commonview.buttons.CommonIconButton
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.NextSong
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.PrevSong
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.SetAutoPlayMode
 import jatx.russianrocksongbook.testing.ADD_TO_FAVORITE_BUTTON
 import jatx.russianrocksongbook.testing.DELETE_FROM_FAVORITE_BUTTON
 import jatx.russianrocksongbook.testing.LEFT_BUTTON
@@ -19,7 +22,7 @@ internal fun SongTextActions(
 
     if (localViewModel.isAutoPlayMode.collectAsState().value) {
         val onPauseClick = {
-            localViewModel.setAutoPlayMode(false)
+            localViewModel.submitAction(SetAutoPlayMode(false))
         }
         CommonIconButton(
             resId = R.drawable.ic_pause,
@@ -29,7 +32,7 @@ internal fun SongTextActions(
         val isEditorMode = localViewModel.isEditorMode.collectAsState().value
         val onPlayClick = {
             if (!isEditorMode) {
-                localViewModel.setAutoPlayMode(true)
+                localViewModel.submitAction(SetAutoPlayMode(true))
             }
         }
         CommonIconButton(
@@ -38,7 +41,7 @@ internal fun SongTextActions(
         )
     }
     val onLeftClick =  {
-        localViewModel.prevSong()
+        localViewModel.submitAction(PrevSong)
         onSongChanged()
     }
     CommonIconButton(
@@ -66,7 +69,7 @@ internal fun SongTextActions(
         )
     }
     val onRightClick = {
-        localViewModel.nextSong()
+        localViewModel.submitAction(NextSong)
         onSongChanged()
     }
     CommonIconButton(

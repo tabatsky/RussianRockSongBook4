@@ -5,12 +5,18 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import jatx.russianrocksongbook.commonviewmodel.contracts.SongTextViewModelContract
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import jatx.russianrocksongbook.navigation.NavControllerHolder
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 
@@ -46,6 +52,13 @@ open class CommonViewModel @Inject constructor(
         .artistList
         .asStateFlow()
 
+    val commonState = commonStateHolder.commonState.asStateFlow()
+
+    private val actionFlow = MutableSharedFlow<UIAction>(
+        replay = 0,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.SUSPEND
+    )
 
     companion object {
         private const val key = "Common"
@@ -63,7 +76,33 @@ open class CommonViewModel @Inject constructor(
         fun clearStorage() = storage.clear()
     }
 
-    fun back() {
+    init {
+        Log.e("viewModel", "init")
+        collectActions()
+    }
+
+    private fun collectActions() {
+        viewModelScope.launch {
+            actionFlow
+                .onEach(::handleAction)
+                .collect()
+        }
+    }
+
+    fun submitAction(action: UIAction) {
+        actionFlow.tryEmit(action)
+    }
+
+    protected open fun handleAction(action: UIAction) {
+        Log.e("action", action.toString())
+        when (action) {
+            is Back -> back()
+            is SelectScreen -> selectScreen(action.screenVariant)
+            is AppWasUpdated -> setAppWasUpdated(action.wasUpdated)
+        }
+    }
+
+    protected fun back() {
         Log.e("back from", currentScreenVariant.value.toString())
         when (currentScreenVariant.value) {
             is ScreenVariant.Start -> {
@@ -99,19 +138,24 @@ open class CommonViewModel @Inject constructor(
         }
     }
 
-    private fun doNothing() = Unit
-
-    fun selectScreen(
-        screen: ScreenVariant
+    protected fun selectScreen(
+        screenVariant: ScreenVariant
     ) {
-        commonStateHolder.currentScreenVariant.value = screen
-        NavControllerHolder.navController.navigate(screen.destination)
-        Log.e("navigate", screen.destination)
+        commonStateHolder.commonState.value =
+            commonState.value.copy(currentScreenVariant = screenVariant)
+        commonStateHolder.currentScreenVariant.value = screenVariant
+        NavControllerHolder.navController.navigate(screenVariant.destination)
+        Log.e("navigate", screenVariant.destination)
     }
 
-    fun setAppWasUpdated(value: Boolean) {
+    protected fun setAppWasUpdated(value: Boolean) {
+        commonStateHolder.commonState.value =
+            commonState.value.copy(appWasUpdated = value)
         commonStateHolder.appWasUpdated.value = value
     }
+
+
+    private fun doNothing() = Unit
 
     fun showToast(toastText: String) = toasts.showToast(toastText)
 

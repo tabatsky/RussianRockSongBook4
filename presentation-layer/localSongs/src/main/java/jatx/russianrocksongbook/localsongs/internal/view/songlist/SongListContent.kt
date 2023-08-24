@@ -14,6 +14,7 @@ import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.ext.crop
 import jatx.russianrocksongbook.localsongs.internal.view.dialogs.VoiceHelpDialog
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateNeedScroll
 import jatx.russianrocksongbook.whatsnewdialog.api.view.WhatsNewDialog
 
 private const val MAX_ARTIST_LENGTH_LANDSCAPE = 12
@@ -43,7 +44,7 @@ internal fun SongListContent(
         LaunchedEffect(isPortrait) {
             if (wasOrientationChanged) {
                 isLastOrientationPortrait = isPortrait
-                localViewModel.updateNeedScroll(true)
+                localViewModel.submitAction(UpdateNeedScroll(true))
             }
         }
 

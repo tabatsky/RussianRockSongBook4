@@ -11,6 +11,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.ShowSongs
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateArtists
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateNeedScroll
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.VoiceCommandViewModel
 import kotlinx.coroutines.launch
 
@@ -25,18 +28,18 @@ internal fun SongListScreenImpl(
 
     LaunchedEffect(Unit) {
         if (!isBackFromSong || artist == ARTIST_FAVORITE) {
-            localViewModel.updateArtists()
+            localViewModel.submitAction(UpdateArtists)
         }
     }
 
     LaunchedEffect(Unit) {
         if (isBackFromSong) {
-            localViewModel.updateNeedScroll(true)
+            localViewModel.submitAction(UpdateNeedScroll(true))
         }
     }
 
     LaunchedEffect(artist to passToSongWithTitle) {
-        localViewModel.showSongs(artist, passToSongWithTitle)
+        localViewModel.submitAction(ShowSongs(artist, passToSongWithTitle))
     }
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)

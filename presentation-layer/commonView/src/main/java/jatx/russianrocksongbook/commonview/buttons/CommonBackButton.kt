@@ -2,6 +2,7 @@ package jatx.russianrocksongbook.commonview.buttons
 
 import androidx.compose.runtime.Composable
 import jatx.russianrocksongbook.commonview.R
+import jatx.russianrocksongbook.commonviewmodel.Back
 import jatx.russianrocksongbook.testing.BACK_BUTTON
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 
@@ -9,7 +10,7 @@ import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 fun CommonBackButton(
     commonViewModel: CommonViewModel = CommonViewModel.getInstance()
 ) {
-    val onBackClick = { commonViewModel.back() }
+    val onBackClick = { commonViewModel.submitAction(Back) }
     CommonIconButton(
         resId = R.drawable.ic_back,
         testTag = BACK_BUTTON,

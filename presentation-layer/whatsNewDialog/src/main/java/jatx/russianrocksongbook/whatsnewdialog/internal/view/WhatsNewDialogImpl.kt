@@ -16,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import jatx.russianrocksongbook.commonviewmodel.AppWasUpdated
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.whatsnewdialog.R
@@ -33,7 +34,7 @@ internal fun WhatsNewDialogImpl() {
 
     val appWasUpdated by commonViewModel.appWasUpdated.collectAsState()
     val onDismiss = {
-        commonViewModel.setAppWasUpdated(false)
+        commonViewModel.submitAction(AppWasUpdated(false))
     }
 
     if (appWasUpdated) {

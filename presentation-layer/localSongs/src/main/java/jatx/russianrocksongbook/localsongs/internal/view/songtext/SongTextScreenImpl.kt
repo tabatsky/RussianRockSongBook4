@@ -23,6 +23,10 @@ import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.view.dialogs.DeleteToTrashDialog
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.SelectSong
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.SetAutoPlayMode
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.SetEditorMode
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateCurrentSong
 import kotlinx.coroutines.launch
 
 @Composable
@@ -38,7 +42,7 @@ internal fun SongTextScreenImpl(artist: String, position: Int) {
     }
 
     LaunchedEffect(key) {
-        localViewModel.selectSong(position)
+        localViewModel.submitAction(SelectSong(position))
     }
 
     val song by localViewModel.currentSong.collectAsState()
@@ -99,16 +103,16 @@ internal fun SongTextScreenImpl(artist: String, position: Int) {
     val onWarningClick = { showWarningDialog = true }
 
     val onEditClick =  {
-        localViewModel.setAutoPlayMode(false)
-        localViewModel.setEditorMode(true)
+        localViewModel.submitAction(SetAutoPlayMode(false))
+        localViewModel.submitAction(SetEditorMode(true))
     }
 
     val onSaveClick = {
         song?.copy(text = text)?.let {
-            localViewModel.updateCurrentSong(it)
+            localViewModel.submitAction(UpdateCurrentSong(it))
             localViewModel.saveSong(it)
         }
-        localViewModel.setEditorMode(false)
+        localViewModel.submitAction(SetEditorMode(false))
     }
 
     val theme = localViewModel.settings.theme
