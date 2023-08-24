@@ -16,6 +16,7 @@ import androidx.tv.foundation.lazy.list.rememberTvLazyListState
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.SelectArtist
 import jatx.russianrocksongbook.testing.MENU_LAZY_COLUMN
 
 @Composable
@@ -47,7 +48,7 @@ internal fun SongListMenuBody(
             fontSizeSp = fontSizeSp,
             theme = theme,
             onClick = {
-                localViewModel.selectArtist(artist = artist)
+                localViewModel.submitAction(SelectArtist(artist))
                 onCloseDrawer()
             }
         )

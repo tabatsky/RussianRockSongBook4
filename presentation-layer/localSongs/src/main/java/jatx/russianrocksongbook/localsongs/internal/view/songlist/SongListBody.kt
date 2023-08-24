@@ -19,10 +19,13 @@ import androidx.tv.foundation.lazy.list.TvLazyColumn
 import androidx.tv.foundation.lazy.list.itemsIndexed
 import androidx.tv.foundation.lazy.list.rememberTvLazyListState
 import jatx.russianrocksongbook.commonview.stub.CommonSongListStub
+import jatx.russianrocksongbook.commonviewmodel.SelectScreen
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateNeedScroll
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateScrollPosition
 import jatx.russianrocksongbook.testing.SONG_LIST_LAZY_COLUMN
 import jatx.russianrocksongbook.testing.TestingConfig
 import jatx.russianrocksongbook.navigation.ScreenVariant
@@ -57,9 +60,12 @@ internal fun SongListBody(
             fontSizeSp = fontSizeSp,
             onClick = {
                 Log.e("SongListBody", "selected: ${song.artist} - ${song.title}")
-                localViewModel.selectScreen(
-                    ScreenVariant
-                        .SongText(currentArtist, index))
+                localViewModel.submitAction(
+                    SelectScreen(
+                        ScreenVariant
+                            .SongText(currentArtist, index)
+                    )
+                )
             }
         )
     }
@@ -75,12 +81,12 @@ internal fun SongListBody(
                     delay(100L)
                 }
                 if (scrollPosition >= 0) onPerformScroll(scrollPosition)
-                localViewModel.updateNeedScroll(false)
+                localViewModel.submitAction(UpdateNeedScroll(false))
             } else {
                 snapshotFlow {
                     getFirstVisibleItemIndex()
                 }.collectLatest {
-                    localViewModel.updateScrollPosition(it)
+                    localViewModel.submitAction(UpdateScrollPosition(it))
                 }
             }
         }

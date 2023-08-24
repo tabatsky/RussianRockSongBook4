@@ -16,6 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import jatx.russianrocksongbook.addartist.api.methods.copySongsFromDirToRepoWithPath
 import jatx.russianrocksongbook.addartist.api.methods.copySongsFromDirToRepoWithPickedDir
 import jatx.russianrocksongbook.addsongsfromdirhelper.api.AddSongsFromDirHelper
+import jatx.russianrocksongbook.commonviewmodel.Back
 import jatx.russianrocksongbook.debug.AppDebug
 import jatx.russianrocksongbook.domain.usecase.cloud.SendCrashUseCase
 import jatx.russianrocksongbook.musichelper.api.MusicHelper
@@ -69,7 +70,7 @@ class MainActivity : ComponentActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
-    private fun back() = CommonViewModel.getStoredInstance()?.back()
+    private fun back() = CommonViewModel.getStoredInstance()?.submitAction(Back)
 
     fun clean() {
         CommonViewModel.clearStorage()

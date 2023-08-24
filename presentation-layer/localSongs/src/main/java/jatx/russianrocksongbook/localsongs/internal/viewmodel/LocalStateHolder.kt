@@ -21,4 +21,7 @@ internal class LocalStateHolder @Inject constructor(
 
     val scrollPosition = MutableStateFlow(0)
     val needScroll = MutableStateFlow(false)
+
+    val localState = MutableStateFlow(
+        LocalUIState.initial(commonStateHolder.commonState.value))
 }

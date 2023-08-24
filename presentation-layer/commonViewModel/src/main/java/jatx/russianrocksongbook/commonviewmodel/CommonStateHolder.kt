@@ -17,4 +17,6 @@ class CommonStateHolder @Inject constructor(
     val currentArtist = MutableStateFlow(settingsRepository.defaultArtist)
     val appWasUpdated = MutableStateFlow(false)
     val artistList = MutableStateFlow(listOf<String>())
+
+    val commonState = MutableStateFlow(CommonUIState.initial(settingsRepository.defaultArtist))
 }

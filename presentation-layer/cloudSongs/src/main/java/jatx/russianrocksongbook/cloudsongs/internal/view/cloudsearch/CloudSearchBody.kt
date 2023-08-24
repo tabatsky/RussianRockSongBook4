@@ -19,6 +19,7 @@ import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.CloudViewModel
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.SearchState
 import jatx.russianrocksongbook.commonview.stub.CommonSongListStub
 import jatx.russianrocksongbook.commonview.stub.ErrorSongListStub
+import jatx.russianrocksongbook.commonviewmodel.SelectScreen
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
@@ -77,7 +78,7 @@ internal fun CloudSearchBody(
 
     val onItemClick: (Int, CloudSong) -> Unit = { index, cloudSong ->
         println("selected: ${cloudSong.artist} - ${cloudSong.title}")
-        cloudViewModel.selectScreen(ScreenVariant.CloudSongText(index))
+        cloudViewModel.submitAction(SelectScreen(ScreenVariant.CloudSongText(index)))
     }
 
     Column(
