@@ -9,7 +9,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import jatx.russianrocksongbook.commonviewmodel.CommonUIState
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_ERROR
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
@@ -21,10 +20,10 @@ import jatx.russianrocksongbook.navigation.ScreenVariant
 import jatx.russianrocksongbook.commonviewmodel.contracts.SongTextViewModelContract
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted.Companion.Eagerly
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -54,31 +53,15 @@ internal open class LocalViewModel @Inject constructor(
     private val getArtistsUseCase =
         localViewModelDeps.getArtistsUseCase
 
-    val currentSongCount = localStateHolder.currentSongCount.asStateFlow()
-    val currentSongList = localStateHolder.currentSongList.asStateFlow()
-    val currentSongPosition = localStateHolder.currentSongPosition.asStateFlow()
-    val currentSong = localStateHolder.currentSong.asStateFlow()
-
-    val isEditorMode = localStateHolder.isEditorMode.asStateFlow()
-    val isAutoPlayMode = localStateHolder.isAutoPlayMode.asStateFlow()
-    val isUploadButtonEnabled = localStateHolder.isUploadButtonEnabled.asStateFlow()
-
-    val scrollPosition = localStateHolder.scrollPosition.asStateFlow()
-    val needScroll = localStateHolder.needScroll.asStateFlow()
-
     val editorText = mutableStateOf("")
 
-    val localState = localStateHolder
-        .localState
-        .combine(commonState) { local, common ->
+    val localState = combine(localStateHolder.localState, commonState) { local, common ->
             local.copy(commonUIState = common)
         }
         .stateIn(
             viewModelScope,
-            WhileSubscribed(),
-            LocalUIState.initial(
-                CommonUIState.initial(settings.defaultArtist)
-            )
+            Eagerly,
+            localStateHolder.localState.value
         )
 
     private var showSongsJob: Job? = null
@@ -100,15 +83,59 @@ internal open class LocalViewModel @Inject constructor(
         fun getStoredInstance() = storage[key] as? LocalViewModel
     }
 
+    override fun openVkMusicImpl(dontAskMore: Boolean) {
+        settings.vkMusicDontAsk = dontAskMore
+        localState.value.currentSong?.let {
+            callbacks.onOpenVkMusic("${it.artist} ${it.title}")
+        }
+    }
+
+    override fun openYandexMusicImpl(dontAskMore: Boolean) {
+        settings.yandexMusicDontAsk = dontAskMore
+        localState.value.currentSong?.let {
+            callbacks.onOpenYandexMusic("${it.artist} ${it.title}")
+        }
+    }
+
+    override fun openYoutubeMusicImpl(dontAskMore: Boolean) {
+        settings.youtubeMusicDontAsk = dontAskMore
+        localState.value.currentSong?.let {
+            callbacks.onOpenYoutubeMusic("${it.artist} ${it.title}")
+        }
+    }
+
+    override fun sendWarningImpl(comment: String) {
+        localState.value.currentSong?.let {
+            addWarningLocalUseCase
+                .execute(it, comment)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ result ->
+                    when (result.status) {
+                        STATUS_SUCCESS -> showToast(R.string.toast_send_warning_success)
+                        STATUS_ERROR -> showToast(result.message ?: "")
+                    }
+                }, { error ->
+                    error.printStackTrace()
+                    showToast(R.string.error_in_app)
+                })
+        }
+    }
+
     override fun handleAction(action: UIAction) {
-        Log.e("action", action.toString())
         when (action) {
             is SelectArtist -> selectArtist(action.artist)
             is ShowSongs -> showSongs(action.artist, action.passToSongWithTitle)
             is SelectSong -> selectSong(action.position)
             is NextSong -> nextSong()
             is PrevSong -> prevSong()
-
+            is SaveSong -> saveSong(action.song)
+            is SetFavorite -> setFavorite(action.favorite)
+            is DeleteCurrentToTrash -> deleteCurrentToTrash()
+            is SpeechRecognize -> speechRecognize(action.dontAskMore)
+            is UploadCurrentToCloud -> uploadCurrentToCloud()
+            is ReviewApp -> reviewApp()
+            is ShowDevSite -> showDevSite()
             is UpdateArtists -> updateArtists()
             is UpdateCurrentSong -> updateCurrentSong(action.song)
             is UpdateScrollPosition -> updateScrollPosition(action.position)
@@ -167,14 +194,15 @@ internal open class LocalViewModel @Inject constructor(
                         .execute(artist)
                         .collect {
                             withContext(Dispatchers.Main) {
-                                val oldArtist = currentSongList.value.getOrNull(0)?.artist
+                                val oldArtist = localState.value.currentSongList.getOrNull(0)?.artist
                                     ?: "null"
                                 val newArtist = it.getOrNull(0)?.artist ?: "null"
                                 if (newArtist == artist || newArtist == "null" || artist == ARTIST_FAVORITE) {
                                     updateCurrentSongList(it)
                                     if (_passToSongWithTitle != null) {
-                                        currentSongList
+                                        localState
                                             .value
+                                            .currentSongList
                                             .map { it.title }
                                             .indexOf(_passToSongWithTitle)
                                             .takeIf { it >= 0 }
@@ -205,25 +233,25 @@ internal open class LocalViewModel @Inject constructor(
         updateNeedScroll(true)
         updateCurrentSongPosition(position)
 
-        val oldArtist = currentSong.value?.artist
-        val oldTitle = currentSong.value?.title
+        val oldArtist = localState.value.currentSong?.artist
+        val oldTitle = localState.value.currentSong?.title
 
         selectSongJob = viewModelScope
             .launch {
                 withContext(Dispatchers.IO) {
                     getSongByArtistAndPositionUseCase
-                        .execute(currentArtist.value, position)
+                        .execute(localState.value.currentArtist, position)
                         .collect {
                             withContext(Dispatchers.Main) {
                                 updateCurrentSong(it)
 
-                                val newArtist = currentSong.value?.artist
-                                val newTitle = currentSong.value?.title
+                                val newArtist = localState.value.currentSong?.artist
+                                val newTitle = localState.value.currentSong?.title
 
                                 if (newArtist != oldArtist || newTitle != oldTitle) {
                                     setAutoPlayMode(false)
                                     setEditorMode(false)
-                                    currentSong.value?.let {
+                                    localState.value.currentSong?.let {
                                         updateEditorText(it.text)
                                     }
                                 }
@@ -234,152 +262,126 @@ internal open class LocalViewModel @Inject constructor(
     }
 
     private fun nextSong() {
-        if (currentSongCount.value > 0) {
-            selectScreen(
-                ScreenVariant
-                    .SongText(
-                        artist = currentArtist.value,
-                        position = (currentSongPosition.value + 1) % currentSongCount.value
-                    ))
-        }
-    }
-
-    private fun prevSong() {
-        if (currentSongCount.value > 0) {
-            if (currentSongPosition.value > 0) {
+        with (localState.value) {
+            if (currentSongCount > 0) {
                 selectScreen(
                     ScreenVariant
                         .SongText(
-                            artist = currentArtist.value,
-                            position = (currentSongPosition.value - 1) % currentSongCount.value
-                        ))
-            } else {
-                selectScreen(
-                    ScreenVariant
-                        .SongText(
-                            artist = currentArtist.value,
-                            position = currentSongCount.value - 1
+                            artist = currentArtist,
+                            position = (currentSongPosition + 1) % currentSongCount
                         ))
             }
         }
     }
 
-    fun saveSong(song: Song) {
+    private fun prevSong() {
+        with (localState.value) {
+            if (currentSongCount > 0) {
+                if (currentSongPosition > 0) {
+                    selectScreen(
+                        ScreenVariant
+                            .SongText(
+                                artist = currentArtist,
+                                position = (currentSongPosition - 1) % currentSongCount
+                            )
+                    )
+                } else {
+                    selectScreen(
+                        ScreenVariant
+                            .SongText(
+                                artist = currentArtist,
+                                position = currentSongCount - 1
+                            )
+                    )
+                }
+            }
+        }
+    }
+
+    private fun saveSong(song: Song) {
         updateSongUseCase.execute(song)
     }
 
-    fun setFavorite(value: Boolean) {
-        Log.e("set favorite", value.toString())
-        currentSong.value?.copy(favorite = value)?.let {
-            updateCurrentSong(it)
-            saveSong(it)
-            if (!value && currentArtist.value == ARTIST_FAVORITE) {
-                updateCurrentSongCount(
-                    getCountByArtistUseCase.execute(ARTIST_FAVORITE))
-                if (currentSongCount.value > 0) {
-                    if (currentSongPosition.value >= currentSongCount.value) {
+    private fun setFavorite(favorite: Boolean) {
+        Log.e("set favorite", favorite.toString())
+        with (localState.value) {
+            currentSong?.copy(favorite = favorite)?.let {
+                updateCurrentSong(it)
+                saveSong(it)
+                if (!favorite && currentArtist == ARTIST_FAVORITE) {
+                    updateCurrentSongCount(
+                        getCountByArtistUseCase.execute(ARTIST_FAVORITE)
+                    )
+                    if (currentSongCount > 0) {
+                        if (currentSongPosition >= currentSongCount) {
+                            selectScreen(
+                                ScreenVariant
+                                    .SongText(
+                                        artist = currentArtist,
+                                        position = currentSongPosition - 1
+                                    )
+                            )
+                        } else {
+                            selectScreen(
+                                ScreenVariant
+                                    .SongText(
+                                        artist = currentArtist,
+                                        position = currentSongPosition
+                                    )
+                            )
+                        }
+                    } else {
+                        back()
+                    }
+                }
+                if (favorite) {
+                    showToast(R.string.toast_added_to_favorite)
+                } else {
+                    showToast(R.string.toast_removed_from_favorite)
+                }
+            }
+        }
+    }
+
+    private fun deleteCurrentToTrash() {
+        with (localState.value) {
+            currentSong?.let {
+                deleteSongToTrashUseCase.execute(it)
+                val songCount = getCountByArtistUseCase.execute(currentArtist)
+                updateCurrentSongCount(songCount)
+                if (songCount > 0) {
+                    if (currentSongPosition >= currentSongCount) {
                         selectScreen(
                             ScreenVariant
                                 .SongText(
-                                    artist = currentArtist.value,
-                                    position = currentSongPosition.value - 1
-                                ))
+                                    artist = currentArtist,
+                                    position = currentSongPosition - 1
+                                )
+                        )
                     } else {
                         selectScreen(
                             ScreenVariant
                                 .SongText(
-                                    artist = currentArtist.value,
-                                    position = currentSongPosition.value
-                                ))
+                                    artist = currentArtist,
+                                    position = currentSongPosition
+                                )
+                        )
                     }
                 } else {
                     back()
                 }
             }
-            if (value) {
-                showToast(R.string.toast_added_to_favorite)
-            } else {
-                showToast(R.string.toast_removed_from_favorite)
-            }
+            showToast(R.string.toast_deleted_to_trash)
         }
     }
 
-    fun deleteCurrentToTrash() {
-        currentSong.value?.let {
-            deleteSongToTrashUseCase.execute(it)
-            updateCurrentSongCount(
-                getCountByArtistUseCase.execute(currentArtist.value))
-            if (currentSongCount.value > 0) {
-                if (currentSongPosition.value >= currentSongCount.value) {
-                    selectScreen(
-                        ScreenVariant
-                            .SongText(
-                                artist = currentArtist.value,
-                                position = currentSongPosition.value - 1
-                            )
-                    )
-                } else {
-                    selectScreen(
-                        ScreenVariant
-                            .SongText(
-                                artist = currentArtist.value,
-                                position = currentSongPosition.value
-                            )
-                    )
-                }
-            } else {
-                back()
-            }
-        }
-        showToast(R.string.toast_deleted_to_trash)
-    }
-
-    override fun openVkMusicImpl(dontAskMore: Boolean) {
-        settings.vkMusicDontAsk = dontAskMore
-        currentSong.value?.let {
-            callbacks.onOpenVkMusic("${it.artist} ${it.title}")
-        }
-    }
-
-    override fun openYandexMusicImpl(dontAskMore: Boolean) {
-        settings.yandexMusicDontAsk = dontAskMore
-        currentSong.value?.let {
-            callbacks.onOpenYandexMusic("${it.artist} ${it.title}")
-        }
-    }
-
-    override fun openYoutubeMusicImpl(dontAskMore: Boolean) {
-        settings.youtubeMusicDontAsk = dontAskMore
-        currentSong.value?.let {
-            callbacks.onOpenYoutubeMusic("${it.artist} ${it.title}")
-        }
-    }
-
-    override fun sendWarningImpl(comment: String) {
-        currentSong.value?.let {
-            addWarningLocalUseCase
-                .execute(it, comment)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ result ->
-                    when (result.status) {
-                        STATUS_SUCCESS -> showToast(R.string.toast_send_warning_success)
-                        STATUS_ERROR -> showToast(result.message ?: "")
-                    }
-                }, { error ->
-                    error.printStackTrace()
-                    showToast(R.string.error_in_app)
-                })
-        }
-    }
-
-    fun speechRecognize(dontAskMore: Boolean) {
+    private fun speechRecognize(dontAskMore: Boolean) {
         settings.voiceHelpDontAsk = dontAskMore
         callbacks.onSpeechRecognize()
     }
 
-    fun uploadCurrentToCloud() {
-        currentSong.value?.let { song ->
+    private fun uploadCurrentToCloud() {
+        localState.value.currentSong?.let { song ->
             setUploadButtonEnabled(false)
             uploadSongDisposable?.let {
                 if (!it.isDisposed) it.dispose()
@@ -402,11 +404,11 @@ internal open class LocalViewModel @Inject constructor(
         }
     }
 
-    fun reviewApp() {
+    private fun reviewApp() {
         callbacks.onReviewApp()
     }
 
-    fun showDevSite() {
+    private fun showDevSite() {
         callbacks.onShowDevSite()
     }
 
@@ -426,80 +428,71 @@ internal open class LocalViewModel @Inject constructor(
     }
 
     private fun updateCurrentSong(song: Song?) {
-        localStateHolder.currentSong.value = song
-        localStateHolder.localState.value =
-            localState.value.copy(currentSong = song)
+        localStateHolder.localState.update {
+            it.copy(currentSong = song)
+        }
     }
 
     private fun updateScrollPosition(position: Int) {
-        localStateHolder.scrollPosition.value = position
-        localStateHolder.localState.value =
-            localState.value.copy(scrollPosition = position)
+        localStateHolder.localState.update {
+            it.copy(scrollPosition = position)
+        }
     }
 
-    private fun updateNeedScroll(newValue: Boolean) {
-        localStateHolder.needScroll.value = newValue
-        localStateHolder.localState.value =
-            localState.value.copy(needScroll = newValue)
+    private fun updateNeedScroll(needScroll: Boolean) {
+        localStateHolder.localState.update {
+            it.copy(needScroll = needScroll)
+        }
     }
 
-    private fun setEditorMode(value: Boolean) {
-        localStateHolder.isEditorMode.value = value
-        localStateHolder.localState.value =
-            localState.value.copy(isEditorMode = value)
+    private fun setEditorMode(editorMode: Boolean) {
+        localStateHolder.localState.update {
+            it.copy(isEditorMode = editorMode)
+        }
     }
 
-    private fun setAutoPlayMode(value: Boolean) {
-        localStateHolder.isAutoPlayMode.value = value
-        localStateHolder.localState.value =
-            localState.value.copy(isAutoPlayMode = value)
-    }
-
-    private fun updateCurrentSongList(songList: List<Song>) {
-        localStateHolder.currentSongList.value = songList
-        localStateHolder.localState.value =
-            localState.value.copy(currentSongList = songList)
+    private fun setAutoPlayMode(autoPlayMode: Boolean) {
+        localStateHolder.localState.update {
+            it.copy(isAutoPlayMode = autoPlayMode)
+        }
     }
 
     private fun updateArtists(artists: List<String>) {
-        localStateHolder
-            .commonStateHolder
-            .artistList.value = artists
-        localStateHolder
-            .commonStateHolder
-            .commonState
-            .value = commonState.value.copy(artistList = artists)
+        localStateHolder.commonStateHolder.commonState.update {
+            it.copy(artistList = artists)
+        }
     }
 
     private fun updateCurrentArtist(artist: String) {
-        localStateHolder
-            .commonStateHolder
-            .currentArtist.value = artist
-        localStateHolder
-            .commonStateHolder
-            .commonState
-            .value = commonState.value.copy(currentArtist = artist)
+        localStateHolder.commonStateHolder.commonState.update {
+            it.copy(currentArtist = artist)
+        }
     }
 
     private fun updateCurrentSongCount(count: Int) {
-        localStateHolder.currentSongCount.value = count
-        localStateHolder.localState.value =
-            localState.value.copy(currentSongCount = count)
+        localStateHolder.localState.update {
+            it.copy(currentSongCount = count)
+        }
+    }
+
+    private fun updateCurrentSongList(songList: List<Song>) {
+        localStateHolder.localState.update {
+            it.copy(currentSongList = songList)
+        }
     }
 
     private fun updateCurrentSongPosition(position: Int) {
-        localStateHolder.currentSongPosition.value = position
-        localStateHolder.localState.value =
-            localState.value.copy(currentSongPosition = position)
+        localStateHolder.localState.update {
+            it.copy(currentSongPosition = position)
+        }
     }
 
+    private fun setUploadButtonEnabled(enabled: Boolean) {
+        localStateHolder.localState.update {
+            it.copy(isUploadButtonEnabled = enabled)
+        }
+    }
     private fun updateEditorText(text: String) {
         editorText.value = text
-    }
-
-    private fun setUploadButtonEnabled(value: Boolean) {
-        localStateHolder.isUploadButtonEnabled.value = value
-        localStateHolder.localState.value =
-            localState.value.copy(isUploadButtonEnabled = value)
     }
 }

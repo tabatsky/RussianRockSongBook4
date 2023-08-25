@@ -2,12 +2,14 @@ package jatx.russianrocksongbook.localsongs.internal.view.songtext
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import jatx.russianrocksongbook.commonview.buttons.CommonIconButton
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.NextSong
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.PrevSong
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.SetAutoPlayMode
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.SetFavorite
 import jatx.russianrocksongbook.testing.ADD_TO_FAVORITE_BUTTON
 import jatx.russianrocksongbook.testing.DELETE_FROM_FAVORITE_BUTTON
 import jatx.russianrocksongbook.testing.LEFT_BUTTON
@@ -20,7 +22,9 @@ internal fun SongTextActions(
 ) {
     val localViewModel = LocalViewModel.getInstance()
 
-    if (localViewModel.isAutoPlayMode.collectAsState().value) {
+    val localState by localViewModel.localState.collectAsState()
+
+    if (localState.isAutoPlayMode) {
         val onPauseClick = {
             localViewModel.submitAction(SetAutoPlayMode(false))
         }
@@ -29,7 +33,7 @@ internal fun SongTextActions(
             onClick = onPauseClick
         )
     } else {
-        val isEditorMode = localViewModel.isEditorMode.collectAsState().value
+        val isEditorMode = localState.isEditorMode
         val onPlayClick = {
             if (!isEditorMode) {
                 localViewModel.submitAction(SetAutoPlayMode(true))
@@ -51,7 +55,7 @@ internal fun SongTextActions(
     )
     if (isFavorite) {
         val onDeleteClick = {
-            localViewModel.setFavorite(false)
+            localViewModel.submitAction(SetFavorite(false))
         }
         CommonIconButton(
             resId = R.drawable.ic_delete,
@@ -60,7 +64,7 @@ internal fun SongTextActions(
         )
     } else {
         val onStarClick = {
-            localViewModel.setFavorite(true)
+            localViewModel.submitAction(SetFavorite(true))
         }
         CommonIconButton(
             resId = R.drawable.ic_star,

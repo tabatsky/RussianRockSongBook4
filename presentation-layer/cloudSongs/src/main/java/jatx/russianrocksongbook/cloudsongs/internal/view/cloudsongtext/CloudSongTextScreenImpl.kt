@@ -23,6 +23,10 @@ import jatx.russianrocksongbook.commonview.dialogs.music.VkMusicDialog
 import jatx.russianrocksongbook.commonview.dialogs.music.YandexMusicDialog
 import jatx.russianrocksongbook.commonview.dialogs.music.YoutubeMusicDialog
 import jatx.russianrocksongbook.commonview.dialogs.warning.WarningDialog
+import jatx.russianrocksongbook.commonviewmodel.OpenVkMusic
+import jatx.russianrocksongbook.commonviewmodel.OpenYandexMusic
+import jatx.russianrocksongbook.commonviewmodel.OpenYoutubeMusic
+import jatx.russianrocksongbook.commonviewmodel.SendWarning
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import kotlinx.coroutines.launch
 
@@ -206,7 +210,7 @@ internal fun CloudSongTextScreenImpl(position: Int) {
             if (showYandexDialog) {
                 if (cloudViewModel.settings.yandexMusicDontAsk) {
                     showYandexDialog = false
-                    cloudViewModel.openYandexMusic(true)
+                    cloudViewModel.submitAction(OpenYandexMusic(true))
                 } else {
                     YandexMusicDialog(
                         commonViewModel = cloudViewModel
@@ -218,7 +222,7 @@ internal fun CloudSongTextScreenImpl(position: Int) {
             if (showVkDialog) {
                 if (cloudViewModel.settings.vkMusicDontAsk) {
                     showVkDialog = false
-                    cloudViewModel.openVkMusic(true)
+                    cloudViewModel.submitAction(OpenVkMusic(true))
                 } else {
                     VkMusicDialog(
                         commonViewModel = cloudViewModel
@@ -230,7 +234,7 @@ internal fun CloudSongTextScreenImpl(position: Int) {
             if (showYoutubeMusicDialog) {
                 if (cloudViewModel.settings.youtubeMusicDontAsk) {
                     showYoutubeMusicDialog = false
-                    cloudViewModel.openYoutubeMusic(true)
+                    cloudViewModel.submitAction(OpenYoutubeMusic(true))
                 } else {
                     YoutubeMusicDialog(
                         commonViewModel = cloudViewModel
@@ -242,7 +246,7 @@ internal fun CloudSongTextScreenImpl(position: Int) {
             if (showWarningDialog) {
                 WarningDialog(
                     onConfirm = { comment ->
-                        cloudViewModel.sendWarning(comment)
+                        cloudViewModel.submitAction(SendWarning(comment))
                     },
                     onDismiss = {
                         showWarningDialog = false

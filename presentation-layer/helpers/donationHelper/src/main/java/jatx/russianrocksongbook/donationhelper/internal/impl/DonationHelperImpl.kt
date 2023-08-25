@@ -10,6 +10,7 @@ import jatx.russianrocksongbook.donationhelper.api.DonationHelper
 import jatx.russianrocksongbook.donationhelper.api.SKUS
 import jatx.russianrocksongbook.donationhelper.R
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
+import jatx.russianrocksongbook.commonviewmodel.ShowToastWithResource
 import java.util.*
 import javax.inject.Inject
 
@@ -98,7 +99,9 @@ internal class DonationHelperImpl @Inject constructor(
                     Log.e("consume", responseCode.responseCode.toString())
                     activity.runOnUiThread {
                         if (responseCode.responseCode == 0) {
-                            commonViewModel?.showToast(R.string.thanks_for_donation)
+                            commonViewModel?.submitEffect(
+                                ShowToastWithResource(R.string.thanks_for_donation)
+                            )
                         }
                     }
                 }

@@ -16,6 +16,7 @@ import jatx.russianrocksongbook.commonview.R
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.testing.TEXT_FIELD_WARNING_COMMENT
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
+import jatx.russianrocksongbook.commonviewmodel.ShowToastWithResource
 
 @Composable
 fun WarningDialog(
@@ -96,7 +97,8 @@ fun WarningDialog(
                         onConfirm(comment)
                     } else {
                         commonViewModel
-                            .showToast(R.string.toast_comment_cannot_be_empty)
+                            .submitEffect(
+                                ShowToastWithResource(R.string.toast_comment_cannot_be_empty))
                     }
                 }) {
                 Text(text = stringResource(id = R.string.ok))

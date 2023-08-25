@@ -4,8 +4,11 @@ import android.util.Log
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.slot
 import io.mockk.spyk
 import io.mockk.verifySequence
+import jatx.russianrocksongbook.commonviewmodel.SelectScreen
+import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_ADD_ARTIST
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_ADD_SONG
@@ -14,6 +17,7 @@ import jatx.russianrocksongbook.domain.repository.local.ARTIST_DONATION
 import jatx.russianrocksongbook.domain.usecase.local.GetArtistsAsListUseCase
 import jatx.russianrocksongbook.domain.usecase.local.GetSongsByVoiceSearchUseCase
 import jatx.russianrocksongbook.localsongs.R
+import kotlinx.coroutines.flow.update
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.FixMethodOrder
@@ -39,28 +43,52 @@ class VoiceCommandViewModelTest: LocalViewModelTest() {
 
     @Before
     fun initVoiceCommand() {
+        localStateHolder = LocalStateHolder(commonStateHolder)
         voiceCommandViewModelDeps = VoiceCommandViewModelDeps(
             localViewModelDeps = localViewModelDeps,
             getArtistsAsListUseCase = getArtistsAsListUseCase,
             getSongsByVoiceSearchUseCase = getSongsByVoiceSearchUseCase
         )
-        val _voiceCommandViewModel = VoiceCommandViewModel(
+        val __voiceCommandViewModel = VoiceCommandViewModel(
             localStateHolder = localStateHolder,
             voiceCommandViewModelDeps = voiceCommandViewModelDeps
         )
+
+        val _voiceCommandViewModel = spyk(__voiceCommandViewModel)
+
+        val _actionSlot = slot<UIAction>()
+        every { _voiceCommandViewModel.submitAction(capture(_actionSlot)) } answers {
+            val action = _actionSlot.captured
+            when (action) {
+                is SelectScreen -> {
+                    commonStateHolder.commonState.update {
+                        it.copy(currentScreenVariant = action.screenVariant)
+                    }
+                }
+                else -> __voiceCommandViewModel.submitAction(action)
+            }
+        }
+
         voiceCommandViewModel = spyk(_voiceCommandViewModel)
 
-        every { voiceCommandViewModel.selectArtist(any()) } answers {
-            if (arg(0) in listOf(
-                    ARTIST_ADD_ARTIST,
-                    ARTIST_ADD_SONG,
-                    ARTIST_CLOUD_SONGS,
-                    ARTIST_DONATION
-                )
-            ) {
-                _voiceCommandViewModel.selectArtist(arg(0))
-            } else {
-                _voiceCommandViewModel.showSongs(arg(0), null)
+        val actionSlot = slot<UIAction>()
+        every { voiceCommandViewModel.submitAction(capture(actionSlot)) } answers {
+            val action = actionSlot.captured
+            when (action) {
+                is SelectArtist -> {
+                    val artist = action.artist
+                    if (artist in listOf(
+                            ARTIST_ADD_ARTIST,
+                            ARTIST_ADD_SONG,
+                            ARTIST_CLOUD_SONGS,
+                            ARTIST_DONATION)
+                    ) {
+                        _voiceCommandViewModel.submitAction(action)
+                    } else {
+                        _voiceCommandViewModel.submitAction(ShowSongs(artist, null))
+                    }
+                }
+                else -> _voiceCommandViewModel.submitAction(action)
             }
         }
         every { getArtistsAsListUseCase.execute() } returns artistList
@@ -72,7 +100,7 @@ class VoiceCommandViewModelTest: LocalViewModelTest() {
 
         TimeUnit.MILLISECONDS.sleep(200)
 
-        assertEquals("Немного Нервно", voiceCommandViewModel.currentArtist.value)
+        assertEquals("Немного Нервно", voiceCommandViewModel.localState.value.currentArtist)
 
         verifySequence {
             Log.e("voice command", "открой группу немного нервно")

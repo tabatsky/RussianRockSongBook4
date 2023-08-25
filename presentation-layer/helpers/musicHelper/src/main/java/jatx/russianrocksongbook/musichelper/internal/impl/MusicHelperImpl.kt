@@ -10,6 +10,7 @@ import it.czerwinski.android.hilt.annotations.BoundTo
 import jatx.russianrocksongbook.musichelper.api.MusicHelper
 import jatx.russianrocksongbook.musichelper.R
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
+import jatx.russianrocksongbook.commonviewmodel.ShowToastWithResource
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 import javax.inject.Inject
@@ -36,7 +37,9 @@ internal class MusicHelperImpl @Inject constructor(
                 )
             }
         } catch (e: UnsupportedEncodingException) {
-            commonViewModel?.showToast(R.string.utf8_not_supported)
+            commonViewModel?.submitEffect(
+                ShowToastWithResource(R.string.utf8_not_supported)
+            )
         }
     }
 
@@ -78,9 +81,13 @@ internal class MusicHelperImpl @Inject constructor(
                 startActivity(chooserIntent)
             }
         } catch (e: UnsupportedEncodingException) {
-            commonViewModel?.showToast(R.string.utf8_not_supported)
+            commonViewModel?.submitEffect(
+                ShowToastWithResource(R.string.utf8_not_supported)
+            )
         } catch (e: ActivityNotFoundException) {
-            commonViewModel?.showToast(R.string.vk_app_not_installed)
+            commonViewModel?.submitEffect(
+                ShowToastWithResource(R.string.vk_app_not_installed)
+            )
         }
     }
 
@@ -97,7 +104,9 @@ internal class MusicHelperImpl @Inject constructor(
                 )
             }
         } catch (e: UnsupportedEncodingException) {
-            commonViewModel?.showToast(R.string.utf8_not_supported)
+            commonViewModel?.submitEffect(
+                ShowToastWithResource(R.string.utf8_not_supported)
+            )
         }
     }
 }

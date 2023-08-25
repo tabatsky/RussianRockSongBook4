@@ -11,6 +11,8 @@ import jatx.russianrocksongbook.commonview.buttons.CommonIconButton
 import jatx.russianrocksongbook.commonviewmodel.SelectScreen
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.ReviewApp
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.ShowDevSite
 import jatx.russianrocksongbook.testing.SETTINGS_BUTTON
 import jatx.russianrocksongbook.navigation.ScreenVariant
 
@@ -49,7 +51,7 @@ internal fun SongListActions() {
     ) {
         DropdownMenuItem(onClick = {
             println("selected: review app")
-            localViewModel.reviewApp()
+            localViewModel.submitAction(ReviewApp)
         }) {
             Text(
                 text = stringResource(id = R.string.item_review_app),
@@ -58,7 +60,7 @@ internal fun SongListActions() {
         }
         DropdownMenuItem(onClick = {
             println("selected: dev site")
-            localViewModel.showDevSite()
+            localViewModel.submitAction(ShowDevSite)
         }) {
             Text(
                 text = stringResource(id = R.string.item_dev_site),

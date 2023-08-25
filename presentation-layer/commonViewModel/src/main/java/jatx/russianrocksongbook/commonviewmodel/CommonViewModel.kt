@@ -12,10 +12,14 @@ import jatx.russianrocksongbook.commonviewmodel.contracts.SongTextViewModelContr
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import jatx.russianrocksongbook.navigation.NavControllerHolder
 import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
@@ -36,29 +40,17 @@ open class CommonViewModel @Inject constructor(
 
     val isTV = commonViewModelDeps.tvDetector.isTV
 
-    val currentScreenVariant = commonStateHolder
-        .currentScreenVariant
-        .asStateFlow()
-
-    val currentArtist = commonStateHolder
-        .currentArtist
-        .asStateFlow()
-
-    val appWasUpdated = commonStateHolder
-        .appWasUpdated
-        .asStateFlow()
-
-    val artistList = commonStateHolder
-        .artistList
-        .asStateFlow()
-
     val commonState = commonStateHolder.commonState.asStateFlow()
 
-    private val actionFlow = MutableSharedFlow<UIAction>(
+    private val _actions = MutableSharedFlow<UIAction>(
         replay = 0,
         extraBufferCapacity = 1,
         onBufferOverflow = BufferOverflow.SUSPEND
     )
+    private val actions = _actions.asSharedFlow()
+
+    private val _effects = Channel<UIEffect>()
+    private val effects = _effects.receiveAsFlow()
 
     companion object {
         private const val key = "Common"
@@ -77,62 +69,94 @@ open class CommonViewModel @Inject constructor(
     }
 
     init {
-        Log.e("viewModel", "init")
         collectActions()
+        collectEffects()
     }
 
     private fun collectActions() {
         viewModelScope.launch {
-            actionFlow
+            actions
                 .onEach(::handleAction)
                 .collect()
         }
     }
 
+    private fun collectEffects() {
+        viewModelScope.launch {
+            effects
+                .onEach(::handleEffect)
+                .collect()
+        }
+    }
+
     fun submitAction(action: UIAction) {
-        actionFlow.tryEmit(action)
+        _actions.tryEmit(action)
+    }
+
+    fun submitEffect(effect: UIEffect) {
+        _effects.trySend(effect)
     }
 
     protected open fun handleAction(action: UIAction) {
-        Log.e("action", action.toString())
         when (action) {
             is Back -> back()
             is SelectScreen -> selectScreen(action.screenVariant)
             is AppWasUpdated -> setAppWasUpdated(action.wasUpdated)
+            is OpenVkMusic -> openVkMusic(action.dontAskMore)
+            is OpenYandexMusic -> openYandexMusic(action.dontAskMore)
+            is OpenYoutubeMusic -> openYoutubeMusic(action.dontAskMore)
+            is SendWarning -> sendWarning(action.comment)
+        }
+    }
+
+    protected open fun handleEffect(effect: UIEffect) {
+        when (effect) {
+            is ShowToastWithText -> showToast(effect.text)
+            is ShowToastWithResource -> showToast(effect.resId)
         }
     }
 
     protected fun back() {
-        Log.e("back from", currentScreenVariant.value.toString())
-        when (currentScreenVariant.value) {
-            is ScreenVariant.Start -> {
-                doNothing()
-            }
-            is ScreenVariant.SongList,
-            is ScreenVariant.Favorite -> {
-                callbacks.onFinish()
-            }
-            is ScreenVariant.CloudSongText -> {
-                selectScreen(ScreenVariant.CloudSearch(isBackFromSong = true))
-            }
-            is ScreenVariant.SongText -> {
-                if (currentArtist.value != ARTIST_FAVORITE) {
-                    selectScreen(
-                        ScreenVariant.SongList(
-                            artist = currentArtist.value,
-                            isBackFromSong = true))
-                } else {
-                    selectScreen(ScreenVariant.Favorite(isBackFromSong = true))
+        with (commonState.value) {
+            Log.e("back from", currentScreenVariant.toString())
+            when (currentScreenVariant) {
+                is ScreenVariant.Start -> {
+                    doNothing()
                 }
-            }
-            else -> {
-                if (currentArtist.value != ARTIST_FAVORITE) {
-                    selectScreen(
-                        ScreenVariant.SongList(
-                            artist = currentArtist.value,
-                            isBackFromSong = false))
-                } else {
-                    selectScreen(ScreenVariant.Favorite(isBackFromSong = false))
+
+                is ScreenVariant.SongList,
+                is ScreenVariant.Favorite -> {
+                    callbacks.onFinish()
+                }
+
+                is ScreenVariant.CloudSongText -> {
+                    selectScreen(ScreenVariant.CloudSearch(isBackFromSong = true))
+                }
+
+                is ScreenVariant.SongText -> {
+                    if (currentArtist != ARTIST_FAVORITE) {
+                        selectScreen(
+                            ScreenVariant.SongList(
+                                artist = currentArtist,
+                                isBackFromSong = true
+                            )
+                        )
+                    } else {
+                        selectScreen(ScreenVariant.Favorite(isBackFromSong = true))
+                    }
+                }
+
+                else -> {
+                    if (currentArtist != ARTIST_FAVORITE) {
+                        selectScreen(
+                            ScreenVariant.SongList(
+                                artist = currentArtist,
+                                isBackFromSong = false
+                            )
+                        )
+                    } else {
+                        selectScreen(ScreenVariant.Favorite(isBackFromSong = false))
+                    }
                 }
             }
         }
@@ -141,35 +165,34 @@ open class CommonViewModel @Inject constructor(
     protected fun selectScreen(
         screenVariant: ScreenVariant
     ) {
-        commonStateHolder.commonState.value =
-            commonState.value.copy(currentScreenVariant = screenVariant)
-        commonStateHolder.currentScreenVariant.value = screenVariant
+        commonStateHolder.commonState.update {
+            it.copy(currentScreenVariant = screenVariant)
+        }
         NavControllerHolder.navController.navigate(screenVariant.destination)
         Log.e("navigate", screenVariant.destination)
     }
 
-    protected fun setAppWasUpdated(value: Boolean) {
-        commonStateHolder.commonState.value =
-            commonState.value.copy(appWasUpdated = value)
-        commonStateHolder.appWasUpdated.value = value
+    protected fun setAppWasUpdated(wasUpdated: Boolean) {
+        commonStateHolder.commonState.update {
+            it.copy(appWasUpdated = wasUpdated)
+        }
     }
 
+    protected fun showToast(toastText: String) = toasts.showToast(toastText)
+
+    protected fun showToast(@StringRes resId: Int) = toasts.showToast(resId)
 
     private fun doNothing() = Unit
 
-    fun showToast(toastText: String) = toasts.showToast(toastText)
-
-    fun showToast(@StringRes resId: Int) = toasts.showToast(resId)
-
-    fun openVkMusic(dontAskMore: Boolean) =
+    private fun openVkMusic(dontAskMore: Boolean) =
         (this as? SongTextViewModelContract)?.openVkMusicImpl(dontAskMore)
 
-    fun openYandexMusic(dontAskMore: Boolean) =
+    private fun openYandexMusic(dontAskMore: Boolean) =
         (this as? SongTextViewModelContract)?.openYandexMusicImpl(dontAskMore)
 
-    fun openYoutubeMusic(dontAskMore: Boolean) =
+    private fun openYoutubeMusic(dontAskMore: Boolean) =
         (this as? SongTextViewModelContract)?.openYoutubeMusicImpl(dontAskMore)
 
-    fun sendWarning(comment: String) =
+    private fun sendWarning(comment: String) =
         (this as? SongTextViewModelContract)?.sendWarningImpl(comment)
 }

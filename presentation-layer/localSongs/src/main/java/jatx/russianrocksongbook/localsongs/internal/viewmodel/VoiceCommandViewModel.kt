@@ -55,7 +55,9 @@ internal class VoiceCommandViewModel @Inject constructor(
             if (index < 0) {
                 showToast(R.string.toast_artist_not_found)
             } else {
-                selectArtist(artist = allArtists[index])
+                submitAction(SelectArtist(allArtists[index]))
+                // with this line unit test fails:
+                // selectArtist(artist = allArtists[index])
             }
         } else if (command.lowercase().startsWith("открой песню ")) {
             val voiceSearch = command
@@ -69,7 +71,7 @@ internal class VoiceCommandViewModel @Inject constructor(
             if (songList.isEmpty()) {
                 showToast(R.string.toast_song_not_found)
             } else {
-                val currentArtist = localStateHolder.commonStateHolder.currentArtist.value
+                val currentArtist = localStateHolder.localState.value.currentArtist
                 val currentIndex = songList
                     .indexOfFirst { it.artist.voiceFilter() == currentArtist.voiceFilter() }
                 val index = if (currentIndex < 0) 0 else currentIndex

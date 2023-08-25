@@ -40,11 +40,13 @@ internal fun SongListBody(
 
     val theme = localViewModel.settings.theme
 
-    val currentArtist by localViewModel.currentArtist.collectAsState()
-    val songList by localViewModel.currentSongList.collectAsState()
+    val localState by localViewModel.localState.collectAsState()
 
-    val scrollPosition by localViewModel.scrollPosition.collectAsState()
-    val needScroll by localViewModel.needScroll.collectAsState()
+    val currentArtist = localState.currentArtist
+    val songList = localState.currentSongList
+
+    val scrollPosition = localState.scrollPosition
+    val needScroll = localState.needScroll
 
     val fontScale = localViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
