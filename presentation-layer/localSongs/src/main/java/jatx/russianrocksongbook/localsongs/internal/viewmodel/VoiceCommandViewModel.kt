@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.voicecommands.api.aliases
@@ -38,7 +39,14 @@ internal class VoiceCommandViewModel @Inject constructor(
         fun getStoredInstance() = storage[key] as? VoiceCommandViewModel
     }
 
-    fun parseAndExecuteVoiceCommand(command: String) {
+    override fun handleAction(action: UIAction) {
+        when (action) {
+            is ParseAndExecuteVoiceCommand -> parseAndExecuteVoiceCommand(action.command)
+            else -> super.handleAction(action)
+        }
+    }
+
+    private fun parseAndExecuteVoiceCommand(command: String) {
         Log.e("voice command", command)
 
         if (command.lowercase().startsWith("открой группу ")
