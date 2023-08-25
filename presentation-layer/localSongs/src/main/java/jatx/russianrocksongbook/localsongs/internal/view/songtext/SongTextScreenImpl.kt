@@ -19,14 +19,21 @@ import jatx.russianrocksongbook.commonview.dialogs.music.VkMusicDialog
 import jatx.russianrocksongbook.commonview.dialogs.music.YandexMusicDialog
 import jatx.russianrocksongbook.commonview.dialogs.music.YoutubeMusicDialog
 import jatx.russianrocksongbook.commonview.dialogs.warning.WarningDialog
+import jatx.russianrocksongbook.commonviewmodel.OpenVkMusic
+import jatx.russianrocksongbook.commonviewmodel.OpenYandexMusic
+import jatx.russianrocksongbook.commonviewmodel.OpenYoutubeMusic
+import jatx.russianrocksongbook.commonviewmodel.SendWarning
+import jatx.russianrocksongbook.commonviewmodel.ShowToastWithResource
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.view.dialogs.DeleteToTrashDialog
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.SaveSong
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.SelectSong
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.SetAutoPlayMode
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.SetEditorMode
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateCurrentSong
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.UploadCurrentToCloud
 import kotlinx.coroutines.launch
 
 @Composable
@@ -45,12 +52,15 @@ internal fun SongTextScreenImpl(artist: String, position: Int) {
         localViewModel.submitAction(SelectSong(position))
     }
 
-    val song by localViewModel.currentSong.collectAsState()
+    val localState by localViewModel.localState.collectAsState()
+
+    val song = localState.currentSong
+
     var text by localViewModel.editorText
 
     val onTextChange: (String) -> Unit = { text = it }
 
-    val isAutoPlayMode = localViewModel.isAutoPlayMode
+    val isAutoPlayMode = localState.isAutoPlayMode
     val listState = rememberLazyListState()
     val tvListState = rememberTvLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -88,11 +98,13 @@ internal fun SongTextScreenImpl(artist: String, position: Int) {
     val onVkMusicClick = { showVkDialog = true }
     val onYoutubeMusicClick = { showYoutubeMusicDialog = true }
 
-    val isUploadButtonEnabled by localViewModel.isUploadButtonEnabled.collectAsState()
+    val isUploadButtonEnabled = localState.isUploadButtonEnabled
     val onUploadClick = {
         if (isUploadButtonEnabled) {
             if (song!!.outOfTheBox) {
-                localViewModel.showToast(R.string.toast_song_is_out_of_the_box)
+                localViewModel.submitEffect(
+                    ShowToastWithResource(R.string.toast_song_is_out_of_the_box)
+                )
             } else {
                 showUploadDialog = true
             }
@@ -110,13 +122,13 @@ internal fun SongTextScreenImpl(artist: String, position: Int) {
     val onSaveClick = {
         song?.copy(text = text)?.let {
             localViewModel.submitAction(UpdateCurrentSong(it))
-            localViewModel.saveSong(it)
+            localViewModel.submitAction(SaveSong(it))
         }
         localViewModel.submitAction(SetEditorMode(false))
     }
 
     val theme = localViewModel.settings.theme
-    val isEditorMode by localViewModel.isEditorMode.collectAsState()
+    val isEditorMode = localState.isEditorMode
 
     val fontScale = localViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTitleDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
@@ -224,7 +236,7 @@ internal fun SongTextScreenImpl(artist: String, position: Int) {
             if (showYandexDialog) {
                 if (localViewModel.settings.yandexMusicDontAsk) {
                     showYandexDialog = false
-                    localViewModel.openYandexMusic(true)
+                    localViewModel.submitAction(OpenYandexMusic(true))
                 } else {
                     YandexMusicDialog(
                         commonViewModel = localViewModel,
@@ -236,7 +248,7 @@ internal fun SongTextScreenImpl(artist: String, position: Int) {
             if (showVkDialog) {
                 if (localViewModel.settings.vkMusicDontAsk) {
                     showVkDialog = false
-                    localViewModel.openVkMusic(true)
+                    localViewModel.submitAction(OpenVkMusic(true))
                 } else {
                     VkMusicDialog(
                         commonViewModel = localViewModel,
@@ -248,7 +260,7 @@ internal fun SongTextScreenImpl(artist: String, position: Int) {
             if (showYoutubeMusicDialog) {
                 if (localViewModel.settings.youtubeMusicDontAsk) {
                     showYoutubeMusicDialog = false
-                    localViewModel.openYoutubeMusic(true)
+                    localViewModel.submitAction(OpenYoutubeMusic(true))
                 } else {
                     YoutubeMusicDialog(
                         commonViewModel = localViewModel,
@@ -260,7 +272,7 @@ internal fun SongTextScreenImpl(artist: String, position: Int) {
             if (showUploadDialog) {
                 UploadDialog(
                     onConfirm = {
-                        localViewModel.uploadCurrentToCloud()
+                        localViewModel.submitAction(UploadCurrentToCloud)
                     },
                     onDismiss = {
                         showUploadDialog = false
@@ -275,7 +287,7 @@ internal fun SongTextScreenImpl(artist: String, position: Int) {
             if (showWarningDialog) {
                 WarningDialog(
                     onConfirm = { comment ->
-                        localViewModel.sendWarning(comment)
+                        localViewModel.submitAction(SendWarning(comment))
                     },
                     onDismiss = {
                         showWarningDialog = false

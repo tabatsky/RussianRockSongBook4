@@ -27,7 +27,9 @@ internal fun SongListMenuBody(
     val localViewModel = LocalViewModel.getInstance()
 
     val theme = localViewModel.settings.theme
-    val artistList by localViewModel.artistList.collectAsState()
+
+    val localState by localViewModel.localState.collectAsState()
+    val artistList = localState.artistList
 
     val fontScale = localViewModel.settings.getSpecificFontScale(ScalePow.MENU)
     val fontSizeDp = dimensionResource(id = R.dimen.text_size_20) * fontScale

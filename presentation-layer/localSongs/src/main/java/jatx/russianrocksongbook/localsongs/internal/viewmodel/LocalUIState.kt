@@ -3,6 +3,7 @@ package jatx.russianrocksongbook.localsongs.internal.viewmodel
 import jatx.russianrocksongbook.commonviewmodel.CommonUIState
 import jatx.russianrocksongbook.commonviewmodel.UIState
 import jatx.russianrocksongbook.domain.models.local.Song
+import jatx.russianrocksongbook.navigation.ScreenVariant
 
 data class LocalUIState(
     val commonUIState: CommonUIState,
@@ -30,4 +31,13 @@ data class LocalUIState(
             needScroll = false
         )
     }
+
+    val currentArtist: String
+        get() = commonUIState.currentArtist
+
+    val artistList: List<String>
+        get() = commonUIState.artistList
+
+    val currentScreenVariant: ScreenVariant
+        get() = commonUIState.currentScreenVariant
 }

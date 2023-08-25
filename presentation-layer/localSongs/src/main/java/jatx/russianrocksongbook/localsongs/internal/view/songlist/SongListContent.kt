@@ -14,6 +14,7 @@ import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.ext.crop
 import jatx.russianrocksongbook.localsongs.internal.view.dialogs.VoiceHelpDialog
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.SpeechRecognize
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateNeedScroll
 import jatx.russianrocksongbook.whatsnewdialog.api.view.WhatsNewDialog
 
@@ -27,7 +28,10 @@ internal fun SongListContent(
     val localViewModel = LocalViewModel.getInstance()
 
     val theme = localViewModel.settings.theme
-    val artist by localViewModel.currentArtist.collectAsState()
+
+    val localState by localViewModel.localState.collectAsState()
+
+    val artist = localState.currentArtist
 
     BoxWithConstraints(
         modifier = Modifier
@@ -121,10 +125,10 @@ internal fun SongListContent(
         if (showVoiceHelpDialog) {
             if (localViewModel.settings.voiceHelpDontAsk) {
                 showVoiceHelpDialog = false
-                localViewModel.speechRecognize(true)
+                localViewModel.submitAction(SpeechRecognize(true))
             } else {
                 VoiceHelpDialog(
-                    onConfirm = localViewModel::speechRecognize,
+                    onConfirm = { localViewModel.submitAction(SpeechRecognize(it)) },
                     onDismiss = {
                         showVoiceHelpDialog = false
                     }

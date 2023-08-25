@@ -32,7 +32,8 @@ internal fun DefaultArtistRow(
 ) {
     val settingsViewModel = SettingsViewModel.getInstance()
 
-    val artistList by settingsViewModel.artistList.collectAsState()
+    val commonState by settingsViewModel.commonState.collectAsState()
+    val artistList = commonState.artistList
     val artists = ArrayList(artistList).apply {
         remove(ARTIST_CLOUD_SONGS)
         remove(ARTIST_ADD_SONG)

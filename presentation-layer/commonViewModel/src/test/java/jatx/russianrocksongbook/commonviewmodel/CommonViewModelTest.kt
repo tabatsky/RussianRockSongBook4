@@ -13,6 +13,7 @@ import jatx.russianrocksongbook.commonviewmodel.deps.Resources
 import jatx.russianrocksongbook.commonviewmodel.deps.TVDetector
 import jatx.russianrocksongbook.commonviewmodel.deps.Toasts
 import jatx.russianrocksongbook.navigation.ScreenVariant
+import kotlinx.coroutines.flow.update
 import org.junit.*
 import org.junit.Assert.assertEquals
 import org.junit.runners.MethodSorters
@@ -72,9 +73,21 @@ open class CommonViewModelTest {
         val _commonViewModel = CommonViewModel(commonStateHolder, commonViewModelDeps)
         commonViewModel = spyk(_commonViewModel)
 
-        val screenVariantSlot = slot<ScreenVariant>()
-        every { commonViewModel.selectScreen(capture(screenVariantSlot)) } answers {
-            commonStateHolder.currentScreenVariant.value = screenVariantSlot.captured
+        val actionSlot = slot<UIAction>()
+        every { commonViewModel.submitAction(capture(actionSlot)) } answers {
+            val action = actionSlot.captured
+            when (action) {
+                is SelectScreen -> {
+                    commonStateHolder.commonState.update {
+                        it.copy(currentScreenVariant = action.screenVariant)
+                    }
+                }
+                is AppWasUpdated -> {
+                    commonStateHolder.commonState.update {
+                        it.copy(appWasUpdated = action.wasUpdated)
+                    }
+                }
+            }
         }
 
         verifySequence {
@@ -90,17 +103,17 @@ open class CommonViewModelTest {
 
     @Test
     fun test003_selectScreen_CloudSearch_isWorkingCorrect() {
-        commonViewModel.selectScreen(ScreenVariant.CloudSearch(false))
-        assertEquals(ScreenVariant.CloudSearch(false), commonViewModel.currentScreenVariant.value)
-        commonViewModel.selectScreen(ScreenVariant.CloudSearch(true))
-        assertEquals(ScreenVariant.CloudSearch(true), commonViewModel.currentScreenVariant.value)
+        commonViewModel.submitAction(SelectScreen(ScreenVariant.CloudSearch(false)))
+        assertEquals(ScreenVariant.CloudSearch(false), commonViewModel.commonState.value.currentScreenVariant)
+        commonViewModel.submitAction(SelectScreen(ScreenVariant.CloudSearch(true)))
+        assertEquals(ScreenVariant.CloudSearch(true), commonViewModel.commonState.value.currentScreenVariant)
 
     }
 
     @Test
     fun test004_toasts_isWorkingCorrect() {
-        commonViewModel.showToast(137)
-        commonViewModel.showToast("Hello, world!")
+        commonViewModel.submitEffect(ShowToastWithResource(137))
+        commonViewModel.submitEffect(ShowToastWithText("Hello, world!"))
 
         verifySequence {
             toasts.showToast(137)
@@ -110,9 +123,9 @@ open class CommonViewModelTest {
 
     @Test
     fun test005_setAppWasUpdated_isWorkingCorrect() {
-        commonViewModel.setAppWasUpdated(true)
-        assertEquals(commonViewModel.appWasUpdated.value, true)
-        commonViewModel.setAppWasUpdated(false)
-        assertEquals(commonViewModel.appWasUpdated.value, false)
+        commonViewModel.submitAction(AppWasUpdated(true))
+        assertEquals(commonViewModel.commonState.value.appWasUpdated, true)
+        commonViewModel.submitAction(AppWasUpdated(false))
+        assertEquals(commonViewModel.commonState.value.appWasUpdated, false)
     }
 }

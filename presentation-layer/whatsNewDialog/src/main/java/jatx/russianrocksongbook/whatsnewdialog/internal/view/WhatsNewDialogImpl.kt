@@ -32,7 +32,8 @@ internal fun WhatsNewDialogImpl() {
         fontSizeTitleDp.toSp()
     }
 
-    val appWasUpdated by commonViewModel.appWasUpdated.collectAsState()
+    val commonState by commonViewModel.commonState.collectAsState()
+    val appWasUpdated = commonState.appWasUpdated
     val onDismiss = {
         commonViewModel.submitAction(AppWasUpdated(false))
     }

@@ -9,8 +9,6 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
@@ -25,7 +23,6 @@ import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.StateFlow
 
 const val AUTO_SCROLL_INTERVAL = 250L
 
@@ -42,7 +39,7 @@ internal fun SongTextBody(
     fontSizeTitleSp: TextUnit,
     theme: Theme,
     modifier: Modifier,
-    isAutoPlayMode: StateFlow<Boolean>,
+    isAutoPlayMode: Boolean,
     dY: Int,
     onTextChange: (String) -> Unit,
     onWordClick: (Word) -> Unit
@@ -100,8 +97,6 @@ internal fun SongTextBody(
                     item {
                         TheViewer()
 
-                        val needToScroll by isAutoPlayMode.collectAsState()
-
                         tailrec suspend fun autoScroll(listState: LazyListState) {
                             listState.scroll(MutatePriority.PreventUserInput) {
                                 scrollBy(dY.toFloat())
@@ -111,7 +106,7 @@ internal fun SongTextBody(
                             autoScroll(listState)
                         }
 
-                        if (needToScroll) {
+                        if (isAutoPlayMode) {
                             LaunchedEffect(Unit) {
                                 autoScroll(listState)
                             }
@@ -135,8 +130,6 @@ internal fun SongTextBody(
                     item {
                         TheViewer()
 
-                        val needToScroll by isAutoPlayMode.collectAsState()
-
                         tailrec suspend fun autoScroll(listState: TvLazyListState) {
                             listState.scroll(MutatePriority.PreventUserInput) {
                                 scrollBy(dY.toFloat())
@@ -146,7 +139,7 @@ internal fun SongTextBody(
                             autoScroll(listState)
                         }
 
-                        if (needToScroll) {
+                        if (isAutoPlayMode) {
                             LaunchedEffect(Unit) {
                                 autoScroll(tvListState)
                             }

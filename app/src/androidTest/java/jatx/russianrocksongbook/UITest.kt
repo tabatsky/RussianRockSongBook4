@@ -31,6 +31,7 @@ import jatx.russianrocksongbook.navigation.ScreenVariant
 import jatx.russianrocksongbook.commonviewmodel.deps.impl.ToastsTestImpl
 import jatx.russianrocksongbook.testing.*
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
+import jatx.russianrocksongbook.commonviewmodel.SelectScreen
 import leakcanary.DetectLeaksAfterTestSuccess
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -866,7 +867,7 @@ class UITest {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
-                    ?.selectScreen(ScreenVariant.CloudSearch())
+                    ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
             }
 
             isOnline = false
@@ -893,7 +894,7 @@ class UITest {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
-                    ?.selectScreen(ScreenVariant.CloudSearch())
+                    ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
             }
 
             composeTestRule
@@ -926,7 +927,7 @@ class UITest {
         composeTestRule.activityRule.scenario.onActivity {
             CommonViewModel
                 .getStoredInstance()
-                ?.selectScreen(ScreenVariant.CloudSearch())
+                ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
         }
 
         composeTestRule
@@ -959,7 +960,7 @@ class UITest {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
-                    ?.selectScreen(ScreenVariant.CloudSearch())
+                    ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
             }
 
             composeTestRule
@@ -1004,7 +1005,7 @@ class UITest {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
-                    ?.selectScreen(ScreenVariant.CloudSearch())
+                    ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
             }
 
             composeTestRule
@@ -1048,7 +1049,7 @@ class UITest {
         composeTestRule.activityRule.scenario.onActivity {
             CommonViewModel
                 .getStoredInstance()
-                ?.selectScreen(ScreenVariant.CloudSearch())
+                ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
         }
 
         composeTestRule.waitFor(timeout)
@@ -1091,7 +1092,7 @@ class UITest {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
-                    ?.selectScreen(ScreenVariant.CloudSearch())
+                    ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
             }
 
             composeTestRule.waitFor(timeout)
@@ -1123,7 +1124,7 @@ class UITest {
         composeTestRule.activityRule.scenario.onActivity {
             CommonViewModel
                 .getStoredInstance()
-                ?.selectScreen(ScreenVariant.CloudSearch())
+                ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
         }
 
         composeTestRule.waitFor(timeout)
@@ -1131,7 +1132,7 @@ class UITest {
         composeTestRule.activityRule.scenario.onActivity {
             CommonViewModel
                 .getStoredInstance()
-                ?.selectScreen(ScreenVariant.CloudSongText(2))
+                ?.submitAction(SelectScreen(ScreenVariant.CloudSongText(2)))
         }
 
         composeTestRule.waitFor(timeout)
@@ -1191,7 +1192,7 @@ class UITest {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
-                    ?.selectScreen(ScreenVariant.CloudSearch())
+                    ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
             }
 
             composeTestRule.waitFor(timeout)
@@ -1199,7 +1200,7 @@ class UITest {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
-                    ?.selectScreen(ScreenVariant.CloudSongText(2))
+                    ?.submitAction(SelectScreen(ScreenVariant.CloudSongText(2)))
             }
 
             composeTestRule.waitFor(timeout)
@@ -1260,7 +1261,7 @@ class UITest {
         composeTestRule.activityRule.scenario.onActivity {
             CommonViewModel
                 .getStoredInstance()
-                ?.selectScreen(ScreenVariant.CloudSearch())
+                ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
         }
 
         composeTestRule.waitFor(timeout)
@@ -1268,7 +1269,7 @@ class UITest {
         composeTestRule.activityRule.scenario.onActivity {
             CommonViewModel
                 .getStoredInstance()
-                ?.selectScreen(ScreenVariant.CloudSongText(2))
+                ?.submitAction(SelectScreen(ScreenVariant.CloudSongText(2)))
         }
 
         composeTestRule.waitFor(timeout)
@@ -1325,7 +1326,7 @@ class UITest {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
-                    ?.selectScreen(ScreenVariant.CloudSearch())
+                    ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
             }
 
             composeTestRule.waitFor(timeout)
@@ -1333,7 +1334,7 @@ class UITest {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
-                    ?.selectScreen(ScreenVariant.CloudSongText(2))
+                    ?.submitAction(SelectScreen(ScreenVariant.CloudSongText(2)))
             }
 
             composeTestRule.waitFor(timeout)
@@ -1377,7 +1378,7 @@ class UITest {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
-                    ?.selectScreen(ScreenVariant.CloudSearch())
+                    ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
             }
 
             composeTestRule.waitFor(timeout)
@@ -1385,7 +1386,7 @@ class UITest {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
-                    ?.selectScreen(ScreenVariant.CloudSongText(2))
+                    ?.submitAction(SelectScreen(ScreenVariant.CloudSongText(2)))
             }
 
             composeTestRule.waitFor(timeout)
@@ -1436,7 +1437,7 @@ class UITest {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
-                    ?.selectScreen(ScreenVariant.CloudSearch())
+                    ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
             }
 
             composeTestRule.waitFor(timeout)
@@ -1444,7 +1445,7 @@ class UITest {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
-                    ?.selectScreen(ScreenVariant.CloudSongText(3))
+                    ?.submitAction(SelectScreen(ScreenVariant.CloudSongText(3)))
             }
 
             composeTestRule.waitFor(timeout)
