@@ -176,9 +176,6 @@ jobs:
     - name: Gradle Clean
       run: ./gradlew clean
       
-    - name: Gradle Build
-      run: ./gradlew build
-      
     - name: Assemble Debug
       run: ./gradlew presentation-layer:localSongs:test
 
