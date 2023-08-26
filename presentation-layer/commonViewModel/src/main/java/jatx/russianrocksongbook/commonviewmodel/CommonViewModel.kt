@@ -168,7 +168,8 @@ open class CommonViewModel @Inject constructor(
         commonStateHolder.commonState.update {
             it.copy(currentScreenVariant = screenVariant)
         }
-        NavControllerHolder.navController.navigate(screenVariant.destination)
+        NavControllerHolder.navController
+            ?.navigate(screenVariant.destination)
         Log.e("navigate", screenVariant.destination)
     }
 
