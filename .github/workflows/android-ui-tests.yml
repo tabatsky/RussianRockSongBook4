@@ -36,6 +36,12 @@ jobs:
           
       - name: Gradle Wrapper
         run: gradle wrapper
+        
+      - name: Gradle Clean
+        run: ./gradlew clean
+      
+      - name: Gradle Build
+        run: ./gradlew build
 
       - name: Android Tests
         uses: reactivecircus/android-emulator-runner@v2
