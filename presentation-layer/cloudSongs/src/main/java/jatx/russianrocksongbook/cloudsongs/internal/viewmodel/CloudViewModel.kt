@@ -22,7 +22,8 @@ import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_ERROR
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
-import jatx.russianrocksongbook.commonviewmodel.contracts.SongTextViewModelContract
+import jatx.russianrocksongbook.commonviewmodel.contracts.MusicOpener
+import jatx.russianrocksongbook.commonviewmodel.contracts.WarningSender
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
@@ -35,7 +36,7 @@ internal class CloudViewModel @Inject constructor(
 ): CommonViewModel(
     cloudStateHolder.commonStateHolder,
     cloudViewModelDeps.commonViewModelDeps
-), SongTextViewModelContract {
+) {
     private val addSongFromCloudUseCase =
         cloudViewModelDeps.addSongFromCloudUseCase
     private val pagedSearchUseCase =
@@ -67,6 +68,49 @@ internal class CloudViewModel @Inject constructor(
 
     private val allLikes = mutableStateMapOf<CloudSong, Int>()
     private val allDislikes = mutableStateMapOf<CloudSong, Int>()
+
+    override val musicOpener = object : MusicOpener {
+        override fun openVkMusicImpl(dontAskMore: Boolean) {
+            settings.vkMusicDontAsk = dontAskMore
+            cloudSong.value?.let {
+                callbacks.onOpenVkMusic("${it.artist} ${it.title}")
+            }
+        }
+
+        override fun openYandexMusicImpl(dontAskMore: Boolean) {
+            settings.yandexMusicDontAsk = dontAskMore
+            cloudSong.value?.let {
+                callbacks.onOpenYandexMusic("${it.artist} ${it.title}")
+            }
+        }
+
+        override fun openYoutubeMusicImpl(dontAskMore: Boolean) {
+            settings.youtubeMusicDontAsk = dontAskMore
+            cloudSong.value?.let {
+                callbacks.onOpenYoutubeMusic("${it.artist} ${it.title}")
+            }
+        }
+    }
+
+    override val warningSender = object : WarningSender {
+        override fun sendWarningImpl(comment: String) {
+            cloudSong.value?.let {
+                addWarningCloudUseCase
+                    .execute(it, comment)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ result ->
+                        when (result.status) {
+                            STATUS_SUCCESS -> showToast(R.string.toast_send_warning_success)
+                            STATUS_ERROR -> showToast(result.message ?: "")
+                        }
+                    }, { error ->
+                        error.printStackTrace()
+                        showToast(R.string.error_in_app)
+                    })
+            }
+        }
+    }
 
     companion object {
         private const val key = "Cloud"
@@ -216,45 +260,6 @@ internal class CloudViewModel @Inject constructor(
                         STATUS_ERROR -> {
                             showToast(result.message ?: "")
                         }
-                    }
-                }, { error ->
-                    error.printStackTrace()
-                    showToast(R.string.error_in_app)
-                })
-        }
-    }
-
-    override fun openVkMusicImpl(dontAskMore: Boolean) {
-        settings.vkMusicDontAsk = dontAskMore
-        cloudSong.value?.let {
-            callbacks.onOpenVkMusic("${it.artist} ${it.title}")
-        }
-    }
-
-    override fun openYandexMusicImpl(dontAskMore: Boolean) {
-        settings.yandexMusicDontAsk = dontAskMore
-        cloudSong.value?.let {
-            callbacks.onOpenYandexMusic("${it.artist} ${it.title}")
-        }
-    }
-
-    override fun openYoutubeMusicImpl(dontAskMore: Boolean) {
-        settings.youtubeMusicDontAsk = dontAskMore
-        cloudSong.value?.let {
-            callbacks.onOpenYoutubeMusic("${it.artist} ${it.title}")
-        }
-    }
-
-    override fun sendWarningImpl(comment: String) {
-        cloudSong.value?.let {
-            addWarningCloudUseCase
-                .execute(it, comment)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ result ->
-                    when (result.status) {
-                        STATUS_SUCCESS -> showToast(R.string.toast_send_warning_success)
-                        STATUS_ERROR -> showToast(result.message ?: "")
                     }
                 }, { error ->
                     error.printStackTrace()

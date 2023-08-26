@@ -16,8 +16,10 @@ import jatx.russianrocksongbook.domain.repository.local.*
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.commonviewmodel.UIAction
+import jatx.russianrocksongbook.commonviewmodel.contracts.MusicOpener
+import jatx.russianrocksongbook.commonviewmodel.contracts.WarningSender
+import jatx.russianrocksongbook.navigation.NavControllerHolder
 import jatx.russianrocksongbook.navigation.ScreenVariant
-import jatx.russianrocksongbook.commonviewmodel.contracts.SongTextViewModelContract
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted.Companion.Eagerly
@@ -35,7 +37,7 @@ internal open class LocalViewModel @Inject constructor(
 ): CommonViewModel(
     localStateHolder.commonStateHolder,
     localViewModelDeps.commonViewModelDeps
-), SongTextViewModelContract {
+) {
     private val getSongsByArtistUseCase =
         localViewModelDeps.getSongsByArtistUseCase
     private val getCountByArtistUseCase =
@@ -69,6 +71,50 @@ internal open class LocalViewModel @Inject constructor(
     private var getArtistsJob: Job? = null
     private var uploadSongDisposable: Disposable? = null
 
+    override val musicOpener: MusicOpener? = object : MusicOpener {
+        override fun openVkMusicImpl(dontAskMore: Boolean) {
+            settings.vkMusicDontAsk = dontAskMore
+            localState.value.currentSong?.let {
+                callbacks.onOpenVkMusic("${it.artist} ${it.title}")
+            }
+        }
+
+        override fun openYandexMusicImpl(dontAskMore: Boolean) {
+            settings.yandexMusicDontAsk = dontAskMore
+            localState.value.currentSong?.let {
+                callbacks.onOpenYandexMusic("${it.artist} ${it.title}")
+            }
+        }
+
+        override fun openYoutubeMusicImpl(dontAskMore: Boolean) {
+            settings.youtubeMusicDontAsk = dontAskMore
+            localState.value.currentSong?.let {
+                callbacks.onOpenYoutubeMusic("${it.artist} ${it.title}")
+            }
+        }
+    }
+
+    override val warningSender = object : WarningSender {
+        override fun sendWarningImpl(comment: String) {
+            localState.value.currentSong?.let {
+                addWarningLocalUseCase
+                    .execute(it, comment)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ result ->
+                        when (result.status) {
+                            STATUS_SUCCESS -> showToast(R.string.toast_send_warning_success)
+                            STATUS_ERROR -> showToast(result.message ?: "")
+                        }
+                    }, { error ->
+                        error.printStackTrace()
+                        showToast(R.string.error_in_app)
+                    })
+            }
+        }
+    }
+
+
     companion object {
         private const val key = "Local"
 
@@ -81,45 +127,6 @@ internal open class LocalViewModel @Inject constructor(
         }
 
         fun getStoredInstance() = storage[key] as? LocalViewModel
-    }
-
-    override fun openVkMusicImpl(dontAskMore: Boolean) {
-        settings.vkMusicDontAsk = dontAskMore
-        localState.value.currentSong?.let {
-            callbacks.onOpenVkMusic("${it.artist} ${it.title}")
-        }
-    }
-
-    override fun openYandexMusicImpl(dontAskMore: Boolean) {
-        settings.yandexMusicDontAsk = dontAskMore
-        localState.value.currentSong?.let {
-            callbacks.onOpenYandexMusic("${it.artist} ${it.title}")
-        }
-    }
-
-    override fun openYoutubeMusicImpl(dontAskMore: Boolean) {
-        settings.youtubeMusicDontAsk = dontAskMore
-        localState.value.currentSong?.let {
-            callbacks.onOpenYoutubeMusic("${it.artist} ${it.title}")
-        }
-    }
-
-    override fun sendWarningImpl(comment: String) {
-        localState.value.currentSong?.let {
-            addWarningLocalUseCase
-                .execute(it, comment)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ result ->
-                    when (result.status) {
-                        STATUS_SUCCESS -> showToast(R.string.toast_send_warning_success)
-                        STATUS_ERROR -> showToast(result.message ?: "")
-                    }
-                }, { error ->
-                    error.printStackTrace()
-                    showToast(R.string.error_in_app)
-                })
-        }
     }
 
     override fun handleAction(action: UIAction) {

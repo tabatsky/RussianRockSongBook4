@@ -7,8 +7,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import jatx.russianrocksongbook.commonviewmodel.contracts.MusicOpener
+import jatx.russianrocksongbook.commonviewmodel.contracts.WarningSender
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
-import jatx.russianrocksongbook.commonviewmodel.contracts.SongTextViewModelContract
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import jatx.russianrocksongbook.navigation.NavControllerHolder
 import kotlinx.coroutines.channels.BufferOverflow
@@ -37,6 +38,9 @@ open class CommonViewModel @Inject constructor(
         commonViewModelDeps.resources
     private val toasts =
         commonViewModelDeps.toasts
+
+    protected open val musicOpener: MusicOpener? = null
+    protected open val warningSender: WarningSender? = null
 
     val isTV = commonViewModelDeps.tvDetector.isTV
 
@@ -186,14 +190,14 @@ open class CommonViewModel @Inject constructor(
     private fun doNothing() = Unit
 
     private fun openVkMusic(dontAskMore: Boolean) =
-        (this as? SongTextViewModelContract)?.openVkMusicImpl(dontAskMore)
+        musicOpener?.openVkMusicImpl(dontAskMore)
 
     private fun openYandexMusic(dontAskMore: Boolean) =
-        (this as? SongTextViewModelContract)?.openYandexMusicImpl(dontAskMore)
+        musicOpener?.openYandexMusicImpl(dontAskMore)
 
     private fun openYoutubeMusic(dontAskMore: Boolean) =
-        (this as? SongTextViewModelContract)?.openYoutubeMusicImpl(dontAskMore)
+        musicOpener?.openYoutubeMusicImpl(dontAskMore)
 
     private fun sendWarning(comment: String) =
-        (this as? SongTextViewModelContract)?.sendWarningImpl(comment)
+        warningSender?.sendWarningImpl(comment)
 }

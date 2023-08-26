@@ -1,8 +1,7 @@
 package jatx.russianrocksongbook.commonviewmodel.contracts
 
-interface SongTextViewModelContract {
+interface MusicOpener {
     fun openVkMusicImpl(dontAskMore: Boolean)
     fun openYandexMusicImpl(dontAskMore: Boolean)
     fun openYoutubeMusicImpl(dontAskMore: Boolean)
-    fun sendWarningImpl(comment: String)
 }
