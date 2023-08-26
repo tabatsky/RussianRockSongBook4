@@ -173,7 +173,18 @@ internal open class LocalViewModel @Inject constructor(
                 )
             }
         }
-        selectScreen(newScreenVariant)
+        // for unit tests:
+        if (artist !in listOf(
+                ARTIST_ADD_ARTIST,
+                ARTIST_ADD_SONG,
+                ARTIST_CLOUD_SONGS,
+                ARTIST_DONATION)
+            && NavControllerHolder.navController == null) {
+
+            showSongs(artist)
+        } else {
+            selectScreen(newScreenVariant)
+        }
     }
 
     private fun showSongs(

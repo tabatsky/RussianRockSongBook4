@@ -4,20 +4,11 @@ import android.util.Log
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.slot
-import io.mockk.spyk
 import io.mockk.verifySequence
-import jatx.russianrocksongbook.commonviewmodel.SelectScreen
-import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.domain.models.local.Song
-import jatx.russianrocksongbook.domain.repository.local.ARTIST_ADD_ARTIST
-import jatx.russianrocksongbook.domain.repository.local.ARTIST_ADD_SONG
-import jatx.russianrocksongbook.domain.repository.local.ARTIST_CLOUD_SONGS
-import jatx.russianrocksongbook.domain.repository.local.ARTIST_DONATION
 import jatx.russianrocksongbook.domain.usecase.local.GetArtistsAsListUseCase
 import jatx.russianrocksongbook.domain.usecase.local.GetSongsByVoiceSearchUseCase
 import jatx.russianrocksongbook.localsongs.R
-import kotlinx.coroutines.flow.update
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.FixMethodOrder
@@ -49,54 +40,19 @@ class VoiceCommandViewModelTest: LocalViewModelTest() {
             getArtistsAsListUseCase = getArtistsAsListUseCase,
             getSongsByVoiceSearchUseCase = getSongsByVoiceSearchUseCase
         )
-        val __voiceCommandViewModel = VoiceCommandViewModel(
+
+        voiceCommandViewModel = VoiceCommandViewModel(
             localStateHolder = localStateHolder,
             voiceCommandViewModelDeps = voiceCommandViewModelDeps
         )
 
-        val _voiceCommandViewModel = spyk(__voiceCommandViewModel)
-
-        val _actionSlot = slot<UIAction>()
-        every { _voiceCommandViewModel.submitAction(capture(_actionSlot)) } answers {
-            val action = _actionSlot.captured
-            when (action) {
-                is SelectScreen -> {
-                    commonStateHolder.commonState.update {
-                        it.copy(currentScreenVariant = action.screenVariant)
-                    }
-                }
-                else -> __voiceCommandViewModel.submitAction(action)
-            }
-        }
-
-        voiceCommandViewModel = spyk(_voiceCommandViewModel)
-
-        val actionSlot = slot<UIAction>()
-        every { voiceCommandViewModel.submitAction(capture(actionSlot)) } answers {
-            val action = actionSlot.captured
-            when (action) {
-                is SelectArtist -> {
-                    val artist = action.artist
-                    if (artist in listOf(
-                            ARTIST_ADD_ARTIST,
-                            ARTIST_ADD_SONG,
-                            ARTIST_CLOUD_SONGS,
-                            ARTIST_DONATION)
-                    ) {
-                        _voiceCommandViewModel.submitAction(action)
-                    } else {
-                        _voiceCommandViewModel.submitAction(ShowSongs(artist, null))
-                    }
-                }
-                else -> _voiceCommandViewModel.submitAction(action)
-            }
-        }
         every { getArtistsAsListUseCase.execute() } returns artistList
     }
 
     @Test
     fun test201_parseAndExecuteVoiceCommand_existingGroup_isWorkingCorrect() {
-        voiceCommandViewModel.parseAndExecuteVoiceCommand("открой группу немного нервно")
+        voiceCommandViewModel.submitAction(
+            (ParseAndExecuteVoiceCommand("открой группу немного нервно")))
 
         TimeUnit.MILLISECONDS.sleep(200)
 
@@ -104,6 +60,7 @@ class VoiceCommandViewModelTest: LocalViewModelTest() {
 
         verifySequence {
             Log.e("voice command", "открой группу немного нервно")
+            Log.e("select artist", "Немного Нервно")
             Log.e("show songs", "Немного Нервно")
             getCountByArtistUseCase.execute("Немного Нервно")
             getSongsByArtistUseCase.execute("Немного Нервно")
@@ -112,7 +69,8 @@ class VoiceCommandViewModelTest: LocalViewModelTest() {
 
     @Test
     fun test202_parseAndExecuteVoiceCommand_notExistingGroup_isWorkingCorrect() {
-        voiceCommandViewModel.parseAndExecuteVoiceCommand("открой группу кино")
+        voiceCommandViewModel.submitAction(
+            (ParseAndExecuteVoiceCommand("открой группу кино")))
 
         TimeUnit.MILLISECONDS.sleep(200)
 
@@ -128,7 +86,8 @@ class VoiceCommandViewModelTest: LocalViewModelTest() {
             Song(artist = "Кино", title = "Группа крови", text = "Бла-бла-бла")
         )
 
-        voiceCommandViewModel.parseAndExecuteVoiceCommand("открой песню кино группа крови")
+        voiceCommandViewModel.submitAction(
+            (ParseAndExecuteVoiceCommand("открой песню кино группа крови")))
 
         TimeUnit.MILLISECONDS.sleep(200)
 
@@ -143,7 +102,8 @@ class VoiceCommandViewModelTest: LocalViewModelTest() {
     fun test204_parseAndExecuteVoiceCommand_notExistingSong_isWorkingCorrect() {
         every { getSongsByVoiceSearchUseCase.execute(any()) } returns listOf()
 
-        voiceCommandViewModel.parseAndExecuteVoiceCommand("открой песню весна космос")
+        voiceCommandViewModel.submitAction(
+            (ParseAndExecuteVoiceCommand("открой песню весна космос")))
 
         TimeUnit.MILLISECONDS.sleep(200)
 
@@ -156,7 +116,8 @@ class VoiceCommandViewModelTest: LocalViewModelTest() {
 
     @Test
     fun test205_parseAndExecuteVoiceCommand_unknownCommand_isWorkingCorrect() {
-        voiceCommandViewModel.parseAndExecuteVoiceCommand("раз два три")
+        voiceCommandViewModel.submitAction(
+            (ParseAndExecuteVoiceCommand("раз два три")))
 
         TimeUnit.MILLISECONDS.sleep(200)
 
