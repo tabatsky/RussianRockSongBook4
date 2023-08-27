@@ -48,14 +48,15 @@ internal fun CloudSongTextScreenImpl(position: Int) {
         cloudViewModel.selectCloudSong(position)
     }
 
-    val cloudSongsFlow by cloudViewModel
-        .cloudSongsFlow.collectAsState()
+    val cloudState by cloudViewModel.cloudState.collectAsState()
+
+    val cloudSongsFlow = cloudState.cloudSongsFlow
 
     val cloudSongItems = cloudSongsFlow?.collectAsLazyPagingItems()
     val itemsAdapter = ItemsAdapter(cloudSongItems)
 
     val cloudSong = itemsAdapter.getItem(position)
-    val invalidateCounter by cloudViewModel.invalidateCounter.collectAsState()
+    val invalidateCounter = cloudState.invalidateCounter
 
     cloudViewModel.updateCloudSong(cloudSong)
 
