@@ -52,6 +52,8 @@ internal fun CloudSearchScreenImpl(isBackFromSong: Boolean) {
             }
         }
 
+        if (wasOrientationChanged) return@BoxWithConstraints
+
         if (W < H) {
             Column(
                 modifier = Modifier

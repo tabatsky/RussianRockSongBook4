@@ -36,11 +36,14 @@ internal fun CloudSearchBody(
     val cloudViewModel = CloudViewModel.getInstance()
     val theme = cloudViewModel.settings.theme
 
-    val scrollPosition by cloudViewModel.scrollPosition.collectAsState()
-    val searchState by cloudViewModel.searchState.collectAsState()
+    val cloudState by cloudViewModel.cloudState.collectAsState()
 
-    val cloudSongsFlow by cloudViewModel
-        .cloudSongsFlow.collectAsState()
+    val searchState = cloudState.searchState
+
+    val needScroll = cloudState.needScroll
+    val scrollPosition = cloudState.scrollPosition
+
+    val cloudSongsFlow = cloudState.cloudSongsFlow
 
     val cloudSongItems = cloudSongsFlow?.collectAsLazyPagingItems()
     val itemsAdapter = ItemsAdapter(cloudSongItems)
@@ -59,12 +62,12 @@ internal fun CloudSearchBody(
         fontSizeArtistDp.toSp()
     }
 
-    val searchFor by cloudViewModel.searchFor.collectAsState()
+    val searchFor = cloudState.searchFor
     val onSearchForValueChange: (String) -> Unit = {
         cloudViewModel.updateSearchFor(it)
     }
 
-    val orderBy by cloudViewModel.orderBy.collectAsState()
+    val orderBy = cloudState.orderBy
     val onOrderByValueChange: (OrderBy) -> Unit = {
         if (orderBy != it) {
             cloudViewModel.updateOrderBy(it)
@@ -113,8 +116,6 @@ internal fun CloudSearchBody(
             SearchState.ERROR -> ErrorSongListStub(fontSizeSongTitleSp, theme)
             SearchState.LOADING -> CloudSearchProgress(theme)
             SearchState.LOADED, SearchState.LOADING_NEXT_PAGE -> {
-                val needScroll by cloudViewModel.needScroll.collectAsState()
-
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize(),
@@ -131,6 +132,7 @@ internal fun CloudSearchBody(
                         }
                     }
                 }
+
                 LaunchedEffect(needScroll) {
                     if (needScroll) {
                         if (scrollPosition < itemsAdapter.size) {
