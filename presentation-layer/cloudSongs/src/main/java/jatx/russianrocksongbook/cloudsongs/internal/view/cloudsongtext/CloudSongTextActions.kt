@@ -8,6 +8,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.sp
 import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.CloudViewModel
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.NextCloudSong
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.PrevCloudSong
 import jatx.russianrocksongbook.commonview.buttons.CommonIconButton
 import jatx.russianrocksongbook.testing.LEFT_BUTTON
 import jatx.russianrocksongbook.testing.NUMBER_LABEL
@@ -25,7 +27,7 @@ internal fun CloudSongTextActions(
         resId = R.drawable.ic_left,
         testTag = LEFT_BUTTON
     ) {
-        cloudViewModel.prevCloudSong()
+        cloudViewModel.submitAction(PrevCloudSong)
         onCloudSongChanged()
     }
     Text(
@@ -38,7 +40,7 @@ internal fun CloudSongTextActions(
         resId = R.drawable.ic_right,
         testTag = RIGHT_BUTTON
     ) {
-        cloudViewModel.nextCloudSong()
+        cloudViewModel.submitAction(NextCloudSong)
         onCloudSongChanged()
     }
 }

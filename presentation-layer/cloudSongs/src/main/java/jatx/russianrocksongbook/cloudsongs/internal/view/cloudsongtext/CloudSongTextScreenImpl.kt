@@ -16,6 +16,12 @@ import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.paging.ItemsAdapter
 import jatx.russianrocksongbook.cloudsongs.internal.view.dialogs.DeleteCloudSongDialog
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.CloudViewModel
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.DeleteCurrentFromCloud
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.DownloadCurrent
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.SelectCloudSong
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateCurrentCloudSong
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateCurrentCloudSongCount
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.VoteForCurrent
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.dialogs.chord.ChordDialog
@@ -44,9 +50,7 @@ internal fun CloudSongTextScreenImpl(position: Int) {
         lastKey = key
     }
 
-    LaunchedEffect(key) {
-        cloudViewModel.selectCloudSong(position)
-    }
+    cloudViewModel.submitAction(SelectCloudSong(position))
 
     val cloudState by cloudViewModel.cloudState.collectAsState()
 
@@ -58,10 +62,10 @@ internal fun CloudSongTextScreenImpl(position: Int) {
     val cloudSong = itemsAdapter.getItem(position)
     val invalidateCounter = cloudState.invalidateCounter
 
-    cloudViewModel.updateCloudSong(cloudSong)
+    cloudViewModel.submitAction(UpdateCurrentCloudSong(cloudSong))
 
     val count = itemsAdapter.size
-    cloudViewModel.updateCloudSongCount(count)
+    cloudViewModel.submitAction(UpdateCurrentCloudSongCount(count))
 
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -92,9 +96,9 @@ internal fun CloudSongTextScreenImpl(position: Int) {
     val onVkMusicClick = { showVkDialog = true }
     val onYoutubeMusicClick = { showYoutubeMusicDialog = true }
     val onWarningClick = { showWarningDialog = true }
-    val onDownloadClick = { cloudViewModel.downloadCurrent() }
-    val onLikeClick = { cloudViewModel.voteForCurrent(1) }
-    val onDislikeClick = { cloudViewModel.voteForCurrent(-1) }
+    val onDownloadClick = { cloudViewModel.submitAction(DownloadCurrent) }
+    val onLikeClick = { cloudViewModel.submitAction(VoteForCurrent(1)) }
+    val onDislikeClick = { cloudViewModel.submitAction(VoteForCurrent(-1)) }
 
     var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
     val onDislikeLongClick = {
@@ -257,7 +261,9 @@ internal fun CloudSongTextScreenImpl(position: Int) {
             if (showDeleteDialog) {
                 DeleteCloudSongDialog(
                     onConfirm = { secret1, secret2 ->
-                        cloudViewModel.deleteCurrentFromCloud(secret1, secret2)
+                        cloudViewModel.submitAction(
+                            DeleteCurrentFromCloud(secret1, secret2)
+                        )
                     },
                     onDismiss = {
                         showDeleteDialog = false

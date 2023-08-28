@@ -15,8 +15,14 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.paging.compose.collectAsLazyPagingItems
 import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.paging.ItemsAdapter
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.PerformCloudSearch
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.CloudViewModel
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.SearchState
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateNeedScroll
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateOrderBy
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateScrollPosition
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateSearchFor
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateSearchState
 import jatx.russianrocksongbook.commonview.stub.CommonSongListStub
 import jatx.russianrocksongbook.commonview.stub.ErrorSongListStub
 import jatx.russianrocksongbook.commonviewmodel.SelectScreen
@@ -64,19 +70,19 @@ internal fun CloudSearchBody(
 
     val searchFor = cloudState.searchFor
     val onSearchForValueChange: (String) -> Unit = {
-        cloudViewModel.updateSearchFor(it)
+        cloudViewModel.submitAction(UpdateSearchFor(it))
     }
 
     val orderBy = cloudState.orderBy
     val onOrderByValueChange: (OrderBy) -> Unit = {
         if (orderBy != it) {
-            cloudViewModel.updateOrderBy(it)
-            cloudViewModel.cloudSearch(searchFor, it)
+            cloudViewModel.submitAction(UpdateOrderBy(it))
+            cloudViewModel.submitAction(PerformCloudSearch(searchFor, it))
         }
     }
 
     val onSearchClick = {
-        cloudViewModel.cloudSearch(searchFor, orderBy)
+        cloudViewModel.submitAction(PerformCloudSearch(searchFor, orderBy))
     }
 
     val onItemClick: (Int, CloudSong) -> Unit = { index, cloudSong ->
@@ -141,13 +147,13 @@ internal fun CloudSearchBody(
                             }
                             listState.scrollToItem(scrollPosition)
                             delay(100L)
-                            cloudViewModel.updateNeedScroll(false)
+                            cloudViewModel.submitAction(UpdateNeedScroll(false))
                         }
                     } else {
                         snapshotFlow {
                             listState.firstVisibleItemIndex
                         }.collectLatest {
-                            cloudViewModel.updateScrollPosition(it)
+                            cloudViewModel.submitAction(UpdateScrollPosition(it))
                         }
                     }
                 }
@@ -157,14 +163,14 @@ internal fun CloudSearchBody(
         when {
             searchState == SearchState.ERROR -> {}
             scrollPosition < itemsAdapter.size -> {
-                cloudViewModel.updateSearchState(SearchState.LOADED)
+                cloudViewModel.submitAction(UpdateSearchState(SearchState.LOADED))
             }
             itemsAdapter.size > 0 -> {
-                cloudViewModel.updateSearchState(SearchState.LOADING_NEXT_PAGE)
+                cloudViewModel.submitAction(UpdateSearchState(SearchState.LOADING_NEXT_PAGE))
                 itemsAdapter.getItem(itemsAdapter.size - 1)
             }
             itemsAdapter.size == 0 && searchState != SearchState.EMPTY -> {
-                cloudViewModel.updateSearchState(SearchState.LOADING)
+                cloudViewModel.submitAction(UpdateSearchState(SearchState.LOADING))
             }
         }
     }

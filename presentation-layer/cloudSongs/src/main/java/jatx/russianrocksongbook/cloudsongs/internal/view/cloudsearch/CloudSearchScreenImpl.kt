@@ -10,7 +10,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import jatx.russianrocksongbook.cloudsongs.R
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.PerformCloudSearch
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.CloudViewModel
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateNeedScroll
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
@@ -36,19 +38,19 @@ internal fun CloudSearchScreenImpl(isBackFromSong: Boolean) {
         LaunchedEffect(isPortrait) {
             if (wasOrientationChanged) {
                 isLastOrientationPortrait = isPortrait
-                cloudViewModel.updateNeedScroll(true)
+                cloudViewModel.submitAction(UpdateNeedScroll(true))
             }
         }
 
         LaunchedEffect(Unit) {
             if (!isBackFromSong && !wasOrientationChanged) {
-                cloudViewModel.cloudSearch("", OrderBy.BY_ID_DESC)
+                cloudViewModel.submitAction(PerformCloudSearch("", OrderBy.BY_ID_DESC))
             }
         }
 
         LaunchedEffect(Unit) {
             if (isBackFromSong) {
-                cloudViewModel.updateNeedScroll(true)
+                cloudViewModel.submitAction(UpdateNeedScroll(true))
             }
         }
 
