@@ -48,9 +48,7 @@ internal fun SongTextScreenImpl(artist: String, position: Int) {
         lastKey = key
     }
 
-    LaunchedEffect(key) {
-        localViewModel.submitAction(SelectSong(position))
-    }
+    localViewModel.submitAction(SelectSong(position))
 
     val localState by localViewModel.localState.collectAsState()
 
