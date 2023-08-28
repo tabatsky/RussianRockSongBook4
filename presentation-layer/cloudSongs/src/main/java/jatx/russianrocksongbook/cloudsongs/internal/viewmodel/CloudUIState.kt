@@ -10,9 +10,9 @@ import kotlinx.coroutines.flow.Flow
 data class CloudUIState(
     val commonUIState: CommonUIState,
     val searchState: SearchState,
-    val cloudSongCount: Int,
+    val currentCloudSongCount: Int,
     val cloudSongPosition: Int,
-    val cloudSong: CloudSong?,
+    val currentCloudSong: CloudSong?,
     val cloudSongsFlow: Flow<PagingData<CloudSong>>?,
     val searchFor: String,
     val orderBy: OrderBy,
@@ -24,9 +24,9 @@ data class CloudUIState(
         fun initial(commonUIState: CommonUIState) = CloudUIState(
             commonUIState = commonUIState,
             searchState = SearchState.LOADING,
-            cloudSongCount = 0,
+            currentCloudSongCount = 0,
             cloudSongPosition = 0,
-            cloudSong = null,
+            currentCloudSong = null,
             cloudSongsFlow = null,
             searchFor = "",
             orderBy = OrderBy.BY_ID_DESC,

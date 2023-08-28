@@ -23,6 +23,7 @@ import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_ERROR
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
+import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.commonviewmodel.contracts.MusicOpener
 import jatx.russianrocksongbook.commonviewmodel.contracts.WarningSender
 import jatx.russianrocksongbook.navigation.ScreenVariant
@@ -69,21 +70,21 @@ internal class CloudViewModel @Inject constructor(
     override val musicOpener = object : MusicOpener {
         override fun openVkMusicImpl(dontAskMore: Boolean) {
             settings.vkMusicDontAsk = dontAskMore
-            cloudState.value.cloudSong?.let {
+            cloudState.value.currentCloudSong?.let {
                 callbacks.onOpenVkMusic("${it.artist} ${it.title}")
             }
         }
 
         override fun openYandexMusicImpl(dontAskMore: Boolean) {
             settings.yandexMusicDontAsk = dontAskMore
-            cloudState.value.cloudSong?.let {
+            cloudState.value.currentCloudSong?.let {
                 callbacks.onOpenYandexMusic("${it.artist} ${it.title}")
             }
         }
 
         override fun openYoutubeMusicImpl(dontAskMore: Boolean) {
             settings.youtubeMusicDontAsk = dontAskMore
-            cloudState.value.cloudSong?.let {
+            cloudState.value.currentCloudSong?.let {
                 callbacks.onOpenYoutubeMusic("${it.artist} ${it.title}")
             }
         }
@@ -91,7 +92,7 @@ internal class CloudViewModel @Inject constructor(
 
     override val warningSender = object : WarningSender {
         override fun sendWarningImpl(comment: String) {
-            cloudState.value.cloudSong?.let {
+            cloudState.value.currentCloudSong?.let {
                 addWarningCloudUseCase
                     .execute(it, comment)
                     .subscribeOn(Schedulers.io())
@@ -121,7 +122,27 @@ internal class CloudViewModel @Inject constructor(
         }
     }
 
-    fun cloudSearch(searchFor: String, orderBy: OrderBy) {
+    override fun handleAction(action: UIAction) {
+        when (action) {
+            is PerformCloudSearch -> performCloudSearch(action.searchFor, action.orderBy)
+            is UpdateSearchState -> updateSearchState(action.searchState)
+            is UpdateSearchFor -> updateSearchFor(action.searchFor)
+            is UpdateOrderBy -> updateOrderBy(action.orderBy)
+            is UpdateCurrentCloudSongCount -> updateCurrentCloudSongCount(action.count)
+            is UpdateCurrentCloudSong -> updateCurrentCloudSong(action.cloudSong)
+            is SelectCloudSong -> selectCloudSong(action.position)
+            is UpdateScrollPosition -> updateScrollPosition(action.position)
+            is UpdateNeedScroll -> updateNeedScroll(action.needScroll)
+            is NextCloudSong -> nextCloudSong()
+            is PrevCloudSong -> prevCloudSong()
+            is DeleteCurrentFromCloud -> deleteCurrentFromCloud(action.secret1, action.secret2)
+            is DownloadCurrent -> downloadCurrent()
+            is VoteForCurrent -> voteForCurrent(action.voteValue)
+            else -> super.handleAction(action)
+        }
+    }
+
+    private fun performCloudSearch(searchFor: String, orderBy: OrderBy) {
         updateSearchState(SearchState.LOADING)
         updateScrollPosition(0)
         updateNeedScroll(true)
@@ -153,78 +174,66 @@ internal class CloudViewModel @Inject constructor(
         )
     }
 
-    private fun updateCloudSongsFlow(flow: Flow<PagingData<CloudSong>>?) {
-        cloudStateHolder.cloudState.update {
-            it.copy(cloudSongsFlow = flow)
-        }
-    }
-
-    fun updateSearchState(searchState: SearchState) {
+    private fun updateSearchState(searchState: SearchState) {
         cloudStateHolder.cloudState.update {
             it.copy(searchState = searchState)
         }
     }
 
-    fun updateScrollPosition(position: Int) {
-        cloudStateHolder.cloudState.update {
-            it.copy(scrollPosition = position)
-        }
-    }
-
-    fun updateNeedScroll(needScroll: Boolean) {
-        cloudStateHolder.cloudState.update {
-            it.copy(needScroll = needScroll)
-        }
-    }
-
-    fun updateCloudSong(cloudSong: CloudSong?) {
-        cloudStateHolder.cloudState.update {
-            it.copy(cloudSong = cloudSong)
-        }
-    }
-
-    fun updateCloudSongCount(count: Int) {
-        cloudStateHolder.cloudState.update {
-            it.copy(cloudSongCount = count)
-        }
-    }
-
-    fun updateSearchFor(searchFor: String) {
+    private fun updateSearchFor(searchFor: String) {
         cloudStateHolder.cloudState.update {
             it.copy(searchFor = searchFor)
         }
     }
 
-    fun updateOrderBy(orderBy: OrderBy) {
+    private fun updateOrderBy(orderBy: OrderBy) {
         cloudStateHolder.cloudState.update {
             it.copy(orderBy = orderBy)
         }
     }
 
-    fun selectCloudSong(position: Int) {
+    private fun updateCurrentCloudSongCount(count: Int) {
         cloudStateHolder.cloudState.update {
-            it.copy(cloudSongPosition = position)
-        }
-        updateScrollPosition(position)
-        updateNeedScroll(true)
-    }
-
-    private fun incrementInvalidateCounter() {
-        cloudStateHolder.cloudState.update {
-            it.copy(invalidateCounter = it.invalidateCounter + 1)
+            it.copy(currentCloudSongCount = count)
         }
     }
 
-    fun nextCloudSong() {
+    private fun updateCurrentCloudSong(cloudSong: CloudSong?) {
+        cloudStateHolder.cloudState.update {
+            it.copy(currentCloudSong = cloudSong)
+        }
+    }
+
+    private fun selectCloudSong(position: Int) {
+        cloudStateHolder.cloudState.update {
+            it.copy(cloudSongPosition = position, scrollPosition = position, needScroll = true)
+        }
+        //updateScrollPosition(position)
+        //updateNeedScroll(true)
+    }
+
+    private fun updateScrollPosition(position: Int) {
+        cloudStateHolder.cloudState.update {
+            it.copy(scrollPosition = position)
+        }
+    }
+
+    private fun updateNeedScroll(needScroll: Boolean) {
+        cloudStateHolder.cloudState.update {
+            it.copy(needScroll = needScroll)
+        }
+    }
+
+    private fun nextCloudSong() {
         val currentPosition = cloudState.value.cloudSongPosition
-        val songCount = cloudState.value.cloudSongCount
+        val songCount = cloudState.value.currentCloudSongCount
         if (currentPosition + 1 < songCount)
             selectScreen(
                 ScreenVariant
                     .CloudSongText(currentPosition + 1))
     }
 
-    fun prevCloudSong() {
+    private fun prevCloudSong() {
         val currentPosition = cloudState.value.cloudSongPosition
         if (currentPosition > 0)
             selectScreen(
@@ -233,8 +242,8 @@ internal class CloudViewModel @Inject constructor(
     }
 
     @SuppressLint("CheckResult")
-    fun deleteCurrentFromCloud(secret1: String, secret2: String) {
-        cloudState.value.cloudSong?.let {
+    private fun deleteCurrentFromCloud(secret1: String, secret2: String) {
+        cloudState.value.currentCloudSong?.let {
             deleteFromCloudUseCase
                 .execute(secret1, secret2, it)
                 .subscribeOn(Schedulers.io())
@@ -261,16 +270,16 @@ internal class CloudViewModel @Inject constructor(
         }
     }
 
-    fun downloadCurrent() {
-        cloudState.value.cloudSong?.let {
+    private fun downloadCurrent() {
+        cloudState.value.currentCloudSong?.let {
             addSongFromCloudUseCase.execute(it)
             showToast(R.string.toast_chords_saved_and_added_to_favorite)
         }
     }
 
     @SuppressLint("CheckResult")
-    fun voteForCurrent(voteValue: Int) {
-        cloudState.value.cloudSong?.let { cloudSong ->
+    private fun voteForCurrent(voteValue: Int) {
+        cloudState.value.currentCloudSong?.let { cloudSong ->
             voteUseCase
                 .execute(cloudSong, voteValue)
                 .subscribeOn(Schedulers.io())
@@ -294,6 +303,18 @@ internal class CloudViewModel @Inject constructor(
                     error.printStackTrace()
                     showToast(R.string.error_in_app)
                 })
+        }
+    }
+
+    private fun updateCloudSongsFlow(flow: Flow<PagingData<CloudSong>>?) {
+        cloudStateHolder.cloudState.update {
+            it.copy(cloudSongsFlow = flow)
+        }
+    }
+
+    private fun incrementInvalidateCounter() {
+        cloudStateHolder.cloudState.update {
+            it.copy(invalidateCounter = it.invalidateCounter + 1)
         }
     }
 }
