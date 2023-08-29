@@ -16,18 +16,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.start.R
+import jatx.russianrocksongbook.start.internal.viewmodel.AsyncInit
 import jatx.russianrocksongbook.start.internal.viewmodel.StartViewModel
 
 @Composable
 internal fun StartScreenImpl() {
     val startViewModel = StartViewModel.getInstance()
+
     LaunchedEffect(Unit) {
-        startViewModel.asyncInit()
+        startViewModel.submitAction(AsyncInit)
     }
 
     val theme = startViewModel.settings.theme
-    val currentProgress by startViewModel.stubCurrentProgress.collectAsState()
-    val totalProgress by startViewModel.stubTotalProgress.collectAsState()
+
+    val startState by startViewModel.startState.collectAsState()
+
+    val currentProgress = startState.stubCurrentProgress
+    val totalProgress = startState.stubTotalProgress
     val progress = 1.0f * currentProgress / totalProgress
 
     val fontScale = startViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
