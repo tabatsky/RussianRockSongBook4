@@ -28,9 +28,8 @@ import jatx.russianrocksongbook.commonviewmodel.contracts.MusicOpener
 import jatx.russianrocksongbook.commonviewmodel.contracts.WarningSender
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -58,14 +57,7 @@ internal class CloudViewModel @Inject constructor(
     private val allLikes = mutableStateMapOf<CloudSong, Int>()
     private val allDislikes = mutableStateMapOf<CloudSong, Int>()
 
-    val cloudState = combine(cloudStateHolder.cloudState, commonState) { cloud, common ->
-        cloud.copy(commonUIState = common)
-    }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.Eagerly,
-            cloudStateHolder.cloudState.value
-        )
+    val cloudState = cloudStateHolder.cloudState.asStateFlow()
 
     override val musicOpener = object : MusicOpener {
         override fun openVkMusicImpl(dontAskMore: Boolean) {
@@ -208,8 +200,6 @@ internal class CloudViewModel @Inject constructor(
         cloudStateHolder.cloudState.update {
             it.copy(cloudSongPosition = position, scrollPosition = position, needScroll = true)
         }
-        //updateScrollPosition(position)
-        //updateNeedScroll(true)
     }
 
     private fun updateScrollPosition(position: Int) {

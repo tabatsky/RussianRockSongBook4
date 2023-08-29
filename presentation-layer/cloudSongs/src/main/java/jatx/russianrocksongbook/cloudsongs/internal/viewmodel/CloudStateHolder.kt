@@ -9,6 +9,5 @@ import javax.inject.Inject
 internal class CloudStateHolder @Inject constructor(
     val commonStateHolder: CommonStateHolder
 ) {
-    val cloudState = MutableStateFlow(
-        CloudUIState.initial(commonStateHolder.commonState.value))
+    val cloudState = MutableStateFlow(CloudUIState.initial())
 }
