@@ -1,14 +1,12 @@
 package jatx.russianrocksongbook.cloudsongs.internal.viewmodel
 
 import androidx.paging.PagingData
-import jatx.russianrocksongbook.commonviewmodel.CommonUIState
 import jatx.russianrocksongbook.commonviewmodel.UIState
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import kotlinx.coroutines.flow.Flow
 
 data class CloudUIState(
-    val commonUIState: CommonUIState,
     val searchState: SearchState,
     val currentCloudSongCount: Int,
     val cloudSongPosition: Int,
@@ -21,8 +19,7 @@ data class CloudUIState(
     val needScroll: Boolean
 ): UIState {
     companion object {
-        fun initial(commonUIState: CommonUIState) = CloudUIState(
-            commonUIState = commonUIState,
+        fun initial() = CloudUIState(
             searchState = SearchState.LOADING,
             currentCloudSongCount = 0,
             cloudSongPosition = 0,
