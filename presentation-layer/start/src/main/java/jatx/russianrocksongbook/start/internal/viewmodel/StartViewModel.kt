@@ -5,10 +5,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
+import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -24,14 +26,12 @@ internal class StartViewModel @Inject constructor(
     private val localRepoInitializer =
         startViewModelDeps.localRepoInitializer
 
-    val stubCurrentProgress = startStateHolder
-        .stubCurrentProgress.asStateFlow()
-    val stubTotalProgress = startStateHolder
-        .stubTotalProgress.asStateFlow()
-
-    var skipAsyncInit = false
+    val startState = startStateHolder
+        .startState.asStateFlow()
 
     val needShowStartScreen = settings.appWasUpdated
+
+    private var skipAsyncInit = false
 
     private var asyncInitJob: Job? = null
 
@@ -47,7 +47,14 @@ internal class StartViewModel @Inject constructor(
         }
     }
 
-    fun asyncInit() {
+    override fun handleAction(action: UIAction) {
+        when (action) {
+            is AsyncInit -> asyncInit()
+            else -> super.handleAction(action)
+        }
+    }
+
+    private fun asyncInit() {
         if (!skipAsyncInit) {
             skipAsyncInit = true
             asyncInitJob?.let {
@@ -75,7 +82,8 @@ internal class StartViewModel @Inject constructor(
     }
 
     private fun updateStubProgress(current: Int, total: Int) {
-        startStateHolder.stubCurrentProgress.value = current
-        startStateHolder.stubTotalProgress.value = total
+        startStateHolder.startState.update {
+            it.copy(stubCurrentProgress = current, stubTotalProgress = total)
+        }
     }
 }

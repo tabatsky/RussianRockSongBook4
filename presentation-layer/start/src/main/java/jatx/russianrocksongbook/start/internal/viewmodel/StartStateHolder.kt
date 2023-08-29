@@ -9,6 +9,7 @@ import javax.inject.Inject
 internal class StartStateHolder @Inject constructor(
     val commonStateHolder: CommonStateHolder
 ) {
-    val stubCurrentProgress = MutableStateFlow(0)
-    val stubTotalProgress = MutableStateFlow(100)
+    val startState = MutableStateFlow(
+        StartUIState.initial()
+    )
 }
