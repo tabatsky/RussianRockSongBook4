@@ -14,6 +14,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.addsong.R
+import jatx.russianrocksongbook.addsong.internal.viewmodel.AddSongToRepo
 import jatx.russianrocksongbook.addsong.internal.viewmodel.AddSongViewModel
 import jatx.russianrocksongbook.commonviewmodel.ShowToastWithResource
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
@@ -151,9 +152,10 @@ internal fun AddSongBody() {
                         ShowToastWithResource(R.string.toast_fill_all_fields)
                     )
                 } else {
-                    addSongViewModel.addSongToRepo(
-                        artist.trim(), title.trim(), text
-                    )
+                    addSongViewModel.submitAction(
+                        AddSongToRepo(
+                            artist.trim(), title.trim(), text
+                        ))
                 }
             }) {
             Text(text = stringResource(id = R.string.save))

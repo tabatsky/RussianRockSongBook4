@@ -15,6 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import jatx.russianrocksongbook.addsong.R
 import jatx.russianrocksongbook.addsong.internal.viewmodel.AddSongViewModel
+import jatx.russianrocksongbook.addsong.internal.viewmodel.HideUploadOfferForSong
+import jatx.russianrocksongbook.addsong.internal.viewmodel.Reset
+import jatx.russianrocksongbook.addsong.internal.viewmodel.ShowNewSong
+import jatx.russianrocksongbook.addsong.internal.viewmodel.UploadNewToCloud
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.dialogs.confirm.UploadDialog
@@ -28,11 +32,12 @@ internal fun AddSongScreenImpl() {
     if (!screenInitDone) {
         LaunchedEffect(Unit) {
             screenInitDone = true
-            addSongViewModel.reset()
+            addSongViewModel.submitAction(Reset)
         }
     }
 
-    val showUploadDialog by addSongViewModel.showUploadDialogForSong.collectAsState()
+    val addSongState by addSongViewModel.addSongState.collectAsState()
+    val showUploadDialog = addSongState.showUploadDialogForSong
 
     val theme = addSongViewModel.settings.theme
 
@@ -67,12 +72,12 @@ internal fun AddSongScreenImpl() {
             UploadDialog(
                 invertColors = true,
                 onConfirm = {
-                    addSongViewModel.hideUploadOfferForSong()
-                    addSongViewModel.uploadNewToCloud()
+                    addSongViewModel.submitAction(HideUploadOfferForSong)
+                    addSongViewModel.submitAction(UploadNewToCloud)
                 },
                 onDismiss = {
-                    addSongViewModel.hideUploadOfferForSong()
-                    addSongViewModel.showNewSong()
+                    addSongViewModel.submitAction(HideUploadOfferForSong)
+                    addSongViewModel.submitAction(ShowNewSong)
                 }
             )
         }

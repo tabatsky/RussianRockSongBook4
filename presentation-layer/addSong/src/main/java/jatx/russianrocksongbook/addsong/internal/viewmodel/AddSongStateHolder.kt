@@ -1,7 +1,6 @@
 package jatx.russianrocksongbook.addsong.internal.viewmodel
 
 import dagger.hilt.android.scopes.ActivityRetainedScoped
-import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.commonviewmodel.CommonStateHolder
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
@@ -10,6 +9,5 @@ import javax.inject.Inject
 internal class AddSongStateHolder @Inject constructor(
     val commonStateHolder: CommonStateHolder
 ) {
-    val showUploadDialogForSong = MutableStateFlow(false)
-    val newSong: MutableStateFlow<Song?> = MutableStateFlow(null)
+    val addSongState = MutableStateFlow(AddSongUIState.initial())
 }
