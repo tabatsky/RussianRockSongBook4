@@ -13,7 +13,9 @@ import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_ERROR
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.commonviewmodel.R
+import jatx.russianrocksongbook.commonviewmodel.UIAction
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,16 +31,13 @@ internal class AddSongViewModel @Inject constructor(
     private val addSongToCloudUseCase =
         addSongViewModelDeps.addSongToCloudUseCase
 
-    val showUploadDialogForSong = addSongStateHolder
-        .showUploadDialogForSong.asStateFlow()
-    private val newSong = addSongStateHolder
-        .newSong.asStateFlow()
-
     private var uploadSongDisposable: Disposable? = null
 
     val artist = mutableStateOf("")
     val title = mutableStateOf("")
     val text = mutableStateOf("")
+
+    val addSongState = addSongStateHolder.addSongState.asStateFlow()
 
     companion object {
         private const val key = "AddSong"
@@ -52,25 +51,51 @@ internal class AddSongViewModel @Inject constructor(
         }
     }
 
-    private fun showUploadOfferForSong(song: Song) {
-        Log.e("upload", "show offer")
-        addSongStateHolder.newSong.value = song
-        addSongStateHolder.showUploadDialogForSong.value = true
+    override fun handleAction(action: UIAction) {
+        when (action) {
+            is Reset -> reset()
+            is HideUploadOfferForSong -> hideUploadOfferForSong()
+            is AddSongToRepo -> addSongToRepo(action.artist, action.title, action.text)
+            is UploadNewToCloud -> uploadNewToCloud()
+            is ShowNewSong -> showNewSong()
+            else -> super.handleAction(action)
+        }
     }
 
-    fun reset() {
+    private fun reset() {
         artist.value = ""
         title.value = ""
         text.value = ""
     }
 
-    fun hideUploadOfferForSong() {
-        Log.e("upload", "hide offer")
-        addSongStateHolder.showUploadDialogForSong.value = false
+    private fun showUploadOfferForSong(song: Song) {
+        Log.e("upload", "show offer")
+
+        addSongStateHolder.addSongState.update {
+            it.copy(showUploadDialogForSong = true, newSong = song)
+        }
     }
 
-    fun uploadNewToCloud() {
-        newSong.value?.let { song ->
+    private fun hideUploadOfferForSong() {
+        Log.e("upload", "hide offer")
+        addSongStateHolder.addSongState.update {
+            it.copy(showUploadDialogForSong = false)
+        }
+    }
+
+    private fun addSongToRepo(artist: String, title: String, text: String) {
+        val song = Song(
+            artist = artist,
+            title = title,
+            text = text
+        )
+        val actualSong = insertReplaceUserSongUseCase.execute(song)
+        showToast(R.string.toast_song_added)
+        showUploadOfferForSong(actualSong)
+    }
+
+    private fun uploadNewToCloud() {
+        addSongState.value.newSong?.let { song ->
             uploadSongDisposable?.let {
                 if (!it.isDisposed) it.dispose()
             }
@@ -93,21 +118,10 @@ internal class AddSongViewModel @Inject constructor(
         }
     }
 
-    fun showNewSong() {
+    private fun showNewSong() {
         Log.e("show", "new song")
-        newSong.value?.let {
+        addSongState.value.newSong?.let {
             callbacks.onSongByArtistAndTitleSelected(it.artist, it.title)
         }
-    }
-
-    fun addSongToRepo(artist: String, title: String, text: String) {
-        val song = Song(
-            artist = artist,
-            title = title,
-            text = text
-        )
-        val actualSong = insertReplaceUserSongUseCase.execute(song)
-        showToast(R.string.toast_song_added)
-        showUploadOfferForSong(actualSong)
     }
 }
