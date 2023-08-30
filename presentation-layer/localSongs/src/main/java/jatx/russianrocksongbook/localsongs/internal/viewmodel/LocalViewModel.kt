@@ -210,17 +210,15 @@ internal open class LocalViewModel @Inject constructor(
                 withContext(Dispatchers.IO) {
                     getSongsByArtistUseCase
                         .execute(artist)
-                        .collect {
+                        .collect { songs ->
                             withContext(Dispatchers.Main) {
                                 val oldArtist = localState.value.currentSongList.getOrNull(0)?.artist
                                     ?: "null"
-                                val newArtist = it.getOrNull(0)?.artist ?: "null"
+                                val newArtist = songs.getOrNull(0)?.artist ?: "null"
                                 if (newArtist == artist || newArtist == "null" || artist == ARTIST_FAVORITE) {
-                                    updateCurrentSongList(it)
+                                    updateCurrentSongList(songs)
                                     if (_passToSongWithTitle != null) {
-                                        localState
-                                            .value
-                                            .currentSongList
+                                        songs
                                             .map { it.title }
                                             .indexOf(_passToSongWithTitle)
                                             .takeIf { it >= 0 }
@@ -259,17 +257,17 @@ internal open class LocalViewModel @Inject constructor(
                 withContext(Dispatchers.IO) {
                     getSongByArtistAndPositionUseCase
                         .execute(localState.value.currentArtist, position)
-                        .collect {
+                        .collect { song ->
                             withContext(Dispatchers.Main) {
-                                updateCurrentSong(it)
+                                updateCurrentSong(song)
 
-                                val newArtist = localState.value.currentSong?.artist
-                                val newTitle = localState.value.currentSong?.title
+                                val newArtist = song?.artist
+                                val newTitle = song?.title
 
                                 if (newArtist != oldArtist || newTitle != oldTitle) {
                                     setAutoPlayMode(false)
                                     setEditorMode(false)
-                                    localState.value.currentSong?.let {
+                                    song?.let {
                                         updateEditorText(it.text)
                                     }
                                 }
