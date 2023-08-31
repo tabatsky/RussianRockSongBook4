@@ -8,6 +8,10 @@ import jatx.russianrocksongbook.commonview.spinner.SpinnerState
 import jatx.russianrocksongbook.commonviewmodel.CommonStateHolder
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModelDeps
+import jatx.russianrocksongbook.commonviewmodel.UIAction
+import jatx.russianrocksongbook.domain.repository.preferences.ListenToMusicVariant
+import jatx.russianrocksongbook.domain.repository.preferences.Orientation
+import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,22 +22,19 @@ internal class SettingsViewModel @Inject constructor(
     commonStateHolder,
     commonViewModelDeps
 ) {
-    private val settingsRepository =
-        commonViewModelDeps.settingsRepository
-
     val spinnerStateDefaultArtist = mutableStateOf(SpinnerState(0, false))
-    val valueDefaultArtist = mutableStateOf(settingsRepository.defaultArtist)
+    val valueDefaultArtist = mutableStateOf(settings.defaultArtist)
     val spinnerStateFontScale = mutableStateOf(SpinnerState(0, false))
-    val valueFontScale = mutableStateOf(settingsRepository.commonFontScaleEnum)
+    val valueFontScale = mutableStateOf(settings.commonFontScaleEnum)
     val spinnerStateListenToMusicVariant = mutableStateOf(SpinnerState(0, false))
-    val valueListenToMusicVariant = mutableStateOf(settingsRepository.listenToMusicVariant)
+    val valueListenToMusicVariant = mutableStateOf(settings.listenToMusicVariant)
     val spinnerStateOrientation = mutableStateOf(SpinnerState(0, false))
-    val valueOrientation = mutableStateOf(settingsRepository.orientation)
+    val valueOrientation = mutableStateOf(settings.orientation)
     val spinnerStateTheme = mutableStateOf(SpinnerState(0, false))
-    val valueTheme = mutableStateOf(settingsRepository.theme)
+    val valueTheme = mutableStateOf(settings.theme)
 
-    val stringScrollSpeed = mutableStateOf(settingsRepository.scrollSpeed.toString())
-    val valueScrollSpeed = mutableStateOf(settingsRepository.scrollSpeed)
+    val stringScrollSpeed = mutableStateOf(settings.scrollSpeed.toString())
+    val valueScrollSpeed = mutableStateOf(settings.scrollSpeed)
 
     companion object {
         private const val key = "Settings"
@@ -47,7 +48,40 @@ internal class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun restartApp() {
+    override fun handleAction(action: UIAction) {
+        when (action) {
+            is SaveSettings -> with(action) {
+                saveSettings(
+                    theme,
+                    fontScale,
+                    defaultArtist,
+                    orientation,
+                    listenToMusicVariant,
+                    scrollSpeed
+                )
+            }
+            is RestartApp -> restartApp()
+            else -> super.handleAction(action)
+        }
+    }
+
+    private fun saveSettings(
+        theme: Theme,
+        fontScale: Float,
+        defaultArtist: String,
+        orientation: Orientation,
+        listenToMusicVariant: ListenToMusicVariant,
+        scrollSpeed: Float) {
+
+        settings.theme = theme
+        settings.commonFontScale = fontScale
+        settings.defaultArtist = defaultArtist
+        settings.orientation = orientation
+        settings.listenToMusicVariant = listenToMusicVariant
+        settings.scrollSpeed = scrollSpeed
+    }
+
+    private fun restartApp() {
         callbacks.onRestartApp()
     }
 }
