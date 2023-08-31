@@ -10,6 +10,6 @@ internal class StartStateHolder @Inject constructor(
     val commonStateHolder: CommonStateHolder
 ) {
     val startState = MutableStateFlow(
-        StartUIState.initial()
+        StartState.initial()
     )
 }

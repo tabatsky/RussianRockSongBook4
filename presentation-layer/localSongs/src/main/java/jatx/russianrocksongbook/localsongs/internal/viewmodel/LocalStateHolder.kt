@@ -10,5 +10,5 @@ internal class LocalStateHolder @Inject constructor(
     val commonStateHolder: CommonStateHolder
 ) {
     val localState = MutableStateFlow(
-        LocalUIState.initial(commonStateHolder.commonState.value))
+        LocalState.initial(commonStateHolder.commonState.value))
 }

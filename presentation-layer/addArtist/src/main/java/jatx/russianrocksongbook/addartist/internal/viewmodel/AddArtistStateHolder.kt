@@ -10,6 +10,6 @@ internal class AddArtistStateHolder @Inject constructor(
     val commonStateHolder: CommonStateHolder
 ) {
     val addArtistState = MutableStateFlow(
-        AddArtistUIState.initial()
+        AddArtistState.initial()
     )
 }
