@@ -11,6 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import jatx.russianrocksongbook.addartist.R
 import jatx.russianrocksongbook.addartist.internal.viewmodel.AddArtistViewModel
+import jatx.russianrocksongbook.addartist.internal.viewmodel.HideUploadOfferForDir
+import jatx.russianrocksongbook.addartist.internal.viewmodel.ShowNewArtist
+import jatx.russianrocksongbook.addartist.internal.viewmodel.UploadListToCloud
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.dialogs.confirm.UploadDialog
@@ -19,8 +22,10 @@ import jatx.russianrocksongbook.commonview.dialogs.confirm.UploadDialog
 internal fun AddArtistScreenImpl() {
     val addArtistViewModel = AddArtistViewModel.getInstance()
 
-    val showUploadDialog by addArtistViewModel.showUploadDialogForDir.collectAsState()
-    val uploadArtist by addArtistViewModel.uploadArtist.collectAsState()
+    val addArtistState by addArtistViewModel.addArtistState.collectAsState()
+
+    val showUploadDialog = addArtistState.showUploadDialogForDir
+    val newArtist = addArtistState.newArtist
 
     BoxWithConstraints(
         modifier = Modifier
@@ -44,12 +49,12 @@ internal fun AddArtistScreenImpl() {
         if (showUploadDialog) {
             UploadDialog(
                 onConfirm = {
-                    addArtistViewModel.hideUploadOfferForDir()
-                    addArtistViewModel.uploadListToCloud()
+                    addArtistViewModel.submitAction(HideUploadOfferForDir)
+                    addArtistViewModel.submitAction(UploadListToCloud)
                 },
                 onDismiss = {
-                    addArtistViewModel.hideUploadOfferForDir()
-                    addArtistViewModel.callbacks.onArtistSelected(uploadArtist)
+                    addArtistViewModel.submitAction(HideUploadOfferForDir)
+                    addArtistViewModel.submitAction(ShowNewArtist(newArtist))
                 }
             )
         }

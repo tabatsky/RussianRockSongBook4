@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.addartist.R
 import jatx.russianrocksongbook.addartist.internal.viewmodel.AddArtistViewModel
+import jatx.russianrocksongbook.addartist.internal.viewmodel.AddSongsFromDir
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 
 @Composable
@@ -56,7 +57,7 @@ internal fun AddArtistBody() {
                     contentColor = theme.colorMain
                 ),
             onClick = {
-                addArtistViewModel.addSongsFromDir()
+                addArtistViewModel.submitAction(AddSongsFromDir)
             }) {
             Text(text = stringResource(id = R.string.choose))
         }
