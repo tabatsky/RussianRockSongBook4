@@ -1,12 +1,11 @@
 package jatx.russianrocksongbook.localsongs.internal.viewmodel
 
-import jatx.russianrocksongbook.commonviewmodel.CommonUIState
-import jatx.russianrocksongbook.commonviewmodel.UIState
+import jatx.russianrocksongbook.commonviewmodel.CommonState
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.navigation.ScreenVariant
 
-data class LocalUIState(
-    val commonUIState: CommonUIState,
+data class LocalState(
+    val commonState: CommonState,
     val currentSongCount: Int,
     val currentSongList: List<Song>,
     val currentSongPosition: Int,
@@ -16,10 +15,10 @@ data class LocalUIState(
     val isUploadButtonEnabled: Boolean,
     val scrollPosition: Int,
     val needScroll: Boolean
-): UIState {
+) {
     companion object {
-        fun initial(commonUIState: CommonUIState) = LocalUIState(
-            commonUIState = commonUIState,
+        fun initial(commonState: CommonState) = LocalState(
+            commonState = commonState,
             currentSongCount = 0,
             currentSongList = listOf(),
             currentSongPosition = 0,
@@ -33,11 +32,11 @@ data class LocalUIState(
     }
 
     val currentArtist: String
-        get() = commonUIState.currentArtist
+        get() = commonState.currentArtist
 
     val artistList: List<String>
-        get() = commonUIState.artistList
+        get() = commonState.artistList
 
     val currentScreenVariant: ScreenVariant
-        get() = commonUIState.currentScreenVariant
+        get() = commonState.currentScreenVariant
 }

@@ -1,14 +1,13 @@
 package jatx.russianrocksongbook.addsong.internal.viewmodel
 
-import jatx.russianrocksongbook.commonviewmodel.UIState
 import jatx.russianrocksongbook.domain.models.local.Song
 
-data class AddSongUIState(
+data class AddSongState(
     val showUploadDialogForSong: Boolean,
     val newSong: Song?
-): UIState {
+) {
     companion object {
-        fun initial() = AddSongUIState(
+        fun initial() = AddSongState(
             showUploadDialogForSong = false,
             newSong = null
         )

@@ -9,5 +9,5 @@ import javax.inject.Inject
 internal class AddSongStateHolder @Inject constructor(
     val commonStateHolder: CommonStateHolder
 ) {
-    val addSongState = MutableStateFlow(AddSongUIState.initial())
+    val addSongState = MutableStateFlow(AddSongState.initial())
 }

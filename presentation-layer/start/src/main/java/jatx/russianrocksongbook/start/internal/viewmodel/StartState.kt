@@ -1,13 +1,11 @@
 package jatx.russianrocksongbook.start.internal.viewmodel
 
-import jatx.russianrocksongbook.commonviewmodel.UIState
-
-data class StartUIState(
+data class StartState(
     val stubCurrentProgress: Int,
     val stubTotalProgress: Int
-): UIState {
+) {
     companion object {
-        fun initial() = StartUIState(
+        fun initial() = StartState(
             stubCurrentProgress = 0,
             stubTotalProgress = 100
         )

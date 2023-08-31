@@ -58,7 +58,7 @@ internal open class LocalViewModel @Inject constructor(
     val editorText = mutableStateOf("")
 
     val localState = combine(localStateHolder.localState, commonState) { local, common ->
-            local.copy(commonUIState = common)
+            local.copy(commonState = common)
         }
         .stateIn(
             viewModelScope,

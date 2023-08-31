@@ -9,5 +9,5 @@ import javax.inject.Inject
 class CommonStateHolder @Inject constructor(
     settingsRepository: SettingsRepository
 ) {
-    val commonState = MutableStateFlow(CommonUIState.initial(settingsRepository.defaultArtist))
+    val commonState = MutableStateFlow(CommonState.initial(settingsRepository.defaultArtist))
 }
