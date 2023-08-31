@@ -12,7 +12,9 @@ import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_ERROR
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.commonviewmodel.R
+import jatx.russianrocksongbook.commonviewmodel.UIAction
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import java.io.File
 import javax.inject.Inject
 
@@ -31,12 +33,8 @@ internal class AddArtistViewModel @Inject constructor(
     private val fileSystemAdapter =
         addArtistViewModelDeps.fileSystemRepository
 
-    val showUploadDialogForDir = addArtistStateHolder
-        .showUploadDialogForDir.asStateFlow()
-    val uploadArtist = addArtistStateHolder
-        .uploadArtist.asStateFlow()
-    private val uploadSongList = addArtistStateHolder
-        .uploadSongList.asStateFlow()
+    val addArtistState = addArtistStateHolder
+        .addArtistState.asStateFlow()
 
     private var uploadListDisposable: Disposable? = null
 
@@ -54,22 +52,42 @@ internal class AddArtistViewModel @Inject constructor(
         fun getStoredInstance() = storage[key] as? AddArtistViewModel
     }
 
+    override fun handleAction(action: UIAction) {
+        when (action) {
+            is HideUploadOfferForDir -> hideUploadOfferForDir()
+            is UploadListToCloud -> uploadListToCloud()
+            is ShowNewArtist -> showNewArtist(action.artist)
+            is AddSongsFromDir -> addSongsFromDir()
+            is CopySongsFromDirToRepoWithPickedDir ->
+                copySongsFromDirToRepoWithPickedDir(action.pickedDir)
+            is CopySongsFromDirToRepoWithPath ->
+                copySongsFromDirToRepoWithPath(action.path)
+            else -> super.handleAction(action)
+        }
+    }
+
     private fun showUploadOfferForDir(artist: String, songs: List<Song>) {
-        addArtistStateHolder.uploadArtist.value = artist
-        addArtistStateHolder.uploadSongList.value = songs
-        addArtistStateHolder.showUploadDialogForDir.value = true
+        addArtistStateHolder.addArtistState.update {
+            it.copy(
+                showUploadDialogForDir = true,
+                newArtist = artist,
+                uploadSongList = songs
+            )
+        }
     }
 
-    fun hideUploadOfferForDir() {
-        addArtistStateHolder.showUploadDialogForDir.value = false
+    private fun hideUploadOfferForDir() {
+        addArtistStateHolder.addArtistState.update {
+            it.copy(showUploadDialogForDir = false)
+        }
     }
 
-    fun uploadListToCloud() {
+    private fun uploadListToCloud() {
         uploadListDisposable?.let {
             if (!it.isDisposed) it.dispose()
         }
         uploadListDisposable = addSongListToCloudUseCase
-            .execute(uploadSongList.value)
+            .execute(addArtistState.value.uploadSongList)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ result ->
@@ -81,7 +99,7 @@ internal class AddArtistViewModel @Inject constructor(
                                 it.success, it.duplicate, it.error
                             )
                             showToast(toastText)
-                            callbacks.onArtistSelected(uploadArtist.value)
+                            callbacks.onArtistSelected(addArtistState.value.newArtist)
                         }
                     }
                     STATUS_ERROR -> showToast(result.message ?: "")
@@ -92,7 +110,15 @@ internal class AddArtistViewModel @Inject constructor(
             })
     }
 
-    fun copySongsFromDirToRepoWithPickedDir(pickedDir: DocumentFile) {
+    private fun showNewArtist(artist: String) {
+        callbacks.onArtistSelected(artist)
+    }
+
+    private fun addSongsFromDir() {
+        callbacks.onAddSongsFromDir()
+    }
+
+    private fun copySongsFromDirToRepoWithPickedDir(pickedDir: DocumentFile) {
         if (!pickedDir.exists()) {
             showToast(R.string.toast_folder_does_not_exist)
         } else if (!pickedDir.isDirectory) {
@@ -109,7 +135,7 @@ internal class AddArtistViewModel @Inject constructor(
         }
     }
 
-    fun copySongsFromDirToRepoWithPath(path: String) {
+    private fun copySongsFromDirToRepoWithPath(path: String) {
         val dir = File(path)
         if (!dir.exists()) {
             showToast(R.string.toast_folder_does_not_exist)
@@ -125,9 +151,5 @@ internal class AddArtistViewModel @Inject constructor(
             showToast(toastText)
             showUploadOfferForDir(artist, actualSongs)
         }
-    }
-
-    fun addSongsFromDir() {
-        callbacks.onAddSongsFromDir()
     }
 }
