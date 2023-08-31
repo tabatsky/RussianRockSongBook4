@@ -14,6 +14,8 @@ import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.domain.repository.preferences.*
 import jatx.russianrocksongbook.settings.R
+import jatx.russianrocksongbook.settings.internal.viewmodel.RestartApp
+import jatx.russianrocksongbook.settings.internal.viewmodel.SaveSettings
 import jatx.russianrocksongbook.settings.internal.viewmodel.SettingsViewModel
 
 @Composable
@@ -55,13 +57,16 @@ internal fun SettingsScreenImpl() {
     }
 
     val onSaveClick: () -> Unit = {
-        settings.theme = themeToSave
-        settings.commonFontScale = fontScaleToSave.scale
-        settings.defaultArtist = defaultArtistToSave
-        settings.orientation = orientationToSave
-        settings.listenToMusicVariant = listenToMusicVariantToSave
-        settings.scrollSpeed = scrollSpeedToSave
-        settingsViewModel.restartApp()
+        settingsViewModel.submitAction(
+            SaveSettings(
+                themeToSave,
+                fontScaleToSave.scale,
+                defaultArtistToSave,
+                orientationToSave,
+                listenToMusicVariantToSave,
+                scrollSpeedToSave
+            ))
+        settingsViewModel.submitAction(RestartApp)
     }
 
     val labelFontScale = settings.getSpecificFontScale(ScalePow.LABEL)
