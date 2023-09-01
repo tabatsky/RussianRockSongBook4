@@ -12,6 +12,7 @@ import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.donation.R
 import jatx.russianrocksongbook.donation.internal.viewmodel.DonationViewModel
+import jatx.russianrocksongbook.donation.internal.viewmodel.PurchaseItem
 import jatx.russianrocksongbook.donationhelper.api.SKUS
 import jatx.russianrocksongbook.donationhelper.api.SKUS_LANDSCAPE
 
@@ -24,7 +25,7 @@ internal fun DonationScreenImpl() {
 
     val onPurchaseClick: (Int, Boolean) -> Unit = { index, isLandscape ->
         val sku = if (!isLandscape) SKUS[index] else SKUS_LANDSCAPE[index]
-        donationViewModel.purchaseItem(sku)
+        donationViewModel.submitAction(PurchaseItem(sku))
     }
 
     BoxWithConstraints(

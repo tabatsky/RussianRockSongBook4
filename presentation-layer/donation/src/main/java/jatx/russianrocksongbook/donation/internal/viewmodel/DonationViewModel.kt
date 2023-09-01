@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import jatx.russianrocksongbook.commonviewmodel.CommonStateHolder
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModelDeps
+import jatx.russianrocksongbook.commonviewmodel.UIAction
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,7 +29,14 @@ internal class DonationViewModel @Inject constructor(
         }
     }
 
-    fun purchaseItem(sku: String) {
+    override fun handleAction(action: UIAction) {
+        when (action) {
+            is PurchaseItem -> purchaseItem(action.sku)
+            else -> super.handleAction(action)
+        }
+    }
+
+    private fun purchaseItem(sku: String) {
         callbacks.onPurchaseItem(sku)
     }
 }
