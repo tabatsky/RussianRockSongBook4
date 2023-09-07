@@ -3,22 +3,21 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'com.google.devtools.ksp'
 }
 
 android {
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         minSdk 21
-        targetSdk 33
+        targetSdk 34
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
 
-        kapt {
-            arguments {
-                arg("room.schemaLocation", "$projectDir/schemas")
-            }
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
         }
     }
 
@@ -40,7 +39,7 @@ android {
 
 dependencies {
     implementation commonDeps.coreKtx
-    kapt roomDeps.roomCompiler
+    ksp roomDeps.roomCompiler
     implementation roomDeps.roomRuntime
     implementation roomDeps.roomKtx
     implementation diDeps.hiltAndroid
