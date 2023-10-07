@@ -13,7 +13,7 @@ buildscript {
                 tv : "1.0.0-alpha09",
                 pagingCompose : '3.2.1',
                 lifecycle : '2.5.1',
-                navigationCompose : '2.7.2',
+                navigationCompose : '2.6.0', // do not upgrade because of bug with back handler in later versions
                 activityCompose : '1.7.2',
                 hilt : '2.47',
                 hiltExtensions : '1.4.0',
