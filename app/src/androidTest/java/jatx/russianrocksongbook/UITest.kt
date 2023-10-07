@@ -1107,11 +1107,9 @@ class UITest {
                 .assertIsDisplayed()
             Log.e("test $testNumber assert", "${list[2].visibleTitleWithArtistAndRating} is displayed")
             composeTestRule
-                .onNodeWithTag(CLOUD_SONG_TEXT_VIEWER)
+                .onNodeWithText(list[2].text)
                 .assertIsDisplayed()
-            Log.e("test $testNumber assert", "$CLOUD_SONG_TEXT_VIEWER is displayed")
-            Espresso.onView(withText(list[2].text)).check(matches(isDisplayed()))
-            Log.e("test $testNumber assert", "song text is displayed")
+            Log.e("test $testNumber assert", "song text is displayed correctly")
         }
     }
 
@@ -1209,8 +1207,10 @@ class UITest {
                 .onNodeWithText(list[2].visibleTitleWithArtistAndRating)
                 .assertIsDisplayed()
             Log.e("test $testNumber assert", "${list[2].visibleTitleWithArtistAndRating} is displayed")
-            Espresso.onView(withText(list[2].text)).check(matches(isDisplayed()))
-            Log.e("test $testNumber assert", "song text is displayed")
+            composeTestRule
+                .onNodeWithText(list[2].text)
+                .assertIsDisplayed()
+            Log.e("test $testNumber assert", "song text is displayed correctly")
             composeTestRule
                 .onNodeWithTag(NUMBER_LABEL)
                 .assertTextContains("3 /", substring = true)
@@ -1226,8 +1226,10 @@ class UITest {
                 .onNodeWithText(list[3].visibleTitleWithArtistAndRating)
                 .assertIsDisplayed()
             Log.e("test $testNumber assert", "${list[3].visibleTitleWithArtistAndRating} is displayed")
-            Espresso.onView(withText(list[3].text)).check(matches(isDisplayed()))
-            Log.e("test $testNumber assert", "song text is displayed")
+            composeTestRule
+                .onNodeWithText(list[3].text)
+                .assertIsDisplayed()
+            Log.e("test $testNumber assert", "song text is displayed correctly")
             composeTestRule
                 .onNodeWithTag(NUMBER_LABEL)
                 .assertTextContains("4 /", substring = true)
@@ -1243,8 +1245,10 @@ class UITest {
                 .onNodeWithText(list[2].visibleTitleWithArtistAndRating)
                 .assertIsDisplayed()
             Log.e("test $testNumber assert", "${list[2].visibleTitleWithArtistAndRating} is displayed")
-            Espresso.onView(withText(list[2].text)).check(matches(isDisplayed()))
-            Log.e("test $testNumber assert", "song text is displayed")
+            composeTestRule
+                .onNodeWithText(list[2].text)
+                .assertIsDisplayed()
+            Log.e("test $testNumber assert", "song text is displayed correctly")
             composeTestRule
                 .onNodeWithTag(NUMBER_LABEL)
                 .assertTextContains("3 /", substring = true)

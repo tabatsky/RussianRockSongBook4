@@ -59,7 +59,7 @@ dependencies {
     kapt diDeps.hiltExtensionsProcessor
     implementation diDeps.hiltNavigationCompose
 
-    api project(':ui-library:clickablewordstextview')
+    api project(':ui-library:clickableWordsTextCompose')
 
     api project(':domain-layer:usecase:cloud')
     api project(':domain-layer:usecase:local')

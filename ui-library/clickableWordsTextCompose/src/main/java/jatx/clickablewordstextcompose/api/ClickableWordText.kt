@@ -15,6 +15,8 @@ import jatx.clickablewordstextcompose.internal.WordScanner
 @Composable
 fun ClickableWordText(
     text: String,
+    actualWordSet: Set<String>,
+    actualWordMappings: Map<String, String>,
     modifier: Modifier,
     colorMain: Color,
     colorBg: Color,
@@ -25,12 +27,20 @@ fun ClickableWordText(
 
     val annotatedText = AnnotatedString(
         text = text,
-        spanStyles = wordList.map {
-            AnnotatedString.Range(
-                SpanStyle(color = colorBg, background = colorMain),
-                it.startIndex,
-                it.endIndex
-            )
+        spanStyles = wordList.mapNotNull {
+            var actualWord = it.text
+            for (key in actualWordMappings.keys) {
+                actualWord = actualWord.replace(key, actualWordMappings[key] ?: "")
+            }
+            if (actualWord in actualWordSet) {
+                AnnotatedString.Range(
+                    SpanStyle(color = colorBg, background = colorMain),
+                    it.startIndex,
+                    it.endIndex
+                )
+            } else {
+                null
+            }
         }
     )
 
@@ -45,6 +55,14 @@ fun ClickableWordText(
         )
     ) { offset ->
         val word = wordList.firstOrNull { offset >= it.startIndex && offset < it.endIndex }
-        word?.let(onWordClick)
+        word?.let {
+            var actualWord = word.text
+            for (key in actualWordMappings.keys) {
+                actualWord = actualWord.replace(key, actualWordMappings[key] ?: "")
+            }
+            if (actualWord in actualWordSet) {
+                onWordClick(word)
+            }
+        }
     }
 }
