@@ -10,7 +10,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.tv.foundation.lazy.list.rememberTvLazyListState
-import jatx.clickablewordstextview.api.Word
+import jatx.clickablewordstextcompose.api.Word
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.dialogs.chord.ChordDialog
