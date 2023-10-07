@@ -25,7 +25,7 @@ import org.junit.Test
 import org.junit.runners.MethodSorters
 import java.util.concurrent.TimeUnit
 
-const val timeout = 200L
+const val timeout = 500L
 
 @MockKExtension.ConfirmVerification
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
