@@ -2,19 +2,22 @@ buildscript {
     ext {
         versions = [
                 kotlin : '1.9.0',
-                coreKtx : '1.12.0-rc01',
+                coreKtx : '1.12.0',
                 appCompat : '1.6.1',
-                material : '1.9.0',
+                material : '1.10.0',
                 coroutines : '1.6.4',
-                compose : '1.5.0',
+                compose : '1.5.3',
                 composeCompiler : '1.5.2',
+                // do not upgrade 'composeMaterial' because of incompatibility
+                // of later versions with 'navigationCompose:2.6.0':
                 composeMaterial: '1.4.3',
-                composeMaterial3: '1.1.1',
+                composeMaterial3: '1.1.2',
                 tv : "1.0.0-alpha09",
                 pagingCompose : '3.2.1',
-                lifecycle : '2.5.1',
-                navigationCompose : '2.6.0', // do not upgrade because of bug with back handler in later versions
-                activityCompose : '1.7.2',
+                lifecycle : '2.6.2',
+                // do not upgrade 'navigationCompose' because of bug with back handler in later versions:
+                navigationCompose : '2.6.0',
+                activityCompose : '1.8.0',
                 hilt : '2.47',
                 hiltExtensions : '1.4.0',
                 hiltNavigationCompose: '1.0.0',
@@ -129,7 +132,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath gradlePlugins.android
+        classpath 'com.android.tools.build:gradle:8.1.2'
         classpath gradlePlugins.kotlin
         classpath gradlePlugins.hiltAndroid
     }
