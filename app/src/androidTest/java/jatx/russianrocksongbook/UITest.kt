@@ -7,10 +7,6 @@ import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.runner.AndroidJUnitRunner
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -404,11 +400,9 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song title with artist is displayed")
         composeTestRule
-            .onNodeWithTag(SONG_TEXT_VIEWER)
+            .onNodeWithText(song1.text)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "$SONG_TEXT_VIEWER is displayed")
-        Espresso.onView(withText(song1.text)).check(matches(isDisplayed()))
-        Log.e("test $testNumber assert", "song text is displayed")
+        Log.e("test $testNumber assert", "song text is displayed correctly")
     }
 
     @Test
@@ -435,11 +429,9 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song title with artist is displayed")
         composeTestRule
-            .onNodeWithTag(SONG_TEXT_VIEWER)
+            .onNodeWithText(song1.text)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "$SONG_TEXT_VIEWER is displayed")
-        Espresso.onView(withText(song1.text)).check(matches(isDisplayed()))
-        Log.e("test $testNumber assert", "song text is displayed")
+        Log.e("test $testNumber assert", "song text is displayed correctly")
         composeTestRule
             .onNodeWithTag(SONG_TEXT_EDITOR)
             .assertDoesNotExist()
@@ -488,8 +480,10 @@ class UITest {
             .onNodeWithTag(SONG_TEXT_VIEWER)
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "$SONG_TEXT_VIEWER is displayed")
-        Espresso.onView(withText(song1.text)).check(matches(isDisplayed()))
-        Log.e("test $testNumber assert", "song text is displayed")
+        composeTestRule
+            .onNodeWithText(song1.text)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "song text is displayed correctly")
         composeTestRule
             .onNodeWithTag(SONG_TEXT_EDITOR)
             .assertDoesNotExist()
@@ -552,8 +546,10 @@ class UITest {
             .onNodeWithText("${song2.title} (${song2.artist})")
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song2 title with artist is displayed")
-        Espresso.onView(withText(song2.text)).check(matches(isDisplayed()))
-        Log.e("test $testNumber assert", "song text is displayed")
+        composeTestRule
+            .onNodeWithText(song2.text)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "song text is displayed correctly")
 
         composeTestRule
             .onNodeWithTag(LEFT_BUTTON)
@@ -1586,12 +1582,11 @@ class UITest {
             .onNodeWithText("$TITLE_NEW ($ARTIST_NEW)")
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "'Title (Artist)' is displayed")
+
         composeTestRule
-            .onNodeWithTag(SONG_TEXT_VIEWER)
+            .onNodeWithText(TEXT_NEW)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "$SONG_TEXT_VIEWER is displayed")
-        Espresso.onView(withText(TEXT_NEW)).check(matches(isDisplayed()))
-        Log.e("test $testNumber assert", "song text is displayed")
+        Log.e("test $testNumber assert", "song text is displayed correctly")
 
         val song = localRepository.getSongByArtistAndTitle(ARTIST_NEW, TITLE_NEW)
         assert(song != null)
@@ -1924,11 +1919,9 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song title with artist is displayed")
         composeTestRule
-            .onNodeWithTag(SONG_TEXT_VIEWER)
+            .onNodeWithText(song1!!.text)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "$SONG_TEXT_VIEWER is displayed")
-        Espresso.onView(withText(song1!!.text)).check(matches(isDisplayed()))
-        Log.e("test $testNumber assert", "song text is displayed")
+        Log.e("test $testNumber assert", "song text is displayed correctly")
     }
 
     @Test
@@ -1949,11 +1942,9 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song title with artist is displayed")
         composeTestRule
-            .onNodeWithTag(SONG_TEXT_VIEWER)
+            .onNodeWithText(song2!!.text)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "$SONG_TEXT_VIEWER is displayed")
-        Espresso.onView(withText(song2!!.text)).check(matches(isDisplayed()))
-        Log.e("test $testNumber assert", "song text is displayed")
+        Log.e("test $testNumber assert", "song text is displayed correctly")
     }
 }
 

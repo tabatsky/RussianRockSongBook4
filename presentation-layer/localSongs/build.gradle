@@ -72,7 +72,7 @@ dependencies {
     implementation tvDeps.tvFoundation
     implementation tvDeps.tvMaterial
 
-    api project(':ui-library:clickablewordstextview')
+    api project(':ui-library:clickableWordsTextCompose')
 
     api project(':domain-layer:usecase:cloud')
     api project(':domain-layer:usecase:local')
