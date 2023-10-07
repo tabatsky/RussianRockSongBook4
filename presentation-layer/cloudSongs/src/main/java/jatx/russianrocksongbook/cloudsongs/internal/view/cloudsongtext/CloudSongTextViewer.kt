@@ -1,21 +1,13 @@
 package jatx.russianrocksongbook.cloudsongs.internal.view.cloudsongtext
 
-import android.graphics.Typeface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.lifecycle.viewModelScope
 import com.dqt.libs.chorddroid.classes.ChordLibrary
-import jatx.clickablewordstextview.api.ClickableWordsTextView
-import jatx.clickablewordstextview.api.Word
-import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.CloudViewModel
+import jatx.clickablewordstextcompose.api.ClickableWordText
+import jatx.clickablewordstextcompose.api.Word
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
-import jatx.russianrocksongbook.testing.CLOUD_SONG_TEXT_VIEWER
-import kotlinx.coroutines.launch
 
 @Composable
 internal fun CloudSongTextViewer(
@@ -24,25 +16,14 @@ internal fun CloudSongTextViewer(
     fontSizeTextSp: TextUnit,
     onWordClick: (Word) -> Unit
 ) {
-    val cloudViewModel = CloudViewModel.getInstance()
-    AndroidView(
-        modifier = Modifier.testTag(CLOUD_SONG_TEXT_VIEWER),
-        factory = { context ->
-            ClickableWordsTextView(context)
-        },
-        update = { view ->
-            view.text = cloudSong.text
-            view.actualWordMappings = ChordLibrary.chordMappings
-            view.actualWordSet = ChordLibrary.baseChords.keys
-            view.setTextColor(theme.colorMain.toArgb())
-            view.setBackgroundColor(theme.colorBg.toArgb())
-            view.textSize = fontSizeTextSp.value
-            view.typeface = Typeface.MONOSPACE
-            cloudViewModel.viewModelScope.launch {
-                view.wordFlow.collect {
-                    onWordClick(it)
-                }
-            }
-        }
+    ClickableWordText(
+        text = cloudSong.text,
+        actualWordSet = ChordLibrary.baseChords.keys,
+        actualWordMappings = ChordLibrary.chordMappings,
+        modifier = Modifier,
+        colorMain = theme.colorMain,
+        colorBg = theme.colorBg,
+        fontSize = fontSizeTextSp,
+        onWordClick = onWordClick
     )
 }
