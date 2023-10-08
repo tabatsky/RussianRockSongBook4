@@ -9,6 +9,24 @@ const val ARTIST_ADD_SONG = "Добавить песню"
 const val ARTIST_CLOUD_SONGS = "Аккорды онлайн"
 const val ARTIST_DONATION = "Пожертвования"
 
+val predefinedArtistList = listOf(
+    ARTIST_FAVORITE,
+    ARTIST_ADD_ARTIST,
+    ARTIST_ADD_SONG,
+    ARTIST_CLOUD_SONGS,
+    ARTIST_DONATION
+)
+
+fun String.artistGroup() = this.first().toString().uppercase()
+
+fun List<String>.artistGroups() = this.filter { it !in predefinedArtistList }
+    .map { it.artistGroup() }
+    .distinct()
+    .sorted()
+
+fun List<String>.predefinedArtistsWithGroups() =
+    predefinedArtistList + this.artistGroups()
+
 interface LocalRepository {
     fun getArtists(): Flow<List<String>>
     fun getArtistsAsList(): List<String>

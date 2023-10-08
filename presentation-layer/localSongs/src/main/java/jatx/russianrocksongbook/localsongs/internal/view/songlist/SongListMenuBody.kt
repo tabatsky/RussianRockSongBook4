@@ -4,6 +4,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
@@ -13,6 +14,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.tv.foundation.lazy.list.TvLazyColumn
 import androidx.tv.foundation.lazy.list.itemsIndexed
 import androidx.tv.foundation.lazy.list.rememberTvLazyListState
+import jatx.russianrocksongbook.domain.repository.local.predefinedArtistList
+import jatx.russianrocksongbook.domain.repository.local.predefinedArtistsWithGroups
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
@@ -31,6 +34,8 @@ internal fun SongListMenuBody(
     val localState by localViewModel.localState.collectAsState()
     val artistList = localState.artistList
 
+    val predefinedWithGroups = artistList.predefinedArtistsWithGroups()
+
     val fontScale = localViewModel.settings.getSpecificFontScale(ScalePow.MENU)
     val fontSizeDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
     val fontSizeSp = with(LocalDensity.current) {
@@ -43,17 +48,44 @@ internal fun SongListMenuBody(
             left = navigationFocusRequester
         }
 
+    var expandedArtistGroup by rememberSaveable {
+        mutableStateOf("")
+    }
+
+    fun getExpandedList(group: String) = if (expandedArtistGroup == group) {
+        artistList.filter { it !in predefinedArtistList && it.uppercase().startsWith(group) }
+    } else {
+        listOf()
+    }
+
+
     @Composable
-    fun TheItem(artist: String) {
-        ArtistItem(
-            artist = artist,
-            fontSizeSp = fontSizeSp,
-            theme = theme,
-            onClick = {
-                localViewModel.submitAction(SelectArtist(artist))
-                onCloseDrawer()
-            }
-        )
+    fun TheItem(artistOrGroup: String) {
+        if (artistOrGroup in predefinedArtistList) {
+            ArtistItem(
+                artist = artistOrGroup,
+                fontSizeSp = fontSizeSp,
+                theme = theme,
+                onClick = {
+                    localViewModel.submitAction(SelectArtist(artistOrGroup))
+                    onCloseDrawer()
+                }
+            )
+        } else {
+            ArtistGroupItem(
+                artistGroup = artistOrGroup,
+                expandedList = getExpandedList(artistOrGroup),
+                fontSizeSp = fontSizeSp,
+                theme = theme,
+                onGroupClick = {
+                    expandedArtistGroup = artistOrGroup
+                },
+                onArtistClick = {
+                    localViewModel.submitAction(SelectArtist(it))
+                    onCloseDrawer()
+                }
+            )
+        }
     }
 
     if (localViewModel.isTV) {
@@ -62,8 +94,8 @@ internal fun SongListMenuBody(
             modifier = modifier,
             state = menuState
         ) {
-            itemsIndexed(artistList) { _, artist ->
-                TheItem(artist)
+            itemsIndexed(predefinedWithGroups) { _, artistOrGroup ->
+                TheItem(artistOrGroup)
             }
         }
     } else {
@@ -72,8 +104,8 @@ internal fun SongListMenuBody(
             modifier = modifier,
             state = menuState
         ) {
-            itemsIndexed(artistList) { _, artist ->
-                TheItem(artist)
+            itemsIndexed(predefinedWithGroups) { _, artistOrGroup ->
+                TheItem(artistOrGroup)
             }
         }
     }

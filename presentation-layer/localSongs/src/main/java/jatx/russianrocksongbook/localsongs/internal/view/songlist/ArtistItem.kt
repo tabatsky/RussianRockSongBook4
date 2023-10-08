@@ -1,6 +1,7 @@
 package jatx.russianrocksongbook.localsongs.internal.view.songlist
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
@@ -14,31 +15,69 @@ import jatx.russianrocksongbook.domain.repository.local.*
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 
 @Composable
+internal fun ArtistGroupItem(
+    artistGroup: String,
+    expandedList: List<String>,
+    fontSizeSp: TextUnit,
+    theme: Theme,
+    onGroupClick: () -> Unit,
+    onArtistClick: (String) -> Unit
+) {
+    val modifier = Modifier
+        .fillMaxWidth()
+        .padding(5.dp)
+        .clickable {
+            onGroupClick()
+        }
+
+    Column {
+        Text(
+            text = artistGroup,
+            modifier = modifier,
+            fontWeight = FontWeight.W500,
+            fontSize = fontSizeSp,
+            color = theme.colorBg
+        )
+        Divider(color = theme.colorCommon, thickness = 1.dp)
+        expandedList.forEach {
+            ArtistItem(
+                artist = it,
+                fontSizeSp = fontSizeSp,
+                theme = theme,
+                onClick = {
+                    onArtistClick(it)
+                }
+            )
+        }
+    }
+}
+
+@Composable
 internal fun ArtistItem(
     artist: String,
     fontSizeSp: TextUnit,
     theme: Theme,
     onClick: () -> Unit
 ) {
-    val modifier = Modifier
-        .fillMaxWidth()
-        .padding(5.dp)
+    val isPredefined = predefinedArtistList.contains(artist)
+
+    val modifier = (if (isPredefined) {
+        Modifier
+            .fillMaxWidth()
+            .padding(5.dp)
+            } else {
+        Modifier
+            .fillMaxWidth()
+            .padding(start = 20.dp, end = 5.dp, top = 5.dp, bottom = 5.dp)
+            })
         .clickable {
             onClick()
         }
 
-    val isBold =
-        (listOf(
-            ARTIST_FAVORITE,
-            ARTIST_ADD_ARTIST,
-            ARTIST_ADD_SONG,
-            ARTIST_CLOUD_SONGS,
-            ARTIST_DONATION
-        ).contains(artist))
     Text(
         text = artist,
         modifier = modifier,
-        fontWeight = if (isBold) FontWeight.W700 else FontWeight.W400,
+        fontWeight = if (isPredefined) FontWeight.W700 else FontWeight.W400,
         fontSize = fontSizeSp,
         color = theme.colorBg
     )
