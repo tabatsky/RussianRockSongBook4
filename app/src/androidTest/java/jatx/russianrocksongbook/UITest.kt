@@ -215,31 +215,27 @@ class UITest {
             .performClick()
         Log.e("test $testNumber click", DRAWER_BUTTON_MAIN)
 
-        val index1 = artists.indexOf(ARTIST_1) - 3
-        composeTestRule
-            .onNodeWithText(ARTIST_1)
-            .assertDoesNotExist()
-        Log.e("test $testNumber assert", "$ARTIST_1 does not exist")
+        val index1 = artists.predefinedArtistsWithGroups().indexOf(ARTIST_1.artistGroup()) - 3
         composeTestRule
             .onNodeWithTag(MENU_LAZY_COLUMN)
             .performScrollToIndex(index1)
         Log.e("test $testNumber scroll", "menu to index $index1")
         composeTestRule.waitFor(timeout)
         composeTestRule
-            .onNodeWithText(ARTIST_1)
+            .onNodeWithText(ARTIST_1.artistGroup())
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "$ARTIST_1 is displayed")
+        Log.e("test $testNumber assert", "${ARTIST_1.artistGroup()} is displayed")
 
-        val index2 = artists.indexOf(ARTIST_2) - 3
+        val index2 = artists.predefinedArtistsWithGroups().indexOf(ARTIST_2.artistGroup()) - 3
         composeTestRule
             .onNodeWithTag(MENU_LAZY_COLUMN)
             .performScrollToIndex(index2)
         Log.e("test $testNumber scroll", "menu to index $index2")
         composeTestRule.waitFor(timeout)
         composeTestRule
-            .onNodeWithText(ARTIST_2)
+            .onNodeWithText(ARTIST_2.artistGroup())
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "$ARTIST_2 is displayed")
+        Log.e("test $testNumber assert", "${ARTIST_2.artistGroup()} is displayed")
     }
 
     @Test
@@ -256,12 +252,21 @@ class UITest {
         Log.e("test $testNumber click", DRAWER_BUTTON_MAIN)
         composeTestRule.waitFor(timeout)
 
-        val index1 = artists.indexOf(ARTIST_1) - 3
+        val index1 = artists.predefinedArtistsWithGroups().indexOf(ARTIST_1.artistGroup()) - 3
         composeTestRule
             .onNodeWithTag(MENU_LAZY_COLUMN)
             .performScrollToIndex(index1)
         Log.e("test $testNumber scroll", "menu to index $index1")
         composeTestRule.waitFor(timeout)
+        composeTestRule
+            .onNodeWithText(ARTIST_1.artistGroup())
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${ARTIST_1.artistGroup()} is displayed")
+        composeTestRule
+            .onNodeWithText(ARTIST_1.artistGroup())
+            .performClick()
+        composeTestRule.waitFor(timeout)
+
         composeTestRule
             .onNodeWithText(ARTIST_1)
             .assertIsDisplayed()
