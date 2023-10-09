@@ -24,8 +24,8 @@ import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
-import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateNeedScroll
-import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateScrollPosition
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateSongListNeedScroll
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateSongListScrollPosition
 import jatx.russianrocksongbook.testing.SONG_LIST_LAZY_COLUMN
 import jatx.russianrocksongbook.testing.TestingConfig
 import jatx.russianrocksongbook.navigation.ScreenVariant
@@ -45,8 +45,8 @@ internal fun SongListBody(
     val currentArtist = localState.currentArtist
     val songList = localState.currentSongList
 
-    val scrollPosition = localState.scrollPosition
-    val needScroll = localState.needScroll
+    val scrollPosition = localState.songListScrollPosition
+    val needScroll = localState.songListNeedScroll
 
     val fontScale = localViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
@@ -83,12 +83,12 @@ internal fun SongListBody(
                     delay(100L)
                 }
                 if (scrollPosition >= 0) onPerformScroll(scrollPosition)
-                localViewModel.submitAction(UpdateNeedScroll(false))
+                localViewModel.submitAction(UpdateSongListNeedScroll(false))
             } else {
                 snapshotFlow {
                     getFirstVisibleItemIndex()
                 }.collectLatest {
-                    localViewModel.submitAction(UpdateScrollPosition(it))
+                    localViewModel.submitAction(UpdateSongListScrollPosition(it))
                 }
             }
         }

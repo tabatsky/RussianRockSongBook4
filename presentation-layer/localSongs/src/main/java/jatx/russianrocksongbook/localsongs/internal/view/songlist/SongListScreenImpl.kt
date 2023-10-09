@@ -13,7 +13,7 @@ import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.ShowSongs
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateArtists
-import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateNeedScroll
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateSongListNeedScroll
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.VoiceCommandViewModel
 import kotlinx.coroutines.launch
 
@@ -34,7 +34,7 @@ internal fun SongListScreenImpl(
 
     LaunchedEffect(Unit) {
         if (isBackFromSong) {
-            localViewModel.submitAction(UpdateNeedScroll(true))
+            localViewModel.submitAction(UpdateSongListNeedScroll(true))
         }
     }
 

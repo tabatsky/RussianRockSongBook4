@@ -265,8 +265,8 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         TimeUnit.MILLISECONDS.sleep(timeout)
 
-        assertEquals(13, localViewModel.localState.value.scrollPosition)
-        assertEquals(true, localViewModel.localState.value.needScroll)
+        assertEquals(13, localViewModel.localState.value.songListScrollPosition)
+        assertEquals(true, localViewModel.localState.value.songListNeedScroll)
         assertEquals(songList[0], localViewModel.localState.value.currentSong)
         assertEquals(13, localViewModel.localState.value.currentSongPosition)
 

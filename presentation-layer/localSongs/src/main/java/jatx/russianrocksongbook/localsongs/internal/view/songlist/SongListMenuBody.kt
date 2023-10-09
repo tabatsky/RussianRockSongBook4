@@ -4,7 +4,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
@@ -20,7 +19,12 @@ import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.SelectArtist
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateMenuExpandedArtistGroup
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateMenuScrollPosition
 import jatx.russianrocksongbook.testing.MENU_LAZY_COLUMN
+import jatx.russianrocksongbook.testing.TestingConfig
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 internal fun SongListMenuBody(
@@ -48,10 +52,7 @@ internal fun SongListMenuBody(
             left = navigationFocusRequester
         }
 
-    var expandedArtistGroup by rememberSaveable {
-        mutableStateOf("")
-    }
-
+    val expandedArtistGroup = localState.menuExpandedArtistGroup
     fun getExpandedList(group: String) = if (expandedArtistGroup == group) {
         artistList.filter { it !in predefinedArtistList && it.uppercase().startsWith(group) }
     } else {
@@ -78,13 +79,41 @@ internal fun SongListMenuBody(
                 fontSizeSp = fontSizeSp,
                 theme = theme,
                 onGroupClick = {
-                    expandedArtistGroup = artistOrGroup
+                    localViewModel.submitAction(UpdateMenuExpandedArtistGroup(artistOrGroup))
                 },
                 onArtistClick = {
                     localViewModel.submitAction(SelectArtist(it))
                     onCloseDrawer()
                 }
             )
+        }
+    }
+
+    var needScroll by remember {
+        mutableStateOf(true)
+    }
+
+    val scrollPosition = localState.menuScrollPosition
+
+    @Composable
+    fun ScrollEffect(
+        onPerformScroll: suspend (Int) -> Unit,
+        getFirstVisibleItemIndex: () -> Int
+    ) {
+        LaunchedEffect(needScroll) {
+            if (needScroll) {
+                if (TestingConfig.isTesting) {
+                    delay(100L)
+                }
+                if (scrollPosition >= 0) onPerformScroll(scrollPosition)
+                needScroll = false
+            } else {
+                snapshotFlow {
+                    getFirstVisibleItemIndex()
+                }.collectLatest {
+                    localViewModel.submitAction(UpdateMenuScrollPosition(it))
+                }
+            }
         }
     }
 
@@ -98,6 +127,10 @@ internal fun SongListMenuBody(
                 TheItem(artistOrGroup)
             }
         }
+        ScrollEffect(
+            onPerformScroll = { menuState.scrollToItem(it) },
+            getFirstVisibleItemIndex = { menuState.firstVisibleItemIndex }
+        )
     } else {
         val menuState = rememberLazyListState()
         LazyColumn(
@@ -108,5 +141,9 @@ internal fun SongListMenuBody(
                 TheItem(artistOrGroup)
             }
         }
+        ScrollEffect(
+            onPerformScroll = { menuState.scrollToItem(it) },
+            getFirstVisibleItemIndex = { menuState.firstVisibleItemIndex }
+        )
     }
 }
