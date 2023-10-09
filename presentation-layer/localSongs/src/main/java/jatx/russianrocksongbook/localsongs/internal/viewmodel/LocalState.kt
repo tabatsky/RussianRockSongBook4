@@ -13,8 +13,10 @@ data class LocalState(
     val isEditorMode: Boolean,
     val isAutoPlayMode: Boolean,
     val isUploadButtonEnabled: Boolean,
-    val scrollPosition: Int,
-    val needScroll: Boolean
+    val menuScrollPosition: Int,
+    val menuExpandedArtistGroup: String,
+    val songListScrollPosition: Int,
+    val songListNeedScroll: Boolean
 ) {
     companion object {
         fun initial(commonState: CommonState) = LocalState(
@@ -26,8 +28,10 @@ data class LocalState(
             isEditorMode = false,
             isAutoPlayMode = false,
             isUploadButtonEnabled = true,
-            scrollPosition = 0,
-            needScroll = false
+            menuScrollPosition = 0,
+            menuExpandedArtistGroup = "",
+            songListScrollPosition = 0,
+            songListNeedScroll = false
         )
     }
 

@@ -145,8 +145,10 @@ internal open class LocalViewModel @Inject constructor(
             is ShowDevSite -> showDevSite()
             is UpdateArtists -> updateArtists()
             is UpdateCurrentSong -> updateCurrentSong(action.song)
-            is UpdateScrollPosition -> updateScrollPosition(action.position)
-            is UpdateNeedScroll -> updateNeedScroll(action.need)
+            is UpdateMenuScrollPosition -> updateMenuScrollPosition(action.position)
+            is UpdateMenuExpandedArtistGroup -> updateMenuExpandedArtistGroup(action.artistGroup)
+            is UpdateSongListScrollPosition -> updateSongListScrollPosition(action.position)
+            is UpdateSongListNeedScroll -> updateSongListNeedScroll(action.need)
             is SetEditorMode -> setEditorMode(action.isEditor)
             is SetAutoPlayMode -> setAutoPlayMode(action.isAutoPlay)
             else -> super.handleAction(action)
@@ -245,8 +247,8 @@ internal open class LocalViewModel @Inject constructor(
         }
 
         Log.e("select song", position.toString())
-        updateScrollPosition(position)
-        updateNeedScroll(true)
+        updateSongListScrollPosition(position)
+        updateSongListNeedScroll(true)
         updateCurrentSongPosition(position)
 
         val oldArtist = localState.value.currentSong?.artist
@@ -449,15 +451,27 @@ internal open class LocalViewModel @Inject constructor(
         }
     }
 
-    private fun updateScrollPosition(position: Int) {
+    private fun updateMenuScrollPosition(position: Int) {
         localStateHolder.localState.update {
-            it.copy(scrollPosition = position)
+            it.copy(menuScrollPosition = position)
         }
     }
 
-    private fun updateNeedScroll(needScroll: Boolean) {
+    private fun updateMenuExpandedArtistGroup(artistGroup: String) {
         localStateHolder.localState.update {
-            it.copy(needScroll = needScroll)
+            it.copy(menuExpandedArtistGroup = artistGroup)
+        }
+    }
+
+    private fun updateSongListScrollPosition(position: Int) {
+        localStateHolder.localState.update {
+            it.copy(songListScrollPosition = position)
+        }
+    }
+
+    private fun updateSongListNeedScroll(needScroll: Boolean) {
+        localStateHolder.localState.update {
+            it.copy(songListNeedScroll = needScroll)
         }
     }
 

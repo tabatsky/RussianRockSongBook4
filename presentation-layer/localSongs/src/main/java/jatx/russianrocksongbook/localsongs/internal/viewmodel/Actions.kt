@@ -4,8 +4,10 @@ import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.domain.models.local.Song
 
 data class UpdateCurrentSong(val song: Song?): UIAction
-data class UpdateScrollPosition(val position: Int): UIAction
-data class UpdateNeedScroll(val need: Boolean): UIAction
+data class UpdateMenuScrollPosition(val position: Int): UIAction
+data class UpdateMenuExpandedArtistGroup(val artistGroup: String): UIAction
+data class UpdateSongListScrollPosition(val position: Int): UIAction
+data class UpdateSongListNeedScroll(val need: Boolean): UIAction
 data class SetEditorMode(val isEditor: Boolean): UIAction
 data class SetAutoPlayMode(val isAutoPlay: Boolean): UIAction
 object UpdateArtists: UIAction
