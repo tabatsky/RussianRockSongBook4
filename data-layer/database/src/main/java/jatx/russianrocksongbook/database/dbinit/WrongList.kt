@@ -21,5 +21,6 @@ internal val wrongArtists = listOf(
 internal val wrongArtistsPatch = mapOf(
     "Люмен" to "Lumen",
     "Черный кофе" to "Чёрный Кофе",
-    "Чиж и Ко" to "Чиж & Co"
+    "Чиж и Ко" to "Чиж & Co",
+    "The Matrixx" to "Глеб Самойлоff & The Matrixx"
 )
