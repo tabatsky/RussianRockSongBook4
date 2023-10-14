@@ -1,5 +1,8 @@
 package jatx.russianrocksongbook.localsongs.internal.view.songlist
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,6 +12,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.domain.repository.local.*
@@ -23,17 +27,24 @@ internal fun ArtistGroupItem(
     onGroupClick: () -> Unit,
     onArtistClick: (String) -> Unit
 ) {
-    val modifier = Modifier
+    val labelModifier = Modifier
         .fillMaxWidth()
         .padding(5.dp)
         .clickable {
             onGroupClick()
         }
 
-    Column {
+    val animationSpec = tween<IntSize>(durationMillis = 300, easing = LinearOutSlowInEasing)
+
+    Column(
+        modifier = Modifier
+            .animateContentSize(
+                animationSpec = animationSpec
+            )
+    ) {
         Text(
             text = artistGroup,
-            modifier = modifier,
+            modifier = labelModifier,
             fontWeight = FontWeight.W500,
             fontSize = fontSizeSp,
             color = theme.colorBg
@@ -61,7 +72,7 @@ internal fun ArtistItem(
 ) {
     val isPredefined = predefinedArtistList.contains(artist)
 
-    val modifier = (if (isPredefined) {
+    val artistModifier = (if (isPredefined) {
         Modifier
             .fillMaxWidth()
             .padding(5.dp)
@@ -76,7 +87,7 @@ internal fun ArtistItem(
 
     Text(
         text = artist,
-        modifier = modifier,
+        modifier = artistModifier,
         fontWeight = if (isPredefined) FontWeight.W700 else FontWeight.W400,
         fontSize = fontSizeSp,
         color = theme.colorBg

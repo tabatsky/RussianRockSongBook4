@@ -124,7 +124,7 @@ internal fun SongListMenuBody(
             state = menuState
         ) {
             itemsIndexed(predefinedWithGroups) { _, artistOrGroup ->
-                TheItem(artistOrGroup)
+                TheItem(artistOrGroup = artistOrGroup)
             }
         }
         ScrollEffect(
@@ -138,7 +138,7 @@ internal fun SongListMenuBody(
             state = menuState
         ) {
             itemsIndexed(predefinedWithGroups) { _, artistOrGroup ->
-                TheItem(artistOrGroup)
+                TheItem(artistOrGroup = artistOrGroup)
             }
         }
         ScrollEffect(
