@@ -13,7 +13,6 @@ data class CloudState(
     val cloudSongsFlow: Flow<PagingData<CloudSong>>?,
     val searchFor: String,
     val orderBy: OrderBy,
-    val invalidateCounter: Int,
     val scrollPosition: Int,
     val needScroll: Boolean
 ) {
@@ -26,7 +25,6 @@ data class CloudState(
             cloudSongsFlow = null,
             searchFor = "",
             orderBy = OrderBy.BY_ID_DESC,
-            invalidateCounter = 0,
             scrollPosition = 0,
             needScroll = false
         )

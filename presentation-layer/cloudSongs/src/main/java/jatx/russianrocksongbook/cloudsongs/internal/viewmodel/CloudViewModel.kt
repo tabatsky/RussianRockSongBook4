@@ -282,7 +282,6 @@ internal class CloudViewModel @Inject constructor(
                             } else if (voteValue == -1) {
                                 allDislikes[cloudSong] = cloudSong.dislikeCount + 1
                             }
-                            incrementInvalidateCounter()
                             showToast(R.string.toast_vote_success)
                         }
                         STATUS_ERROR -> {
@@ -299,12 +298,6 @@ internal class CloudViewModel @Inject constructor(
     private fun updateCloudSongsFlow(flow: Flow<PagingData<CloudSong>>?) {
         cloudStateHolder.cloudState.update {
             it.copy(cloudSongsFlow = flow)
-        }
-    }
-
-    private fun incrementInvalidateCounter() {
-        cloudStateHolder.cloudState.update {
-            it.copy(invalidateCounter = it.invalidateCounter + 1)
         }
     }
 }

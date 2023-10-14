@@ -60,7 +60,6 @@ internal fun CloudSongTextScreenImpl(position: Int) {
     val itemsAdapter = ItemsAdapter(cloudSongItems)
 
     val cloudSong = itemsAdapter.getItem(position)
-    val invalidateCounter = cloudState.invalidateCounter
 
     cloudViewModel.submitAction(UpdateCurrentCloudSong(cloudSong))
 
@@ -137,7 +136,6 @@ internal fun CloudSongTextScreenImpl(position: Int) {
                         W = W,
                         H = H,
                         cloudSong = _cloudSong,
-                        invalidateCounter = invalidateCounter,
                         listState = listState,
                         fontSizeTextSp = fontSizeTextSp,
                         fontSizeTitleSp = fontSizeTitleSp,

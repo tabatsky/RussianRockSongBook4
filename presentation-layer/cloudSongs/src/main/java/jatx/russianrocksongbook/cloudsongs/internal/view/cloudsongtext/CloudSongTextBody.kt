@@ -1,6 +1,5 @@
 package jatx.russianrocksongbook.cloudsongs.internal.view.cloudsongtext
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
@@ -23,7 +22,6 @@ internal fun CloudSongTextBody(
     W: Dp,
     H: Dp,
     cloudSong: CloudSong,
-    invalidateCounter: Int,
     listState: LazyListState,
     fontSizeTextSp: TextUnit,
     fontSizeTitleSp: TextUnit,
@@ -31,13 +29,11 @@ internal fun CloudSongTextBody(
     modifier: Modifier,
     onWordClick: (Word) -> Unit
 ) {
-    val paddingStart = if (W > H) 20.dp else 0.dp
-
-    Log.e("invalidateCounter", invalidateCounter.toString())
+    val paddingStart = if (W > H) 20.dp else 8.dp
 
     Column(
         modifier = modifier
-            .padding(start = paddingStart)
+            .padding(start = paddingStart, top = 8.dp)
     ) {
         Text(
             text = cloudSong.visibleTitleWithArtistAndRating,

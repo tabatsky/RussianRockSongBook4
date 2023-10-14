@@ -46,11 +46,11 @@ internal fun SongTextBody(
 ) {
     val localViewModel = LocalViewModel.getInstance()
 
-    val paddingStart = if (W > H) 20.dp else 0.dp
+    val paddingStart = if (W > H) 20.dp else 8.dp
 
     Column(
         modifier = modifier
-            .padding(start = paddingStart)
+            .padding(start = paddingStart, top = 8.dp)
     ) {
         Text(
             text = "${song.title} (${song.artist})",
