@@ -34,7 +34,7 @@ fun ClickableWordText(
             }
             if (actualWord in actualWordSet) {
                 AnnotatedString.Range(
-                    SpanStyle(color = colorBg, background = colorMain),
+                    SpanStyle(color = colorBg, background = colorMain, fontSize = fontSize * 1.1),
                     it.startIndex,
                     it.endIndex
                 )
@@ -54,7 +54,7 @@ fun ClickableWordText(
             color = colorMain
         )
     ) { offset ->
-        val word = wordList.firstOrNull { offset >= it.startIndex && offset < it.endIndex }
+        val word = wordList.firstOrNull { offset >= it.startIndex && offset <= it.endIndex }
         word?.let {
             var actualWord = word.text
             for (key in actualWordMappings.keys) {
