@@ -40,19 +40,23 @@ import kotlinx.coroutines.launch
 internal fun SongTextScreenImpl(artist: String, position: Int) {
     val localViewModel = LocalViewModel.getInstance()
 
-    val key = artist to position
+    val localState by localViewModel.localState.collectAsState()
+
+    val song = localState.currentSong
+
+    LaunchedEffect(artist to position) {
+        localViewModel.submitAction(SelectSong(position))
+    }
+
+    if (position != localState.currentSongPosition) return
+
+    val key = artist to song?.title
     var lastKey by rememberSaveable { mutableStateOf(key) }
     val keyChanged = key != lastKey
 
     if (keyChanged) {
         lastKey = key
     }
-
-    localViewModel.submitAction(SelectSong(position))
-
-    val localState by localViewModel.localState.collectAsState()
-
-    val song = localState.currentSong
 
     var text by localViewModel.editorText
 
