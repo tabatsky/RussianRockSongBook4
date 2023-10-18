@@ -144,7 +144,7 @@ internal open class LocalViewModel @Inject constructor(
             is ReviewApp -> reviewApp()
             is ShowDevSite -> showDevSite()
             is UpdateArtists -> updateArtists()
-            is UpdateCurrentSong -> updateCurrentSong(action.song)
+            is UpdateCurrentSong -> updateCurrentSong(action.song, localState.value.currentSongPosition)
             is UpdateMenuScrollPosition -> updateMenuScrollPosition(action.position)
             is UpdateMenuExpandedArtistGroup -> updateMenuExpandedArtistGroup(action.artistGroup)
             is UpdateSongListScrollPosition -> updateSongListScrollPosition(action.position)
@@ -247,9 +247,6 @@ internal open class LocalViewModel @Inject constructor(
         }
 
         Log.e("select song", position.toString())
-        updateSongListScrollPosition(position)
-        updateSongListNeedScroll(true)
-        updateCurrentSongPosition(position)
 
         val oldArtist = localState.value.currentSong?.artist
         val oldTitle = localState.value.currentSong?.title
@@ -261,7 +258,7 @@ internal open class LocalViewModel @Inject constructor(
                         .execute(localState.value.currentArtist, position)
                         .collect { song ->
                             withContext(Dispatchers.Main) {
-                                updateCurrentSong(song)
+                                updateCurrentSong(song, position)
 
                                 val newArtist = song?.artist
                                 val newTitle = song?.title
@@ -324,14 +321,15 @@ internal open class LocalViewModel @Inject constructor(
         Log.e("set favorite", favorite.toString())
         with (localState.value) {
             currentSong?.copy(favorite = favorite)?.let {
-                updateCurrentSong(it)
+                updateCurrentSong(it, localState.value.currentSongPosition)
                 saveSong(it)
                 if (!favorite && currentArtist == ARTIST_FAVORITE) {
+                    val newSongCount = getCountByArtistUseCase.execute(ARTIST_FAVORITE)
                     updateCurrentSongCount(
-                        getCountByArtistUseCase.execute(ARTIST_FAVORITE)
+                        newSongCount
                     )
-                    if (currentSongCount > 0) {
-                        if (currentSongPosition >= currentSongCount) {
+                    if (newSongCount > 0) {
+                        if (currentSongPosition >= newSongCount) {
                             selectScreen(
                                 ScreenVariant
                                     .SongText(
@@ -365,10 +363,10 @@ internal open class LocalViewModel @Inject constructor(
         with (localState.value) {
             currentSong?.let {
                 deleteSongToTrashUseCase.execute(it)
-                val songCount = getCountByArtistUseCase.execute(currentArtist)
-                updateCurrentSongCount(songCount)
-                if (songCount > 0) {
-                    if (currentSongPosition >= currentSongCount) {
+                val newSongCount = getCountByArtistUseCase.execute(currentArtist)
+                updateCurrentSongCount(newSongCount)
+                if (newSongCount > 0) {
+                    if (currentSongPosition >= newSongCount) {
                         selectScreen(
                             ScreenVariant
                                 .SongText(
@@ -445,9 +443,14 @@ internal open class LocalViewModel @Inject constructor(
         }
     }
 
-    private fun updateCurrentSong(song: Song?) {
+    private fun updateCurrentSong(song: Song?, position: Int) {
         localStateHolder.localState.update {
-            it.copy(currentSong = song)
+            it.copy(
+                currentSong = song,
+                currentSongPosition = position,
+                songListScrollPosition = position,
+                songListNeedScroll = true
+            )
         }
     }
 
@@ -508,12 +511,6 @@ internal open class LocalViewModel @Inject constructor(
     private fun updateCurrentSongList(songList: List<Song>) {
         localStateHolder.localState.update {
             it.copy(currentSongList = songList)
-        }
-    }
-
-    private fun updateCurrentSongPosition(position: Int) {
-        localStateHolder.localState.update {
-            it.copy(currentSongPosition = position)
         }
     }
 
