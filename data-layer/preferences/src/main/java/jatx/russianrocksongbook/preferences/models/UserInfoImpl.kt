@@ -26,5 +26,6 @@ class UserInfoImpl @Inject constructor(
         HashingUtil.hash(deviceId)
     }
 
-    override val googleAccount = ""
+    override val googleAccount: String
+        get() = deviceIdHash
 }
