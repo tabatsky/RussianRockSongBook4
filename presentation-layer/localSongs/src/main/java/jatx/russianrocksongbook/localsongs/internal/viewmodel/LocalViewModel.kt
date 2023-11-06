@@ -16,8 +16,8 @@ import jatx.russianrocksongbook.domain.repository.local.*
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.commonviewmodel.UIAction
-import jatx.russianrocksongbook.commonviewmodel.contracts.MusicOpener
 import jatx.russianrocksongbook.commonviewmodel.contracts.WarningSender
+import jatx.russianrocksongbook.domain.models.music.Music
 import jatx.russianrocksongbook.navigation.NavControllerHolder
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import kotlinx.coroutines.Dispatchers
@@ -71,28 +71,8 @@ internal open class LocalViewModel @Inject constructor(
     private var getArtistsJob: Job? = null
     private var uploadSongDisposable: Disposable? = null
 
-    override val musicOpener: MusicOpener? = object : MusicOpener {
-        override fun openVkMusicImpl(dontAskMore: Boolean) {
-            settings.vkMusicDontAsk = dontAskMore
-            localState.value.currentSong?.let {
-                callbacks.onOpenVkMusic("${it.artist} ${it.title}")
-            }
-        }
-
-        override fun openYandexMusicImpl(dontAskMore: Boolean) {
-            settings.yandexMusicDontAsk = dontAskMore
-            localState.value.currentSong?.let {
-                callbacks.onOpenYandexMusic("${it.artist} ${it.title}")
-            }
-        }
-
-        override fun openYoutubeMusicImpl(dontAskMore: Boolean) {
-            settings.youtubeMusicDontAsk = dontAskMore
-            localState.value.currentSong?.let {
-                callbacks.onOpenYoutubeMusic("${it.artist} ${it.title}")
-            }
-        }
-    }
+    override val currentMusic: Music?
+        get() = localState.value.currentSong
 
     override val warningSender = object : WarningSender {
         override fun sendWarningImpl(comment: String) {

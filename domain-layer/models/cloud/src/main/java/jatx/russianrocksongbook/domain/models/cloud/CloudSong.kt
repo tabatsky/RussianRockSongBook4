@@ -1,5 +1,7 @@
 package jatx.russianrocksongbook.domain.models.cloud
 
+import jatx.russianrocksongbook.domain.models.music.Music
+
 const val thumbUp = "\uD83D\uDC4D"
 const val thumbDown = "\uD83D\uDC4E"
 
@@ -16,7 +18,7 @@ data class CloudSong(
     val raiting: Double = 0.0,
     val likeCount: Int = 0,
     val dislikeCount: Int = 0
-) {
+): Music {
 
     val visibleTitle = "$title${if (variant == 0) "" else " ($variant)"}"
 
@@ -28,4 +30,7 @@ data class CloudSong(
 
     val visibleTitleWithArtistAndRating: String
         get() = "$visibleTitle | $artist | $formattedRating"
+
+    override val searchFor: String
+        get() = "$artist $title"
 }

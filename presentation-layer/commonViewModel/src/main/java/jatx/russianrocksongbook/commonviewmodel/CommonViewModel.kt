@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jatx.russianrocksongbook.commonviewmodel.contracts.MusicOpener
 import jatx.russianrocksongbook.commonviewmodel.contracts.WarningSender
+import jatx.russianrocksongbook.domain.models.music.Music
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import jatx.russianrocksongbook.navigation.NavControllerHolder
@@ -39,7 +40,30 @@ open class CommonViewModel @Inject constructor(
     private val toasts =
         commonViewModelDeps.toasts
 
-    protected open val musicOpener: MusicOpener? = null
+    protected open val currentMusic: Music? = null
+
+    private val musicOpener: MusicOpener = object : MusicOpener {
+        override fun openVkMusicImpl(dontAskMore: Boolean) {
+            settings.vkMusicDontAsk = dontAskMore
+            currentMusic?.let {
+                callbacks.onOpenVkMusic(it.searchFor)
+            }
+        }
+
+        override fun openYandexMusicImpl(dontAskMore: Boolean) {
+            settings.yandexMusicDontAsk = dontAskMore
+            currentMusic?.let {
+                callbacks.onOpenYandexMusic(it.searchFor)
+            }
+        }
+
+        override fun openYoutubeMusicImpl(dontAskMore: Boolean) {
+            settings.youtubeMusicDontAsk = dontAskMore
+            currentMusic?.let {
+                callbacks.onOpenYoutubeMusic(it.searchFor)
+            }
+        }
+    }
     protected open val warningSender: WarningSender? = null
 
     val isTV = commonViewModelDeps.tvDetector.isTV
@@ -190,13 +214,13 @@ open class CommonViewModel @Inject constructor(
     private fun doNothing() = Unit
 
     private fun openVkMusic(dontAskMore: Boolean) =
-        musicOpener?.openVkMusicImpl(dontAskMore)
+        musicOpener.openVkMusicImpl(dontAskMore)
 
     private fun openYandexMusic(dontAskMore: Boolean) =
-        musicOpener?.openYandexMusicImpl(dontAskMore)
+        musicOpener.openYandexMusicImpl(dontAskMore)
 
     private fun openYoutubeMusic(dontAskMore: Boolean) =
-        musicOpener?.openYoutubeMusicImpl(dontAskMore)
+        musicOpener.openYoutubeMusicImpl(dontAskMore)
 
     private fun sendWarning(comment: String) =
         warningSender?.sendWarningImpl(comment)
