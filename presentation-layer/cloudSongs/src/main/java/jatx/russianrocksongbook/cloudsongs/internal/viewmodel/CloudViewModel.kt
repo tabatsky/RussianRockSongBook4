@@ -24,8 +24,8 @@ import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_ERROR
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.commonviewmodel.UIAction
-import jatx.russianrocksongbook.commonviewmodel.contracts.MusicOpener
 import jatx.russianrocksongbook.commonviewmodel.contracts.WarningSender
+import jatx.russianrocksongbook.domain.models.music.Music
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asStateFlow
@@ -59,28 +59,8 @@ internal class CloudViewModel @Inject constructor(
 
     val cloudState = cloudStateHolder.cloudState.asStateFlow()
 
-    override val musicOpener = object : MusicOpener {
-        override fun openVkMusicImpl(dontAskMore: Boolean) {
-            settings.vkMusicDontAsk = dontAskMore
-            cloudState.value.currentCloudSong?.let {
-                callbacks.onOpenVkMusic("${it.artist} ${it.title}")
-            }
-        }
-
-        override fun openYandexMusicImpl(dontAskMore: Boolean) {
-            settings.yandexMusicDontAsk = dontAskMore
-            cloudState.value.currentCloudSong?.let {
-                callbacks.onOpenYandexMusic("${it.artist} ${it.title}")
-            }
-        }
-
-        override fun openYoutubeMusicImpl(dontAskMore: Boolean) {
-            settings.youtubeMusicDontAsk = dontAskMore
-            cloudState.value.currentCloudSong?.let {
-                callbacks.onOpenYoutubeMusic("${it.artist} ${it.title}")
-            }
-        }
-    }
+    override val currentMusic: Music?
+        get() = cloudState.value.currentCloudSong
 
     override val warningSender = object : WarningSender {
         override fun sendWarningImpl(comment: String) {

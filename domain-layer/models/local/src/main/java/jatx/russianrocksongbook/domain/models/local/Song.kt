@@ -1,5 +1,7 @@
 package jatx.russianrocksongbook.domain.models.local
 
+import jatx.russianrocksongbook.domain.models.music.Music
+
 const val USER_SONG_MD5 = "USER"
 
 data class Song(
@@ -11,7 +13,7 @@ data class Song(
     val deleted: Boolean = false,
     val outOfTheBox: Boolean = true,
     val origTextMD5: String = ""
-) {
+): Music {
 
     // for correct MutableStateFlow working
     override fun equals(other: Any?): Boolean {
@@ -36,4 +38,7 @@ data class Song(
                 (if (deleted) 1 else 0) * 2 +
                 (if (favorite) 1 else 0)
     }
+
+    override val searchFor: String
+        get() = "$artist $title"
 }

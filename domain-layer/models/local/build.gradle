@@ -34,4 +34,5 @@ dependencies {
     implementation commonDeps.coreKtx
 
     api project(':core:hashing')
+    api project(':domain-layer:models:music')
 }
