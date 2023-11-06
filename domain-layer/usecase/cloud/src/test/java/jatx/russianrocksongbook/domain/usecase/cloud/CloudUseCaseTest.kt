@@ -9,7 +9,6 @@ import jatx.russianrocksongbook.domain.models.appcrash.AppCrash
 import jatx.russianrocksongbook.domain.models.cloud.UserInfo
 import jatx.russianrocksongbook.domain.models.converters.asCloudSongWithUserInfo
 import jatx.russianrocksongbook.domain.models.local.Song
-import jatx.russianrocksongbook.domain.models.warning.Warning
 import jatx.russianrocksongbook.domain.repository.cloud.CloudRepository
 import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.domain.repository.cloud.result.*
@@ -25,8 +24,7 @@ class CloudUseCaseTest {
     lateinit var cloudRepository: CloudRepository
     lateinit var addSongListToCloudUseCase: AddSongListToCloudUseCase
     lateinit var addSongToCloudUseCase: AddSongToCloudUseCase
-    lateinit var addWarningCloudUseCase: AddWarningCloudUseCase
-    lateinit var addWarningLocalUseCase: AddWarningLocalUseCase
+    lateinit var addWarningUseCase: AddWarningUseCase
     lateinit var deleteFromCloudUseCase: DeleteFromCloudUseCase
     lateinit var pagedSearchUseCase: PagedSearchUseCase
     lateinit var sendCrashUseCase: SendCrashUseCase
@@ -96,8 +94,7 @@ class CloudUseCaseTest {
             cloudRepository = cloudRepository,
             userInfo = userInfo
         )
-        addWarningCloudUseCase = AddWarningCloudUseCase(cloudRepository)
-        addWarningLocalUseCase = AddWarningLocalUseCase(cloudRepository)
+        addWarningUseCase = AddWarningUseCase(cloudRepository)
         deleteFromCloudUseCase = DeleteFromCloudUseCase(cloudRepository)
         pagedSearchUseCase = PagedSearchUseCase(cloudRepository)
         sendCrashUseCase = SendCrashUseCase(cloudRepository)
@@ -144,17 +141,15 @@ class CloudUseCaseTest {
         every { cloudRepository.addWarning(any()) } returns
                 Single.just(resultWithoutData)
 
-        val result = addWarningCloudUseCase.execute(
-            cloudSong = song asCloudSongWithUserInfo userInfo,
+        val result = addWarningUseCase.execute(
+            warnable = song asCloudSongWithUserInfo userInfo,
             comment = comment
         )
 
         assertEquals(resultWithoutData, result.blockingGet())
 
-        val warning = Warning(
-            cloudSong = song asCloudSongWithUserInfo userInfo,
-            comment = comment
-        )
+        val warning = (song asCloudSongWithUserInfo userInfo)
+            .warningWithComment(comment)
 
         verifySequence {
             cloudRepository.addWarning(warning)
@@ -166,17 +161,14 @@ class CloudUseCaseTest {
         every { cloudRepository.addWarning(any()) } returns
                 Single.just(resultWithoutData)
 
-        val result = addWarningLocalUseCase.execute(
-            song = song,
+        val result = addWarningUseCase.execute(
+            warnable = song,
             comment = comment
         )
 
         assertEquals(resultWithoutData, result.blockingGet())
 
-        val warning = Warning(
-            song = song,
-            comment = comment
-        )
+        val warning = song.warningWithComment(comment)
 
         verifySequence {
             cloudRepository.addWarning(warning)

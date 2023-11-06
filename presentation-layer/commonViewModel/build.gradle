@@ -61,6 +61,7 @@ dependencies {
     implementation commonDeps.composeUiTooling
     implementation commonDeps.navigationCompose
 
+    api project(':domain-layer:usecase:cloud')
     api project(':domain-layer:usecase:local')
     api project(':data-layer:database')
     api project(':data-layer:networking')

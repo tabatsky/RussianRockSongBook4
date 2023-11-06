@@ -16,8 +16,8 @@ import jatx.russianrocksongbook.domain.repository.local.*
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.commonviewmodel.UIAction
-import jatx.russianrocksongbook.commonviewmodel.contracts.WarningSender
 import jatx.russianrocksongbook.domain.models.music.Music
+import jatx.russianrocksongbook.domain.models.warning.Warnable
 import jatx.russianrocksongbook.navigation.NavControllerHolder
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import kotlinx.coroutines.Dispatchers
@@ -48,8 +48,6 @@ internal open class LocalViewModel @Inject constructor(
         localViewModelDeps.updateSongUseCase
     private val deleteSongToTrashUseCase =
         localViewModelDeps.deleteSongToTrashUseCase
-    private val addWarningLocalUseCase =
-        localViewModelDeps.addWarningLocalUseCase
     private val addSongToCloudUseCase =
         localViewModelDeps.addSongToCloudUseCase
     private val getArtistsUseCase =
@@ -74,26 +72,8 @@ internal open class LocalViewModel @Inject constructor(
     override val currentMusic: Music?
         get() = localState.value.currentSong
 
-    override val warningSender = object : WarningSender {
-        override fun sendWarningImpl(comment: String) {
-            localState.value.currentSong?.let {
-                addWarningLocalUseCase
-                    .execute(it, comment)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ result ->
-                        when (result.status) {
-                            STATUS_SUCCESS -> showToast(R.string.toast_send_warning_success)
-                            STATUS_ERROR -> showToast(result.message ?: "")
-                        }
-                    }, { error ->
-                        error.printStackTrace()
-                        showToast(R.string.error_in_app)
-                    })
-            }
-        }
-    }
-
+    override val currentWarnable: Warnable?
+        get() = localState.value.currentSong
 
     companion object {
         private const val key = "Local"

@@ -32,7 +32,4 @@ android {
 
 dependencies {
     implementation commonDeps.coreKtx
-
-    api project(':domain-layer:models:cloud')
-    api project(':domain-layer:models:local')
 }

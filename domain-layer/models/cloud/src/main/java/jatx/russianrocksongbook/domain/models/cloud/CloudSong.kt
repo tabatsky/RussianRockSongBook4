@@ -1,6 +1,9 @@
 package jatx.russianrocksongbook.domain.models.cloud
 
 import jatx.russianrocksongbook.domain.models.music.Music
+import jatx.russianrocksongbook.domain.models.warning.TYPE_CLOUD
+import jatx.russianrocksongbook.domain.models.warning.Warnable
+import jatx.russianrocksongbook.domain.models.warning.Warning
 
 const val thumbUp = "\uD83D\uDC4D"
 const val thumbDown = "\uD83D\uDC4E"
@@ -18,7 +21,7 @@ data class CloudSong(
     val raiting: Double = 0.0,
     val likeCount: Int = 0,
     val dislikeCount: Int = 0
-): Music {
+): Music, Warnable {
 
     val visibleTitle = "$title${if (variant == 0) "" else " ($variant)"}"
 
@@ -33,4 +36,12 @@ data class CloudSong(
 
     override val searchFor: String
         get() = "$artist $title"
+
+    override fun warningWithComment(comment: String) = Warning(
+        warningType = TYPE_CLOUD,
+        artist = artist,
+        title = title,
+        variant = variant,
+        comment = comment
+    )
 }

@@ -24,8 +24,8 @@ import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_ERROR
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.commonviewmodel.UIAction
-import jatx.russianrocksongbook.commonviewmodel.contracts.WarningSender
 import jatx.russianrocksongbook.domain.models.music.Music
+import jatx.russianrocksongbook.domain.models.warning.Warnable
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asStateFlow
@@ -49,8 +49,6 @@ internal class CloudViewModel @Inject constructor(
         cloudViewModelDeps.voteUseCase
     private val deleteFromCloudUseCase =
         cloudViewModelDeps.deleteFromCloudUseCase
-    private val addWarningCloudUseCase =
-        cloudViewModelDeps.addWarningCloudUseCase
 
     val spinnerStateOrderBy = mutableStateOf(SpinnerState(0, false))
 
@@ -62,25 +60,8 @@ internal class CloudViewModel @Inject constructor(
     override val currentMusic: Music?
         get() = cloudState.value.currentCloudSong
 
-    override val warningSender = object : WarningSender {
-        override fun sendWarningImpl(comment: String) {
-            cloudState.value.currentCloudSong?.let {
-                addWarningCloudUseCase
-                    .execute(it, comment)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ result ->
-                        when (result.status) {
-                            STATUS_SUCCESS -> showToast(R.string.toast_send_warning_success)
-                            STATUS_ERROR -> showToast(result.message ?: "")
-                        }
-                    }, { error ->
-                        error.printStackTrace()
-                        showToast(R.string.error_in_app)
-                    })
-            }
-        }
-    }
+    override val currentWarnable: Warnable?
+        get() = cloudState.value.currentCloudSong
 
     companion object {
         private const val key = "Cloud"

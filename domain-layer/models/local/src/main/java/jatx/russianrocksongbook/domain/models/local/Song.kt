@@ -1,6 +1,9 @@
 package jatx.russianrocksongbook.domain.models.local
 
 import jatx.russianrocksongbook.domain.models.music.Music
+import jatx.russianrocksongbook.domain.models.warning.TYPE_OUT_OF_THE_BOX
+import jatx.russianrocksongbook.domain.models.warning.Warnable
+import jatx.russianrocksongbook.domain.models.warning.Warning
 
 const val USER_SONG_MD5 = "USER"
 
@@ -13,7 +16,7 @@ data class Song(
     val deleted: Boolean = false,
     val outOfTheBox: Boolean = true,
     val origTextMD5: String = ""
-): Music {
+): Music, Warnable {
 
     // for correct MutableStateFlow working
     override fun equals(other: Any?): Boolean {
@@ -41,4 +44,12 @@ data class Song(
 
     override val searchFor: String
         get() = "$artist $title"
+
+    override fun warningWithComment(comment: String) = Warning(
+        warningType = TYPE_OUT_OF_THE_BOX,
+        artist = artist,
+        title = title,
+        variant = -1,
+        comment = comment
+    )
 }

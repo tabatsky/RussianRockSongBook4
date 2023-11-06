@@ -34,4 +34,5 @@ dependencies {
     implementation commonDeps.coreKtx
 
     api project(':domain-layer:models:music')
+    api project(':domain-layer:models:warning')
 }
