@@ -7,9 +7,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import jatx.russianrocksongbook.commonviewmodel.contracts.MusicOpener
 import jatx.russianrocksongbook.commonviewmodel.contracts.WarningSender
 import jatx.russianrocksongbook.domain.models.music.Music
+import jatx.russianrocksongbook.domain.models.warning.Warnable
+import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_ERROR
+import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import jatx.russianrocksongbook.navigation.NavControllerHolder
@@ -39,6 +44,8 @@ open class CommonViewModel @Inject constructor(
         commonViewModelDeps.resources
     private val toasts =
         commonViewModelDeps.toasts
+    private val addWarningUseCase =
+        commonViewModelDeps.addWarningUseCase
 
     protected open val currentMusic: Music? = null
 
@@ -64,7 +71,28 @@ open class CommonViewModel @Inject constructor(
             }
         }
     }
-    protected open val warningSender: WarningSender? = null
+
+    protected open val currentWarnable: Warnable? = null
+
+    private val warningSender: WarningSender = object : WarningSender {
+        override fun sendWarningImpl(comment: String) {
+            currentWarnable?.let {
+                addWarningUseCase
+                    .execute(it, comment)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ result ->
+                        when (result.status) {
+                            STATUS_SUCCESS -> showToast(R.string.toast_send_warning_success)
+                            STATUS_ERROR -> showToast(result.message ?: "")
+                        }
+                    }, { error ->
+                        error.printStackTrace()
+                        showToast(R.string.error_in_app)
+                    })
+            }
+        }
+    }
 
     val isTV = commonViewModelDeps.tvDetector.isTV
 
@@ -223,5 +251,5 @@ open class CommonViewModel @Inject constructor(
         musicOpener.openYoutubeMusicImpl(dontAskMore)
 
     private fun sendWarning(comment: String) =
-        warningSender?.sendWarningImpl(comment)
+        warningSender.sendWarningImpl(comment)
 }

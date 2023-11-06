@@ -10,7 +10,6 @@ import jatx.russianrocksongbook.domain.repository.local.ARTIST_ADD_SONG
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_CLOUD_SONGS
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_DONATION
 import jatx.russianrocksongbook.domain.usecase.cloud.AddSongToCloudUseCase
-import jatx.russianrocksongbook.domain.usecase.cloud.AddWarningLocalUseCase
 import jatx.russianrocksongbook.domain.usecase.local.*
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModelTest
@@ -49,9 +48,6 @@ open class LocalViewModelTest: CommonViewModelTest() {
     lateinit var deleteSongToTrashUseCase: DeleteSongToTrashUseCase
 
     @RelaxedMockK
-    lateinit var addWarningLocalUseCase: AddWarningLocalUseCase
-
-    @RelaxedMockK
     lateinit var addSongToCloudUseCase: AddSongToCloudUseCase
 
     internal lateinit var localViewModelDeps: LocalViewModelDeps
@@ -84,7 +80,6 @@ open class LocalViewModelTest: CommonViewModelTest() {
             getSongByArtistAndPositionUseCase = getSongByArtistAndPositionUseCase,
             updateSongUseCase = updateSongUseCase,
             deleteSongToTrashUseCase = deleteSongToTrashUseCase,
-            addWarningLocalUseCase = addWarningLocalUseCase,
             addSongToCloudUseCase = addSongToCloudUseCase,
             getArtistsUseCase = getArtistsUseCase
         )

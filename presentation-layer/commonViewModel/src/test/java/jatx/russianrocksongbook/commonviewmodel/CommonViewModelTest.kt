@@ -12,6 +12,7 @@ import jatx.russianrocksongbook.commonviewmodel.deps.Callbacks
 import jatx.russianrocksongbook.commonviewmodel.deps.Resources
 import jatx.russianrocksongbook.commonviewmodel.deps.TVDetector
 import jatx.russianrocksongbook.commonviewmodel.deps.Toasts
+import jatx.russianrocksongbook.domain.usecase.cloud.AddWarningUseCase
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import kotlinx.coroutines.flow.update
 import org.junit.*
@@ -43,6 +44,9 @@ open class CommonViewModelTest {
 
     @RelaxedMockK
     lateinit var tvDetector: TVDetector
+
+    @RelaxedMockK
+    lateinit var addWarningUseCase: AddWarningUseCase
 
     @InjectMockKs
     lateinit var commonViewModelDeps: CommonViewModelDeps

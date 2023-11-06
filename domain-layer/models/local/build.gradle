@@ -35,4 +35,5 @@ dependencies {
 
     api project(':core:hashing')
     api project(':domain-layer:models:music')
+    api project(':domain-layer:models:warning')
 }
