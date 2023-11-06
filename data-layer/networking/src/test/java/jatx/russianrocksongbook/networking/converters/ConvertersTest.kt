@@ -3,7 +3,6 @@ package jatx.russianrocksongbook.networking.converters
 import jatx.russianrocksongbook.domain.models.appcrash.AppCrash
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.models.warning.TYPE_CLOUD
-import jatx.russianrocksongbook.domain.models.warning.Warning
 import jatx.russianrocksongbook.networking.apimodels.CloudSongApiModel
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -119,10 +118,7 @@ class ConvertersTest {
             variant = VARIANT,
         )
 
-        val warning = Warning(
-            cloudSong = cloudSong,
-            comment = COMMENT
-        )
+        val warning = cloudSong.warningWithComment(COMMENT)
 
         val warningGson = warning.toWarningApiModel()
 

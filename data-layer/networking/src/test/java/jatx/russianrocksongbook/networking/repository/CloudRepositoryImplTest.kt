@@ -11,7 +11,6 @@ import jatx.russianrocksongbook.domain.models.appcrash.AppCrash
 import jatx.russianrocksongbook.domain.models.cloud.UserInfo
 import jatx.russianrocksongbook.domain.models.converters.asCloudSongWithUserInfo
 import jatx.russianrocksongbook.domain.models.local.Song
-import jatx.russianrocksongbook.domain.models.warning.Warning
 import jatx.russianrocksongbook.domain.repository.cloud.CloudRepository
 import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.networking.converters.toAppCrashApiModel
@@ -113,10 +112,7 @@ class CloudRepositoryImplTest {
 
     @Test
     fun test004_addWarning_isWorkingCorrect() {
-        val warning = Warning(
-            cloudSong = cloudSong,
-            comment = "some comment"
-        )
+        val warning = cloudSong.warningWithComment("some comment")
 
         cloudRepository.addWarning(warning)
 
