@@ -7,6 +7,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
@@ -21,7 +22,7 @@ import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 internal fun AddArtistBody() {
     val addArtistViewModel = AddArtistViewModel.getInstance()
 
-    val theme = addArtistViewModel.settings.theme
+    val theme = addArtistViewModel.theme.collectAsState().value
 
     val fontScale = addArtistViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTextDp = dimensionResource(id = R.dimen.text_size_16) * fontScale

@@ -21,6 +21,7 @@ import jatx.russianrocksongbook.navigation.NavControllerHolder
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
@@ -46,6 +47,9 @@ open class CommonViewModel @Inject constructor(
         commonViewModelDeps.toasts
     private val addWarningUseCase =
         commonViewModelDeps.addWarningUseCase
+
+    private val _theme = MutableStateFlow(settings.theme)
+    val theme = _theme.asStateFlow()
 
     protected open val currentMusic: Music? = null
 
@@ -127,6 +131,10 @@ open class CommonViewModel @Inject constructor(
     init {
         collectActions()
         collectEffects()
+    }
+
+    fun reloadSettings() {
+        _theme.update { settings.theme }
     }
 
     private fun collectActions() {

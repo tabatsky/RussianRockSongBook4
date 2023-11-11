@@ -40,7 +40,7 @@ internal fun CloudSearchBody(
     isPortrait: Boolean
 ) {
     val cloudViewModel = CloudViewModel.getInstance()
-    val theme = cloudViewModel.settings.theme
+    val theme = cloudViewModel.theme.collectAsState().value
 
     val cloudState by cloudViewModel.cloudState.collectAsState()
 

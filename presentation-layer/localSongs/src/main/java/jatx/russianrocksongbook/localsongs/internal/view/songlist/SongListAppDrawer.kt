@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -20,7 +21,7 @@ internal fun SongListAppDrawer(
 ) {
     val localViewModel = LocalViewModel.getInstance()
 
-    val theme = localViewModel.settings.theme
+    val theme = localViewModel.theme.collectAsState().value
 
     if (isPortrait) {
         Column(

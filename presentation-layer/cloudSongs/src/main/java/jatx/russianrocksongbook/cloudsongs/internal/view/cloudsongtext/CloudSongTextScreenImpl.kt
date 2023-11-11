@@ -105,7 +105,7 @@ internal fun CloudSongTextScreenImpl(position: Int) {
         showDeleteDialog = true
     }
 
-    val theme = cloudViewModel.settings.theme
+    val theme = cloudViewModel.theme.collectAsState().value
 
     val fontScale = cloudViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTitleDp = dimensionResource(id = R.dimen.text_size_20) * fontScale

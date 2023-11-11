@@ -21,7 +21,7 @@ import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 internal fun CloudSearchScreenImpl(isBackFromSong: Boolean) {
     val cloudViewModel = CloudViewModel.getInstance()
 
-    val theme = cloudViewModel.settings.theme
+    val theme = cloudViewModel.theme.collectAsState().value
 
     BoxWithConstraints(
         modifier = Modifier

@@ -24,7 +24,7 @@ internal fun DeleteCloudSongDialog(
     onDismiss: () -> Unit
 ) {
     val cloudViewModel = CloudViewModel.getInstance()
-    val theme = cloudViewModel.settings.theme
+    val theme = cloudViewModel.theme.collectAsState().value
     val fontScale = cloudViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTextDp = dimensionResource(id = R.dimen.text_size_12) * fontScale
     val fontSizeTextSp = with(LocalDensity.current) {

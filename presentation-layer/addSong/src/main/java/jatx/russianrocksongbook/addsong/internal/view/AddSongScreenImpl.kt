@@ -39,7 +39,7 @@ internal fun AddSongScreenImpl() {
     val addSongState by addSongViewModel.addSongState.collectAsState()
     val showUploadDialog = addSongState.showUploadDialogForSong
 
-    val theme = addSongViewModel.settings.theme
+    val theme = addSongViewModel.theme.collectAsState().value
 
     BoxWithConstraints(
         modifier = Modifier

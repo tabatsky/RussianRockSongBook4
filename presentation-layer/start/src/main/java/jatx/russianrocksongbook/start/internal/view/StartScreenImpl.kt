@@ -27,7 +27,7 @@ internal fun StartScreenImpl() {
         startViewModel.submitAction(AsyncInit)
     }
 
-    val theme = startViewModel.settings.theme
+    val theme = startViewModel.theme.collectAsState().value
 
     val startState by startViewModel.startState.collectAsState()
 
