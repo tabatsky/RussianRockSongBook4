@@ -2,7 +2,6 @@ package jatx.russianrocksongbook
 
 import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -82,7 +81,6 @@ class MainActivity : ComponentActivity() {
     fun ActionsInjector() {
         Log.e("inject init", "actions")
         val commonViewModel = CommonViewModel.getInstance()
-        commonViewModel.callbacks.onRestartApp = ::restartApp
         commonViewModel.callbacks.onReviewApp = ::reviewApp
         commonViewModel.callbacks.onShowDevSite = ::showDevSite
         commonViewModel.callbacks.onOpenYandexMusic = musicHelper::openYandexMusic
@@ -104,15 +102,6 @@ class MainActivity : ComponentActivity() {
     fun initAppDebug() {
         Log.e("inject init", "AppDebug")
         AppDebug.setAppCrashHandler(sendCrashUseCase, version)
-    }
-
-    private fun restartApp() {
-        val packageManager: PackageManager = packageManager
-        val intent = packageManager.getLaunchIntentForPackage(packageName)
-        val componentName = intent!!.component
-        val mainIntent = Intent.makeRestartActivityTask(componentName)
-        startActivity(mainIntent)
-        Runtime.getRuntime().exit(0)
     }
 
     private fun showDevSite() {

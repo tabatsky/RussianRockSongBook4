@@ -10,7 +10,6 @@ class Callbacks @Inject constructor() {
     var onOpenYoutubeMusic: (String) -> Unit = {}
     var onShowDevSite: () -> Unit = {}
     var onReviewApp: () -> Unit = {}
-    var onRestartApp: () -> Unit = {}
     var onAddSongsFromDir: () -> Unit = {}
     var onPurchaseItem: (String) -> Unit = {}
     var onArtistSelected: (String) -> Unit = {}

@@ -83,6 +83,5 @@ internal class SettingsViewModel @Inject constructor(
 
     private fun applySettings() {
         reloadSettings()
-        //callbacks.onRestartApp()
     }
 }
