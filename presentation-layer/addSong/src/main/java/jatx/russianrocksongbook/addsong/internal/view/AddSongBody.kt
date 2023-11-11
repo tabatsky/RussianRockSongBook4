@@ -33,7 +33,7 @@ internal fun AddSongBody() {
 
     val theme = addSongViewModel.theme.collectAsState().value
 
-    val fontScale = addSongViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
+    val fontScale = addSongViewModel.fontScaler.collectAsState().value.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTextDp = dimensionResource(id = R.dimen.text_size_16) * fontScale
     val fontSizeTextSp = with(LocalDensity.current) {
         fontSizeTextDp.toSp()

@@ -26,7 +26,7 @@ internal fun WhatsNewDialogImpl() {
     val commonViewModel = CommonViewModel.getInstance()
 
     val theme = commonViewModel.theme.collectAsState().value
-    val fontScale = commonViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
+    val fontScale = commonViewModel.fontScaler.collectAsState().value.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTitleDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
     val fontSizeTitleSp = with(LocalDensity.current) {
         fontSizeTitleDp.toSp()

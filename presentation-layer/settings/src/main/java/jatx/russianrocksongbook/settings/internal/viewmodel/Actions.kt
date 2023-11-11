@@ -14,4 +14,4 @@ data class SaveSettings(
     val scrollSpeed: Float
 ): UIAction
 
-object RestartApp: UIAction
+object ApplySettings: UIAction

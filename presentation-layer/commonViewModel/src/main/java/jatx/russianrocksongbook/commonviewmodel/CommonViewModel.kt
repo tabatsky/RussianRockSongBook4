@@ -51,6 +51,9 @@ open class CommonViewModel @Inject constructor(
     private val _theme = MutableStateFlow(settings.theme)
     val theme = _theme.asStateFlow()
 
+    private val _fontScaler = MutableStateFlow(settings.fontScaler)
+    val fontScaler = _fontScaler.asStateFlow()
+
     protected open val currentMusic: Music? = null
 
     private val musicOpener: MusicOpener = object : MusicOpener {
@@ -134,7 +137,10 @@ open class CommonViewModel @Inject constructor(
     }
 
     fun reloadSettings() {
-        _theme.update { settings.theme }
+        storage.values.forEach { viewModel ->
+            viewModel._theme.update { settings.theme }
+            viewModel._fontScaler.update { settings.fontScaler }
+        }
     }
 
     private fun collectActions() {

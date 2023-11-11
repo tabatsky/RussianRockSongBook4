@@ -14,7 +14,7 @@ import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.domain.repository.preferences.*
 import jatx.russianrocksongbook.settings.R
-import jatx.russianrocksongbook.settings.internal.viewmodel.RestartApp
+import jatx.russianrocksongbook.settings.internal.viewmodel.ApplySettings
 import jatx.russianrocksongbook.settings.internal.viewmodel.SaveSettings
 import jatx.russianrocksongbook.settings.internal.viewmodel.SettingsViewModel
 
@@ -23,7 +23,6 @@ internal fun SettingsScreenImpl() {
     val settingsViewModel = SettingsViewModel.getInstance()
 
     val theme = settingsViewModel.theme.collectAsState().value
-    val settings = settingsViewModel.settings
 
     var themeToSave by settingsViewModel.valueTheme
     val onThemePositionChanged: (Int) -> Unit = {
@@ -66,16 +65,22 @@ internal fun SettingsScreenImpl() {
                 listenToMusicVariantToSave,
                 scrollSpeedToSave
             ))
-        settingsViewModel.submitAction(RestartApp)
+        settingsViewModel.submitAction(ApplySettings)
     }
 
-    val labelFontScale = settings.getSpecificFontScale(ScalePow.LABEL)
+    val labelFontScale = settingsViewModel
+        .fontScaler
+        .collectAsState()
+        .value.getSpecificFontScale(ScalePow.LABEL)
     val fontSizeLabelDp = dimensionResource(id = R.dimen.text_size_20) * labelFontScale
     val fontSizeLabelSp = with(LocalDensity.current) {
         fontSizeLabelDp.toSp()
     }
 
-    val buttonFontScale = settings.getSpecificFontScale(ScalePow.BUTTON)
+    val buttonFontScale = settingsViewModel
+        .fontScaler
+        .collectAsState()
+        .value.getSpecificFontScale(ScalePow.BUTTON)
     val fontSizeButtonDp = dimensionResource(id = R.dimen.text_size_20) * buttonFontScale
     val fontSizeButtonSp = with(LocalDensity.current) {
         fontSizeButtonDp.toSp()

@@ -107,7 +107,7 @@ internal fun CloudSongTextScreenImpl(position: Int) {
 
     val theme = cloudViewModel.theme.collectAsState().value
 
-    val fontScale = cloudViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
+    val fontScale = cloudViewModel.fontScaler.collectAsState().value.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTitleDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
     val fontSizeTitleSp = with(LocalDensity.current) {
         fontSizeTitleDp.toSp()
