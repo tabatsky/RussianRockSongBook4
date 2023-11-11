@@ -86,6 +86,12 @@ class SettingsRepositoryImpl @Inject constructor(
             FontScale.values().find { it.scale == scale }
         } ?: FontScale.M
 
+    override val fontScaler: FontScaler
+        get() = FontScalerImpl(commonFontScale)
+
     override fun getSpecificFontScale(scalePow: ScalePow) = commonFontScale.pow(scalePow.pow)
 }
 
+class FontScalerImpl(private val commonFontScale: Float): FontScaler {
+    override fun getSpecificFontScale(scalePow: ScalePow) = commonFontScale.pow(scalePow.pow)
+}

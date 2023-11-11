@@ -24,7 +24,7 @@ internal fun AddArtistBody() {
 
     val theme = addArtistViewModel.theme.collectAsState().value
 
-    val fontScale = addArtistViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
+    val fontScale = addArtistViewModel.fontScaler.collectAsState().value.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTextDp = dimensionResource(id = R.dimen.text_size_16) * fontScale
     val fontSizeTextSp = with(LocalDensity.current) {
         fontSizeTextDp.toSp()

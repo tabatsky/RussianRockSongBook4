@@ -60,7 +60,7 @@ internal class SettingsViewModel @Inject constructor(
                     scrollSpeed
                 )
             }
-            is RestartApp -> restartApp()
+            is ApplySettings -> applySettings()
             else -> super.handleAction(action)
         }
     }
@@ -81,7 +81,7 @@ internal class SettingsViewModel @Inject constructor(
         settings.scrollSpeed = scrollSpeed
     }
 
-    private fun restartApp() {
+    private fun applySettings() {
         reloadSettings()
         //callbacks.onRestartApp()
     }

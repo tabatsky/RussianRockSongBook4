@@ -35,7 +35,7 @@ internal fun StartScreenImpl() {
     val totalProgress = startState.stubTotalProgress
     val progress = 1.0f * currentProgress / totalProgress
 
-    val fontScale = startViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
+    val fontScale = startViewModel.fontScaler.collectAsState().value.getSpecificFontScale(ScalePow.TEXT)
 
     val fontSizeLabel1Dp = dimensionResource(id = R.dimen.text_size_20) * fontScale
     val fontSizeLabel1Sp = with(LocalDensity.current) {

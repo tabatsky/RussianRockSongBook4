@@ -17,6 +17,7 @@ interface SettingsRepository {
     var voiceHelpDontAsk: Boolean
     var commonFontScale: Float
     val commonFontScaleEnum: FontScale
+    val fontScaler: FontScaler
 
     fun confirmAppUpdate()
     fun getSpecificFontScale(scalePow: ScalePow): Float
@@ -72,4 +73,8 @@ enum class FontScale(
     val scale: Float
 ) {
     XS(0.5f), S(0.75f), M(1.0f), L(1.5f), XL(2.0f)
+}
+
+interface FontScaler {
+    fun getSpecificFontScale(scalePow: ScalePow): Float
 }

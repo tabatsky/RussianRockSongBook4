@@ -132,7 +132,7 @@ internal fun SongTextScreenImpl(artist: String, position: Int) {
     val theme = localViewModel.theme.collectAsState().value
     val isEditorMode = localState.isEditorMode
 
-    val fontScale = localViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
+    val fontScale = localViewModel.fontScaler.collectAsState().value.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTitleDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
     val fontSizeTitleSp = with(LocalDensity.current) {
         fontSizeTitleDp.toSp()

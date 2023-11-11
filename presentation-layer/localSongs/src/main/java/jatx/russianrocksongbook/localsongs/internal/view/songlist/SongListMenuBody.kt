@@ -40,7 +40,7 @@ internal fun SongListMenuBody(
 
     val predefinedWithGroups = artistList.predefinedArtistsWithGroups()
 
-    val fontScale = localViewModel.settings.getSpecificFontScale(ScalePow.MENU)
+    val fontScale = localViewModel.fontScaler.collectAsState().value.getSpecificFontScale(ScalePow.MENU)
     val fontSizeDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
     val fontSizeSp = with(LocalDensity.current) {
         fontSizeDp.toSp()
