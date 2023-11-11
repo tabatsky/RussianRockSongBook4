@@ -6,6 +6,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
@@ -23,7 +24,7 @@ fun ChordDialog(
     chord: String,
     onDismiss: () -> Unit
 ) {
-    val theme = commonViewModel.settings.theme
+    val theme = commonViewModel.theme.collectAsState().value
     var actualChord = chord
     for (key in ChordLibrary.chordMappings.keys) {
         actualChord = actualChord.replace(key, ChordLibrary.chordMappings[key] ?: "")

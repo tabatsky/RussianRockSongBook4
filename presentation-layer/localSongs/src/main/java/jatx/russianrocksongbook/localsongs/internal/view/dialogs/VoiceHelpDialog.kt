@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
@@ -22,7 +23,7 @@ internal fun VoiceHelpDialog(
 ) {
     val localViewModel = LocalViewModel.getInstance()
 
-    val theme = localViewModel.settings.theme
+    val theme = localViewModel.theme.collectAsState().value
     val fontScale = localViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTextDp = dimensionResource(id = R.dimen.text_size_16) * fontScale
     val fontSizeTextSp = with(LocalDensity.current) {

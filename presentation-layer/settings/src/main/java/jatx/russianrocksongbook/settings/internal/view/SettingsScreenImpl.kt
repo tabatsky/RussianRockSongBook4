@@ -22,7 +22,7 @@ import jatx.russianrocksongbook.settings.internal.viewmodel.SettingsViewModel
 internal fun SettingsScreenImpl() {
     val settingsViewModel = SettingsViewModel.getInstance()
 
-    val theme = settingsViewModel.settings.theme
+    val theme = settingsViewModel.theme.collectAsState().value
     val settings = settingsViewModel.settings
 
     var themeToSave by settingsViewModel.valueTheme

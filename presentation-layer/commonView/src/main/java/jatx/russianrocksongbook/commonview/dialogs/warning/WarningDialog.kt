@@ -24,7 +24,7 @@ fun WarningDialog(
     onConfirm: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val theme = commonViewModel.settings.theme
+    val theme = commonViewModel.theme.collectAsState().value
     val fontScale = commonViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTextDp = dimensionResource(id = R.dimen.text_size_12) * fontScale
     val fontSizeTextSp = with(LocalDensity.current) {

@@ -129,7 +129,7 @@ internal fun SongTextScreenImpl(artist: String, position: Int) {
         localViewModel.submitAction(SetEditorMode(false))
     }
 
-    val theme = localViewModel.settings.theme
+    val theme = localViewModel.theme.collectAsState().value
     val isEditorMode = localState.isEditorMode
 
     val fontScale = localViewModel.settings.getSpecificFontScale(ScalePow.TEXT)

@@ -3,6 +3,7 @@ package jatx.russianrocksongbook.addsong.internal.view
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -30,7 +31,7 @@ internal fun AddSongBody() {
     var title by addSongViewModel.title
     var text by addSongViewModel.text
 
-    val theme = addSongViewModel.settings.theme
+    val theme = addSongViewModel.theme.collectAsState().value
 
     val fontScale = addSongViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTextDp = dimensionResource(id = R.dimen.text_size_16) * fontScale

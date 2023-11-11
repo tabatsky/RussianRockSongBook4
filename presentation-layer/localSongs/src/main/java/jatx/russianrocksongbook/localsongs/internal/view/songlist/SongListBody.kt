@@ -38,7 +38,7 @@ internal fun SongListBody(
 ) {
     val localViewModel = LocalViewModel.getInstance()
 
-    val theme = localViewModel.settings.theme
+    val theme = localViewModel.theme.collectAsState().value
 
     val localState by localViewModel.localState.collectAsState()
 

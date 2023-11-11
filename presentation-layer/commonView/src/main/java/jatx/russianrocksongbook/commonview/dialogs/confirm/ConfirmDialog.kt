@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -28,7 +29,7 @@ fun ConfirmDialog(
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
-    val theme = commonViewModel.settings.theme
+    val theme = commonViewModel.theme.collectAsState().value
     val fontScale = commonViewModel.settings.getSpecificFontScale(ScalePow.TEXT)
     val fontSizeTitleDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
     val fontSizeTitleSp = with(LocalDensity.current) {

@@ -20,7 +20,7 @@ import jatx.russianrocksongbook.navigation.ScreenVariant
 internal fun SongListActions() {
     val localViewModel = LocalViewModel.getInstance()
 
-    val theme = localViewModel.settings.theme
+    val theme = localViewModel.theme.collectAsState().value
     var expanded by remember { mutableStateOf(false) }
 
     val onSettingsClick = {
