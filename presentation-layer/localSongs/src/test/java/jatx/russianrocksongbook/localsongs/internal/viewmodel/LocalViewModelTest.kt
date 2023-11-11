@@ -112,10 +112,28 @@ open class LocalViewModelTest: CommonViewModelTest() {
         artistsFlow.value = artists
         assertEquals(ScreenVariant.SongList(defaultArtist), localViewModel.localState.value.currentScreenVariant)
         assertEquals(artists, localViewModel.localState.value.artistList)
-        verifySequence {
-            settingsRepository.defaultArtist
-            settingsRepository.defaultArtist
-            getArtistsUseCase.execute()
+        if (this is VoiceCommandViewModelTest) {
+            verifySequence {
+                settingsRepository.defaultArtist
+                settingsRepository.theme
+                settingsRepository.fontScaler
+                settingsRepository.theme
+                settingsRepository.fontScaler
+                settingsRepository.theme
+                settingsRepository.fontScaler
+                settingsRepository.defaultArtist
+                getArtistsUseCase.execute()
+            }
+        } else {
+            verifySequence {
+                settingsRepository.defaultArtist
+                settingsRepository.theme
+                settingsRepository.fontScaler
+                settingsRepository.theme
+                settingsRepository.fontScaler
+                settingsRepository.defaultArtist
+                getArtistsUseCase.execute()
+            }
         }
     }
 

@@ -1983,7 +1983,7 @@ class StringConst @Inject constructor(
     val orientFix = context.getString(R.string.orient_fix)
     val listenToMusic = context.getString(R.string.listen_to_music)
     val scrollSpeed = context.getString(R.string.scroll_speed)
-    val saveAndRestart = context.getString(R.string.save_and_restart)
+    val saveAndRestart = context.getString(R.string.apply_settings)
     val addArtistManual = context.getString(R.string.add_artist_manual)
     val choose = context.getString(R.string.choose)
     val toastSongIsOutOfTheBox = context.getString(R.string.toast_song_is_out_of_the_box)
