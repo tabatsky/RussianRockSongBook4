@@ -17,4 +17,5 @@ class Callbacks @Inject constructor() {
         { _, _ -> }
     var onSpeechRecognize: () -> Unit = {}
     var onFinish: () -> Unit = {}
+    var onApplyOrientation: () -> Unit = {}
 }
