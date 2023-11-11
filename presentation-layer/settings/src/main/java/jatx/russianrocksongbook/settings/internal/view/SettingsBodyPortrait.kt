@@ -117,7 +117,7 @@ internal fun SettingsBodyPortrait(
             onClick = onSaveClick
         ) {
             Text(
-                text = stringResource(id = R.string.save_and_restart),
+                text = stringResource(id = R.string.apply_settings),
                 textAlign = TextAlign.Center,
                 fontSize = fontSizeButtonSp
             )

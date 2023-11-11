@@ -52,11 +52,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        requestedOrientation = when (settingsRepository.orientation) {
-            Orientation.PORTRAIT -> ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            Orientation.LANDSCAPE -> ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            else -> ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-        }
+        applyOrientation()
 
         setContent {
             ActionsInjector()
@@ -96,12 +92,21 @@ class MainActivity : ComponentActivity() {
             clean()
             finish()
         }
+        commonViewModel.callbacks.onApplyOrientation = ::applyOrientation
     }
 
     @Inject
     fun initAppDebug() {
         Log.e("inject init", "AppDebug")
         AppDebug.setAppCrashHandler(sendCrashUseCase, version)
+    }
+
+    private fun applyOrientation() {
+        requestedOrientation = when (settingsRepository.orientation) {
+            Orientation.PORTRAIT -> ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            Orientation.LANDSCAPE -> ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            else -> ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        }
     }
 
     private fun showDevSite() {

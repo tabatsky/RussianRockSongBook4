@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="title_settings">Настройки</string>
-    <string name="save_and_restart">Сохранить и перезапустить</string>
+    <string name="apply_settings">Применить</string>
     <string name="theme">Тема:</string>
     <string name="font_scale">Размер шрифта:</string>
     <string name="def_artist">По умолчанию:</string>
