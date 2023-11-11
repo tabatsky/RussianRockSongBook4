@@ -96,6 +96,8 @@ open class CommonViewModelTest {
 
         verifySequence {
             settingsRepository.defaultArtist
+            settingsRepository.theme
+            settingsRepository.fontScaler
             tvDetector.isTV
         }
     }
