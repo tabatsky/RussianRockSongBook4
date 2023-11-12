@@ -7,11 +7,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
+import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.domain.repository.preferences.*
 import jatx.russianrocksongbook.settings.R
 import jatx.russianrocksongbook.settings.internal.viewmodel.ApplySettings
@@ -68,23 +68,10 @@ internal fun SettingsScreenImpl() {
         settingsViewModel.submitAction(ApplySettings)
     }
 
-    val labelFontScale = settingsViewModel
-        .fontScaler
-        .collectAsState()
-        .value.getSpecificFontScale(ScalePow.LABEL)
-    val fontSizeLabelDp = dimensionResource(id = R.dimen.text_size_20) * labelFontScale
-    val fontSizeLabelSp = with(LocalDensity.current) {
-        fontSizeLabelDp.toSp()
-    }
-
-    val buttonFontScale = settingsViewModel
-        .fontScaler
-        .collectAsState()
-        .value.getSpecificFontScale(ScalePow.BUTTON)
-    val fontSizeButtonDp = dimensionResource(id = R.dimen.text_size_20) * buttonFontScale
-    val fontSizeButtonSp = with(LocalDensity.current) {
-        fontSizeButtonDp.toSp()
-    }
+    val fontSizeLabelSp = dimensionResource(id = R.dimen.text_size_20)
+        .toScaledSp(settingsViewModel.fontScaler, ScalePow.LABEL)
+    val fontSizeButtonSp = dimensionResource(id = R.dimen.text_size_20)
+        .toScaledSp(settingsViewModel.fontScaler, ScalePow.BUTTON)
 
     BoxWithConstraints(
         modifier = Modifier

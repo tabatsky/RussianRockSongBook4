@@ -10,12 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.commonviewmodel.AppWasUpdated
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
@@ -26,11 +26,9 @@ internal fun WhatsNewDialogImpl() {
     val commonViewModel = CommonViewModel.getInstance()
 
     val theme = commonViewModel.theme.collectAsState().value
-    val fontScale = commonViewModel.fontScaler.collectAsState().value.getSpecificFontScale(ScalePow.TEXT)
-    val fontSizeTitleDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
-    val fontSizeTitleSp = with(LocalDensity.current) {
-        fontSizeTitleDp.toSp()
-    }
+
+    val fontSizeTitleSp = dimensionResource(id = R.dimen.text_size_20)
+        .toScaledSp(commonViewModel.fontScaler, ScalePow.TEXT)
 
     val commonState by commonViewModel.commonState.collectAsState()
     val appWasUpdated = commonState.appWasUpdated

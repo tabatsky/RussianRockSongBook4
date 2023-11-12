@@ -10,10 +10,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.start.R
 import jatx.russianrocksongbook.start.internal.viewmodel.AsyncInit
@@ -35,22 +35,12 @@ internal fun StartScreenImpl() {
     val totalProgress = startState.stubTotalProgress
     val progress = 1.0f * currentProgress / totalProgress
 
-    val fontScale = startViewModel.fontScaler.collectAsState().value.getSpecificFontScale(ScalePow.TEXT)
-
-    val fontSizeLabel1Dp = dimensionResource(id = R.dimen.text_size_20) * fontScale
-    val fontSizeLabel1Sp = with(LocalDensity.current) {
-        fontSizeLabel1Dp.toSp()
-    }
-
-    val fontSizeLabel2Dp = dimensionResource(id = R.dimen.text_size_12) * fontScale
-    val fontSizeLabel2Sp = with(LocalDensity.current) {
-        fontSizeLabel2Dp.toSp()
-    }
-
-    val fontSizeProgressDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
-    val fontSizeProgressSp = with(LocalDensity.current) {
-        fontSizeProgressDp.toSp()
-    }
+    val fontSizeLabel1Sp = dimensionResource(id = R.dimen.text_size_20)
+        .toScaledSp(startViewModel.fontScaler, ScalePow.TEXT)
+    val fontSizeLabel2Sp = dimensionResource(id = R.dimen.text_size_12)
+        .toScaledSp(startViewModel.fontScaler, ScalePow.TEXT)
+    val fontSizeProgressSp = dimensionResource(id = R.dimen.text_size_20)
+        .toScaledSp(startViewModel.fontScaler, ScalePow.TEXT)
 
     Column(
         modifier = Modifier

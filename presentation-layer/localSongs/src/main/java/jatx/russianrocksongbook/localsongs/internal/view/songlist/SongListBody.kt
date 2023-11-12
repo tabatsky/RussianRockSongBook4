@@ -12,12 +12,12 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.tv.foundation.lazy.list.TvLazyColumn
 import androidx.tv.foundation.lazy.list.itemsIndexed
 import androidx.tv.foundation.lazy.list.rememberTvLazyListState
+import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.commonview.stub.CommonSongListStub
 import jatx.russianrocksongbook.commonviewmodel.SelectScreen
 import jatx.russianrocksongbook.domain.models.local.Song
@@ -48,11 +48,9 @@ internal fun SongListBody(
     val scrollPosition = localState.songListScrollPosition
     val needScroll = localState.songListNeedScroll
 
-    val fontScale = localViewModel.fontScaler.collectAsState().value.getSpecificFontScale(ScalePow.TEXT)
-    val fontSizeDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
-    val fontSizeSp = with(LocalDensity.current) {
-        fontSizeDp.toSp()
-    }
+    val fontSizeSp = dimensionResource(id = R.dimen.text_size_20)
+        .toScaledSp(localViewModel.fontScaler, ScalePow.TEXT)
+
 
     @Composable
     fun TheItem(index: Int, song: Song) {
