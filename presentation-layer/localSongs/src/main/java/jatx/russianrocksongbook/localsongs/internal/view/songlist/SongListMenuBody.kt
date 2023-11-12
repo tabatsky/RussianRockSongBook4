@@ -7,12 +7,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.tv.foundation.lazy.list.TvLazyColumn
 import androidx.tv.foundation.lazy.list.itemsIndexed
 import androidx.tv.foundation.lazy.list.rememberTvLazyListState
+import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.domain.repository.local.predefinedArtistList
 import jatx.russianrocksongbook.domain.repository.local.predefinedArtistsWithGroups
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
@@ -40,11 +40,8 @@ internal fun SongListMenuBody(
 
     val predefinedWithGroups = artistList.predefinedArtistsWithGroups()
 
-    val fontScale = localViewModel.fontScaler.collectAsState().value.getSpecificFontScale(ScalePow.MENU)
-    val fontSizeDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
-    val fontSizeSp = with(LocalDensity.current) {
-        fontSizeDp.toSp()
-    }
+    val fontSizeSp = dimensionResource(id = R.dimen.text_size_20)
+        .toScaledSp(localViewModel.fontScaler, ScalePow.MENU)
 
     val modifier = Modifier
         .testTag(MENU_LAZY_COLUMN)

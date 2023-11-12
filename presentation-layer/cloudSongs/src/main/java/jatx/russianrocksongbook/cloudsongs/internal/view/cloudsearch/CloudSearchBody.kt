@@ -10,7 +10,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.paging.compose.collectAsLazyPagingItems
 import jatx.russianrocksongbook.cloudsongs.R
@@ -23,6 +22,7 @@ import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateOrderBy
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateScrollPosition
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateSearchFor
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateSearchState
+import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.commonview.stub.CommonSongListStub
 import jatx.russianrocksongbook.commonview.stub.ErrorSongListStub
 import jatx.russianrocksongbook.commonviewmodel.SelectScreen
@@ -54,19 +54,12 @@ internal fun CloudSearchBody(
     val cloudSongItems = cloudSongsFlow?.collectAsLazyPagingItems()
     val itemsAdapter = ItemsAdapter(cloudSongItems)
 
-    val fontScale = cloudViewModel.fontScaler.collectAsState().value.getSpecificFontScale(ScalePow.TEXT)
-    val fontSizeTextDp = dimensionResource(id = R.dimen.text_size_16) * fontScale
-    val fontSizeTextSp = with(LocalDensity.current) {
-        fontSizeTextDp.toSp()
-    }
-    val fontSizeSongTitleDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
-    val fontSizeSongTitleSp = with(LocalDensity.current) {
-        fontSizeSongTitleDp.toSp()
-    }
-    val fontSizeArtistDp = dimensionResource(id = R.dimen.text_size_24) * fontScale
-    val fontSizeArtistSp = with(LocalDensity.current) {
-        fontSizeArtistDp.toSp()
-    }
+    val fontSizeTextSp = dimensionResource(id = R.dimen.text_size_16)
+        .toScaledSp(cloudViewModel.fontScaler, ScalePow.TEXT)
+    val fontSizeSongTitleSp = dimensionResource(id = R.dimen.text_size_20)
+        .toScaledSp(cloudViewModel.fontScaler, ScalePow.TEXT)
+    val fontSizeArtistSp = dimensionResource(id = R.dimen.text_size_24)
+        .toScaledSp(cloudViewModel.fontScaler, ScalePow.TEXT)
 
     val searchFor = cloudState.searchFor
     val onSearchForValueChange: (String) -> Unit = {

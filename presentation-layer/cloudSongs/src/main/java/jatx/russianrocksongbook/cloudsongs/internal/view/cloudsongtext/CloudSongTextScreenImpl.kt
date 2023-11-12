@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -29,6 +28,7 @@ import jatx.russianrocksongbook.commonview.dialogs.music.VkMusicDialog
 import jatx.russianrocksongbook.commonview.dialogs.music.YandexMusicDialog
 import jatx.russianrocksongbook.commonview.dialogs.music.YoutubeMusicDialog
 import jatx.russianrocksongbook.commonview.dialogs.warning.WarningDialog
+import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.commonviewmodel.OpenVkMusic
 import jatx.russianrocksongbook.commonviewmodel.OpenYandexMusic
 import jatx.russianrocksongbook.commonviewmodel.OpenYoutubeMusic
@@ -107,15 +107,10 @@ internal fun CloudSongTextScreenImpl(position: Int) {
 
     val theme = cloudViewModel.theme.collectAsState().value
 
-    val fontScale = cloudViewModel.fontScaler.collectAsState().value.getSpecificFontScale(ScalePow.TEXT)
-    val fontSizeTitleDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
-    val fontSizeTitleSp = with(LocalDensity.current) {
-        fontSizeTitleDp.toSp()
-    }
-    val fontSizeTextDp = dimensionResource(id = R.dimen.text_size_16) * fontScale
-    val fontSizeTextSp = with(LocalDensity.current) {
-        fontSizeTextDp.toSp()
-    }
+    val fontSizeTitleSp = dimensionResource(id = R.dimen.text_size_20)
+        .toScaledSp(cloudViewModel.fontScaler, ScalePow.TEXT)
+    val fontSizeTextSp = dimensionResource(id = R.dimen.text_size_16)
+        .toScaledSp(cloudViewModel.fontScaler, ScalePow.TEXT)
 
     if (cloudSong == null) {
         CloudSongTextProgress(theme)

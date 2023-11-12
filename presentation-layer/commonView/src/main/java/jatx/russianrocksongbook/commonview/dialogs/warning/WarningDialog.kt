@@ -5,7 +5,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -13,6 +12,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.commonview.R
+import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.testing.TEXT_FIELD_WARNING_COMMENT
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
@@ -25,11 +25,8 @@ fun WarningDialog(
     onDismiss: () -> Unit
 ) {
     val theme = commonViewModel.theme.collectAsState().value
-    val fontScale = commonViewModel.fontScaler.collectAsState().value.getSpecificFontScale(ScalePow.TEXT)
-    val fontSizeTextDp = dimensionResource(id = R.dimen.text_size_12) * fontScale
-    val fontSizeTextSp = with(LocalDensity.current) {
-        fontSizeTextDp.toSp()
-    }
+    val fontSizeTextSp = dimensionResource(id = R.dimen.text_size_12)
+        .toScaledSp(commonViewModel.fontScaler, ScalePow.TEXT)
 
     var comment by rememberSaveable { mutableStateOf("") }
 

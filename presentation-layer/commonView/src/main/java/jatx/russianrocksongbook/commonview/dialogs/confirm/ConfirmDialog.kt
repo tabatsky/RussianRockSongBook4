@@ -10,13 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.commonview.R
+import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 
@@ -30,11 +30,8 @@ fun ConfirmDialog(
     onDismiss: () -> Unit
 ) {
     val theme = commonViewModel.theme.collectAsState().value
-    val fontScale = commonViewModel.fontScaler.collectAsState().value.getSpecificFontScale(ScalePow.TEXT)
-    val fontSizeTitleDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
-    val fontSizeTitleSp = with(LocalDensity.current) {
-        fontSizeTitleDp.toSp()
-    }
+    val fontSizeTitleSp = dimensionResource(id = R.dimen.text_size_20)
+        .toScaledSp(commonViewModel.fontScaler, ScalePow.TEXT)
 
     val colorBg = if (!invertColors) theme.colorBg else theme.colorMain
     val colorMain = if (!invertColors) theme.colorMain else theme.colorBg

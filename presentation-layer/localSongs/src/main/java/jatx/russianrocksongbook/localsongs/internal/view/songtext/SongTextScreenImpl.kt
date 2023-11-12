@@ -6,7 +6,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.tv.foundation.lazy.list.rememberTvLazyListState
@@ -19,6 +18,7 @@ import jatx.russianrocksongbook.commonview.dialogs.music.VkMusicDialog
 import jatx.russianrocksongbook.commonview.dialogs.music.YandexMusicDialog
 import jatx.russianrocksongbook.commonview.dialogs.music.YoutubeMusicDialog
 import jatx.russianrocksongbook.commonview.dialogs.warning.WarningDialog
+import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.commonviewmodel.OpenVkMusic
 import jatx.russianrocksongbook.commonviewmodel.OpenYandexMusic
 import jatx.russianrocksongbook.commonviewmodel.OpenYoutubeMusic
@@ -132,15 +132,10 @@ internal fun SongTextScreenImpl(artist: String, position: Int) {
     val theme = localViewModel.theme.collectAsState().value
     val isEditorMode = localState.isEditorMode
 
-    val fontScale = localViewModel.fontScaler.collectAsState().value.getSpecificFontScale(ScalePow.TEXT)
-    val fontSizeTitleDp = dimensionResource(id = R.dimen.text_size_20) * fontScale
-    val fontSizeTitleSp = with(LocalDensity.current) {
-        fontSizeTitleDp.toSp()
-    }
-    val fontSizeTextDp = dimensionResource(id = R.dimen.text_size_16) * fontScale
-    val fontSizeTextSp = with(LocalDensity.current) {
-        fontSizeTextDp.toSp()
-    }
+    val fontSizeTitleSp = dimensionResource(id = R.dimen.text_size_20)
+        .toScaledSp(localViewModel.fontScaler, ScalePow.TEXT)
+    val fontSizeTextSp = dimensionResource(id = R.dimen.text_size_16)
+        .toScaledSp(localViewModel.fontScaler, ScalePow.TEXT)
 
     song?.let { _song ->
         BoxWithConstraints(

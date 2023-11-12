@@ -7,7 +7,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -17,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.addsong.R
 import jatx.russianrocksongbook.addsong.internal.viewmodel.AddSongToRepo
 import jatx.russianrocksongbook.addsong.internal.viewmodel.AddSongViewModel
+import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.commonviewmodel.ShowToastWithResource
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.testing.TEXT_FIELD_ARTIST
@@ -33,11 +33,8 @@ internal fun AddSongBody() {
 
     val theme = addSongViewModel.theme.collectAsState().value
 
-    val fontScale = addSongViewModel.fontScaler.collectAsState().value.getSpecificFontScale(ScalePow.TEXT)
-    val fontSizeTextDp = dimensionResource(id = R.dimen.text_size_16) * fontScale
-    val fontSizeTextSp = with(LocalDensity.current) {
-        fontSizeTextDp.toSp()
-    }
+    val fontSizeTextSp = dimensionResource(id = R.dimen.text_size_16)
+        .toScaledSp(addSongViewModel.fontScaler, ScalePow.TEXT)
 
     Column(
         modifier = Modifier
