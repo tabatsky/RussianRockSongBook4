@@ -63,9 +63,9 @@ enum class ListenToMusicVariant {
 enum class ScalePow(
     val pow: Float
 ) {
-    TEXT(1.0f),
+    TEXT(0.7f),
     LABEL(0.5f),
-    MENU(0.7f),
+    MENU(0.6f),
     BUTTON(0.3f)
 }
 
