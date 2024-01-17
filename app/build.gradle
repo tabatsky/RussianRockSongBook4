@@ -5,17 +5,13 @@ plugins {
     id 'dagger.hilt.android.plugin'
 }
 
-def keystorePropertiesFile = file("keystore.properties")
-def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-
 android {
     signingConfigs {
         config {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
+            keyAlias 'test_key'
+            keyPassword 'qwerty'
+            storeFile file('..\\test.keystore')
+            storePassword 'qwerty'
         }
     }
 
