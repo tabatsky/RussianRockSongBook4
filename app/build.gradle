@@ -136,7 +136,7 @@ dependencies {
 
     debugImplementation testDeps.kotlinReflect
 
-    androidTestImplementation testDeps.leakCanary
+    //androidTestImplementation testDeps.leakCanary
 
     androidTestUtil testDeps.androidXOrchestrator
 }

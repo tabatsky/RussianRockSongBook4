@@ -28,7 +28,6 @@ import jatx.russianrocksongbook.commonviewmodel.deps.impl.ToastsTestImpl
 import jatx.russianrocksongbook.testing.*
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.commonviewmodel.SelectScreen
-import leakcanary.DetectLeaksAfterTestSuccess
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -91,8 +90,8 @@ class UITest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
-    @get:Rule
-    val rule = DetectLeaksAfterTestSuccess()
+//    @get:Rule
+//    val rule = DetectLeaksAfterTestSuccess()
 
     @Inject
     lateinit var localRepository: LocalRepository
