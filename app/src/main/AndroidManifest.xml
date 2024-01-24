@@ -22,6 +22,10 @@
         android:theme="@style/Theme.RussianRockSongBook4"
         android:largeHeap="true"
         tools:targetApi="m">
+        <meta-data
+            android:name="com.google.android.play.billingclient.version"
+            android:value="6.1.0" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">

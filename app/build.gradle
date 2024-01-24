@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
-    id 'dagger.hilt.android.plugin'
+    id 'com.google.dagger.hilt.android'
 }
 
 android {
@@ -103,6 +103,7 @@ dependencies {
     debugImplementation testDeps.mockkAndroid
 
     testImplementation testDeps.androidXCore
+    testImplementation testDeps.androidXCoreKtx
     testImplementation testDeps.androidXRunner
     testImplementation testDeps.androidXTruth
     testImplementation testDeps.androidXRules
@@ -112,6 +113,7 @@ dependencies {
     testImplementation testDeps.androidXCoreTesting
 
     androidTestImplementation testDeps.androidXCore
+    androidTestImplementation testDeps.androidXCoreKtx
     androidTestImplementation testDeps.androidXRunner
     androidTestImplementation testDeps.androidXTruth
     androidTestImplementation testDeps.androidXRules
@@ -136,7 +138,7 @@ dependencies {
 
     debugImplementation testDeps.kotlinReflect
 
-    //androidTestImplementation testDeps.leakCanary
+    androidTestImplementation testDeps.leakCanary
 
     androidTestUtil testDeps.androidXOrchestrator
 }

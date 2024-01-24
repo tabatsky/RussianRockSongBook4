@@ -2,11 +2,15 @@ package jatx.russianrocksongbook
 
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.junit4.createEmptyComposeRule
+import androidx.test.core.app.ActivityScenario
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.runner.AndroidJUnitRunner
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -28,6 +32,7 @@ import jatx.russianrocksongbook.commonviewmodel.deps.impl.ToastsTestImpl
 import jatx.russianrocksongbook.testing.*
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.commonviewmodel.SelectScreen
+import leakcanary.DetectLeaksAfterTestSuccess
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -90,8 +95,8 @@ class UITest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
-//    @get:Rule
-//    val rule = DetectLeaksAfterTestSuccess()
+    @get:Rule
+    val rule = DetectLeaksAfterTestSuccess()
 
     @Inject
     lateinit var localRepository: LocalRepository
