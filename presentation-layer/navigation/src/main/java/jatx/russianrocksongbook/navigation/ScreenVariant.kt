@@ -1,5 +1,7 @@
 package jatx.russianrocksongbook.navigation
 
+import androidx.navigation.NavBackStackEntry
+
 sealed interface ScreenVariant {
     val destination: String
 
@@ -73,3 +75,21 @@ sealed interface ScreenVariant {
             get() = destinationSettings
     }
 }
+
+val String.isStartScreen: Boolean
+    get() = this.startsWith(destinationStart)
+
+val NavBackStackEntry?.isStartScreen: Boolean
+    get() = this?.destination?.route?.isStartScreen ?: false
+
+val String.isSongListScreen: Boolean
+    get() = this.startsWith(destinationSongList)
+
+val NavBackStackEntry?.isSongListScreen: Boolean
+    get() = this?.destination?.route?.isSongListScreen ?: false
+
+val String.isSongTextScreen: Boolean
+    get() = this.startsWith(destinationSongText)
+
+val NavBackStackEntry?.isSongTextScreen: Boolean
+    get() = this?.destination?.route?.isSongTextScreen ?: false

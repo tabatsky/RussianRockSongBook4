@@ -10,7 +10,7 @@ import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 fun CommonBackButton(
     commonViewModel: CommonViewModel = CommonViewModel.getInstance()
 ) {
-    val onBackClick = { commonViewModel.submitAction(Back) }
+    val onBackClick = { commonViewModel.submitAction(Back()) }
     CommonIconButton(
         resId = R.drawable.ic_back,
         testTag = BACK_BUTTON,

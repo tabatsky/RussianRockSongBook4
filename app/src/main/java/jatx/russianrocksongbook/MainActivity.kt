@@ -65,12 +65,13 @@ class MainActivity : ComponentActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
-    private fun back() = CommonViewModel.getStoredInstance()?.submitAction(Back)
+    private fun back() = CommonViewModel.getStoredInstance()?.submitAction(Back())
 
-    fun clean() {
+    override fun onDestroy() {
+        super.onDestroy()
         CommonViewModel.clearStorage()
-        viewModelStore.clear()
         NavControllerHolder.cleanNavController()
+        viewModelStore.clear()
     }
 
     @Composable
@@ -89,7 +90,6 @@ class MainActivity : ComponentActivity() {
             ::selectSongByArtistAndTitle
         commonViewModel.callbacks.onSpeechRecognize = ::speechRecognize
         commonViewModel.callbacks.onFinish = {
-            clean()
             finish()
         }
         commonViewModel.callbacks.onApplyOrientation = ::applyOrientation
