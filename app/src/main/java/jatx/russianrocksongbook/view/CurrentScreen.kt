@@ -10,6 +10,8 @@ import jatx.russianrocksongbook.addartist.api.view.AddArtistScreen
 import jatx.russianrocksongbook.addsong.api.view.AddSongScreen
 import jatx.russianrocksongbook.cloudsongs.api.view.CloudSearchScreen
 import jatx.russianrocksongbook.cloudsongs.api.view.CloudSongTextScreen
+import jatx.russianrocksongbook.commonviewmodel.Back
+import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import jatx.russianrocksongbook.donation.api.view.DonationScreen
 import jatx.russianrocksongbook.localsongs.api.view.SongListScreen
@@ -36,7 +38,9 @@ import jatx.russianrocksongbook.navigation.destinationStart
 @Composable
 fun CurrentScreen() {
     val navController = rememberNavController()
-    NavControllerHolder.injectNavController(navController)
+    NavControllerHolder.injectNavController(navController) {
+        CommonViewModel.getStoredInstance()?.submitAction(Back(true))
+    }
 
     NavHost(navController, startDestination = destinationStart) {
 

@@ -8,15 +8,12 @@ buildscript {
                 coroutines : '1.6.4',
                 compose : '1.7.0-alpha01',
                 composeCompiler : '1.5.8',
-                // do not upgrade 'composeMaterial:1.4.3' because of incompatibility
-                // of later versions with 'navigationCompose:2.6.0':
                 composeMaterial: '1.6.0-rc01',
                 composeMaterial3: '1.2.0-beta02',
                 tv : "1.0.0-alpha10",
                 pagingCompose : '3.2.1',
                 lifecycle : '2.7.0',
-                // do not upgrade 'navigationCompose' because of bug with back handler in later versions:
-                navigationCompose : '2.6.0',
+                navigationCompose : '2.7.6',
                 activityCompose : '1.8.2',
                 hilt : '2.50',
                 hiltCompiler : '2.50',

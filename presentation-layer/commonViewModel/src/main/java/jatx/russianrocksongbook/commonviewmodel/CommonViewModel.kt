@@ -169,7 +169,7 @@ open class CommonViewModel @Inject constructor(
 
     protected open fun handleAction(action: UIAction) {
         when (action) {
-            is Back -> back()
+            is Back -> back(action.fromDestinationChangedListener)
             is SelectScreen -> selectScreen(action.screenVariant)
             is AppWasUpdated -> setAppWasUpdated(action.wasUpdated)
             is OpenVkMusic -> openVkMusic(action.dontAskMore)
@@ -186,9 +186,10 @@ open class CommonViewModel @Inject constructor(
         }
     }
 
-    protected fun back() {
+    protected fun back(fromDestinationChangedListener: Boolean = false) {
         with (commonState.value) {
             Log.e("back from", currentScreenVariant.toString())
+            Log.e("listener", fromDestinationChangedListener.toString())
             when (currentScreenVariant) {
                 is ScreenVariant.Start -> {
                     doNothing()
@@ -204,15 +205,19 @@ open class CommonViewModel @Inject constructor(
                 }
 
                 is ScreenVariant.SongText -> {
-                    if (currentArtist != ARTIST_FAVORITE) {
-                        selectScreen(
-                            ScreenVariant.SongList(
-                                artist = currentArtist,
-                                isBackFromSong = true
+                    if (fromDestinationChangedListener) {
+                        if (currentArtist != ARTIST_FAVORITE) {
+                            selectScreen(
+                                ScreenVariant.SongList(
+                                    artist = currentArtist,
+                                    isBackFromSong = true
+                                )
                             )
-                        )
+                        } else {
+                            selectScreen(ScreenVariant.Favorite(isBackFromSong = true))
+                        }
                     } else {
-                        selectScreen(ScreenVariant.Favorite(isBackFromSong = true))
+                        NavControllerHolder.navController?.popBackStack()
                     }
                 }
 
@@ -238,8 +243,11 @@ open class CommonViewModel @Inject constructor(
         commonStateHolder.commonState.update {
             it.copy(currentScreenVariant = screenVariant)
         }
+
         NavControllerHolder.navController
-            ?.navigate(screenVariant.destination)
+            ?.navigate(screenVariant.destination) {
+                launchSingleTop = true
+            }
         Log.e("navigate", screenVariant.destination)
     }
 
