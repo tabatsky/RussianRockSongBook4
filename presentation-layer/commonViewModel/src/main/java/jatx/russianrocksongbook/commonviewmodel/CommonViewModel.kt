@@ -189,7 +189,6 @@ open class CommonViewModel @Inject constructor(
     protected fun back(fromDestinationChangedListener: Boolean = false) {
         with (commonState.value) {
             Log.e("back from", currentScreenVariant.toString())
-            Log.e("listener", fromDestinationChangedListener.toString())
             when (currentScreenVariant) {
                 is ScreenVariant.Start -> {
                     doNothing()
