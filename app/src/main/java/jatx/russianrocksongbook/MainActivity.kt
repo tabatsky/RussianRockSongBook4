@@ -74,9 +74,11 @@ class MainActivity : ComponentActivity() {
     }
 
     fun clean() {
-        CommonViewModel.clearStorage()
         NavControllerHolder.cleanNavController()
-        viewModelStore.clear()
+        if (CommonViewModel.needReset) {
+            CommonViewModel.clearStorage()
+            viewModelStore.clear()
+        }
     }
 
     @Composable

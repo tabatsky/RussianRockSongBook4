@@ -79,7 +79,6 @@ class CloudViewModel @Inject constructor(
     override fun resetState() = cloudStateHolder.reset()
 
     override fun handleAction(action: UIAction) {
-        Log.e("cloud action", action.toString())
         when (action) {
             is PerformCloudSearch -> performCloudSearch(action.searchFor, action.orderBy)
             is UpdateSearchState -> updateSearchState(action.searchState)

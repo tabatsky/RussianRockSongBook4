@@ -120,6 +120,8 @@ open class CommonViewModel @Inject constructor(
     private val effects = _effects.receiveAsFlow()
 
     companion object {
+        var needReset = false
+
         private const val key = "Common"
 
         val storage = ConcurrentHashMap<String, CommonViewModel>()
@@ -210,10 +212,6 @@ open class CommonViewModel @Inject constructor(
                     doNothing()
                 }
 
-                is ScreenVariant.CloudSongText -> {
-                    selectScreen(ScreenVariant.CloudSearch(isBackFromSong = true))
-                }
-
                 is ScreenVariant.SongText  -> {
                     if (currentArtist != ARTIST_FAVORITE) {
                         selectScreen(
@@ -238,6 +236,12 @@ open class CommonViewModel @Inject constructor(
                     }
                 }
 
+                is ScreenVariant.CloudSongText -> {
+                    if (previousScreenVariant is ScreenVariant.CloudSearch) {
+                        selectScreen(previousScreenVariant)
+                    }
+                }
+
                 else -> {
                     if (currentArtist != ARTIST_FAVORITE) {
                         selectScreen(
@@ -259,6 +263,7 @@ open class CommonViewModel @Inject constructor(
         when (commonState.value.currentScreenVariant) {
             is ScreenVariant.SongList,
             is ScreenVariant.Favorite -> {
+                needReset = true
                 callbacks.onFinish()
             }
 

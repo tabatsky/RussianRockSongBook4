@@ -1,6 +1,5 @@
 package jatx.russianrocksongbook.cloudsongs.internal.view.cloudsearch
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -24,7 +23,8 @@ internal fun CloudSearchScreenImpl(randomKey: Int, isBackFromSong: Boolean) {
 
     val theme = cloudViewModel.theme.collectAsState().value
 
-    Log.e("randomKey", randomKey.toString())
+    var savedRandomKey by rememberSaveable { mutableIntStateOf(0) }
+    val randomKeyChanged = randomKey != savedRandomKey
 
     BoxWithConstraints(
         modifier = Modifier
@@ -45,9 +45,12 @@ internal fun CloudSearchScreenImpl(randomKey: Int, isBackFromSong: Boolean) {
             }
         }
 
-        LaunchedEffect(Unit) {
-            if (!isBackFromSong && !wasOrientationChanged) {
-                cloudViewModel.submitAction(PerformCloudSearch("", OrderBy.BY_ID_DESC))
+        if (randomKeyChanged) {
+            savedRandomKey = randomKey
+            LaunchedEffect(Unit) {
+                if (!isBackFromSong && !wasOrientationChanged) {
+                    cloudViewModel.submitAction(PerformCloudSearch("", OrderBy.BY_ID_DESC))
+                }
             }
         }
 
