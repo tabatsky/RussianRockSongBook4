@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -29,7 +30,6 @@ import jatx.russianrocksongbook.navigation.argArtist
 import jatx.russianrocksongbook.navigation.argCloudSearchRandomKey
 import jatx.russianrocksongbook.navigation.argIsBackFromSomeScreen
 import jatx.russianrocksongbook.navigation.argIsBackFromSong
-import jatx.russianrocksongbook.navigation.argIsFromMenu
 import jatx.russianrocksongbook.navigation.argPosition
 import jatx.russianrocksongbook.navigation.argTitle
 import jatx.russianrocksongbook.navigation.destinationAddArtist
@@ -52,10 +52,20 @@ fun CurrentScreen() {
     }
 
     // view models survive popBackStack thereby next lines:
-    CommonViewModel.getInstance().resetState()
-    LocalViewModel.getInstance().resetState()
-    VoiceCommandViewModel.getInstance().resetState()
-    CloudViewModel.getInstance().resetState()
+    val commonViewModel = CommonViewModel.getInstance()
+    val localViewModel = LocalViewModel.getInstance()
+    val voiceCommandViewModel = VoiceCommandViewModel.getInstance()
+    val cloudViewModel = CloudViewModel.getInstance()
+
+    if (CommonViewModel.needReset) {
+        commonViewModel.resetState()
+        localViewModel.resetState()
+        voiceCommandViewModel.resetState()
+        cloudViewModel.resetState()
+        CommonViewModel.needReset = false
+    }
+
+    Log.e("scope", cloudViewModel.viewModelScope.toString())
 
     NavHost(
         navController,
