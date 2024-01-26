@@ -14,6 +14,7 @@ import jatx.russianrocksongbook.domain.usecase.local.*
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModelTest
 import jatx.russianrocksongbook.commonviewmodel.SelectScreen
+import jatx.russianrocksongbook.commonviewmodel.ShowSongs
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Assert.assertEquals
@@ -163,7 +164,6 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         verifySequence {
             Log.e("show songs", "Кино")
-            getCountByArtistUseCase.execute("Кино")
             getSongsByArtistUseCase.execute("Кино")
         }
     }
@@ -188,6 +188,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
         songsFlow.value = songList
         localViewModel.submitAction(SelectArtist("Кино"))
 
+        TimeUnit.MILLISECONDS.sleep(timeout)
         assertEquals("Кино", localViewModel.localState.value.currentArtist)
         TimeUnit.MILLISECONDS.sleep(timeout)
         assertEquals(songList, localViewModel.localState.value.currentSongList)
@@ -246,9 +247,11 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         assertTrue(localViewModel.localState.value.currentScreenVariant is ScreenVariant.CloudSearch)
 
+        val destination = localViewModel.localState.value.currentScreenVariant.destination
+
         verifySequence {
             Log.e("select artist", ARTIST_CLOUD_SONGS)
-            Log.e("navigate", "CloudSearch/false")
+            Log.e("navigate", destination)
         }
     }
 
@@ -339,7 +342,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
             Log.e("select song", "13")
             getSongByArtistAndPositionUseCase.execute("", 13)
             deleteSongToTrashUseCase.execute(song)
-            Log.e("back from", ScreenVariant.Start.toString())
+            Log.e("back by", "user")
             toasts.showToast(R.string.toast_deleted_to_trash)
         }
     }

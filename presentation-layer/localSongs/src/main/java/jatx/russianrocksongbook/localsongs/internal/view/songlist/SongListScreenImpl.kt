@@ -9,9 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import jatx.russianrocksongbook.commonviewmodel.ShowSongs
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
-import jatx.russianrocksongbook.localsongs.internal.viewmodel.ShowSongs
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateArtists
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateSongListNeedScroll
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.VoiceCommandViewModel
@@ -20,30 +20,33 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun SongListScreenImpl(
     artist: String,
-    isBackFromSong: Boolean,
+    isBackFromSomeScreen: Boolean,
     passToSongWithTitle: String?
 ) {
     val localViewModel = LocalViewModel.getInstance()
     InitVoiceCommandViewModel()
 
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+
     LaunchedEffect(Unit) {
-        if (!isBackFromSong || artist == ARTIST_FAVORITE) {
+        if (!isBackFromSomeScreen || artist == ARTIST_FAVORITE) {
             localViewModel.submitAction(UpdateArtists)
         }
     }
 
     LaunchedEffect(Unit) {
-        if (isBackFromSong) {
+        if (isBackFromSomeScreen) {
             localViewModel.submitAction(UpdateSongListNeedScroll(true))
+            scope.launch {
+                drawerState.close()
+            }
         }
     }
 
     LaunchedEffect(artist to passToSongWithTitle) {
         localViewModel.submitAction(ShowSongs(artist, passToSongWithTitle))
     }
-
-    val drawerState = rememberDrawerState(DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
 
     BoxWithConstraints(
         modifier = Modifier

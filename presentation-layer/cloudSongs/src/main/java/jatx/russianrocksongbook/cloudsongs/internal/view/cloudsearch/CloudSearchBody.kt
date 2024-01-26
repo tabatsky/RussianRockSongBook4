@@ -1,5 +1,6 @@
 package jatx.russianrocksongbook.cloudsongs.internal.view.cloudsearch
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -53,6 +54,7 @@ internal fun CloudSearchBody(
 
     val cloudSongItems = cloudSongsFlow?.collectAsLazyPagingItems()
     val itemsAdapter = ItemsAdapter(cloudSongItems)
+    Log.e("items", itemsAdapter.size.toString())
 
     val fontSizeTextSp = dimensionResource(id = R.dimen.text_size_16)
         .toScaledSp(cloudViewModel.fontScaler, ScalePow.TEXT)
