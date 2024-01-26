@@ -15,6 +15,7 @@ import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.domain.repository.local.*
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
+import jatx.russianrocksongbook.commonviewmodel.ShowSongs
 import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.domain.models.music.Music
 import jatx.russianrocksongbook.domain.models.warning.Warnable
@@ -31,7 +32,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-internal open class LocalViewModel @Inject constructor(
+open class LocalViewModel @Inject constructor(
     private val localStateHolder: LocalStateHolder,
     localViewModelDeps: LocalViewModelDeps
 ): CommonViewModel(
@@ -67,6 +68,7 @@ internal open class LocalViewModel @Inject constructor(
     private var showSongsJob: Job? = null
     private var selectSongJob: Job? = null
     private var getArtistsJob: Job? = null
+
     private var uploadSongDisposable: Disposable? = null
 
     override val currentMusic: Music?
@@ -88,6 +90,8 @@ internal open class LocalViewModel @Inject constructor(
 
         fun getStoredInstance() = storage[key] as? LocalViewModel
     }
+
+    override fun resetState() = localStateHolder.reset()
 
     override fun handleAction(action: UIAction) {
         when (action) {
@@ -132,23 +136,23 @@ internal open class LocalViewModel @Inject constructor(
             }
             ARTIST_FAVORITE -> {
                 ScreenVariant.Favorite(
-                    isBackFromSong = false
+                    isBackFromSomeScreen = false
                 )
             }
             else -> {
                 ScreenVariant.SongList(
                     artist = artist,
-                    isBackFromSong = false
+                    isBackFromSomeScreen = false
                 )
             }
         }
-        // for unit tests:
+
         if (artist !in listOf(
                 ARTIST_ADD_ARTIST,
                 ARTIST_ADD_SONG,
                 ARTIST_CLOUD_SONGS,
                 ARTIST_DONATION)
-            && NavControllerHolder.navController == null) {
+            && NavControllerHolder.navControllerIsNull) {
 
             showSongs(artist)
         } else {
@@ -185,6 +189,10 @@ internal open class LocalViewModel @Inject constructor(
                                             .indexOf(_passToSongWithTitle)
                                             .takeIf { it >= 0 }
                                             ?.let { position ->
+                                                selectScreen(
+                                                    ScreenVariant
+                                                        .SongList(artist)
+                                                )
                                                 selectScreen(
                                                     ScreenVariant
                                                         .SongText(newArtist, position))
@@ -285,9 +293,7 @@ internal open class LocalViewModel @Inject constructor(
                 saveSong(it)
                 if (!favorite && currentArtist == ARTIST_FAVORITE) {
                     val newSongCount = getCountByArtistUseCase.execute(ARTIST_FAVORITE)
-                    updateCurrentSongCount(
-                        newSongCount
-                    )
+                    updateCurrentSongCount(newSongCount)
                     if (newSongCount > 0) {
                         if (currentSongPosition >= newSongCount) {
                             selectScreen(

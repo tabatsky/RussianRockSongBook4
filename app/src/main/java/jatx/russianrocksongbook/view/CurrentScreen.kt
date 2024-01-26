@@ -1,5 +1,8 @@
 package jatx.russianrocksongbook.view
 
+import android.util.Log
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -10,17 +13,23 @@ import jatx.russianrocksongbook.addartist.api.view.AddArtistScreen
 import jatx.russianrocksongbook.addsong.api.view.AddSongScreen
 import jatx.russianrocksongbook.cloudsongs.api.view.CloudSearchScreen
 import jatx.russianrocksongbook.cloudsongs.api.view.CloudSongTextScreen
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.CloudViewModel
 import jatx.russianrocksongbook.commonviewmodel.Back
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import jatx.russianrocksongbook.donation.api.view.DonationScreen
 import jatx.russianrocksongbook.localsongs.api.view.SongListScreen
 import jatx.russianrocksongbook.localsongs.api.view.SongTextScreen
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.VoiceCommandViewModel
 import jatx.russianrocksongbook.settings.api.view.SettingsScreen
 import jatx.russianrocksongbook.start.api.view.StartScreen
 import jatx.russianrocksongbook.navigation.NavControllerHolder
 import jatx.russianrocksongbook.navigation.argArtist
+import jatx.russianrocksongbook.navigation.argCloudSearchRandomKey
+import jatx.russianrocksongbook.navigation.argIsBackFromSomeScreen
 import jatx.russianrocksongbook.navigation.argIsBackFromSong
+import jatx.russianrocksongbook.navigation.argIsFromMenu
 import jatx.russianrocksongbook.navigation.argPosition
 import jatx.russianrocksongbook.navigation.argTitle
 import jatx.russianrocksongbook.navigation.destinationAddArtist
@@ -42,36 +51,49 @@ fun CurrentScreen() {
         CommonViewModel.getStoredInstance()?.submitAction(Back(true))
     }
 
-    NavHost(navController, startDestination = destinationStart) {
+    // view models survive popBackStack thereby next lines:
+    CommonViewModel.getInstance().resetState()
+    LocalViewModel.getInstance().resetState()
+    VoiceCommandViewModel.getInstance().resetState()
+    CloudViewModel.getInstance().resetState()
+
+    NavHost(
+        navController,
+        startDestination = destinationStart,
+        enterTransition = { EnterTransition.None },
+        popEnterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None },
+        popExitTransition = { ExitTransition.None }
+    ) {
 
         composable(destinationStart) {
             StartScreen()
         }
 
         composable(
-            "$destinationSongList/{$argArtist}/{$argIsBackFromSong}",
+            "$destinationSongList/{$argArtist}/{$argIsBackFromSomeScreen}",
             arguments = listOf(
                 navArgument(argArtist) { type = NavType.StringType },
-                navArgument(argIsBackFromSong) { type = NavType.BoolType },
+                navArgument(argIsBackFromSomeScreen) { type = NavType.BoolType }
             )
         ) { backStackEntry ->
             SongListScreen(
                 artist = backStackEntry.arguments?.getString(argArtist)
                     ?: throw IllegalArgumentException("No such argument"),
-                isBackFromSong = backStackEntry.arguments?.getBoolean(argIsBackFromSong)
+                isBackFromSomeScreen = backStackEntry.arguments?.getBoolean(argIsBackFromSomeScreen)
                     ?: throw IllegalArgumentException("No such argument")
             )
         }
 
         composable(
-            "$destinationFavorite/{$argIsBackFromSong}",
+            "$destinationFavorite/{$argIsBackFromSomeScreen}",
             arguments = listOf(
-                navArgument(argIsBackFromSong) { type = NavType.BoolType },
+                navArgument(argIsBackFromSomeScreen) { type = NavType.BoolType },
             )
         ) { backStackEntry ->
             SongListScreen(
                 artist = ARTIST_FAVORITE,
-                isBackFromSong = backStackEntry.arguments?.getBoolean(argIsBackFromSong)
+                isBackFromSomeScreen = backStackEntry.arguments?.getBoolean(argIsBackFromSomeScreen)
                     ?: throw IllegalArgumentException("No such argument")
             )
         }
@@ -107,12 +129,15 @@ fun CurrentScreen() {
         }
 
         composable(
-            "$destinationCloudSearch/{$argIsBackFromSong}",
+            "$destinationCloudSearch/{$argCloudSearchRandomKey}/{$argIsBackFromSong}",
             arguments = listOf(
-                navArgument(argIsBackFromSong) { type = NavType.BoolType },
+                navArgument(argCloudSearchRandomKey) { type = NavType.IntType },
+                navArgument(argIsBackFromSong) { type = NavType.BoolType }
             )
         ) { backStackEntry ->
             CloudSearchScreen(
+                randomKey = backStackEntry.arguments?.getInt(argCloudSearchRandomKey)
+                    ?: throw IllegalArgumentException("No such argument"),
                 isBackFromSong = backStackEntry.arguments?.getBoolean(argIsBackFromSong)
                     ?: throw IllegalArgumentException("No such argument")
             )

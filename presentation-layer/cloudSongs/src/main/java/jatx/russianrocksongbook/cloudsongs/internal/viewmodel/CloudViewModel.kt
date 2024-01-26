@@ -1,6 +1,7 @@
 package jatx.russianrocksongbook.cloudsongs.internal.viewmodel
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -34,7 +35,7 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-internal class CloudViewModel @Inject constructor(
+class CloudViewModel @Inject constructor(
     private val cloudStateHolder: CloudStateHolder,
     cloudViewModelDeps: CloudViewModelDeps
 ): CommonViewModel(
@@ -75,7 +76,10 @@ internal class CloudViewModel @Inject constructor(
         }
     }
 
+    override fun resetState() = cloudStateHolder.reset()
+
     override fun handleAction(action: UIAction) {
+        Log.e("cloud action", action.toString())
         when (action) {
             is PerformCloudSearch -> performCloudSearch(action.searchFor, action.orderBy)
             is UpdateSearchState -> updateSearchState(action.searchState)
@@ -96,6 +100,8 @@ internal class CloudViewModel @Inject constructor(
     }
 
     private fun performCloudSearch(searchFor: String, orderBy: OrderBy) {
+        Log.e("cloudSearch", "$searchFor $orderBy")
+
         updateSearchState(SearchState.LOADING)
         updateScrollPosition(0)
         updateNeedScroll(true)

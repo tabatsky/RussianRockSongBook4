@@ -6,7 +6,7 @@ import jatx.russianrocksongbook.domain.usecase.local.GetSongsByVoiceSearchUseCas
 import javax.inject.Inject
 
 @ViewModelScoped
-internal class VoiceCommandViewModelDeps @Inject constructor(
+class VoiceCommandViewModelDeps @Inject constructor(
     val localViewModelDeps: LocalViewModelDeps,
     val getArtistsAsListUseCase: GetArtistsAsListUseCase,
     val getSongsByVoiceSearchUseCase: GetSongsByVoiceSearchUseCase

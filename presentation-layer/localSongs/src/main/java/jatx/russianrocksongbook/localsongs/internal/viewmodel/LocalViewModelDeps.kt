@@ -7,7 +7,7 @@ import jatx.russianrocksongbook.commonviewmodel.CommonViewModelDeps
 import javax.inject.Inject
 
 @ViewModelScoped
-internal class LocalViewModelDeps @Inject constructor(
+class LocalViewModelDeps @Inject constructor(
     val commonViewModelDeps: CommonViewModelDeps,
     val getSongsByArtistUseCase: GetSongsByArtistUseCase,
     val getCountByArtistUseCase: GetCountByArtistUseCase,

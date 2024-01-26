@@ -57,6 +57,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ActionsInjector()
             BackHandler(true) {
+                Log.e("activity", "back")
                 back()
             }
             CurrentScreen()
@@ -69,6 +70,10 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        clean()
+    }
+
+    fun clean() {
         CommonViewModel.clearStorage()
         NavControllerHolder.cleanNavController()
         viewModelStore.clear()

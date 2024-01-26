@@ -1,13 +1,18 @@
 package jatx.russianrocksongbook.commonviewmodel
 
-import dagger.hilt.android.scopes.ActivityRetainedScoped
 import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@ActivityRetainedScoped
+@Singleton
 class CommonStateHolder @Inject constructor(
-    settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsRepository
 ) {
     val commonState = MutableStateFlow(CommonState.initial(settingsRepository.defaultArtist))
+
+    fun reset() {
+        commonState.update { CommonState.initial(settingsRepository.defaultArtist) }
+    }
 }

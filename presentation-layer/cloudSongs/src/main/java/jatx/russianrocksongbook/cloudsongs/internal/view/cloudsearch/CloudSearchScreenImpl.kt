@@ -1,5 +1,6 @@
 package jatx.russianrocksongbook.cloudsongs.internal.view.cloudsearch
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -18,10 +19,12 @@ import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 
 @Composable
-internal fun CloudSearchScreenImpl(isBackFromSong: Boolean) {
+internal fun CloudSearchScreenImpl(randomKey: Int, isBackFromSong: Boolean) {
     val cloudViewModel = CloudViewModel.getInstance()
 
     val theme = cloudViewModel.theme.collectAsState().value
+
+    Log.e("randomKey", randomKey.toString())
 
     BoxWithConstraints(
         modifier = Modifier

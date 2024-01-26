@@ -18,6 +18,7 @@ import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import jatx.russianrocksongbook.navigation.NavControllerHolder
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -47,6 +48,9 @@ open class CommonViewModel @Inject constructor(
         commonViewModelDeps.toasts
     private val addWarningUseCase =
         commonViewModelDeps.addWarningUseCase
+
+    private var collectActionsJob: Job? = null
+    private var collectEffectsJob: Job? = null
 
     private val _theme = MutableStateFlow(settings.theme)
     val theme = _theme.asStateFlow()
@@ -131,6 +135,8 @@ open class CommonViewModel @Inject constructor(
         fun clearStorage() = storage.clear()
     }
 
+    open fun resetState() = commonStateHolder.reset()
+
     init {
         collectActions()
         collectEffects()
@@ -144,7 +150,7 @@ open class CommonViewModel @Inject constructor(
     }
 
     private fun collectActions() {
-        viewModelScope.launch {
+        collectActionsJob = viewModelScope.launch {
             actions
                 .onEach(::handleAction)
                 .collect()
@@ -152,7 +158,7 @@ open class CommonViewModel @Inject constructor(
     }
 
     private fun collectEffects() {
-        viewModelScope.launch {
+        collectEffectsJob = viewModelScope.launch {
             effects
                 .onEach(::handleEffect)
                 .collect()
@@ -169,7 +175,7 @@ open class CommonViewModel @Inject constructor(
 
     protected open fun handleAction(action: UIAction) {
         when (action) {
-            is Back -> back(action.fromDestinationChangedListener)
+            is Back -> back(action.byDestinationChangedListener)
             is SelectScreen -> selectScreen(action.screenVariant)
             is AppWasUpdated -> setAppWasUpdated(action.wasUpdated)
             is OpenVkMusic -> openVkMusic(action.dontAskMore)
@@ -186,7 +192,17 @@ open class CommonViewModel @Inject constructor(
         }
     }
 
-    protected fun back(fromDestinationChangedListener: Boolean = false) {
+    protected fun back(byDestinationChangedListener: Boolean = false) {
+        Log.e("back by",
+            if (byDestinationChangedListener) "destination listener" else "user")
+        if (byDestinationChangedListener) {
+            backByDestinationChangedListener()
+        } else {
+            backByUserPressBackButton()
+        }
+    }
+
+    private fun backByDestinationChangedListener() {
         with (commonState.value) {
             Log.e("back from", currentScreenVariant.toString())
             when (currentScreenVariant) {
@@ -194,29 +210,31 @@ open class CommonViewModel @Inject constructor(
                     doNothing()
                 }
 
-                is ScreenVariant.SongList,
-                is ScreenVariant.Favorite -> {
-                    callbacks.onFinish()
-                }
-
                 is ScreenVariant.CloudSongText -> {
                     selectScreen(ScreenVariant.CloudSearch(isBackFromSong = true))
                 }
 
-                is ScreenVariant.SongText -> {
-                    if (fromDestinationChangedListener) {
-                        if (currentArtist != ARTIST_FAVORITE) {
-                            selectScreen(
-                                ScreenVariant.SongList(
-                                    artist = currentArtist,
-                                    isBackFromSong = true
-                                )
+                is ScreenVariant.SongText  -> {
+                    if (currentArtist != ARTIST_FAVORITE) {
+                        selectScreen(
+                            ScreenVariant.SongList(
+                                artist = currentArtist,
+                                isBackFromSomeScreen = true
                             )
-                        } else {
-                            selectScreen(ScreenVariant.Favorite(isBackFromSong = true))
-                        }
+                        )
                     } else {
-                        NavControllerHolder.navController?.popBackStack()
+                        selectScreen(ScreenVariant.Favorite(isBackFromSomeScreen = true))
+                    }
+                }
+
+                is ScreenVariant.SongTextByArtistAndTitle -> {
+                    if (previousScreenVariant is ScreenVariant.Favorite) {
+                        submitAction(
+                            ShowSongs(
+                                artist = currentScreenVariant.artist,
+                                passToSongWithTitle = currentScreenVariant.title
+                            )
+                        )
                     }
                 }
 
@@ -225,29 +243,92 @@ open class CommonViewModel @Inject constructor(
                         selectScreen(
                             ScreenVariant.SongList(
                                 artist = currentArtist,
-                                isBackFromSong = false
+                                isBackFromSomeScreen = true
                             )
                         )
                     } else {
-                        selectScreen(ScreenVariant.Favorite(isBackFromSong = false))
+                        selectScreen(ScreenVariant.Favorite(isBackFromSomeScreen = true))
                     }
                 }
             }
         }
     }
 
+    private fun backByUserPressBackButton() {
+        NavControllerHolder.popBackStack()
+        when (commonState.value.currentScreenVariant) {
+            is ScreenVariant.SongList,
+            is ScreenVariant.Favorite -> {
+                callbacks.onFinish()
+            }
+
+            else -> doNothing()
+        }
+    }
+
     protected fun selectScreen(
         screenVariant: ScreenVariant
     ) {
-        commonStateHolder.commonState.update {
-            it.copy(currentScreenVariant = screenVariant)
+        val currentScreenVariant = commonStateHolder
+            .commonState
+            .value
+            .currentScreenVariant
+
+        if (currentScreenVariant is ScreenVariant.SongTextByArtistAndTitle) {
+
+            val previousScreenVariant = commonStateHolder
+                .commonState
+                .value
+                .previousScreenVariant
+            if (previousScreenVariant is ScreenVariant.Favorite) {
+                NavControllerHolder.popBackStack(true, 2)
+            } else {
+                NavControllerHolder.popBackStack(true)
+            }
         }
 
-        NavControllerHolder.navController
-            ?.navigate(screenVariant.destination) {
-                launchSingleTop = true
+        if (currentScreenVariant is ScreenVariant.Start &&
+            screenVariant is ScreenVariant.SongList) {
+
+            NavControllerHolder.popBackStack(true)
+        }
+
+        if (currentScreenVariant is ScreenVariant.Favorite &&
+            screenVariant is ScreenVariant.SongList) {
+
+            NavControllerHolder.popBackStack(true)
+        }
+
+        if (currentScreenVariant is ScreenVariant.SongList &&
+            screenVariant is ScreenVariant.Favorite) {
+
+            NavControllerHolder.popBackStack(true)
+        }
+
+        if (currentScreenVariant is ScreenVariant.SongList &&
+            screenVariant is ScreenVariant.SongList) {
+
+            if (currentScreenVariant.artist == screenVariant.artist) {
+                return
             }
+
+            NavControllerHolder.popBackStack(true)
+        }
+
+        updateCurrentScreenAtCommonState(screenVariant)
+        NavControllerHolder.navigate(screenVariant)
+
         Log.e("navigate", screenVariant.destination)
+    }
+
+    private fun updateCurrentScreenAtCommonState(screenVariant: ScreenVariant) {
+        commonStateHolder.commonState.update {
+            val previousScreenVariant = it.currentScreenVariant
+            it.copy(
+                currentScreenVariant = screenVariant,
+                previousScreenVariant = previousScreenVariant
+            )
+        }
     }
 
     protected fun setAppWasUpdated(wasUpdated: Boolean) {

@@ -65,8 +65,8 @@ internal fun SongListMenuBody(
                 fontSizeSp = fontSizeSp,
                 theme = theme,
                 onClick = {
-                    localViewModel.submitAction(SelectArtist(artistOrGroup))
                     onCloseDrawer()
+                    localViewModel.submitAction(SelectArtist(artistOrGroup))
                 }
             )
         } else {
@@ -79,8 +79,8 @@ internal fun SongListMenuBody(
                     localViewModel.submitAction(UpdateMenuExpandedArtistGroup(artistOrGroup))
                 },
                 onArtistClick = {
-                    localViewModel.submitAction(SelectArtist(it))
                     onCloseDrawer()
+                    localViewModel.submitAction(SelectArtist(it))
                 }
             )
         }

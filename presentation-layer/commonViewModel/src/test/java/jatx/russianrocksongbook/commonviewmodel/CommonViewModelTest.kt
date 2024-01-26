@@ -109,10 +109,10 @@ open class CommonViewModelTest {
 
     @Test
     fun test003_selectScreen_CloudSearch_isWorkingCorrect() {
-        commonViewModel.submitAction(SelectScreen(ScreenVariant.CloudSearch(false)))
-        assertEquals(ScreenVariant.CloudSearch(false), commonViewModel.commonState.value.currentScreenVariant)
-        commonViewModel.submitAction(SelectScreen(ScreenVariant.CloudSearch(true)))
-        assertEquals(ScreenVariant.CloudSearch(true), commonViewModel.commonState.value.currentScreenVariant)
+        commonViewModel.submitAction(SelectScreen(ScreenVariant.CloudSearch(128, false)))
+        assertEquals(ScreenVariant.CloudSearch(128,false), commonViewModel.commonState.value.currentScreenVariant)
+        commonViewModel.submitAction(SelectScreen(ScreenVariant.CloudSearch(137,true)))
+        assertEquals(ScreenVariant.CloudSearch(137, true), commonViewModel.commonState.value.currentScreenVariant)
 
     }
 

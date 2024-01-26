@@ -12,7 +12,7 @@ import jatx.russianrocksongbook.voicecommands.api.voiceFilter
 import javax.inject.Inject
 
 @HiltViewModel
-internal class VoiceCommandViewModel @Inject constructor(
+class VoiceCommandViewModel @Inject constructor(
     private val localStateHolder: LocalStateHolder,
     voiceCommandViewModelDeps: VoiceCommandViewModelDeps
 ): LocalViewModel(

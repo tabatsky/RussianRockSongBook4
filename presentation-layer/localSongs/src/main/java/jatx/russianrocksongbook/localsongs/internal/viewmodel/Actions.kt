@@ -21,7 +21,6 @@ data class SpeechRecognize(val dontAskMore: Boolean): UIAction
 object UploadCurrentToCloud: UIAction
 object ReviewApp: UIAction
 object ShowDevSite: UIAction
-data class ShowSongs(val artist: String, val passToSongWithTitle: String? = null): UIAction
 data class SelectArtist(val artist: String): UIAction
 
 data class ParseAndExecuteVoiceCommand(val command: String): UIAction

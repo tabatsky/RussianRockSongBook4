@@ -9,7 +9,7 @@ import jatx.russianrocksongbook.commonviewmodel.CommonViewModelDeps
 import javax.inject.Inject
 
 @ViewModelScoped
-internal class CloudViewModelDeps @Inject constructor(
+class CloudViewModelDeps @Inject constructor(
     val commonViewModelDeps: CommonViewModelDeps,
     val addSongFromCloudUseCase: AddSongFromCloudUseCase,
     val pagedSearchUseCase: PagedSearchUseCase,
