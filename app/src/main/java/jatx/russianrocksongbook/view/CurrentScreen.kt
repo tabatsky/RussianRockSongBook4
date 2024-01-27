@@ -133,7 +133,7 @@ fun CurrentScreen() {
             SongListScreen(
                 artist = backStackEntry.arguments?.getString(argArtist)
                     ?: throw IllegalArgumentException("No such argument"),
-                passToSongWithTitle = backStackEntry.arguments?.getString(argTitle)
+                songTitleToPass = backStackEntry.arguments?.getString(argTitle)
                     ?: throw IllegalArgumentException("No such argument")
             )
         }

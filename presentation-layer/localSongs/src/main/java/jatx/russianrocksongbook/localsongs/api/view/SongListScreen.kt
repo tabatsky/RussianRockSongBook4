@@ -4,5 +4,5 @@ import androidx.compose.runtime.Composable
 import jatx.russianrocksongbook.localsongs.internal.view.songlist.SongListScreenImpl
 
 @Composable
-fun SongListScreen(artist: String, isBackFromSomeScreen: Boolean = false, passToSongWithTitle: String? = null) =
-    SongListScreenImpl(artist, isBackFromSomeScreen, passToSongWithTitle)
+fun SongListScreen(artist: String, isBackFromSomeScreen: Boolean = false, songTitleToPass: String? = null) =
+    SongListScreenImpl(artist, isBackFromSomeScreen, songTitleToPass)

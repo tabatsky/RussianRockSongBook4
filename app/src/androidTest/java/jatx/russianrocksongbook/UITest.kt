@@ -2,20 +2,21 @@ package jatx.russianrocksongbook
 
 import android.app.Application
 import android.content.Context
-import android.content.Intent
 import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.junit4.createEmptyComposeRule
-import androidx.test.core.app.ActivityScenario
-import androidx.test.core.app.ApplicationProvider
+import androidx.lifecycle.Lifecycle
+import androidx.test.espresso.Espresso
 import androidx.test.runner.AndroidJUnitRunner
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
+import io.mockk.core.ValueClassSupport.boxedValue
 import jatx.russianrocksongbook.domain.repository.cloud.CloudRepository
 import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.domain.repository.local.*
@@ -139,6 +140,7 @@ class UITest {
 
     @After
     fun clean() {
+        if (composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED) return
         composeTestRule.activityRule.scenario.onActivity {
             it.clean()
         }
@@ -1852,6 +1854,11 @@ class UITest {
         composeTestRule.waitFor(timeout)
 
         composeTestRule
+            .onNodeWithTag(APP_BAR_TITLE)
+            .assertTextEquals(ARTIST_FAVORITE)
+        Log.e("test $testNumber assert", "app bar title is equals $ARTIST_FAVORITE")
+
+        composeTestRule
             .onNodeWithTag(SONG_LIST_LAZY_COLUMN)
             .performScrollToIndex(index1)
         Log.e("test $testNumber scroll", "songList to index $index1")
@@ -1892,6 +1899,14 @@ class UITest {
             .assertDoesNotExist()
         Log.e("test $testNumber assert", "$TITLE_1_3 does not exist")
         composeTestRule.waitFor(timeout)
+
+        Espresso.pressBackUnconditionally()
+        Log.e("test $testNumber action", "press back")
+
+        composeTestRule.waitFor(timeout)
+
+        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        Log.e("test $testNumber assert", "activity is destroyed")
     }
 
     @Test
@@ -1955,9 +1970,123 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song text is displayed correctly")
     }
+
+    @Test
+    fun test1004_voiceCommandOpenSongByTitleWithDoubleBackPressingIsWorkingCorrectly() {
+        val testNumber = 1002
+
+        composeTestRule.activityRule.scenario.onActivity {
+            parseAndExecuteVoiceCommand("открой песню $TITLE_1_1")
+        }
+
+        composeTestRule.waitFor(timeout)
+
+        val song1 = localRepository.getSongByArtistAndTitle(ARTIST_1, TITLE_1_1)
+        assertNotNull(song1)
+
+        composeTestRule
+            .onNodeWithText("$TITLE_1_1 ($ARTIST_1)")
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "song title with artist is displayed")
+        composeTestRule
+            .onNodeWithText(song1!!.text)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "song text is displayed correctly")
+
+        Espresso.pressBack()
+        Log.e("test $testNumber action", "press back")
+
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule
+            .onNodeWithText(song1!!.title)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "song title is displayed correctly")
+
+        Espresso.pressBackUnconditionally()
+        Log.e("test $testNumber action", "press back")
+
+        composeTestRule.waitFor(timeout)
+
+        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        Log.e("test $testNumber assert", "activity is destroyed")
+    }
+
+    @Test
+    fun test1005_voiceCommandOpenSongByTitleFromFavoriteWithDoubleBackPressingIsWorkingCorrectly() {
+        val testNumber = 1002
+
+        composeTestRule.activityRule.scenario.onActivity {
+            parseAndExecuteVoiceCommand("открой раздел избранное")
+        }
+
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule
+            .onNodeWithTag(APP_BAR_TITLE)
+            .assertTextEquals(ARTIST_FAVORITE)
+        Log.e("test $testNumber assert", "app bar title is equals $ARTIST_FAVORITE")
+
+        composeTestRule.activityRule.scenario.onActivity {
+            parseAndExecuteVoiceCommand("открой песню $TITLE_1_1")
+        }
+
+        composeTestRule.waitFor(timeout)
+
+        val song1 = localRepository.getSongByArtistAndTitle(ARTIST_1, TITLE_1_1)
+        assertNotNull(song1)
+
+        composeTestRule
+            .onNodeWithText("$TITLE_1_1 ($ARTIST_1)")
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "song title with artist is displayed")
+        composeTestRule
+            .onNodeWithText(song1!!.text)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "song text is displayed correctly")
+
+        Espresso.pressBack()
+        Log.e("test $testNumber action", "press back")
+
+        composeTestRule.waitFor(timeout)
+
+        val actualArtist = composeTestRule
+            .onNodeWithTag(APP_BAR_TITLE)
+            .text ?: "error"
+
+        assertTrue(actualArtist.startEquallyWith(ARTIST_1))
+        Log.e("test $testNumber assert", "app bar title starts equally with $ARTIST_1")
+
+        composeTestRule
+            .onNodeWithText(song1!!.title)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "song title is displayed correctly")
+
+        Espresso.pressBackUnconditionally()
+        Log.e("test $testNumber action", "press back")
+
+        composeTestRule.waitFor(timeout)
+
+        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        Log.e("test $testNumber assert", "activity is destroyed")
+    }
 }
 
 const val timeout = 1500L
+
+val SemanticsNodeInteraction.text: String?
+    get() = (this
+        .fetchSemanticsNode()
+        .config
+        .getOrNull(SemanticsProperties.Text)
+        ?.boxedValue as? List<*>)
+        ?.getOrNull(0)?.toString()
+
+fun String.startEquallyWith(with: String, len: Int = 10): Boolean {
+    val startOfThis = this.take(len)
+    val startOfWith = with.take(len)
+    return startOfThis == startOfWith
+}
 
 fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.waitFor(time: Long) {
     try {

@@ -16,6 +16,7 @@ import jatx.russianrocksongbook.localsongs.internal.view.dialogs.VoiceHelpDialog
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.SpeechRecognize
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateSongListNeedScroll
+import jatx.russianrocksongbook.testing.APP_BAR_TITLE
 import jatx.russianrocksongbook.whatsnewdialog.api.view.WhatsNewDialog
 
 private const val MAX_ARTIST_LENGTH_LANDSCAPE = 12
@@ -65,6 +66,7 @@ internal fun SongListContent(
                 val navigationFocusRequester = remember { FocusRequester() }
                 CommonTopAppBar(
                     title = visibleArtist,
+                    titleTestTag = APP_BAR_TITLE,
                     navigationIcon = {
                         SongListNavigationIcon(
                             onClick = openDrawer,
@@ -91,6 +93,7 @@ internal fun SongListContent(
                 val navigationFocusRequester = remember { FocusRequester() }
                 CommonSideAppBar(
                     title = visibleArtist,
+                    titleTestTag = APP_BAR_TITLE,
                     navigationIcon = {
                         SongListNavigationIcon(
                             onClick = openDrawer,

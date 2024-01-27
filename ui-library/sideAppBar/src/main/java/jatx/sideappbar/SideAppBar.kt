@@ -33,6 +33,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -45,6 +46,7 @@ import kotlin.math.sqrt
 fun SideAppBar(
     modifier: Modifier = Modifier,
     title: String? = null,
+    titleTestTag: String? = null,
     navigationIcon: @Composable (() -> Unit)? = null,
     actions: @Composable ColumnScope.() -> Unit = {},
     backgroundColor: Color = MaterialTheme.colors.primarySurface,
@@ -102,8 +104,11 @@ fun SideAppBar(
                                 ) {
                                     Text(
                                         text = it,
-                                        modifier = Modifier
-                                            .width(TextMaxWidth),
+                                        modifier = titleTestTag?.let { testTag ->
+                                            Modifier
+                                                .width(TextMaxWidth)
+                                                .testTag(testTag)
+                                        } ?: Modifier.width(TextMaxWidth),
                                         softWrap = false,
                                         textAlign = TextAlign.End
                                     )

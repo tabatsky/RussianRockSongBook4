@@ -10,12 +10,14 @@ import jatx.sideappbar.SideAppBar
 @Composable
 fun CommonSideAppBar(
     title: String? = null,
+    titleTestTag: String? = null,
     navigationIcon: @Composable () -> Unit = { CommonBackButton() },
     actions: @Composable ColumnScope.() -> Unit = {},
     appBarWidth: Dp = COMMON_APP_BAR_WIDTH
 ) {
     SideAppBar(
         title = title,
+        titleTestTag = titleTestTag,
         backgroundColor = colorDarkYellow,
         navigationIcon = navigationIcon,
         actions = actions,

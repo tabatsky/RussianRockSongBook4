@@ -42,8 +42,6 @@ internal fun SongListBody(
 
     val localState by localViewModel.localState.collectAsState()
 
-    Log.e("currentArtist", localState.currentArtist)
-
     val currentArtist = localState.currentArtist
     val songList = localState.currentSongList
 
