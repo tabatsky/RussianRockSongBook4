@@ -237,9 +237,11 @@ open class CommonViewModel @Inject constructor(
                 }
 
                 is ScreenVariant.CloudSongText -> {
-                    if (previousScreenVariant is ScreenVariant.CloudSearch) {
-                        selectScreen(previousScreenVariant)
-                    }
+                    selectScreen(
+                        ScreenVariant.CloudSearch(
+                            randomKey = lastCloudSearchKey,
+                            isBackFromSong = true
+                        ))
                 }
 
                 else -> {
@@ -327,11 +329,17 @@ open class CommonViewModel @Inject constructor(
     }
 
     private fun updateCurrentScreenAtCommonState(screenVariant: ScreenVariant) {
-        commonStateHolder.commonState.update {
-            val previousScreenVariant = it.currentScreenVariant
-            it.copy(
+        commonStateHolder.commonState.update { state ->
+            val previousScreenVariant = state.currentScreenVariant
+            val randomKey = if (screenVariant is ScreenVariant.CloudSearch) {
+                screenVariant.randomKey
+            } else {
+                state.lastCloudSearchKey
+            }
+            state.copy(
                 currentScreenVariant = screenVariant,
-                previousScreenVariant = previousScreenVariant
+                previousScreenVariant = previousScreenVariant,
+                lastCloudSearchKey = randomKey
             )
         }
     }

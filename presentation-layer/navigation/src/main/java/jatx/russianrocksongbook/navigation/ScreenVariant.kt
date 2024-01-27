@@ -8,7 +8,7 @@ val rnd = Random(42)
 sealed interface ScreenVariant {
     val destination: String
 
-    object Start: ScreenVariant {
+    data object Start: ScreenVariant {
         override val destination: String
             get() = destinationStart
     }
@@ -59,22 +59,22 @@ sealed interface ScreenVariant {
             get() = "$destinationCloudSongText/$position"
     }
 
-    object AddArtist: ScreenVariant {
+    data object AddArtist: ScreenVariant {
         override val destination: String
             get() = destinationAddArtist
     }
 
-    object AddSong: ScreenVariant {
+    data object AddSong: ScreenVariant {
         override val destination: String
             get() = destinationAddSong
     }
 
-    object Donation: ScreenVariant {
+    data object Donation: ScreenVariant {
         override val destination: String
             get() = destinationDonation
     }
 
-    object Settings: ScreenVariant {
+    data object Settings: ScreenVariant {
         override val destination: String
             get() = destinationSettings
     }
