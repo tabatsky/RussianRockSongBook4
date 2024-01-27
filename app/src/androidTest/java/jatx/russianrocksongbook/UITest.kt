@@ -282,6 +282,13 @@ class UITest {
             .performClick()
         composeTestRule.waitFor(timeout)
 
+        val actualArtist = composeTestRule
+            .onNodeWithTag(APP_BAR_TITLE)
+            .text ?: "error"
+
+        assertTrue(actualArtist.startEquallyWith(ARTIST_1))
+        Log.e("test $testNumber assert", "app bar title starts equally with $ARTIST_1")
+
         val songs = localRepository.getSongsByArtistAsList(ARTIST_1)
 
         composeTestRule
@@ -299,7 +306,61 @@ class UITest {
     }
 
     @Test
-    fun test0105_songListIsScrollingCorrectly() {
+    fun test0105_songListForArtist_BackActionAfterOpeningFromMenuIsWorkingCorrectly() {
+        val testNumber = 104
+
+        val artists = localRepository.getArtistsAsList()
+
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule
+            .onNodeWithTag(DRAWER_BUTTON_MAIN)
+            .performClick()
+        Log.e("test $testNumber click", DRAWER_BUTTON_MAIN)
+        composeTestRule.waitFor(timeout)
+
+        val index1 = artists.predefinedArtistsWithGroups().indexOf(ARTIST_1.artistGroup()) - 3
+        composeTestRule
+            .onNodeWithTag(MENU_LAZY_COLUMN)
+            .performScrollToIndex(index1)
+        Log.e("test $testNumber scroll", "menu to index $index1")
+        composeTestRule.waitFor(timeout)
+        composeTestRule
+            .onNodeWithText(ARTIST_1.artistGroup())
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${ARTIST_1.artistGroup()} is displayed")
+        composeTestRule
+            .onNodeWithText(ARTIST_1.artistGroup())
+            .performClick()
+        composeTestRule.waitFor(timeout)
+
+        composeTestRule
+            .onNodeWithText(ARTIST_1)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$ARTIST_1 is displayed")
+        composeTestRule
+            .onNodeWithText(ARTIST_1)
+            .performClick()
+        composeTestRule.waitFor(timeout)
+
+        val actualArtist = composeTestRule
+            .onNodeWithTag(APP_BAR_TITLE)
+            .text ?: "error"
+
+        assertTrue(actualArtist.startEquallyWith(ARTIST_1))
+        Log.e("test $testNumber assert", "app bar title starts equally with $ARTIST_1")
+
+        Espresso.pressBackUnconditionally()
+        Log.e("test $testNumber action", "press back")
+
+        composeTestRule.waitFor(timeout)
+
+        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        Log.e("test $testNumber assert", "activity is destroyed")
+    }
+
+    @Test
+    fun test0106_songListIsScrollingCorrectly() {
         val testNumber = 105
 
         composeTestRule.waitFor(timeout)
@@ -1999,7 +2060,7 @@ class UITest {
         composeTestRule.waitFor(timeout)
 
         composeTestRule
-            .onNodeWithText(song1!!.title)
+            .onNodeWithText(song1.title)
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song title is displayed correctly")
 
@@ -2058,7 +2119,7 @@ class UITest {
         Log.e("test $testNumber assert", "app bar title starts equally with $ARTIST_1")
 
         composeTestRule
-            .onNodeWithText(song1!!.title)
+            .onNodeWithText(song1.title)
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song title is displayed correctly")
 
