@@ -1,6 +1,7 @@
 package jatx.russianrocksongbook.testing
 
 const val DRAWER_BUTTON_MAIN = "drawerButtonMain"
+const val APP_BAR_TITLE = "appBarTitle"
 const val MENU_LAZY_COLUMN = "menuLazyColumn"
 const val SONG_LIST_LAZY_COLUMN = "songListLazyColumn"
 const val SONG_TEXT_VIEWER = "songTextViewer"

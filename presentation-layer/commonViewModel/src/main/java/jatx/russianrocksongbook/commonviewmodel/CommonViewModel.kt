@@ -230,7 +230,7 @@ open class CommonViewModel @Inject constructor(
                         submitAction(
                             ShowSongs(
                                 artist = currentScreenVariant.artist,
-                                passToSongWithTitle = currentScreenVariant.title
+                                songTitleToPass = currentScreenVariant.title
                             )
                         )
                     }

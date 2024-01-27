@@ -64,6 +64,7 @@ class VoiceCommandViewModelTest: LocalViewModelTest() {
             Log.e("show songs", "Немного Нервно")
             getCountByArtistUseCase.execute("Немного Нервно")
             getSongsByArtistUseCase.execute("Немного Нервно")
+            Log.e("first song artist", "was: null; become: null")
         }
     }
 

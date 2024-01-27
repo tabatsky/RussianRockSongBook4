@@ -165,6 +165,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
         verifySequence {
             Log.e("show songs", "Кино")
             getSongsByArtistUseCase.execute("Кино")
+            Log.e("pass to song", "Кино - Кукушка")
         }
     }
 
@@ -206,13 +207,14 @@ open class LocalViewModelTest: CommonViewModelTest() {
             Log.e("show songs", "Кино")
             getCountByArtistUseCase.execute("Кино")
             getSongsByArtistUseCase.execute("Кино")
-            Log.e("artists", "null Кино")
+            Log.e("first song artist", "was: null; become: Кино")
             Log.e("select song", "0")
+            Log.e("first song artist", "was: Кино; become: Кино")
             Log.e("select artist", "Алиса")
             Log.e("show songs", "Алиса")
             getCountByArtistUseCase.execute("Алиса")
             getSongsByArtistUseCase.execute("Алиса")
-            Log.e("artists", "Кино Алиса")
+            Log.e("first song artist", "was: Кино; become: Алиса")
             Log.e("select song", "0")
         }
     }
@@ -291,7 +293,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
             Log.e("show songs", "Кино")
             getCountByArtistUseCase.execute("Кино")
             getSongsByArtistUseCase.execute("Кино")
-            Log.e("artists", "null Кино")
+            Log.e("first song artist", "was: null; become: Кино")
             Log.e("select song", "0")
             getSongByArtistAndPositionUseCase.execute("Кино", 0)
             Log.e("select song", "13")

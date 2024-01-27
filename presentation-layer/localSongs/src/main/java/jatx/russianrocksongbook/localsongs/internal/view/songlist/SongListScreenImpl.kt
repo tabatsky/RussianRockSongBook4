@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 internal fun SongListScreenImpl(
     artist: String,
     isBackFromSomeScreen: Boolean,
-    passToSongWithTitle: String?
+    songTitleToPass: String?
 ) {
     val localViewModel = LocalViewModel.getInstance()
     InitVoiceCommandViewModel()
@@ -44,8 +44,8 @@ internal fun SongListScreenImpl(
         }
     }
 
-    LaunchedEffect(artist to passToSongWithTitle) {
-        localViewModel.submitAction(ShowSongs(artist, passToSongWithTitle))
+    LaunchedEffect(artist to songTitleToPass) {
+        localViewModel.submitAction(ShowSongs(artist, songTitleToPass))
     }
 
     BoxWithConstraints(

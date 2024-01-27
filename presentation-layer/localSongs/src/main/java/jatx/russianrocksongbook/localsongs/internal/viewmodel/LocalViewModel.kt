@@ -96,7 +96,7 @@ open class LocalViewModel @Inject constructor(
     override fun handleAction(action: UIAction) {
         when (action) {
             is SelectArtist -> selectArtist(action.artist)
-            is ShowSongs -> showSongs(action.artist, action.passToSongWithTitle)
+            is ShowSongs -> showSongs(action.artist, action.songTitleToPass)
             is SelectSong -> selectSong(action.position)
             is NextSong -> nextSong()
             is PrevSong -> prevSong()
@@ -162,7 +162,7 @@ open class LocalViewModel @Inject constructor(
 
     private fun showSongs(
         artist: String,
-        passToSongWithTitle: String? = null
+        songTitleToPass: String? = null
     ) {
         Log.e("show songs", artist)
         updateCurrentArtist(artist)
@@ -170,7 +170,6 @@ open class LocalViewModel @Inject constructor(
         showSongsJob?.let {
             if (!it.isCancelled) it.cancel()
         }
-        var _passToSongWithTitle = passToSongWithTitle
         showSongsJob = viewModelScope
             .launch {
                 withContext(Dispatchers.IO) {
@@ -183,29 +182,37 @@ open class LocalViewModel @Inject constructor(
                                 val newArtist = songs.getOrNull(0)?.artist ?: "null"
                                 if (newArtist == artist || newArtist == "null" || artist == ARTIST_FAVORITE) {
                                     updateCurrentSongList(songs)
-                                    if (_passToSongWithTitle != null) {
-                                        songs
-                                            .map { it.title }
-                                            .indexOf(_passToSongWithTitle)
-                                            .takeIf { it >= 0 }
-                                            ?.let { position ->
-                                                selectScreen(
-                                                    ScreenVariant
-                                                        .SongList(artist)
-                                                )
-                                                selectScreen(
-                                                    ScreenVariant
-                                                        .SongText(newArtist, position))
-                                            }
-                                        _passToSongWithTitle = null
-                                    } else if (oldArtist != newArtist) {
-                                        Log.e("artists", "$oldArtist $newArtist")
-                                        selectSong(0)
+                                    songTitleToPass?.let {
+                                        passToSongWithTitle(songs, artist, it)
+                                    } ?: run {
+                                        Log.e("first song artist", "was: $oldArtist; become: $newArtist")
+                                        if ((oldArtist != newArtist || artist == ARTIST_FAVORITE)
+                                            && newArtist != "null") {
+
+                                            selectSong(0)
+                                        }
                                     }
                                 }
                             }
                         }
                 }
+            }
+    }
+
+    private fun passToSongWithTitle(songs: List<Song>, artist: String, songTitleToPass: String) {
+        Log.e("pass to song", "$artist - $songTitleToPass")
+        songs
+            .map { it.title }
+            .indexOf(songTitleToPass)
+            .takeIf { it >= 0 }
+            ?.let { position ->
+                selectScreen(
+                    ScreenVariant
+                        .SongList(artist)
+                )
+                selectScreen(
+                    ScreenVariant
+                        .SongText(artist, position))
             }
     }
 
