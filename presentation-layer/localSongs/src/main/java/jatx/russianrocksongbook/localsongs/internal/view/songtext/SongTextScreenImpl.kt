@@ -48,7 +48,7 @@ internal fun SongTextScreenImpl(artist: String, position: Int) {
         localViewModel.submitAction(SelectSong(position))
     }
 
-    if (position != localState.currentSongPosition) return
+    val skipBody = position != localState.currentSongPosition
 
     val key = artist to song?.title
     var lastKey by rememberSaveable { mutableStateOf(key) }
@@ -206,7 +206,16 @@ internal fun SongTextScreenImpl(artist: String, position: Int) {
                         }
                     )
 
-                    TheBody(Modifier.weight(1.0f))
+                    if (skipBody) {
+                        Box(
+                            modifier = Modifier
+                                .weight(1.0f)
+                                .background(theme.colorBg)
+                        )
+                    } else {
+                        TheBody(Modifier.weight(1.0f))
+                    }
+
                     ThePanel()
                 }
             } else {
@@ -225,7 +234,15 @@ internal fun SongTextScreenImpl(artist: String, position: Int) {
                         }
                     )
 
-                    TheBody(Modifier.weight(1.0f))
+                    if (skipBody) {
+                        Box(
+                            modifier = Modifier
+                                .weight(1.0f)
+                                .background(theme.colorBg)
+                        )
+                    } else {
+                        TheBody(Modifier.weight(1.0f))
+                    }
                     ThePanel()
                 }
             }
