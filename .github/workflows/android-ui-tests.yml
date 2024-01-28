@@ -50,7 +50,7 @@ jobs:
           ram-size: 2048
           heap-size: 512
           force-avd-creation: false
-          emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: |
             adb logcat -c
