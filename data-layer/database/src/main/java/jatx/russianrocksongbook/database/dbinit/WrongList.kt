@@ -11,7 +11,8 @@ internal val wrongSongs = listOf(
     Song(artist = "Кино", title = "Черная река"),
     Song(artist = "Би-2", title = "А мы не ангелы, парень"),
     Song(artist = "Агата Кристи", title = "А мы не ангелы"),
-    Song(artist = "Ночные Снайперы", title = "Милая девочка")
+    Song(artist = "Ночные Снайперы", title = "Милая девочка"),
+    Song(artist = "Александр Башлачёв", title = "Если б я был султан...")
 )
 
 internal val wrongArtists = listOf(
