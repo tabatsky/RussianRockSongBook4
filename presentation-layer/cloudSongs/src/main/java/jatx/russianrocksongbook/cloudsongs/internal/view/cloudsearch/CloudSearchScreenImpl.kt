@@ -16,6 +16,7 @@ import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateNeedScroll
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
+import jatx.russianrocksongbook.testing.APP_BAR_TITLE
 
 @Composable
 internal fun CloudSearchScreenImpl(randomKey: Int, isBackFromSong: Boolean) {
@@ -68,7 +69,10 @@ internal fun CloudSearchScreenImpl(randomKey: Int, isBackFromSong: Boolean) {
                     .fillMaxSize()
                     .background(theme.colorBg)
             ) {
-                CommonTopAppBar(title = stringResource(id = R.string.title_activity_cloud_search))
+                CommonTopAppBar(
+                    title = stringResource(id = R.string.title_activity_cloud_search),
+                    titleTestTag = APP_BAR_TITLE
+                )
                 CloudSearchBody(
                     modifier = Modifier.weight(1.0f),
                     isPortrait = true
@@ -80,7 +84,10 @@ internal fun CloudSearchScreenImpl(randomKey: Int, isBackFromSong: Boolean) {
                     .fillMaxSize()
                     .background(theme.colorBg)
             ) {
-                CommonSideAppBar(title = stringResource(id = R.string.title_activity_cloud_search))
+                CommonSideAppBar(
+                    title = stringResource(id = R.string.title_activity_cloud_search),
+                    titleTestTag = APP_BAR_TITLE
+                )
                 CloudSearchBody(
                     modifier = Modifier.weight(1.0f),
                     isPortrait = false

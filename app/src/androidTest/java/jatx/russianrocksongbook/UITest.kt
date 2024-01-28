@@ -2028,7 +2028,7 @@ class UITest {
     }
 
     @Test
-    fun test0600_settingsScreenIsDisplayingCorrectly() {
+    fun test0600_settingsScreenIsDisplayingAndClosingCorrectly() {
         val testNumber = 600
 
         composeTestRule.waitForCondition {
@@ -2163,10 +2163,35 @@ class UITest {
             "test $testNumber assert",
             "$TEXT_FIELD_SCROLL_SPEED text is ${settingsRepository.scrollSpeed}"
         )
+
+        Espresso.pressBack()
+        Log.e("test $testNumber action", "press back")
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(APP_BAR_TITLE)
+                .isDisplayed()
+        }
+
+        val actualArtist = composeTestRule
+            .onNodeWithTag(APP_BAR_TITLE)
+            .text ?: "error"
+
+        assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
+        Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
+
+        Espresso.pressBackUnconditionally()
+        Log.e("test $testNumber action", "press back")
+
+        composeTestRule.waitForCondition {
+            composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
+        }
+        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        Log.e("test $testNumber assert", "activity is destroyed")
     }
 
     @Test
-    fun test0700_donationScreenIsDisplayingCorrectly() {
+    fun test0700_donationScreenIsDisplayingAndClosingCorrectly() {
         val testNumber = 700
 
         composeTestRule.waitForCondition {
@@ -2207,10 +2232,35 @@ class UITest {
                     .assertIsDisplayed()
                 Log.e("test $testNumber assert", "$it is displayed")
             }
+
+        Espresso.pressBack()
+        Log.e("test $testNumber action", "press back")
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(APP_BAR_TITLE)
+                .isDisplayed()
+        }
+
+        val actualArtist = composeTestRule
+            .onNodeWithTag(APP_BAR_TITLE)
+            .text ?: "error"
+
+        assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
+        Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
+
+        Espresso.pressBackUnconditionally()
+        Log.e("test $testNumber action", "press back")
+
+        composeTestRule.waitForCondition {
+            composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
+        }
+        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        Log.e("test $testNumber assert", "activity is destroyed")
     }
 
     @Test
-    fun test0800_addArtistScreenIsDisplayingCorrectly() {
+    fun test0800_addArtistScreenIsDisplayingAndClosingCorrectly() {
         val testNumber = 800
 
         composeTestRule.waitForCondition {
@@ -2256,6 +2306,31 @@ class UITest {
             .onNodeWithText(stringConst.choose)
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "${stringConst.choose} is displayed")
+
+        Espresso.pressBack()
+        Log.e("test $testNumber action", "press back")
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(APP_BAR_TITLE)
+                .isDisplayed()
+        }
+
+        val actualArtist = composeTestRule
+            .onNodeWithTag(APP_BAR_TITLE)
+            .text ?: "error"
+
+        assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
+        Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
+
+        Espresso.pressBackUnconditionally()
+        Log.e("test $testNumber action", "press back")
+
+        composeTestRule.waitForCondition {
+            composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
+        }
+        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        Log.e("test $testNumber assert", "activity is destroyed")
     }
 
     @Test
@@ -2579,6 +2654,290 @@ class UITest {
         assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
         Log.e("test $testNumber assert", "activity is destroyed")
     }
+
+    @Test
+    fun test1101_appIsClosingCorrectlyAfter3SongText() {
+        val testNumber = 204
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(APP_BAR_TITLE)
+                .isDisplayed()
+        }
+
+        val actualArtist = composeTestRule
+            .onNodeWithTag(APP_BAR_TITLE)
+            .text ?: "error"
+
+        assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
+        Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
+
+
+        val songs = localRepository
+            .getSongsByArtistAsList(settingsRepository.defaultArtist)
+
+        val firstSongIndex = 3
+
+        val song1 = songs[firstSongIndex]
+        val song2 = songs[firstSongIndex + 1]
+        val song3 = songs[firstSongIndex + 2]
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(song1.title)
+                .isDisplayed()
+        }
+
+        composeTestRule
+            .onNodeWithText(song1.title)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${song1.title} is displayed")
+        composeTestRule
+            .onNodeWithText(song1.title)
+            .performClick()
+        Log.e("test $testNumber click", song1.title)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText("${song1.title} (${song1.artist})")
+                .isDisplayed()
+        }
+
+        composeTestRule
+            .onNodeWithText("${song1.title} (${song1.artist})")
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "song title with artist is displayed")
+        composeTestRule
+            .onNodeWithText(song1.text)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "song text is displayed correctly")
+
+        composeTestRule
+            .onNodeWithTag(RIGHT_BUTTON)
+            .performClick()
+        Log.e("test $testNumber click", RIGHT_BUTTON)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText("${song2.title} (${song2.artist})")
+                .isDisplayed()
+        }
+        composeTestRule
+            .onNodeWithText("${song2.title} (${song2.artist})")
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "song2 title with artist is displayed")
+        composeTestRule
+            .onNodeWithText(song2.text)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "song text is displayed correctly")
+
+        composeTestRule
+            .onNodeWithTag(RIGHT_BUTTON)
+            .performClick()
+        Log.e("test $testNumber click", RIGHT_BUTTON)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText("${song3.title} (${song3.artist})")
+                .isDisplayed()
+        }
+        composeTestRule
+            .onNodeWithText("${song3.title} (${song3.artist})")
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "song3 title with artist is displayed")
+        composeTestRule
+            .onNodeWithText(song3.text)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "song text is displayed correctly")
+
+        Espresso.pressBack()
+        Log.e("test $testNumber action", "press back")
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(APP_BAR_TITLE)
+                .isDisplayed()
+        }
+
+        val actualArtistAfterBackPressing = composeTestRule
+            .onNodeWithTag(APP_BAR_TITLE)
+            .text ?: "error"
+
+        assertTrue(actualArtistAfterBackPressing.startEquallyWith(settingsRepository.defaultArtist))
+        Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
+
+        composeTestRule
+            .onNodeWithText(song3.title)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "song title is displayed correctly")
+
+        Espresso.pressBackUnconditionally()
+        Log.e("test $testNumber action", "press back")
+
+        composeTestRule.waitForCondition {
+            composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
+        }
+        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        Log.e("test $testNumber assert", "activity is destroyed")
+    }
+
+    @Test
+    fun test1102_appIsClosingCorrectlyAfter3CloudSongText() {
+        val testNumber = 204
+
+        val list = cloudRepository.search("", OrderBy.BY_ID_DESC)
+
+        val firstSongIndex = 3
+
+        val cloudSong1 = list[firstSongIndex]
+        val cloudSong2 = list[firstSongIndex + 1]
+        val cloudSong3 = list[firstSongIndex + 2]
+
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(DRAWER_BUTTON_MAIN)
+                .isDisplayed()
+        }
+
+        composeTestRule
+            .onNodeWithTag(DRAWER_BUTTON_MAIN)
+            .performClick()
+        Log.e("test $testNumber click", DRAWER_BUTTON_MAIN)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(ARTIST_CLOUD_SONGS)
+                .isDisplayed()
+        }
+        composeTestRule
+            .onNodeWithText(ARTIST_CLOUD_SONGS)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$ARTIST_CLOUD_SONGS is displayed")
+        composeTestRule
+            .onNodeWithText(ARTIST_CLOUD_SONGS)
+            .performClick()
+        Log.e("test $testNumber click", ARTIST_CLOUD_SONGS)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
+                .isDisplayed()
+        }
+        composeTestRule
+            .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
+            .assertIsDisplayed()
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(cloudSong1.visibleTitleWithRating)
+                .isDisplayed()
+        }
+        composeTestRule
+            .onNodeWithText(cloudSong1.visibleTitleWithRating)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${cloudSong1.visibleTitleWithRating} is displayed")
+        composeTestRule
+            .onNodeWithText(cloudSong1.visibleTitleWithRating)
+            .performClick()
+        Log.e("test $testNumber click", cloudSong1.visibleTitleWithRating)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(cloudSong1.visibleTitleWithArtistAndRating)
+                .isDisplayed()
+        }
+
+        composeTestRule
+            .onNodeWithText(cloudSong1.visibleTitleWithArtistAndRating)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "cloud song title with artist is displayed")
+        composeTestRule
+            .onNodeWithText(cloudSong1.text)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "cloud song text is displayed correctly")
+
+        composeTestRule
+            .onNodeWithTag(RIGHT_BUTTON)
+            .performClick()
+        Log.e("test $testNumber click", RIGHT_BUTTON)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(cloudSong2.visibleTitleWithArtistAndRating)
+                .isDisplayed()
+        }
+        composeTestRule
+            .onNodeWithText(cloudSong2.visibleTitleWithArtistAndRating)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "cloud song 2 title with artist is displayed")
+        composeTestRule
+            .onNodeWithText(cloudSong2.text)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "cloud song 2 text is displayed correctly")
+
+        composeTestRule
+            .onNodeWithTag(RIGHT_BUTTON)
+            .performClick()
+        Log.e("test $testNumber click", RIGHT_BUTTON)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(cloudSong3.visibleTitleWithArtistAndRating)
+                .isDisplayed()
+        }
+        composeTestRule
+            .onNodeWithText(cloudSong3.visibleTitleWithArtistAndRating)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "cloud song 3 title with artist is displayed")
+        composeTestRule
+            .onNodeWithText(cloudSong3.text)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "cloud song 2 text is displayed correctly")
+
+        Espresso.pressBack()
+        Log.e("test $testNumber action", "press back")
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(APP_BAR_TITLE)
+                .isDisplayed()
+        }
+
+        val actualArtistAfterBackPressing = composeTestRule
+            .onNodeWithTag(APP_BAR_TITLE)
+            .text ?: "error"
+
+        assertTrue(actualArtistAfterBackPressing.startEquallyWith(ARTIST_CLOUD_SONGS))
+        Log.e("test $testNumber assert", "app bar title starts equally with $ARTIST_CLOUD_SONGS")
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(cloudSong3.visibleTitleWithRating)
+                .isDisplayed()
+        }
+        composeTestRule
+            .onNodeWithText(cloudSong3.visibleTitleWithRating)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "song title is displayed correctly")
+
+        Espresso.pressBack()
+        Log.e("test $testNumber action", "press back")
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(APP_BAR_TITLE)
+                .isDisplayed()
+        }
+
+        val actualArtistAfterSecondBackPressing = composeTestRule
+            .onNodeWithTag(APP_BAR_TITLE)
+            .text ?: "error"
+
+        assertTrue(actualArtistAfterSecondBackPressing.startEquallyWith(settingsRepository.defaultArtist))
+        Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
+
+        Espresso.pressBackUnconditionally()
+        Log.e("test $testNumber action", "press back")
+
+        composeTestRule.waitForCondition {
+            composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
+        }
+        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        Log.e("test $testNumber assert", "activity is destroyed")
+    }
+
 }
 
 const val timeout = 1500L
