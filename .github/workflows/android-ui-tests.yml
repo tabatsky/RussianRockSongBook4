@@ -19,7 +19,7 @@ jobs:
     
     strategy:
         matrix:
-          api-level: [21, 23, 24, 29, 31]
+          api-level: [21, 23, 24, 30, 31, 33]
           target: [default]
     
     steps:
@@ -45,12 +45,12 @@ jobs:
         with:
           api-level: ${{ matrix.api-level }}
           target: ${{ matrix.target }}
-          profile: Nexus 6
+          profile: 29
           arch: x86_64
           ram-size: 2048
           heap-size: 512
           force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: |
             adb logcat -c

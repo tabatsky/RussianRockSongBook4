@@ -14,7 +14,6 @@ import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runners.MethodSorters
-import java.util.concurrent.TimeUnit
 
 @MockKExtension.ConfirmVerification
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -54,8 +53,9 @@ class VoiceCommandViewModelTest: LocalViewModelTest() {
         voiceCommandViewModel.submitAction(
             (ParseAndExecuteVoiceCommand("открой группу немного нервно")))
 
-        TimeUnit.MILLISECONDS.sleep(200)
-
+        waitForCondition {
+            voiceCommandViewModel.localState.value.currentArtist == "Немного Нервно"
+        }
         assertEquals("Немного Нервно", voiceCommandViewModel.localState.value.currentArtist)
 
         verifySequence {
@@ -73,8 +73,6 @@ class VoiceCommandViewModelTest: LocalViewModelTest() {
         voiceCommandViewModel.submitAction(
             (ParseAndExecuteVoiceCommand("открой группу кино")))
 
-        TimeUnit.MILLISECONDS.sleep(200)
-
         verifySequence {
             Log.e("voice command", "открой группу кино")
             toasts.showToast(R.string.toast_artist_not_found)
@@ -90,8 +88,6 @@ class VoiceCommandViewModelTest: LocalViewModelTest() {
         voiceCommandViewModel.submitAction(
             (ParseAndExecuteVoiceCommand("открой песню кино группа крови")))
 
-        TimeUnit.MILLISECONDS.sleep(200)
-
         verifySequence {
             Log.e("voice command", "открой песню кино группа крови")
             getSongsByVoiceSearchUseCase.execute("киногруппакрови")
@@ -106,8 +102,6 @@ class VoiceCommandViewModelTest: LocalViewModelTest() {
         voiceCommandViewModel.submitAction(
             (ParseAndExecuteVoiceCommand("открой песню весна космос")))
 
-        TimeUnit.MILLISECONDS.sleep(200)
-
         verifySequence {
             Log.e("voice command", "открой песню весна космос")
             getSongsByVoiceSearchUseCase.execute("веснакосмос")
@@ -119,8 +113,6 @@ class VoiceCommandViewModelTest: LocalViewModelTest() {
     fun test205_parseAndExecuteVoiceCommand_unknownCommand_isWorkingCorrect() {
         voiceCommandViewModel.submitAction(
             (ParseAndExecuteVoiceCommand("раз два три")))
-
-        TimeUnit.MILLISECONDS.sleep(200)
 
         verifySequence {
             Log.e("voice command", "раз два три")

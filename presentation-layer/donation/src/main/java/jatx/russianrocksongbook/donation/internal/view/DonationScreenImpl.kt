@@ -16,6 +16,7 @@ import jatx.russianrocksongbook.donation.internal.viewmodel.DonationViewModel
 import jatx.russianrocksongbook.donation.internal.viewmodel.PurchaseItem
 import jatx.russianrocksongbook.donationhelper.api.SKUS
 import jatx.russianrocksongbook.donationhelper.api.SKUS_LANDSCAPE
+import jatx.russianrocksongbook.testing.APP_BAR_TITLE
 
 
 @Composable
@@ -42,7 +43,10 @@ internal fun DonationScreenImpl() {
                     .fillMaxSize()
                     .background(color = theme.colorBg)
             ) {
-                CommonTopAppBar(title = stringResource(id = R.string.title_donation))
+                CommonTopAppBar(
+                    title = stringResource(id = R.string.title_donation),
+                    titleTestTag = APP_BAR_TITLE
+                )
                 DonationBodyPortrait(
                     theme = theme,
                     onPurchaseClick = onPurchaseClick
@@ -54,7 +58,10 @@ internal fun DonationScreenImpl() {
                     .fillMaxSize()
                     .background(color = theme.colorBg)
             ) {
-                CommonSideAppBar(title = stringResource(id = R.string.title_donation))
+                CommonSideAppBar(
+                    title = stringResource(id = R.string.title_donation),
+                    titleTestTag = APP_BAR_TITLE
+                )
                 DonationBodyLandscape(
                     theme = theme,
                     onPurchaseClick = onPurchaseClick

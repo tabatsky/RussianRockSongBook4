@@ -3,6 +3,7 @@ package jatx.russianrocksongbook.commonviewmodel.deps.impl
 import android.app.UiModeManager
 import android.content.Context
 import android.content.res.Configuration
+import android.util.Log
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
@@ -17,7 +18,13 @@ internal class TVDetectorImpl @Inject constructor(
 ): TVDetector {
     override val isTV: Boolean
         get() {
-            val uiModeManager = context.getSystemService(Context.UI_MODE_SERVICE) as? UiModeManager
-            return uiModeManager?.currentModeType == Configuration.UI_MODE_TYPE_TELEVISION
+            return try {
+                val uiModeManager =
+                    context.getSystemService(Context.UI_MODE_SERVICE) as? UiModeManager
+                uiModeManager?.currentModeType == Configuration.UI_MODE_TYPE_TELEVISION
+            } catch (e: Throwable) {
+                Log.e("tvDetector", "error", e)
+                false
+            }
         }
 }

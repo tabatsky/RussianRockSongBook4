@@ -25,8 +25,6 @@ import org.junit.Test
 import org.junit.runners.MethodSorters
 import java.util.concurrent.TimeUnit
 
-const val timeout = 500L
-
 @MockKExtension.ConfirmVerification
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 open class LocalViewModelTest: CommonViewModelTest() {
@@ -156,9 +154,16 @@ open class LocalViewModelTest: CommonViewModelTest() {
         songsFlow.value = songList
         localViewModel.submitAction(ShowSongs("Кино", "Кукушка"))
 
-        TimeUnit.MILLISECONDS.sleep(timeout)
+        waitForCondition {
+            localViewModel.localState.value.currentArtist == "Кино"
+        }
 
         assertEquals("Кино", localViewModel.localState.value.currentArtist)
+
+        waitForCondition {
+            localViewModel.localState.value.currentSongList == songList
+        }
+
         assertEquals(songList, localViewModel.localState.value.currentSongList)
         assertEquals(songList.size, localViewModel.localState.value.currentSongCount)
 
@@ -189,17 +194,24 @@ open class LocalViewModelTest: CommonViewModelTest() {
         songsFlow.value = songList
         localViewModel.submitAction(SelectArtist("Кино"))
 
-        TimeUnit.MILLISECONDS.sleep(timeout)
+        waitForCondition {
+            localViewModel.localState.value.currentArtist == "Кино"
+        }
         assertEquals("Кино", localViewModel.localState.value.currentArtist)
-        TimeUnit.MILLISECONDS.sleep(timeout)
+        waitForCondition {
+            localViewModel.localState.value.currentSongList == songList
+        }
         assertEquals(songList, localViewModel.localState.value.currentSongList)
         songsFlow.value = songList2
-        TimeUnit.MILLISECONDS.sleep(timeout)
+        waitForCondition {
+            localViewModel.localState.value.currentSongList == songList2
+        }
         assertEquals(songList2, localViewModel.localState.value.currentSongList)
         localViewModel.submitAction(SelectArtist("Алиса"))
-        TimeUnit.MILLISECONDS.sleep(timeout)
         songsFlow.value = songList3
-        TimeUnit.MILLISECONDS.sleep(timeout)
+        waitForCondition {
+            localViewModel.localState.value.currentSongList == songList3
+        }
         assertEquals(songList3, localViewModel.localState.value.currentSongList)
 
         verifySequence {
@@ -273,15 +285,15 @@ open class LocalViewModelTest: CommonViewModelTest() {
     fun test107_selectSong_isWorkingCorrect() {
         songsFlow.value = songList
 
-        TimeUnit.MILLISECONDS.sleep(timeout)
+        TimeUnit.MILLISECONDS.sleep(500)
 
         localViewModel.submitAction(SelectArtist("Кино"))
 
-        TimeUnit.MILLISECONDS.sleep(timeout)
+        TimeUnit.MILLISECONDS.sleep(500)
 
         localViewModel.submitAction(SelectSong(13))
 
-        TimeUnit.MILLISECONDS.sleep(timeout)
+        TimeUnit.MILLISECONDS.sleep(500)
 
         assertEquals(13, localViewModel.localState.value.songListScrollPosition)
         assertEquals(true, localViewModel.localState.value.songListNeedScroll)
@@ -304,16 +316,21 @@ open class LocalViewModelTest: CommonViewModelTest() {
     @Test
     fun test108_setFavorite_isWorkingCorrect() {
         localViewModel.submitAction(SelectSong(13))
-
-        TimeUnit.MILLISECONDS.sleep(timeout)
+        waitForCondition {
+            localViewModel.localState.value.currentSongPosition == 13
+        }
 
         localViewModel.submitAction(SetFavorite(true))
-        TimeUnit.MILLISECONDS.sleep(timeout)
+        waitForCondition {
+            localViewModel.localState.value.currentSong?.favorite == true
+        }
         assertEquals(true, localViewModel.localState.value.currentSong?.favorite)
         val song1 = localViewModel.localState.value.currentSong ?: throw IllegalStateException()
 
         localViewModel.submitAction(SetFavorite(false))
-        TimeUnit.MILLISECONDS.sleep(timeout)
+        waitForCondition {
+            localViewModel.localState.value.currentSong?.favorite == false
+        }
         assertEquals(false, localViewModel.localState.value.currentSong?.favorite)
         val song2 = localViewModel.localState.value.currentSong ?: throw IllegalStateException()
 
@@ -332,13 +349,12 @@ open class LocalViewModelTest: CommonViewModelTest() {
     @Test
     fun test109_deleteCurrentToTrash_isWorkingCorrect() {
         localViewModel.submitAction(SelectSong(13))
-
-        TimeUnit.MILLISECONDS.sleep(timeout)
-
+        waitForCondition {
+            localViewModel.localState.value.currentSongPosition == 13
+        }
         val song = localViewModel.localState.value.currentSong ?: throw IllegalStateException()
 
         localViewModel.submitAction(DeleteCurrentToTrash)
-        TimeUnit.MILLISECONDS.sleep(timeout)
 
         verifySequence {
             Log.e("select song", "13")
@@ -348,4 +364,13 @@ open class LocalViewModelTest: CommonViewModelTest() {
             toasts.showToast(R.string.toast_deleted_to_trash)
         }
     }
+}
+
+fun waitForCondition(condition: () -> Boolean) {
+    var counter = 0
+    while (!condition() && counter < 1000) {
+        TimeUnit.MILLISECONDS.sleep(10)
+        counter++
+    }
+    assertTrue(condition())
 }
