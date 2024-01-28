@@ -121,12 +121,11 @@ class UITest {
         settingsRepository.defaultArtist = ARTIST_KINO
 
         composeTestRule.activityRule.scenario.recreate()
-        composeTestRule.waitFor(timeout)
 
         val appWasUpdated = settingsRepository.appWasUpdated
 
         while (settingsRepository.appWasUpdated) {
-            composeTestRule.waitFor(1000L)
+            composeTestRule.waitForTimeout(1000L)
         }
 
         if (appWasUpdated) {
@@ -134,7 +133,11 @@ class UITest {
                 .onNodeWithText(stringConst.ok)
                 .performClick()
             Log.e("before click", stringConst.ok)
-            composeTestRule.waitFor(timeout)
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithText(stringConst.ok)
+                    .isNotDisplayed()
+            }
         }
     }
 
@@ -151,13 +154,22 @@ class UITest {
     fun test0101_menuIsOpeningAndClosingWithDrawerButtonCorrectly() {
         val testNumber = 101
 
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(DRAWER_BUTTON_MAIN)
+                .isDisplayed()
+        }
 
         composeTestRule
             .onNodeWithTag(DRAWER_BUTTON_MAIN)
             .performClick()
         Log.e("test $testNumber click", DRAWER_BUTTON_MAIN)
-        composeTestRule.waitFor(timeout)
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(stringConst.menu)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText(stringConst.menu)
             .assertIsDisplayed()
@@ -167,7 +179,11 @@ class UITest {
             .onNodeWithTag(DRAWER_BUTTON_MAIN)
             .performClick()
         Log.e("test $testNumber click", DRAWER_BUTTON_MAIN)
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(settingsRepository.defaultArtist)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText(settingsRepository.defaultArtist)
             .assertIsDisplayed()
@@ -179,13 +195,21 @@ class UITest {
     fun test0102_menuPredefinedArtistsAreDisplayingCorrectly() {
         val testNumber = 102
 
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(DRAWER_BUTTON_MAIN)
+                .isDisplayed()
+        }
 
         composeTestRule
             .onNodeWithTag(DRAWER_BUTTON_MAIN)
             .performClick()
         Log.e("test $testNumber click", DRAWER_BUTTON_MAIN)
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(ARTIST_FAVORITE)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText(ARTIST_FAVORITE)
             .assertIsDisplayed()
@@ -214,19 +238,32 @@ class UITest {
 
         val artists = localRepository.getArtistsAsList()
 
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(DRAWER_BUTTON_MAIN)
+                .isDisplayed()
+        }
 
         composeTestRule
             .onNodeWithTag(DRAWER_BUTTON_MAIN)
             .performClick()
         Log.e("test $testNumber click", DRAWER_BUTTON_MAIN)
 
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(MENU_LAZY_COLUMN)
+                .isDisplayed()
+        }
         val index1 = artists.predefinedArtistsWithGroups().indexOf(ARTIST_1.artistGroup()) - 3
         composeTestRule
             .onNodeWithTag(MENU_LAZY_COLUMN)
             .performScrollToIndex(index1)
         Log.e("test $testNumber scroll", "menu to index $index1")
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(ARTIST_1.artistGroup())
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText(ARTIST_1.artistGroup())
             .assertIsDisplayed()
@@ -237,7 +274,11 @@ class UITest {
             .onNodeWithTag(MENU_LAZY_COLUMN)
             .performScrollToIndex(index2)
         Log.e("test $testNumber scroll", "menu to index $index2")
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(ARTIST_2.artistGroup())
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText(ARTIST_2.artistGroup())
             .assertIsDisplayed()
@@ -250,20 +291,32 @@ class UITest {
 
         val artists = localRepository.getArtistsAsList()
 
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(DRAWER_BUTTON_MAIN)
+                .isDisplayed()
+        }
 
         composeTestRule
             .onNodeWithTag(DRAWER_BUTTON_MAIN)
             .performClick()
         Log.e("test $testNumber click", DRAWER_BUTTON_MAIN)
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(MENU_LAZY_COLUMN)
+                .isDisplayed()
+        }
 
         val index1 = artists.predefinedArtistsWithGroups().indexOf(ARTIST_1.artistGroup()) - 3
         composeTestRule
             .onNodeWithTag(MENU_LAZY_COLUMN)
             .performScrollToIndex(index1)
         Log.e("test $testNumber scroll", "menu to index $index1")
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(ARTIST_1.artistGroup())
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText(ARTIST_1.artistGroup())
             .assertIsDisplayed()
@@ -271,8 +324,12 @@ class UITest {
         composeTestRule
             .onNodeWithText(ARTIST_1.artistGroup())
             .performClick()
-        composeTestRule.waitFor(timeout)
 
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(ARTIST_1)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText(ARTIST_1)
             .assertIsDisplayed()
@@ -280,7 +337,11 @@ class UITest {
         composeTestRule
             .onNodeWithText(ARTIST_1)
             .performClick()
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(APP_BAR_TITLE)
+                .isDisplayed()
+        }
 
         val actualArtist = composeTestRule
             .onNodeWithTag(APP_BAR_TITLE)
@@ -307,24 +368,36 @@ class UITest {
 
     @Test
     fun test0105_songListForArtist_BackActionAfterOpeningFromMenuIsWorkingCorrectly() {
-        val testNumber = 104
+        val testNumber = 105
 
         val artists = localRepository.getArtistsAsList()
 
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(DRAWER_BUTTON_MAIN)
+                .isDisplayed()
+        }
 
         composeTestRule
             .onNodeWithTag(DRAWER_BUTTON_MAIN)
             .performClick()
         Log.e("test $testNumber click", DRAWER_BUTTON_MAIN)
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(MENU_LAZY_COLUMN)
+                .isDisplayed()
+        }
 
         val index1 = artists.predefinedArtistsWithGroups().indexOf(ARTIST_1.artistGroup()) - 3
         composeTestRule
             .onNodeWithTag(MENU_LAZY_COLUMN)
             .performScrollToIndex(index1)
         Log.e("test $testNumber scroll", "menu to index $index1")
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(ARTIST_1.artistGroup())
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText(ARTIST_1.artistGroup())
             .assertIsDisplayed()
@@ -332,7 +405,11 @@ class UITest {
         composeTestRule
             .onNodeWithText(ARTIST_1.artistGroup())
             .performClick()
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(ARTIST_1)
+                .isDisplayed()
+        }
 
         composeTestRule
             .onNodeWithText(ARTIST_1)
@@ -341,7 +418,11 @@ class UITest {
         composeTestRule
             .onNodeWithText(ARTIST_1)
             .performClick()
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(APP_BAR_TITLE)
+                .isDisplayed()
+        }
 
         val actualArtist = composeTestRule
             .onNodeWithTag(APP_BAR_TITLE)
@@ -353,7 +434,9 @@ class UITest {
         Espresso.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
+        }
 
         assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
         Log.e("test $testNumber assert", "activity is destroyed")
@@ -361,9 +444,7 @@ class UITest {
 
     @Test
     fun test0106_songListIsScrollingCorrectly() {
-        val testNumber = 105
-
-        composeTestRule.waitFor(timeout)
+        val testNumber = 106
 
         val titles = localRepository
             .getSongsByArtistAsList(ARTIST_1)
@@ -373,7 +454,11 @@ class UITest {
             selectArtist(ARTIST_1)
         }
 
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(TITLE_1_1)
+                .isDisplayed()
+        }
 
         composeTestRule
             .onNodeWithText(TITLE_1_1)
@@ -391,7 +476,11 @@ class UITest {
             .onNodeWithTag(SONG_LIST_LAZY_COLUMN)
             .performScrollToIndex(indexSong2)
         Log.e("test $testNumber scroll", "songList to index $indexSong2")
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(TITLE_1_2)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText(TITLE_1_2)
             .assertIsDisplayed()
@@ -408,7 +497,11 @@ class UITest {
             .onNodeWithTag(SONG_LIST_LAZY_COLUMN)
             .performScrollToIndex(indexSong3)
         Log.e("test $testNumber scroll", "songList to index $indexSong3")
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(TITLE_1_3)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText(TITLE_1_3)
             .assertIsDisplayed()
@@ -425,7 +518,11 @@ class UITest {
             .onNodeWithTag(SONG_LIST_LAZY_COLUMN)
             .performScrollToIndex(indexSong4)
         Log.e("test $testNumber scroll", "songList to index $indexSong4")
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(TITLE_1_4)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText(TITLE_1_4)
             .assertIsDisplayed()
@@ -436,13 +533,15 @@ class UITest {
     fun test0201_songTextIsOpeningFromSongListCorrectly() {
         val testNumber = 201
 
-        composeTestRule.waitFor(timeout)
-
         composeTestRule.activityRule.scenario.onActivity {
             selectArtist(ARTIST_1)
         }
 
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(APP_BAR_TITLE)
+                .text?.startEquallyWith(ARTIST_1) ?: false
+        }
 
         val songs = localRepository
             .getSongsByArtistAsList(ARTIST_1)
@@ -451,11 +550,20 @@ class UITest {
         val songIndex1 = titles.indexOf(TITLE_1_3)
         val song1 = songs[songIndex1]
 
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(SONG_LIST_LAZY_COLUMN)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithTag(SONG_LIST_LAZY_COLUMN)
             .performScrollToIndex(songIndex1 - 3)
         Log.e("test $testNumber scroll", "songList to index ${songIndex1 - 3}")
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(TITLE_1_3)
+                .isDisplayed()
+        }
 
         composeTestRule
             .onNodeWithText(TITLE_1_3)
@@ -464,8 +572,12 @@ class UITest {
         composeTestRule
             .onNodeWithText(TITLE_1_3)
             .performClick()
-        composeTestRule.waitFor(timeout)
         Log.e("test $testNumber click", TITLE_1_3)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText("${song1.title} (${song1.artist})")
+                .isDisplayed()
+        }
 
         composeTestRule
             .onNodeWithText("${song1.title} (${song1.artist})")
@@ -481,13 +593,15 @@ class UITest {
     fun test0202_songTextEditorIsOpeningAndClosingCorrectly() {
         val testNumber = 202
 
-        composeTestRule.waitFor(timeout)
-
         composeTestRule.activityRule.scenario.onActivity {
             selectSongByArtistAndTitle(ARTIST_1, TITLE_1_3)
         }
 
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText("$TITLE_1_3 ($ARTIST_1)")
+                .isDisplayed()
+        }
 
         val songs = localRepository
             .getSongsByArtistAsList(ARTIST_1)
@@ -520,7 +634,11 @@ class UITest {
             .onNodeWithTag(EDIT_BUTTON)
             .performClick()
         Log.e("test $testNumber click", "$EDIT_BUTTON click")
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(SONG_TEXT_EDITOR)
+                .isDisplayed()
+        }
 
         composeTestRule
             .onNodeWithTag(SONG_TEXT_EDITOR)
@@ -546,7 +664,11 @@ class UITest {
             .onNodeWithTag(SAVE_BUTTON)
             .performClick()
         Log.e("test $testNumber click", "$SAVE_BUTTON click")
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(SONG_TEXT_VIEWER)
+                .isDisplayed()
+        }
 
         composeTestRule
             .onNodeWithTag(SONG_TEXT_VIEWER)
@@ -574,13 +696,15 @@ class UITest {
     fun test0203_songTextMusicButtonsCountEqualsTwo() {
         val testNumber = 203
 
-        composeTestRule.waitFor(timeout)
-
         composeTestRule.activityRule.scenario.onActivity {
             selectSongByArtistAndTitle(ARTIST_1, TITLE_1_3)
         }
 
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText("$TITLE_1_3 ($ARTIST_1)")
+                .isDisplayed()
+        }
 
         composeTestRule
             .onAllNodesWithTag(MUSIC_BUTTON)
@@ -592,13 +716,15 @@ class UITest {
     fun test0204_songTextLeftAndRightButtonsAreWorkingCorrectly() {
         val testNumber = 204
 
-        composeTestRule.waitFor(timeout)
-
         composeTestRule.activityRule.scenario.onActivity {
             selectSongByArtistAndTitle(ARTIST_1, TITLE_1_3)
         }
 
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText("$TITLE_1_3 ($ARTIST_1)")
+                .isDisplayed()
+        }
 
         val songs = localRepository
             .getSongsByArtistAsList(ARTIST_1)
@@ -613,7 +739,11 @@ class UITest {
             .onNodeWithTag(RIGHT_BUTTON)
             .performClick()
         Log.e("test $testNumber click", RIGHT_BUTTON)
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText("${song2.title} (${song2.artist})")
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText("${song2.title} (${song2.artist})")
             .assertIsDisplayed()
@@ -627,7 +757,11 @@ class UITest {
             .onNodeWithTag(LEFT_BUTTON)
             .performClick()
         Log.e("test $testNumber click", LEFT_BUTTON)
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText("${song1.title} (${song1.artist})")
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText("${song1.title} (${song1.artist})")
             .assertIsDisplayed()
@@ -638,15 +772,17 @@ class UITest {
     fun test0205_songTextAddingAndRemovingFromFavoriteIsWorkingCorrectly() {
         val testNumber = 205
 
-        composeTestRule.waitFor(timeout)
-
         localRepository.setFavorite(false, ARTIST_1, TITLE_1_3)
 
         composeTestRule.activityRule.scenario.onActivity {
             selectSongByArtistAndTitle(ARTIST_1, TITLE_1_3)
         }
 
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText("$TITLE_1_3 ($ARTIST_1)")
+                .isDisplayed()
+        }
 
         composeTestRule
             .onNodeWithTag(DELETE_FROM_FAVORITE_BUTTON)
@@ -660,7 +796,11 @@ class UITest {
             .onNodeWithTag(ADD_TO_FAVORITE_BUTTON)
             .performClick()
         Log.e("test $testNumber click", ADD_TO_FAVORITE_BUTTON)
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(DELETE_FROM_FAVORITE_BUTTON)
+                .isDisplayed()
+        }
 
         composeTestRule
             .onNodeWithTag(ADD_TO_FAVORITE_BUTTON)
@@ -674,7 +814,11 @@ class UITest {
             .onNodeWithTag(DELETE_FROM_FAVORITE_BUTTON)
             .performClick()
         Log.e("test $testNumber click", DELETE_FROM_FAVORITE_BUTTON)
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(ADD_TO_FAVORITE_BUTTON)
+                .isDisplayed()
+        }
 
         composeTestRule
             .onNodeWithTag(DELETE_FROM_FAVORITE_BUTTON)
@@ -694,13 +838,15 @@ class UITest {
     fun test0206_songTextUploadButtonOutOfTheBoxIsWorkingCorrectly() {
         val testNumber = 206
 
-        composeTestRule.waitFor(timeout)
-
         composeTestRule.activityRule.scenario.onActivity {
             selectSongByArtistAndTitle(ARTIST_1, TITLE_1_3)
         }
 
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText("$TITLE_1_3 ($ARTIST_1)")
+                .isDisplayed()
+        }
 
         composeTestRule
             .onNodeWithTag(UPLOAD_BUTTON)
@@ -724,8 +870,6 @@ class UITest {
         song = song.copy(text = "dsgssdg sdg fdg")
         localRepository.updateSong(song)
 
-        composeTestRule.waitFor(timeout)
-
         song = localRepository.getSongByArtistAndTitle(ARTIST_1, TITLE_1_3)!!
         assertEquals(song.outOfTheBox, false)
 
@@ -733,7 +877,11 @@ class UITest {
             selectSongByArtistAndTitle(ARTIST_1, TITLE_1_3)
         }
 
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText("$TITLE_1_3 ($ARTIST_1)")
+                .isDisplayed()
+        }
 
         composeTestRule
             .onNodeWithTag(UPLOAD_BUTTON)
@@ -744,7 +892,11 @@ class UITest {
             .performClick()
         Log.e("test $testNumber click", UPLOAD_BUTTON)
 
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(stringConst.uploadToCloudTitle)
+                .isDisplayed()
+        }
 
         composeTestRule
             .onNodeWithText(stringConst.uploadToCloudTitle)
@@ -766,12 +918,9 @@ class UITest {
             .onNodeWithText(stringConst.cancel)
             .performClick()
         Log.e("test $testNumber click", stringConst.cancel)
-        composeTestRule.waitFor(timeout)
 
         song = song.copy(text = origText)
         localRepository.updateSong(song)
-
-        composeTestRule.waitFor(timeout)
 
         song = localRepository.getSongByArtistAndTitle(ARTIST_1, TITLE_1_3)!!
         assertEquals(song.outOfTheBox, true)
@@ -784,13 +933,15 @@ class UITest {
     fun test0208_songTextWarningDialogIsWorkingCorrectly() {
         val testNumber = 208
 
-        composeTestRule.waitFor(timeout)
-
         composeTestRule.activityRule.scenario.onActivity {
             selectSongByArtistAndTitle(ARTIST_1, TITLE_1_3)
         }
 
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText("$TITLE_1_3 ($ARTIST_1)")
+                .isDisplayed()
+        }
 
         composeTestRule
             .onNodeWithTag(WARNING_BUTTON)
@@ -800,7 +951,11 @@ class UITest {
             .onNodeWithTag(WARNING_BUTTON)
             .performClick()
         Log.e("test $testNumber click", WARNING_BUTTON)
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(stringConst.sendWarningText)
+                .isDisplayed()
+        }
 
         composeTestRule
             .onNodeWithText(stringConst.sendWarningText)
@@ -822,13 +977,21 @@ class UITest {
             .onNodeWithText(stringConst.cancel)
             .performClick()
         Log.e("test $testNumber click", stringConst.cancel)
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(WARNING_BUTTON)
+                .isDisplayed()
+        }
 
         composeTestRule
             .onNodeWithTag(WARNING_BUTTON)
             .performClick()
         Log.e("test $testNumber click", WARNING_BUTTON)
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(TEXT_FIELD_WARNING_COMMENT)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithTag(TEXT_FIELD_WARNING_COMMENT)
             .performTextReplacement(WARNING_COMMENT)
@@ -836,10 +999,13 @@ class UITest {
             .onNodeWithText(stringConst.ok)
             .performClick()
         Log.e("test $testNumber click", stringConst.ok)
-        composeTestRule.waitFor(timeout)
 
-        assertTrue(ToastsTestImpl.verifyText(stringConst.toastCommentCannotBeEmpty))
-        assertTrue(ToastsTestImpl.verifyText(stringConst.toastSendWarningSuccess))
+        composeTestRule.waitForCondition {
+            ToastsTestImpl.verifyText(stringConst.toastCommentCannotBeEmpty)
+        }
+        composeTestRule.waitForCondition {
+            ToastsTestImpl.verifyText(stringConst.toastSendWarningSuccess)
+        }
         Log.e("test $testNumber toast", "toasts shown")
     }
 
@@ -847,13 +1013,15 @@ class UITest {
     fun test0209_songTextSongToTrashDialogIsOpeningCorrectly() {
         val testNumber = 209
 
-        composeTestRule.waitFor(timeout)
-
         composeTestRule.activityRule.scenario.onActivity {
             selectSongByArtistAndTitle(ARTIST_1, TITLE_1_3)
         }
 
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText("$TITLE_1_3 ($ARTIST_1)")
+                .isDisplayed()
+        }
 
         composeTestRule
             .onNodeWithTag(TRASH_BUTTON)
@@ -863,7 +1031,11 @@ class UITest {
             .onNodeWithTag(TRASH_BUTTON)
             .performClick()
         Log.e("test $testNumber click", TRASH_BUTTON)
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(stringConst.songToTrashTitle)
+                .isDisplayed()
+        }
 
         composeTestRule
             .onNodeWithText(stringConst.songToTrashTitle)
@@ -885,26 +1057,32 @@ class UITest {
             .onNodeWithText(stringConst.cancel)
             .performClick()
         Log.e("test $testNumber click", stringConst.cancel)
-
-        composeTestRule.waitFor(timeout)
     }
 
     @Test
     fun test0301_cloudSearchIsOpeningFromMenuCorrectly() {
         val testNumber = 301
 
-        composeTestRule.waitFor(timeout)
-
         with (cloudRepository) {
             val list = search("", OrderBy.BY_ID_DESC)
             val titleList = list.map { "${it.artist} - ${it.title}" }
             Log.e("test $testNumber list", titleList.toString())
 
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithTag(DRAWER_BUTTON_MAIN)
+                    .isDisplayed()
+            }
+
             composeTestRule
                 .onNodeWithTag(DRAWER_BUTTON_MAIN)
                 .performClick()
             Log.e("test $testNumber click", DRAWER_BUTTON_MAIN)
-            composeTestRule.waitFor(timeout)
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithText(ARTIST_CLOUD_SONGS)
+                    .isDisplayed()
+            }
             composeTestRule
                 .onNodeWithText(ARTIST_CLOUD_SONGS)
                 .assertIsDisplayed()
@@ -913,10 +1091,19 @@ class UITest {
                 .onNodeWithText(ARTIST_CLOUD_SONGS)
                 .performClick()
             Log.e("test $testNumber click", ARTIST_CLOUD_SONGS)
-            composeTestRule.waitFor(timeout)
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
+                    .isDisplayed()
+            }
             composeTestRule
                 .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
                 .assertIsDisplayed()
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithText(list[2].visibleTitleWithRating)
+                    .isDisplayed()
+            }
             Log.e("test $testNumber assert", "${OrderBy.BY_ID_DESC.orderByRus} is displayed")
             composeTestRule
                 .onNodeWithText(list[2].visibleTitleWithRating)
@@ -929,8 +1116,6 @@ class UITest {
     fun test0302_cloudSearchOfflineIsWorkingCorrectly() {
         val testNumber = 302
 
-        composeTestRule.waitFor(timeout)
-
         with (cloudRepository) {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
@@ -938,12 +1123,22 @@ class UITest {
                     ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
             }
 
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithText(ARTIST_CLOUD_SONGS)
+                    .isDisplayed()
+            }
+
             isOnline = false
             composeTestRule
                 .onNodeWithTag(SEARCH_BUTTON)
                 .performClick()
             Log.e("test $testNumber click", SEARCH_BUTTON)
-            composeTestRule.waitFor(timeout)
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithText(stringConst.fetchDataError)
+                    .isDisplayed()
+            }
             composeTestRule
                 .onNodeWithText(stringConst.fetchDataError)
                 .assertIsDisplayed()
@@ -956,13 +1151,17 @@ class UITest {
     fun test0303_cloudSearchNormalQueryIsWorkingCorrectly() {
         val testNumber = 303
 
-        composeTestRule.waitFor(timeout)
-
         with (cloudRepository) {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
                     ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
+            }
+
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
+                    .isDisplayed()
             }
 
             composeTestRule
@@ -973,11 +1172,16 @@ class UITest {
                 .onNodeWithTag(SEARCH_BUTTON)
                 .performClick()
             Log.e("test $testNumber click", SEARCH_BUTTON)
-            composeTestRule.waitFor(timeout)
 
             val list = search("Ло", OrderBy.BY_ID_DESC)
             val titleList = list.map { "${it.artist} - ${it.title}" }
             Log.e("test $testNumber list", titleList.toString())
+
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithText(list[2].visibleTitleWithRating)
+                    .isDisplayed()
+            }
 
             composeTestRule
                 .onNodeWithText(list[2].visibleTitleWithRating)
@@ -990,19 +1194,28 @@ class UITest {
     fun test0304_cloudSearchOrderBySpinnerValuesAreDisplayingCorrectly() {
         val testNumber = 304
 
-        composeTestRule.waitFor(timeout)
-
         composeTestRule.activityRule.scenario.onActivity {
             CommonViewModel
                 .getStoredInstance()
                 ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
         }
 
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
+                .isDisplayed()
+        }
+
         composeTestRule
             .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
             .performClick()
         Log.e("test $testNumber click", OrderBy.BY_ID_DESC.orderByRus)
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onAllNodesWithText(OrderBy.BY_ID_DESC.orderByRus)
+                .fetchSemanticsNodes()
+                .count() == 2
+        }
         composeTestRule
             .onAllNodesWithText(OrderBy.BY_ID_DESC.orderByRus)
             .assertCountEquals(2)
@@ -1015,20 +1228,23 @@ class UITest {
             .onNodeWithText(OrderBy.BY_TITLE.orderByRus)
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "${OrderBy.BY_TITLE.orderByRus} is displayed")
-        composeTestRule.waitFor(timeout)
     }
 
     @Test
     fun test0305_cloudSearchOrderingByTitleIsWorkingCorrectly() {
         val testNumber = 305
 
-        composeTestRule.waitFor(timeout)
-
         with (cloudRepository) {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
                     ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
+            }
+
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
+                    .isDisplayed()
             }
 
             composeTestRule
@@ -1039,23 +1255,30 @@ class UITest {
                 .onNodeWithTag(SEARCH_BUTTON)
                 .performClick()
             Log.e("test $testNumber click", SEARCH_BUTTON)
-            composeTestRule.waitFor(timeout)
 
             composeTestRule
                 .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
                 .performClick()
             Log.e("test $testNumber click", OrderBy.BY_ID_DESC.orderByRus)
-            composeTestRule.waitFor(timeout)
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithText(OrderBy.BY_TITLE.orderByRus)
+                    .isDisplayed()
+            }
             composeTestRule
                 .onNodeWithText(OrderBy.BY_TITLE.orderByRus)
                 .performClick()
             Log.e("test $testNumber click", OrderBy.BY_TITLE.orderByRus)
-            composeTestRule.waitFor(timeout)
 
             val list = search("Ло", OrderBy.BY_TITLE)
             val titleList = list.map { "${it.artist} - ${it.title}" }
             Log.e("test $testNumber list", titleList.toString())
 
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithText(list[2].visibleTitleWithRating)
+                    .isDisplayed()
+            }
             composeTestRule
                 .onNodeWithText(list[2].visibleTitleWithRating)
                 .assertIsDisplayed()
@@ -1067,8 +1290,6 @@ class UITest {
     fun test0306_cloudSearchOrderingByArtistIsWorkingCorrectly() {
         val testNumber = 306
 
-        composeTestRule.waitFor(timeout)
-
         with (cloudRepository) {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
@@ -1076,6 +1297,11 @@ class UITest {
                     ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
             }
 
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
+                    .isDisplayed()
+            }
             composeTestRule
                 .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
                 .performTextReplacement("Ло")
@@ -1084,23 +1310,30 @@ class UITest {
                 .onNodeWithTag(SEARCH_BUTTON)
                 .performClick()
             Log.e("test $testNumber click", SEARCH_BUTTON)
-            composeTestRule.waitFor(timeout)
 
             composeTestRule
                 .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
                 .performClick()
             Log.e("test $testNumber click", OrderBy.BY_ID_DESC.orderByRus)
-            composeTestRule.waitFor(timeout)
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithText(OrderBy.BY_ARTIST.orderByRus)
+                    .isDisplayed()
+            }
             composeTestRule
                 .onNodeWithText(OrderBy.BY_ARTIST.orderByRus)
                 .performClick()
             Log.e("test $testNumber click", OrderBy.BY_ARTIST.orderByRus)
-            composeTestRule.waitFor(timeout)
 
             val list = search("Ло", OrderBy.BY_ARTIST)
             val titleList = list.map { "${it.artist} - ${it.title}" }
             Log.e("test $testNumber list", titleList.toString())
 
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithText(list[2].visibleTitleWithRating)
+                    .isDisplayed()
+            }
             composeTestRule
                 .onNodeWithText(list[2].visibleTitleWithRating)
                 .assertIsDisplayed()
@@ -1112,16 +1345,17 @@ class UITest {
     fun test0307_cloudSearchQueryWithEmptyResultIsWorkingCorrectly() {
         val testNumber = 307
 
-        composeTestRule.waitFor(timeout)
-
         composeTestRule.activityRule.scenario.onActivity {
             CommonViewModel
                 .getStoredInstance()
                 ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
         }
 
-        composeTestRule.waitFor(timeout)
-
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
             .performTextReplacement("Хзщшг")
@@ -1130,7 +1364,11 @@ class UITest {
             .onNodeWithTag(SEARCH_BUTTON)
             .performClick()
         Log.e("test $testNumber click", SEARCH_BUTTON)
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(stringConst.listIsEmpty)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText(stringConst.listIsEmpty)
             .assertIsDisplayed()
@@ -1139,7 +1377,11 @@ class UITest {
             .onNodeWithTag(SEARCH_BUTTON)
             .performClick()
         Log.e("test $testNumber click", SEARCH_BUTTON)
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(stringConst.listIsEmpty)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText(stringConst.listIsEmpty)
             .assertIsDisplayed()
@@ -1149,8 +1391,6 @@ class UITest {
     @Test
     fun test0401_cloudSongTextIsOpeningFromCloudSearchCorrectly() {
         val testNumber = 401
-
-        composeTestRule.waitFor(timeout)
 
         with (cloudRepository) {
             val list = search("", OrderBy.BY_ID_DESC)
@@ -1163,13 +1403,20 @@ class UITest {
                     ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
             }
 
-            composeTestRule.waitFor(timeout)
-
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithText(list[2].visibleTitleWithRating)
+                    .isDisplayed()
+            }
             composeTestRule
                 .onNodeWithText(list[2].visibleTitleWithRating)
                 .performClick()
             Log.e("test $testNumber click", list[2].visibleTitleWithRating)
-            composeTestRule.waitFor(timeout)
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithText(list[2].visibleTitleWithArtistAndRating)
+                    .isDisplayed()
+            }
             composeTestRule
                 .onNodeWithText(list[2].visibleTitleWithArtistAndRating)
                 .assertIsDisplayed()
@@ -1185,15 +1432,17 @@ class UITest {
     fun test0402_cloudSongTextAllButtonsAreDisplaying() {
         val testNumber = 402
 
-        composeTestRule.waitFor(timeout)
-
         composeTestRule.activityRule.scenario.onActivity {
             CommonViewModel
                 .getStoredInstance()
                 ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
         }
 
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(ARTIST_CLOUD_SONGS)
+                .isDisplayed()
+        }
 
         composeTestRule.activityRule.scenario.onActivity {
             CommonViewModel
@@ -1201,8 +1450,12 @@ class UITest {
                 ?.submitAction(SelectScreen(ScreenVariant.CloudSongText(2)))
         }
 
-        composeTestRule.waitFor(timeout)
-
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onAllNodesWithTag(MUSIC_BUTTON)
+                .fetchSemanticsNodes()
+                .count() == 2
+        }
         composeTestRule
             .onAllNodesWithTag(MUSIC_BUTTON)
             .assertCountEquals(2)
@@ -1248,8 +1501,6 @@ class UITest {
     fun test0403_cloudSongTextLeftAndRightButtonsAreWorkingCorrectly() {
         val testNumber = 403
 
-        composeTestRule.waitFor(timeout)
-
         with (cloudRepository) {
             val list = search("", OrderBy.BY_ID_DESC)
             val titleList = list.map { "${it.artist} - ${it.title}" }
@@ -1261,7 +1512,11 @@ class UITest {
                     ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
             }
 
-            composeTestRule.waitFor(timeout)
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithText(ARTIST_CLOUD_SONGS)
+                    .isDisplayed()
+            }
 
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
@@ -1269,8 +1524,11 @@ class UITest {
                     ?.submitAction(SelectScreen(ScreenVariant.CloudSongText(2)))
             }
 
-            composeTestRule.waitFor(timeout)
-
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithText(list[2].visibleTitleWithArtistAndRating)
+                    .isDisplayed()
+            }
             composeTestRule
                 .onNodeWithText(list[2].visibleTitleWithArtistAndRating)
                 .assertIsDisplayed()
@@ -1288,8 +1546,12 @@ class UITest {
                 .onNodeWithTag(RIGHT_BUTTON)
                 .performClick()
             Log.e("test $testNumber click", RIGHT_BUTTON)
-            composeTestRule.waitFor(timeout)
 
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithText(list[3].visibleTitleWithArtistAndRating)
+                    .isDisplayed()
+            }
             composeTestRule
                 .onNodeWithText(list[3].visibleTitleWithArtistAndRating)
                 .assertIsDisplayed()
@@ -1307,8 +1569,12 @@ class UITest {
                 .onNodeWithTag(LEFT_BUTTON)
                 .performClick()
             Log.e("test $testNumber click", LEFT_BUTTON)
-            composeTestRule.waitFor(timeout)
 
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithText(list[2].visibleTitleWithArtistAndRating)
+                    .isDisplayed()
+            }
             composeTestRule
                 .onNodeWithText(list[2].visibleTitleWithArtistAndRating)
                 .assertIsDisplayed()
@@ -1328,15 +1594,17 @@ class UITest {
     fun test0404_cloudSongTextWarningDialogIsWorkingCorrectly() {
         val testNumber = 404
 
-        composeTestRule.waitFor(timeout)
-
         composeTestRule.activityRule.scenario.onActivity {
             CommonViewModel
                 .getStoredInstance()
                 ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
         }
 
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(ARTIST_CLOUD_SONGS)
+                .isDisplayed()
+        }
 
         composeTestRule.activityRule.scenario.onActivity {
             CommonViewModel
@@ -1344,14 +1612,21 @@ class UITest {
                 ?.submitAction(SelectScreen(ScreenVariant.CloudSongText(2)))
         }
 
-        composeTestRule.waitFor(timeout)
-
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(WARNING_BUTTON)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithTag(WARNING_BUTTON)
             .performClick()
         Log.e("test $testNumber click", WARNING_BUTTON)
-        composeTestRule.waitFor(timeout)
 
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(stringConst.sendWarningText)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText(stringConst.sendWarningText)
             .assertIsDisplayed()
@@ -1368,7 +1643,12 @@ class UITest {
             .onNodeWithText(stringConst.cancel)
             .performClick()
         Log.e("test $testNumber click", stringConst.cancel)
-        composeTestRule.waitFor(timeout)
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(stringConst.sendWarningText)
+                .isNotDisplayed()
+        }
 
         composeTestRule
             .onNodeWithText(stringConst.sendWarningText)
@@ -1388,8 +1668,6 @@ class UITest {
     fun test0405_cloudSongTextDownloadButtonIsWorkingCorrectly() {
         val testNumber = 405
 
-        composeTestRule.waitFor(timeout)
-
         with (cloudRepository) {
             val list = search("", OrderBy.BY_ID_DESC)
             val titleList = list.map { "${it.artist} - ${it.title}" }
@@ -1401,7 +1679,11 @@ class UITest {
                     ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
             }
 
-            composeTestRule.waitFor(timeout)
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithText(ARTIST_CLOUD_SONGS)
+                    .isDisplayed()
+            }
 
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
@@ -1409,13 +1691,22 @@ class UITest {
                     ?.submitAction(SelectScreen(ScreenVariant.CloudSongText(2)))
             }
 
-            composeTestRule.waitFor(timeout)
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithTag(DOWNLOAD_BUTTON)
+                    .isDisplayed()
+            }
 
             composeTestRule
                 .onNodeWithTag(DOWNLOAD_BUTTON)
                 .performClick()
             Log.e("test $testNumber click", DOWNLOAD_BUTTON)
-            composeTestRule.waitFor(timeout)
+            composeTestRule.waitForCondition {
+                localRepository
+                    .getSongsByArtistAsList(list[2].artist)
+                    .map { it.title }
+                    .contains(list[2].visibleTitle)
+            }
             assert(
                 localRepository
                     .getSongsByArtistAsList(list[2].artist)
@@ -1440,8 +1731,6 @@ class UITest {
     fun test0406_cloudSongTextAndCloudSearchLikeIsWorkingCorrectly() {
         val testNumber = 406
 
-        composeTestRule.waitFor(timeout)
-
         with (cloudRepository) {
             val list = search("", OrderBy.BY_ID_DESC)
             val titleList = list.map { "${it.artist} - ${it.title}" }
@@ -1453,7 +1742,11 @@ class UITest {
                     ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
             }
 
-            composeTestRule.waitFor(timeout)
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithText(ARTIST_CLOUD_SONGS)
+                    .isDisplayed()
+            }
 
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
@@ -1461,17 +1754,24 @@ class UITest {
                     ?.submitAction(SelectScreen(ScreenVariant.CloudSongText(2)))
             }
 
-            composeTestRule.waitFor(timeout)
-
             val cloudSong2 = list[2].let {
                 it.copy(likeCount = it.likeCount + 1)
             }
 
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithTag(LIKE_BUTTON)
+                    .isDisplayed()
+            }
             composeTestRule
                 .onNodeWithTag(LIKE_BUTTON)
                 .performClick()
             Log.e("test $testNumber click", LIKE_BUTTON)
-            composeTestRule.waitFor(timeout)
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithText(cloudSong2.visibleTitleWithArtistAndRating)
+                    .isDisplayed()
+            }
             composeTestRule
                 .onNodeWithText(cloudSong2.visibleTitleWithArtistAndRating)
                 .assertIsDisplayed()
@@ -1483,8 +1783,12 @@ class UITest {
                 .onNodeWithTag(BACK_BUTTON)
                 .performClick()
             Log.e("test $testNumber click", BACK_BUTTON)
-            composeTestRule.waitFor(timeout)
 
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithText(cloudSong2.visibleTitleWithRating)
+                    .isDisplayed()
+            }
             composeTestRule
                 .onNodeWithText(cloudSong2.visibleTitleWithRating)
                 .assertIsDisplayed()
@@ -1499,8 +1803,6 @@ class UITest {
     fun test0407_cloudSongTextAndCloudSearchDislikeIsWorkingCorrectly() {
         val testNumber = 407
 
-        composeTestRule.waitFor(timeout)
-
         with (cloudRepository) {
             val list = search("", OrderBy.BY_ID_DESC)
             val titleList = list.map { "${it.artist} - ${it.title}" }
@@ -1512,7 +1814,11 @@ class UITest {
                     ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
             }
 
-            composeTestRule.waitFor(timeout)
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithText(ARTIST_CLOUD_SONGS)
+                    .isDisplayed()
+            }
 
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
@@ -1520,17 +1826,24 @@ class UITest {
                     ?.submitAction(SelectScreen(ScreenVariant.CloudSongText(3)))
             }
 
-            composeTestRule.waitFor(timeout)
-
             val cloudSong3 = list[3].let {
                 it.copy(dislikeCount = it.dislikeCount + 1)
             }
 
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithTag(DISLIKE_BUTTON)
+                    .isDisplayed()
+            }
             composeTestRule
                 .onNodeWithTag(DISLIKE_BUTTON)
                 .performClick()
             Log.e("test $testNumber click", DISLIKE_BUTTON)
-            composeTestRule.waitFor(timeout)
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithText(cloudSong3.visibleTitleWithArtistAndRating)
+                    .isDisplayed()
+            }
             composeTestRule
                 .onNodeWithText(cloudSong3.visibleTitleWithArtistAndRating)
                 .assertIsDisplayed()
@@ -1542,8 +1855,12 @@ class UITest {
                 .onNodeWithTag(BACK_BUTTON)
                 .performClick()
             Log.e("test $testNumber click", BACK_BUTTON)
-            composeTestRule.waitFor(timeout)
 
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithText(cloudSong3.visibleTitleWithRating)
+                    .isDisplayed()
+            }
             composeTestRule
                 .onNodeWithText(cloudSong3.visibleTitleWithRating)
                 .assertIsDisplayed()
@@ -1558,13 +1875,20 @@ class UITest {
     fun test0500_addingSongWithUploadingToCloudAndDeletingIsWorkingCorrectly() {
         val testNumber = 500
 
-        composeTestRule.waitFor(timeout)
-
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(DRAWER_BUTTON_MAIN)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithTag(DRAWER_BUTTON_MAIN)
             .performClick()
         Log.e("test $testNumber click", DRAWER_BUTTON_MAIN)
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(ARTIST_ADD_SONG)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText(ARTIST_ADD_SONG)
             .assertIsDisplayed()
@@ -1573,8 +1897,12 @@ class UITest {
             .onNodeWithText(ARTIST_ADD_SONG)
             .performClick()
         Log.e("test $testNumber click", ARTIST_ADD_SONG)
-        composeTestRule.waitFor(timeout)
 
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(stringConst.save)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText(stringConst.save)
             .assertIsDisplayed()
@@ -1588,7 +1916,6 @@ class UITest {
             .onNodeWithTag(TEXT_FIELD_ARTIST)
             .performTextReplacement(ARTIST_NEW)
         Log.e("test $testNumber input", ARTIST_NEW)
-        composeTestRule.waitFor(timeout)
 
         composeTestRule
             .onNodeWithTag(TEXT_FIELD_TITLE)
@@ -1598,7 +1925,6 @@ class UITest {
             .onNodeWithTag(TEXT_FIELD_TITLE)
             .performTextReplacement(TITLE_NEW)
         Log.e("test $testNumber input", TITLE_NEW)
-        composeTestRule.waitFor(timeout)
 
         composeTestRule
             .onNodeWithTag(TEXT_FIELD_TEXT)
@@ -1608,14 +1934,17 @@ class UITest {
             .onNodeWithTag(TEXT_FIELD_TEXT)
             .performTextReplacement(TEXT_NEW)
         Log.e("test $testNumber input", TEXT_NEW)
-        composeTestRule.waitFor(timeout)
 
         composeTestRule
             .onNodeWithText(stringConst.save)
             .performClick()
         Log.e("test $testNumber click", stringConst.save)
-        composeTestRule.waitFor(timeout)
 
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(stringConst.uploadToCloudTitle)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText(stringConst.uploadToCloudTitle)
             .assertIsDisplayed()
@@ -1636,7 +1965,6 @@ class UITest {
             .onNodeWithText(stringConst.ok)
             .performClick()
         Log.e("test $testNumber click", stringConst.ok)
-        composeTestRule.waitFor(timeout)
 
         with (cloudRepository) {
             val list = search("", OrderBy.BY_ID_DESC)
@@ -1669,14 +1997,22 @@ class UITest {
             .onNodeWithTag(TRASH_BUTTON)
             .performClick()
         Log.e("test $testNumber click", TRASH_BUTTON)
-        composeTestRule.waitFor(timeout)
 
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(stringConst.ok)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText(stringConst.ok)
             .performClick()
         Log.e("test $testNumber click", stringConst.ok)
-        composeTestRule.waitFor(timeout)
 
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(stringConst.listIsEmpty)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText(stringConst.listIsEmpty)
             .assertIsDisplayed()
@@ -1695,8 +2031,11 @@ class UITest {
     fun test0600_settingsScreenIsDisplayingCorrectly() {
         val testNumber = 600
 
-        composeTestRule.waitFor(timeout)
-
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(SETTINGS_BUTTON)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithTag(SETTINGS_BUTTON)
             .assertIsDisplayed()
@@ -1705,7 +2044,18 @@ class UITest {
             .onNodeWithTag(SETTINGS_BUTTON)
             .performClick()
         Log.e("test $testNumber click", SETTINGS_BUTTON)
-        composeTestRule.waitFor(timeout)
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(APP_BAR_TITLE)
+                .isDisplayed()
+        }
+
+        val actualTitle = composeTestRule
+            .onNodeWithTag(APP_BAR_TITLE)
+            .text ?: "null"
+        assertTrue(actualTitle.startEquallyWith(stringConst.titleSettings))
+        Log.e("test $testNumber assert", "app bar title starts equally with ${stringConst.titleSettings}")
 
         composeTestRule
             .onNodeWithText(stringConst.saveAndRestart)
@@ -1819,13 +2169,15 @@ class UITest {
     fun test0700_donationScreenIsDisplayingCorrectly() {
         val testNumber = 700
 
-        composeTestRule.waitFor(timeout)
-
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(DRAWER_BUTTON_MAIN)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithTag(DRAWER_BUTTON_MAIN)
             .performClick()
         Log.e("test $testNumber click", DRAWER_BUTTON_MAIN)
-        composeTestRule.waitFor(timeout)
         composeTestRule
             .onNodeWithText(ARTIST_DONATION)
             .assertIsDisplayed()
@@ -1834,29 +2186,47 @@ class UITest {
             .onNodeWithText(ARTIST_DONATION)
             .performClick()
         Log.e("test $testNumber click", ARTIST_DONATION)
-        composeTestRule.waitFor(timeout)
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(APP_BAR_TITLE)
+                .isDisplayed()
+        }
+
+        val actualTitle = composeTestRule
+            .onNodeWithTag(APP_BAR_TITLE)
+            .text ?: "null"
+        assertTrue(actualTitle.startEquallyWith(ARTIST_DONATION))
+        Log.e("test $testNumber assert", "app bar title starts equally with $ARTIST_DONATION")
 
         DONATIONS
             .map { donationLabel(it) }
             .forEach {
-            composeTestRule
-                .onNodeWithText(it)
-                .assertIsDisplayed()
-            Log.e("test $testNumber assert", "$it is displayed")
-        }
+                composeTestRule
+                    .onNodeWithText(it)
+                    .assertIsDisplayed()
+                Log.e("test $testNumber assert", "$it is displayed")
+            }
     }
 
     @Test
     fun test0800_addArtistScreenIsDisplayingCorrectly() {
         val testNumber = 800
 
-        composeTestRule.waitFor(timeout)
-
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(DRAWER_BUTTON_MAIN)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithTag(DRAWER_BUTTON_MAIN)
             .performClick()
         Log.e("test $testNumber click", DRAWER_BUTTON_MAIN)
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(ARTIST_ADD_ARTIST)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText(ARTIST_ADD_ARTIST)
             .assertIsDisplayed()
@@ -1865,7 +2235,18 @@ class UITest {
             .onNodeWithText(ARTIST_ADD_ARTIST)
             .performClick()
         Log.e("test $testNumber click", ARTIST_ADD_ARTIST)
-        composeTestRule.waitFor(timeout)
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(APP_BAR_TITLE)
+                .isDisplayed()
+        }
+
+        val actualTitle = composeTestRule
+            .onNodeWithTag(APP_BAR_TITLE)
+            .text ?: "null"
+        assertTrue(actualTitle.startEquallyWith(ARTIST_ADD_ARTIST))
+        Log.e("test $testNumber assert", "app bar title starts equally with $ARTIST_ADD_ARTIST")
 
         composeTestRule
             .onNodeWithText(stringConst.addArtistManual)
@@ -1897,13 +2278,20 @@ class UITest {
         val index3 = songs.indexOf(song3)
         assertTrue(index1 >= 0)
 
-        composeTestRule.waitFor(timeout)
-
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(DRAWER_BUTTON_MAIN)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithTag(DRAWER_BUTTON_MAIN)
             .performClick()
         Log.e("test $testNumber click", DRAWER_BUTTON_MAIN)
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(ARTIST_FAVORITE)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText(ARTIST_FAVORITE)
             .assertIsDisplayed()
@@ -1912,8 +2300,12 @@ class UITest {
             .onNodeWithText(ARTIST_FAVORITE)
             .performClick()
         Log.e("test $testNumber click", ARTIST_FAVORITE)
-        composeTestRule.waitFor(timeout)
 
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(APP_BAR_TITLE)
+                .text == ARTIST_FAVORITE
+        }
         composeTestRule
             .onNodeWithTag(APP_BAR_TITLE)
             .assertTextEquals(ARTIST_FAVORITE)
@@ -1923,49 +2315,62 @@ class UITest {
             .onNodeWithTag(SONG_LIST_LAZY_COLUMN)
             .performScrollToIndex(index1)
         Log.e("test $testNumber scroll", "songList to index $index1")
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(song1.title)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText(song1.title)
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "${song1.title} is displayed")
-        composeTestRule.waitFor(timeout)
 
         composeTestRule
             .onNodeWithTag(SONG_LIST_LAZY_COLUMN)
             .performScrollToIndex(index2)
         Log.e("test $testNumber scroll", "songList to index $index2")
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(song2.title)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText(song2.title)
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "${song2.title} is displayed")
-        composeTestRule.waitFor(timeout)
 
         composeTestRule
             .onNodeWithTag(SONG_LIST_LAZY_COLUMN)
             .performScrollToIndex(index3)
         Log.e("test $testNumber scroll", "songList to index $index3")
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(song3.title)
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText(song3.title)
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "${song3.title} is displayed")
-        composeTestRule.waitFor(timeout)
 
         localRepository.setFavorite(false, ARTIST_1, TITLE_1_3)
 
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(TITLE_1_3)
+                .isNotDisplayed()
+        }
         composeTestRule
             .onNodeWithText(TITLE_1_3)
             .assertDoesNotExist()
         Log.e("test $testNumber assert", "$TITLE_1_3 does not exist")
-        composeTestRule.waitFor(timeout)
 
         Espresso.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
-        composeTestRule.waitFor(timeout)
-
+        composeTestRule.waitForCondition {
+            composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
+        }
         assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
         Log.e("test $testNumber assert", "activity is destroyed")
     }
@@ -1978,7 +2383,18 @@ class UITest {
             parseAndExecuteVoiceCommand("открой группу $ARTIST_1")
         }
 
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(APP_BAR_TITLE)
+                .isDisplayed()
+        }
+
+        val actualArtist = composeTestRule
+            .onNodeWithTag(APP_BAR_TITLE)
+            .text ?: "error"
+
+        assertTrue(actualArtist.startEquallyWith(ARTIST_1))
+        Log.e("test $testNumber assert", "app bar title starts equally with $ARTIST_1")
 
         composeTestRule
             .onNodeWithText(TITLE_1_4)
@@ -1994,11 +2410,14 @@ class UITest {
             parseAndExecuteVoiceCommand("открой песню $TITLE_1_1")
         }
 
-        composeTestRule.waitFor(timeout)
-
         val song1 = localRepository.getSongByArtistAndTitle(ARTIST_1, TITLE_1_1)
         assertNotNull(song1)
 
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText("$TITLE_1_1 ($ARTIST_1)")
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText("$TITLE_1_1 ($ARTIST_1)")
             .assertIsDisplayed()
@@ -2017,11 +2436,14 @@ class UITest {
             parseAndExecuteVoiceCommand("открой песню $ARTIST_3 $TITLE_3_1")
         }
 
-        composeTestRule.waitFor(timeout)
-
         val song2 = localRepository.getSongByArtistAndTitle(ARTIST_3, TITLE_3_1)
         assertNotNull(song2)
 
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText("$TITLE_3_1 ($ARTIST_3)")
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText("$TITLE_3_1 ($ARTIST_3)")
             .assertIsDisplayed()
@@ -2034,17 +2456,20 @@ class UITest {
 
     @Test
     fun test1004_voiceCommandOpenSongByTitleWithDoubleBackPressingIsWorkingCorrectly() {
-        val testNumber = 1002
+        val testNumber = 1004
 
         composeTestRule.activityRule.scenario.onActivity {
             parseAndExecuteVoiceCommand("открой песню $TITLE_1_1")
         }
 
-        composeTestRule.waitFor(timeout)
-
         val song1 = localRepository.getSongByArtistAndTitle(ARTIST_1, TITLE_1_1)
         assertNotNull(song1)
 
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText("$TITLE_1_1 ($ARTIST_1)")
+                .isDisplayed()
+        }
         composeTestRule
             .onNodeWithText("$TITLE_1_1 ($ARTIST_1)")
             .assertIsDisplayed()
@@ -2057,59 +2482,11 @@ class UITest {
         Espresso.pressBack()
         Log.e("test $testNumber action", "press back")
 
-        composeTestRule.waitFor(timeout)
-
-        composeTestRule
-            .onNodeWithText(song1.title)
-            .assertIsDisplayed()
-        Log.e("test $testNumber assert", "song title is displayed correctly")
-
-        Espresso.pressBackUnconditionally()
-        Log.e("test $testNumber action", "press back")
-
-        composeTestRule.waitFor(timeout)
-
-        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
-        Log.e("test $testNumber assert", "activity is destroyed")
-    }
-
-    @Test
-    fun test1005_voiceCommandOpenSongByTitleFromFavoriteWithDoubleBackPressingIsWorkingCorrectly() {
-        val testNumber = 1002
-
-        composeTestRule.activityRule.scenario.onActivity {
-            parseAndExecuteVoiceCommand("открой раздел избранное")
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(APP_BAR_TITLE)
+                .isDisplayed()
         }
-
-        composeTestRule.waitFor(timeout)
-
-        composeTestRule
-            .onNodeWithTag(APP_BAR_TITLE)
-            .assertTextEquals(ARTIST_FAVORITE)
-        Log.e("test $testNumber assert", "app bar title is equals $ARTIST_FAVORITE")
-
-        composeTestRule.activityRule.scenario.onActivity {
-            parseAndExecuteVoiceCommand("открой песню $TITLE_1_1")
-        }
-
-        composeTestRule.waitFor(timeout)
-
-        val song1 = localRepository.getSongByArtistAndTitle(ARTIST_1, TITLE_1_1)
-        assertNotNull(song1)
-
-        composeTestRule
-            .onNodeWithText("$TITLE_1_1 ($ARTIST_1)")
-            .assertIsDisplayed()
-        Log.e("test $testNumber assert", "song title with artist is displayed")
-        composeTestRule
-            .onNodeWithText(song1!!.text)
-            .assertIsDisplayed()
-        Log.e("test $testNumber assert", "song text is displayed correctly")
-
-        Espresso.pressBack()
-        Log.e("test $testNumber action", "press back")
-
-        composeTestRule.waitFor(timeout)
 
         val actualArtist = composeTestRule
             .onNodeWithTag(APP_BAR_TITLE)
@@ -2126,8 +2503,79 @@ class UITest {
         Espresso.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
-        composeTestRule.waitFor(timeout)
+        composeTestRule.waitForCondition {
+            composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
+        }
+        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        Log.e("test $testNumber assert", "activity is destroyed")
+    }
 
+    @Test
+    fun test1005_voiceCommandOpenSongByTitleFromFavoriteWithDoubleBackPressingIsWorkingCorrectly() {
+        val testNumber = 1005
+
+        composeTestRule.activityRule.scenario.onActivity {
+            parseAndExecuteVoiceCommand("открой раздел избранное")
+        }
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(APP_BAR_TITLE)
+                .isDisplayed()
+        }
+        composeTestRule
+            .onNodeWithTag(APP_BAR_TITLE)
+            .assertTextEquals(ARTIST_FAVORITE)
+        Log.e("test $testNumber assert", "app bar title is equals $ARTIST_FAVORITE")
+
+        composeTestRule.activityRule.scenario.onActivity {
+            parseAndExecuteVoiceCommand("открой песню $TITLE_1_1")
+        }
+
+        val song1 = localRepository.getSongByArtistAndTitle(ARTIST_1, TITLE_1_1)
+        assertNotNull(song1)
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText("$TITLE_1_1 ($ARTIST_1)")
+                .isDisplayed()
+        }
+        composeTestRule
+            .onNodeWithText("$TITLE_1_1 ($ARTIST_1)")
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "song title with artist is displayed")
+        composeTestRule
+            .onNodeWithText(song1!!.text)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "song text is displayed correctly")
+
+        Espresso.pressBack()
+        Log.e("test $testNumber action", "press back")
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(APP_BAR_TITLE)
+                .isDisplayed()
+        }
+
+        val actualArtist = composeTestRule
+            .onNodeWithTag(APP_BAR_TITLE)
+            .text ?: "error"
+
+        assertTrue(actualArtist.startEquallyWith(ARTIST_1))
+        Log.e("test $testNumber assert", "app bar title starts equally with $ARTIST_1")
+
+        composeTestRule
+            .onNodeWithText(song1.title)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "song title is displayed correctly")
+
+        Espresso.pressBackUnconditionally()
+        Log.e("test $testNumber action", "press back")
+
+        composeTestRule.waitForCondition {
+            composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
+        }
         assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
         Log.e("test $testNumber assert", "activity is destroyed")
     }
@@ -2149,9 +2597,19 @@ fun String.startEquallyWith(with: String, len: Int = 10): Boolean {
     return startOfThis == startOfWith
 }
 
-fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.waitFor(time: Long) {
+fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.waitForTimeout(time: Long) {
     try {
         waitUntil(time) { false }
+    } catch (e: ComposeTimeoutException) {
+        Log.e("test wait", "timeout")
+    }
+}
+
+fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.waitForCondition(
+    condition: () -> Boolean
+) {
+    try {
+        waitUntil(10000L) { condition() }
     } catch (e: ComposeTimeoutException) {
         Log.e("test wait", "timeout")
     }
@@ -2171,6 +2629,7 @@ class StringConst @Inject constructor(
     val save = context.getString(R.string.save)
     val uploadToCloudTitle = context.getString(R.string.dialog_upload_to_cloud_title)
     val uploadToCloudMessage = context.getString(R.string.dialog_upload_to_cloud_message)
+    val titleSettings = context.getString(R.string.title_settings)
     val theme = context.getString(R.string.theme)
     val fontScale = context.getString(R.string.font_scale)
     val defArtist = context.getString(R.string.def_artist)

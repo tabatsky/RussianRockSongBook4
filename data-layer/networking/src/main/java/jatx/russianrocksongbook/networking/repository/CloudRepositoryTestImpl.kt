@@ -21,26 +21,44 @@ const val PAGE_SIZE = 15
 @Singleton
 @TestBoundTo(supertype = CloudRepository::class, component = SingletonComponent::class)
 internal class CloudRepositoryTestImpl @Inject constructor(
-    localRepo: LocalRepository,
+    private val localRepo: LocalRepository,
     private val userInfo: UserInfo
 ): CloudRepository {
     override var isOnline = true
 
-    private val list1 = localRepo.getSongsByArtistAsList("Немного Нервно")
-    private val list2 = localRepo.getSongsByArtistAsList("Александр Башлачёв")
-    private val list3 = localRepo.getSongsByArtistAsList("Сплин")
-
-    private val arrayList = arrayListOf<Song>().apply {
-        addAll(list1)
-        addAll(list2)
-        addAll(list3)
-        reverse()
+    private val list1 by lazy {
+        localRepo.getSongsByArtistAsList("Немного Нервно")
+    }
+    private val list2 by lazy {
+        localRepo.getSongsByArtistAsList("Александр Башлачёв")
+    }
+    private val list3 by lazy {
+        localRepo.getSongsByArtistAsList("Сплин")
     }
 
-    private var list: List<CloudSong> = arrayList
-            .map {
-                (it asCloudSongWithUserInfo userInfo).copy(variant = 1)
+    private val arrayList by lazy {
+        arrayListOf<Song>().apply {
+            addAll(list1)
+            addAll(list2)
+            addAll(list3)
+            reverse()
+        }
+    }
+
+    private var _list: List<CloudSong>? = null
+    private var list: List<CloudSong>
+        get() {
+            if (_list == null) {
+                _list = arrayList
+                    .map {
+                        (it asCloudSongWithUserInfo userInfo).copy(variant = 1)
+                    }
             }
+            return _list!!
+        }
+        set(value) {
+            _list = value
+        }
 
     private val orderByLambda: (CloudSong, OrderBy) -> String = { cloudSong, orderBy ->
         when (orderBy) {

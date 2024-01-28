@@ -17,6 +17,7 @@ import jatx.russianrocksongbook.settings.R
 import jatx.russianrocksongbook.settings.internal.viewmodel.ApplySettings
 import jatx.russianrocksongbook.settings.internal.viewmodel.SaveSettings
 import jatx.russianrocksongbook.settings.internal.viewmodel.SettingsViewModel
+import jatx.russianrocksongbook.testing.APP_BAR_TITLE
 
 @Composable
 internal fun SettingsScreenImpl() {
@@ -86,7 +87,10 @@ internal fun SettingsScreenImpl() {
                     .fillMaxSize()
                     .background(color = theme.colorBg)
             ) {
-                CommonTopAppBar(title = stringResource(id = R.string.title_settings))
+                CommonTopAppBar(
+                    title = stringResource(id = R.string.title_settings),
+                    titleTestTag = APP_BAR_TITLE
+                )
                 SettingsBodyPortrait(
                     theme = theme,
                     fontSizeLabelSp = fontSizeLabelSp,
@@ -106,7 +110,10 @@ internal fun SettingsScreenImpl() {
                     .fillMaxSize()
                     .background(color = theme.colorBg)
             ) {
-                CommonSideAppBar(title = stringResource(id = R.string.title_settings))
+                CommonSideAppBar(
+                    title = stringResource(id = R.string.title_settings),
+                    titleTestTag = APP_BAR_TITLE
+                )
                 SettingsBodyLandscape(
                     theme = theme,
                     fontSizeLabelSp = fontSizeLabelSp,

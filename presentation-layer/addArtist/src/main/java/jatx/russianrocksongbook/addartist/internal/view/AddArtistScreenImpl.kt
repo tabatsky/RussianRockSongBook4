@@ -17,6 +17,7 @@ import jatx.russianrocksongbook.addartist.internal.viewmodel.UploadListToCloud
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.dialogs.confirm.UploadDialog
+import jatx.russianrocksongbook.testing.APP_BAR_TITLE
 
 @Composable
 internal fun AddArtistScreenImpl() {
@@ -36,12 +37,18 @@ internal fun AddArtistScreenImpl() {
 
         if (W < H) {
             Column {
-                CommonTopAppBar(title = stringResource(id = R.string.title_add_artist))
+                CommonTopAppBar(
+                    title = stringResource(id = R.string.title_add_artist),
+                    titleTestTag = APP_BAR_TITLE
+                )
                 AddArtistBody()
             }
         } else {
             Row {
-                CommonSideAppBar(title = stringResource(id = R.string.title_add_artist))
+                CommonSideAppBar(
+                    title = stringResource(id = R.string.title_add_artist),
+                    titleTestTag = APP_BAR_TITLE
+                )
                 AddArtistBody()
             }
         }
