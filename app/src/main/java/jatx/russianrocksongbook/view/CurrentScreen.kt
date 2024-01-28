@@ -65,8 +65,6 @@ fun CurrentScreen() {
         CommonViewModel.needReset = false
     }
 
-    Log.e("scope", cloudViewModel.viewModelScope.toString())
-
     NavHost(
         navController,
         startDestination = destinationStart,
