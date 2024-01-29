@@ -31,6 +31,8 @@ object AppNavigator {
             val wasCloudSearchScreen = previousDestination.isCloudSearchScreen
             val wasDonationScreen = previousDestination.isDonationScreen
             val wasSettingsScreen = previousDestination.isSettingsScreen
+            val wasAddArtistScreen = previousDestination.isAddArtistScreen
+            val wasAddSongScreen = previousDestination.isAddSongScreen
 
             val wasSongTextScreen = previousDestination.isSongTextScreen
 
@@ -57,6 +59,8 @@ object AppNavigator {
             needSubmitBackAction = needSubmitBackAction || (wasCloudSearchScreen && becomeSongListOrFavoriteScreen)
             needSubmitBackAction = needSubmitBackAction || (wasDonationScreen && becomeSongListOrFavoriteScreen)
             needSubmitBackAction = needSubmitBackAction || (wasSettingsScreen && becomeSongListOrFavoriteScreen)
+            needSubmitBackAction = needSubmitBackAction || (wasAddArtistScreen && becomeSongListOrFavoriteScreen)
+            needSubmitBackAction = needSubmitBackAction || (wasAddSongScreen && becomeSongListOrFavoriteScreen)
 
             needSubmitBackAction = needSubmitBackAction || (wasCloudSongTextScreen && becomeCloudSearchScreen)
 
