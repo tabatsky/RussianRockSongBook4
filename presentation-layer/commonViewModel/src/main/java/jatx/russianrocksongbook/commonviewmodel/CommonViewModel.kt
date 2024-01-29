@@ -17,7 +17,7 @@ import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_ERROR
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import jatx.russianrocksongbook.navigation.ScreenVariant
-import jatx.russianrocksongbook.navigation.NavControllerHolder
+import jatx.russianrocksongbook.navigation.AppNavigator
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
@@ -148,12 +148,10 @@ open class CommonViewModel @Inject constructor(
     }
 
     fun relaunchJobIfNecessary() {
-        if (collectActionsJob == null || collectActionsJob?.isActive != true) {
-            Log.e("relaunch", "collect actions")
+        if (collectActionsJob?.isActive != true) {
             collectActionsJob = collectActions()
         }
-        if (collectEffectsJob == null || collectEffectsJob?.isActive != true) {
-            Log.e("relaunch", "collect effects")
+        if (collectEffectsJob?.isActive != true) {
             collectEffectsJob = collectEffects()
         }
     }
@@ -264,7 +262,7 @@ open class CommonViewModel @Inject constructor(
     }
 
     private fun backByUserPressBackButton() {
-        NavControllerHolder.popBackStack()
+        AppNavigator.popBackStack()
         when (commonState.value.currentScreenVariant) {
             is ScreenVariant.SongList,
             is ScreenVariant.Favorite -> {
@@ -291,28 +289,28 @@ open class CommonViewModel @Inject constructor(
                 .value
                 .previousScreenVariant
             if (previousScreenVariant is ScreenVariant.Favorite) {
-                NavControllerHolder.popBackStack(true, 2)
+                AppNavigator.popBackStack(true, 2)
             } else {
-                NavControllerHolder.popBackStack(true)
+                AppNavigator.popBackStack(true)
             }
         }
 
         if (currentScreenVariant is ScreenVariant.Start &&
             screenVariant is ScreenVariant.SongList) {
 
-            NavControllerHolder.popBackStack(true)
+            AppNavigator.popBackStack(true)
         }
 
         if (currentScreenVariant is ScreenVariant.Favorite &&
             screenVariant is ScreenVariant.SongList) {
 
-            NavControllerHolder.popBackStack(true)
+            AppNavigator.popBackStack(true)
         }
 
         if (currentScreenVariant is ScreenVariant.SongList &&
             screenVariant is ScreenVariant.Favorite) {
 
-            NavControllerHolder.popBackStack(true)
+            AppNavigator.popBackStack(true)
         }
 
         if (currentScreenVariant is ScreenVariant.SongList &&
@@ -322,13 +320,25 @@ open class CommonViewModel @Inject constructor(
                 return
             }
 
-            NavControllerHolder.popBackStack(true)
+            AppNavigator.popBackStack(true)
+        }
+
+        if (currentScreenVariant is ScreenVariant.AddSong &&
+            screenVariant is ScreenVariant.SongTextByArtistAndTitle) {
+
+            AppNavigator.popBackStack(true)
+        }
+
+        if (currentScreenVariant is ScreenVariant.AddArtist &&
+            screenVariant is ScreenVariant.SongList) {
+
+            AppNavigator.popBackStack(true)
         }
 
         updateCurrentScreenAtCommonState(screenVariant)
-        NavControllerHolder.navigate(screenVariant)
+        AppNavigator.navigate(screenVariant)
 
-        Log.e("navigate", screenVariant.destination)
+        Log.e("navigated", screenVariant.destination)
     }
 
     private fun updateCurrentScreenAtCommonState(screenVariant: ScreenVariant) {

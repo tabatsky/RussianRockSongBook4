@@ -19,7 +19,7 @@ import jatx.russianrocksongbook.commonviewmodel.ShowSongs
 import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.domain.models.music.Music
 import jatx.russianrocksongbook.domain.models.warning.Warnable
-import jatx.russianrocksongbook.navigation.NavControllerHolder
+import jatx.russianrocksongbook.navigation.AppNavigator
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -153,7 +153,7 @@ open class LocalViewModel @Inject constructor(
                 ARTIST_ADD_SONG,
                 ARTIST_CLOUD_SONGS,
                 ARTIST_DONATION)
-            && NavControllerHolder.navControllerIsNull) {
+            && AppNavigator.navControllerIsNull) {
 
             showSongs(artist)
         } else {

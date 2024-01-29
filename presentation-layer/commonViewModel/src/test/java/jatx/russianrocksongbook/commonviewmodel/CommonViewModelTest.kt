@@ -75,6 +75,7 @@ open class CommonViewModelTest {
         every { toasts.showToast(anyString()) } just runs
 
         val _commonViewModel = CommonViewModel(commonStateHolder, commonViewModelDeps)
+        _commonViewModel.relaunchJobIfNecessary()
         commonViewModel = spyk(_commonViewModel)
 
         val actionSlot = slot<UIAction>()

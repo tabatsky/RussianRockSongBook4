@@ -87,6 +87,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
             localStateHolder = localStateHolder,
             localViewModelDeps = localViewModelDeps
         )
+        localViewModel.relaunchJobIfNecessary()
 
         every { getArtistsUseCase.execute() } returns artistsFlow
         every { getCountByArtistUseCase.execute(any()) } answers {
@@ -239,7 +240,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         verifySequence {
             Log.e("select artist", ARTIST_ADD_ARTIST)
-            Log.e("navigate", "AddArtist")
+            Log.e("navigated", "AddArtist")
         }
     }
 
@@ -251,7 +252,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         verifySequence {
             Log.e("select artist", ARTIST_ADD_SONG)
-            Log.e("navigate", "AddSong")
+            Log.e("navigated", "AddSong")
         }
     }
 
@@ -265,7 +266,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         verifySequence {
             Log.e("select artist", ARTIST_CLOUD_SONGS)
-            Log.e("navigate", destination)
+            Log.e("navigated", destination)
         }
     }
 
@@ -277,7 +278,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         verifySequence {
             Log.e("select artist", ARTIST_DONATION)
-            Log.e("navigate", "Donation")
+            Log.e("navigated", "Donation")
         }
     }
 
