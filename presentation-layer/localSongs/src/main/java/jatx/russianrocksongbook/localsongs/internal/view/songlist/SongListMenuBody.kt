@@ -42,7 +42,7 @@ internal fun SongListMenuBody(
     val predefinedWithGroups = artistList.predefinedArtistsWithGroups()
 
     val fontSizeSp = dimensionResource(id = R.dimen.text_size_20)
-        .toScaledSp(localViewModel.fontScaler, ScalePow.MENU)
+        .toScaledSp(ScalePow.MENU)
 
     val modifier = Modifier
         .testTag(MENU_LAZY_COLUMN)

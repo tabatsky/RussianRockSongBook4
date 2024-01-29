@@ -29,7 +29,7 @@ internal fun WhatsNewDialogImpl() {
     val theme = LocalAppTheme.current
 
     val fontSizeTitleSp = dimensionResource(id = R.dimen.text_size_20)
-        .toScaledSp(commonViewModel.fontScaler, ScalePow.TEXT)
+        .toScaledSp(ScalePow.TEXT)
 
     val commonState by commonViewModel.commonState.collectAsState()
     val appWasUpdated = commonState.appWasUpdated

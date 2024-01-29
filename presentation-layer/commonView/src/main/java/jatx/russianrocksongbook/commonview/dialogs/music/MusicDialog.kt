@@ -28,7 +28,7 @@ internal fun MusicDialog(
 ) {
     val theme = commonViewModel.theme.collectAsState().value
     val fontSizeTitleSp = dimensionResource(id = R.dimen.text_size_20)
-        .toScaledSp(commonViewModel.fontScaler, ScalePow.TEXT)
+        .toScaledSp(ScalePow.TEXT)
 
     AlertDialog(
         onDismissRequest = {

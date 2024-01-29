@@ -34,7 +34,7 @@ internal fun AddSongBody() {
     val theme = LocalAppTheme.current
 
     val fontSizeTextSp = dimensionResource(id = R.dimen.text_size_16)
-        .toScaledSp(addSongViewModel.fontScaler, ScalePow.TEXT)
+        .toScaledSp(ScalePow.TEXT)
 
     Column(
         modifier = Modifier

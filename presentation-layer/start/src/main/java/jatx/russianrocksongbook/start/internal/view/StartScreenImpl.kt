@@ -37,11 +37,11 @@ internal fun StartScreenImpl() {
     val progress = 1.0f * currentProgress / totalProgress
 
     val fontSizeLabel1Sp = dimensionResource(id = R.dimen.text_size_20)
-        .toScaledSp(startViewModel.fontScaler, ScalePow.TEXT)
+        .toScaledSp(ScalePow.TEXT)
     val fontSizeLabel2Sp = dimensionResource(id = R.dimen.text_size_12)
-        .toScaledSp(startViewModel.fontScaler, ScalePow.TEXT)
+        .toScaledSp(ScalePow.TEXT)
     val fontSizeProgressSp = dimensionResource(id = R.dimen.text_size_20)
-        .toScaledSp(startViewModel.fontScaler, ScalePow.TEXT)
+        .toScaledSp(ScalePow.TEXT)
 
     Column(
         modifier = Modifier

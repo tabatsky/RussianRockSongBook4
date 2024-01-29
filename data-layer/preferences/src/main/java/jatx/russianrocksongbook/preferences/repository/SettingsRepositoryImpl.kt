@@ -20,20 +20,20 @@ class SettingsRepositoryImpl @Inject constructor(
     override fun confirmAppUpdate() = settingsStorage.confirmAppUpdate()
 
     override var theme: Theme
-        get() = Theme.values()[settingsStorage.theme]
+        get() = Theme.entries[settingsStorage.theme]
         set(value) {
             settingsStorage.theme = value.ordinal
         }
 
     override var orientation: Orientation
-        get() = Orientation.values()[settingsStorage.orientation]
+        get() = Orientation.entries[settingsStorage.orientation]
         set(value) {
             settingsStorage.orientation = value.ordinal
         }
 
     override var listenToMusicVariant: ListenToMusicVariant
         get() = ListenToMusicVariant
-            .values()[settingsStorage.listenToMusicVariant]
+            .entries[settingsStorage.listenToMusicVariant]
         set(value) {
             settingsStorage.listenToMusicVariant = value.ordinal
         }
@@ -83,7 +83,7 @@ class SettingsRepositoryImpl @Inject constructor(
 
     override val commonFontScaleEnum: FontScale
         get() = commonFontScale.let { scale ->
-            FontScale.values().find { it.scale == scale }
+            FontScale.entries.find { it.scale == scale }
         } ?: FontScale.M
 
     override val fontScaler: FontScaler

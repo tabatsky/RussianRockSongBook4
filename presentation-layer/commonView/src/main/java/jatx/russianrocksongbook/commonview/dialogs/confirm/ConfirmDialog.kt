@@ -31,7 +31,7 @@ fun ConfirmDialog(
 ) {
     val theme = commonViewModel.theme.collectAsState().value
     val fontSizeTitleSp = dimensionResource(id = R.dimen.text_size_20)
-        .toScaledSp(commonViewModel.fontScaler, ScalePow.TEXT)
+        .toScaledSp(ScalePow.TEXT)
 
     val colorBg = if (!invertColors) theme.colorBg else theme.colorMain
     val colorMain = if (!invertColors) theme.colorMain else theme.colorBg

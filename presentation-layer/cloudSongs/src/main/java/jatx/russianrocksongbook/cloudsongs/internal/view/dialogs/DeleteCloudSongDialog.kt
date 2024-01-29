@@ -27,7 +27,7 @@ internal fun DeleteCloudSongDialog(
     val cloudViewModel = CloudViewModel.getInstance()
     val theme = LocalAppTheme.current
     val fontSizeTextSp = dimensionResource(id = R.dimen.text_size_12)
-        .toScaledSp(cloudViewModel.fontScaler, ScalePow.TEXT)
+        .toScaledSp(ScalePow.TEXT)
 
     var secret1 by rememberSaveable { mutableStateOf("") }
     var secret2 by rememberSaveable { mutableStateOf("") }
