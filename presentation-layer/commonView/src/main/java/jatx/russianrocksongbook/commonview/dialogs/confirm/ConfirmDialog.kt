@@ -27,7 +27,8 @@ fun ConfirmDialog(
     @StringRes messageRes: Int,
     invertColors: Boolean = false,
     onConfirm: () -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onDecline: (() -> Unit)? = null
 ) {
     val theme = commonViewModel.theme.collectAsState().value
     val fontSizeTitleSp = dimensionResource(id = R.dimen.text_size_20)
@@ -79,8 +80,8 @@ fun ConfirmDialog(
                         contentColor = colorMain
                     ),
                 onClick = {
-                    onDismiss()
-                    onConfirm()
+                    onDismiss.invoke()
+                    onConfirm.invoke()
                 }) {
                 Text(text = stringResource(id = R.string.ok))
             }
@@ -98,7 +99,8 @@ fun ConfirmDialog(
                         contentColor = colorMain
                     ),
                 onClick = {
-                    onDismiss()
+                    onDismiss.invoke()
+                    onDecline?.invoke()
                 }) {
                 Text(text = stringResource(id = R.string.cancel))
             }

@@ -7,11 +7,13 @@ import jatx.russianrocksongbook.commonview.R
 fun UploadDialog(
     invertColors: Boolean = false,
     onConfirm: () -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onDecline: (() -> Unit)? = null
 ) = ConfirmDialog(
     invertColors =  invertColors,
     titleRes = R.string.dialog_upload_to_cloud_title,
     messageRes = R.string.dialog_upload_to_cloud_message,
     onConfirm = onConfirm,
-    onDismiss = onDismiss
+    onDismiss = onDismiss,
+    onDecline = onDecline
 )
