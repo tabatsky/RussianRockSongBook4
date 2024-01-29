@@ -134,9 +134,9 @@ internal fun SongTextScreenImpl(artist: String, position: Int) {
     val isEditorMode = localState.isEditorMode
 
     val fontSizeTitleSp = dimensionResource(id = R.dimen.text_size_20)
-        .toScaledSp(localViewModel.fontScaler, ScalePow.TEXT)
+        .toScaledSp(ScalePow.TEXT)
     val fontSizeTextSp = dimensionResource(id = R.dimen.text_size_16)
-        .toScaledSp(localViewModel.fontScaler, ScalePow.TEXT)
+        .toScaledSp(ScalePow.TEXT)
 
     song?.let { _song ->
         BoxWithConstraints(

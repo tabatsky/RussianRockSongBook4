@@ -71,9 +71,9 @@ internal fun SettingsScreenImpl() {
     }
 
     val fontSizeLabelSp = dimensionResource(id = R.dimen.text_size_20)
-        .toScaledSp(settingsViewModel.fontScaler, ScalePow.LABEL)
+        .toScaledSp(ScalePow.LABEL)
     val fontSizeButtonSp = dimensionResource(id = R.dimen.text_size_20)
-        .toScaledSp(settingsViewModel.fontScaler, ScalePow.BUTTON)
+        .toScaledSp(ScalePow.BUTTON)
 
     BoxWithConstraints(
         modifier = Modifier

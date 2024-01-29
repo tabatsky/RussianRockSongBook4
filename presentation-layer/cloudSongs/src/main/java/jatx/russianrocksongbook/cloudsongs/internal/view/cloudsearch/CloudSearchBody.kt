@@ -58,11 +58,11 @@ internal fun CloudSearchBody(
     Log.e("items", itemsAdapter.size.toString())
 
     val fontSizeTextSp = dimensionResource(id = R.dimen.text_size_16)
-        .toScaledSp(cloudViewModel.fontScaler, ScalePow.TEXT)
+        .toScaledSp(ScalePow.TEXT)
     val fontSizeSongTitleSp = dimensionResource(id = R.dimen.text_size_20)
-        .toScaledSp(cloudViewModel.fontScaler, ScalePow.TEXT)
+        .toScaledSp(ScalePow.TEXT)
     val fontSizeArtistSp = dimensionResource(id = R.dimen.text_size_24)
-        .toScaledSp(cloudViewModel.fontScaler, ScalePow.TEXT)
+        .toScaledSp(ScalePow.TEXT)
 
     val searchFor = cloudState.searchFor
     val onSearchForValueChange: (String) -> Unit = {

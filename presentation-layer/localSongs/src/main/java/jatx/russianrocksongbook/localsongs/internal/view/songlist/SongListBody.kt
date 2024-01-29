@@ -50,7 +50,7 @@ internal fun SongListBody(
     val needScroll = localState.songListNeedScroll
 
     val fontSizeSp = dimensionResource(id = R.dimen.text_size_20)
-        .toScaledSp(localViewModel.fontScaler, ScalePow.TEXT)
+        .toScaledSp(ScalePow.TEXT)
 
 
     @Composable

@@ -26,7 +26,7 @@ internal fun VoiceHelpDialog(
     val theme = LocalAppTheme.current
 
     val fontSizeTextSp = dimensionResource(id = R.dimen.text_size_16)
-        .toScaledSp(localViewModel.fontScaler, ScalePow.TEXT)
+        .toScaledSp(ScalePow.TEXT)
 
     AlertDialog(
         onDismissRequest = {

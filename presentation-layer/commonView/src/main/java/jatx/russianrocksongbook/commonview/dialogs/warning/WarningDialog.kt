@@ -26,7 +26,7 @@ fun WarningDialog(
 ) {
     val theme = commonViewModel.theme.collectAsState().value
     val fontSizeTextSp = dimensionResource(id = R.dimen.text_size_12)
-        .toScaledSp(commonViewModel.fontScaler, ScalePow.TEXT)
+        .toScaledSp(ScalePow.TEXT)
 
     var comment by rememberSaveable { mutableStateOf("") }
 

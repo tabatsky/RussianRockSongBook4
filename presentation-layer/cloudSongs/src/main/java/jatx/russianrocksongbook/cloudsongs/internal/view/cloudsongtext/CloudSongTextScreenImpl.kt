@@ -109,9 +109,9 @@ internal fun CloudSongTextScreenImpl(position: Int) {
     val theme = LocalAppTheme.current
 
     val fontSizeTitleSp = dimensionResource(id = R.dimen.text_size_20)
-        .toScaledSp(cloudViewModel.fontScaler, ScalePow.TEXT)
+        .toScaledSp(ScalePow.TEXT)
     val fontSizeTextSp = dimensionResource(id = R.dimen.text_size_16)
-        .toScaledSp(cloudViewModel.fontScaler, ScalePow.TEXT)
+        .toScaledSp(ScalePow.TEXT)
 
     if (cloudSong == null) {
         CloudSongTextProgress(theme)
