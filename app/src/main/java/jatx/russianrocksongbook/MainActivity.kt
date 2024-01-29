@@ -27,7 +27,7 @@ import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
 import jatx.russianrocksongbook.donationhelper.api.DonationHelper
 import jatx.russianrocksongbook.localsongs.api.methods.selectArtist
 import jatx.russianrocksongbook.localsongs.api.methods.selectSongByArtistAndTitle
-import jatx.russianrocksongbook.navigation.NavControllerHolder
+import jatx.russianrocksongbook.navigation.AppNavigator
 import jatx.russianrocksongbook.view.CurrentScreen
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.voicecommands.api.VoiceCommandHelper
@@ -77,7 +77,7 @@ class MainActivity : ComponentActivity() {
     }
 
     fun clean() {
-        NavControllerHolder.cleanNavController()
+        AppNavigator.cleanNavController()
         if (CommonViewModel.needReset) {
             CommonViewModel.clearStorage()
             viewModelStore.clear()

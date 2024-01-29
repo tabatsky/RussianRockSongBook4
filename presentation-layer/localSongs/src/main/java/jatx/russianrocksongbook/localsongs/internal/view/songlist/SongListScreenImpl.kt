@@ -38,10 +38,11 @@ internal fun SongListScreenImpl(
     LaunchedEffect(Unit) {
         if (isBackFromSomeScreen) {
             localViewModel.submitAction(UpdateSongListNeedScroll(true))
-            scope.launch {
-                drawerState.close()
-            }
         }
+    }
+
+    LaunchedEffect(Unit) {
+        drawerState.close()
     }
 
     LaunchedEffect(artist to songTitleToPass) {

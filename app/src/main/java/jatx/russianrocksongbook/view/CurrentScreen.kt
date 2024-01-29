@@ -23,7 +23,7 @@ import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.VoiceCommandViewModel
 import jatx.russianrocksongbook.settings.api.view.SettingsScreen
 import jatx.russianrocksongbook.start.api.view.StartScreen
-import jatx.russianrocksongbook.navigation.NavControllerHolder
+import jatx.russianrocksongbook.navigation.AppNavigator
 import jatx.russianrocksongbook.navigation.argArtist
 import jatx.russianrocksongbook.navigation.argCloudSearchRandomKey
 import jatx.russianrocksongbook.navigation.argIsBackFromSomeScreen
@@ -45,7 +45,7 @@ import jatx.russianrocksongbook.navigation.destinationStart
 @Composable
 fun CurrentScreen() {
     val navController = rememberNavController()
-    NavControllerHolder.injectNavController(navController) {
+    AppNavigator.injectNavController(navController) {
         CommonViewModel.getStoredInstance()?.submitAction(Back(true))
     }
 

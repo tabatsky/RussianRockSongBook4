@@ -6,7 +6,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 
-object NavControllerHolder {
+object AppNavigator {
     @SuppressLint("StaticFieldLeak")
     private var navController: NavHostController? = null
 
@@ -29,8 +29,6 @@ object NavControllerHolder {
 
             val wasFavoriteScreen = previousDestination.isFavorite
             val wasCloudSearchScreen = previousDestination.isCloudSearchScreen
-            val wasAddArtistScreen = previousDestination.isAddArtistScreen
-            val wasAddSongScreen = previousDestination.isAddSongScreen
             val wasDonationScreen = previousDestination.isDonationScreen
             val wasSettingsScreen = previousDestination.isSettingsScreen
 
@@ -57,15 +55,13 @@ object NavControllerHolder {
             needSubmitBackAction = needSubmitBackAction || (wasSongTextScreen && becomeSongListOrFavoriteScreen)
 
             needSubmitBackAction = needSubmitBackAction || (wasCloudSearchScreen && becomeSongListOrFavoriteScreen)
-            needSubmitBackAction = needSubmitBackAction || (wasAddArtistScreen && becomeSongListOrFavoriteScreen)
-            needSubmitBackAction = needSubmitBackAction || (wasAddSongScreen && becomeSongListOrFavoriteScreen)
             needSubmitBackAction = needSubmitBackAction || (wasDonationScreen && becomeSongListOrFavoriteScreen)
             needSubmitBackAction = needSubmitBackAction || (wasSettingsScreen && becomeSongListOrFavoriteScreen)
 
             needSubmitBackAction = needSubmitBackAction || (wasCloudSongTextScreen && becomeCloudSearchScreen)
 
             if (needSubmitBackAction) {
-                this@NavControllerHolder.onSubmitBackAction?.invoke()
+                this@AppNavigator.onSubmitBackAction?.invoke()
             }
 
             if (skipSubmitBackAction > 0) {
