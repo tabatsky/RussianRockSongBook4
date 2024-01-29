@@ -72,12 +72,13 @@ internal fun AddSongScreenImpl() {
             UploadDialog(
                 invertColors = true,
                 onConfirm = {
-                    addSongViewModel.submitAction(HideUploadOfferForSong)
                     addSongViewModel.submitAction(UploadNewToCloud)
+                },
+                onDecline = {
+                    addSongViewModel.submitAction(ShowNewSong)
                 },
                 onDismiss = {
                     addSongViewModel.submitAction(HideUploadOfferForSong)
-                    addSongViewModel.submitAction(ShowNewSong)
                 }
             )
         }

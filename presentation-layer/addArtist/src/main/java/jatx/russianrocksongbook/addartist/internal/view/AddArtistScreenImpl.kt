@@ -56,12 +56,13 @@ internal fun AddArtistScreenImpl() {
         if (showUploadDialog) {
             UploadDialog(
                 onConfirm = {
-                    addArtistViewModel.submitAction(HideUploadOfferForDir)
                     addArtistViewModel.submitAction(UploadListToCloud)
+                },
+                onDecline = {
+                    addArtistViewModel.submitAction(ShowNewArtist(newArtist))
                 },
                 onDismiss = {
                     addArtistViewModel.submitAction(HideUploadOfferForDir)
-                    addArtistViewModel.submitAction(ShowNewArtist(newArtist))
                 }
             )
         }
