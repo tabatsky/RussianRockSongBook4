@@ -29,6 +29,7 @@ import jatx.russianrocksongbook.commonview.dialogs.music.YandexMusicDialog
 import jatx.russianrocksongbook.commonview.dialogs.music.YoutubeMusicDialog
 import jatx.russianrocksongbook.commonview.dialogs.warning.WarningDialog
 import jatx.russianrocksongbook.commonview.font.toScaledSp
+import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
 import jatx.russianrocksongbook.commonviewmodel.OpenVkMusic
 import jatx.russianrocksongbook.commonviewmodel.OpenYandexMusic
 import jatx.russianrocksongbook.commonviewmodel.OpenYoutubeMusic
@@ -105,7 +106,7 @@ internal fun CloudSongTextScreenImpl(position: Int) {
         showDeleteDialog = true
     }
 
-    val theme = cloudViewModel.theme.collectAsState().value
+    val theme = LocalAppTheme.current
 
     val fontSizeTitleSp = dimensionResource(id = R.dimen.text_size_20)
         .toScaledSp(cloudViewModel.fontScaler, ScalePow.TEXT)

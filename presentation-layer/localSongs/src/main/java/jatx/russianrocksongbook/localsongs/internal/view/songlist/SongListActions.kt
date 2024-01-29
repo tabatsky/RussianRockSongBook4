@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import jatx.russianrocksongbook.commonview.buttons.CommonIconButton
+import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
 import jatx.russianrocksongbook.commonviewmodel.SelectScreen
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
@@ -20,7 +21,7 @@ import jatx.russianrocksongbook.navigation.ScreenVariant
 internal fun SongListActions() {
     val localViewModel = LocalViewModel.getInstance()
 
-    val theme = localViewModel.theme.collectAsState().value
+    val theme = LocalAppTheme.current
     var expanded by remember { mutableStateOf(false) }
 
     val onSettingsClick = {

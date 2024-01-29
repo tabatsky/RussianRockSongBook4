@@ -72,6 +72,7 @@ class CloudViewModel @Inject constructor(
             if (!storage.containsKey(key)){
                 storage[key] = hiltViewModel<CloudViewModel>()
             }
+            storage[key]?.relaunchJobIfNecessary()
             return storage[key] as CloudViewModel
         }
     }

@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import jatx.russianrocksongbook.commonview.font.toScaledSp
+import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
 import jatx.russianrocksongbook.commonviewmodel.AppWasUpdated
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
@@ -25,7 +26,7 @@ import jatx.russianrocksongbook.whatsnewdialog.R
 internal fun WhatsNewDialogImpl() {
     val commonViewModel = CommonViewModel.getInstance()
 
-    val theme = commonViewModel.theme.collectAsState().value
+    val theme = LocalAppTheme.current
 
     val fontSizeTitleSp = dimensionResource(id = R.dimen.text_size_20)
         .toScaledSp(commonViewModel.fontScaler, ScalePow.TEXT)

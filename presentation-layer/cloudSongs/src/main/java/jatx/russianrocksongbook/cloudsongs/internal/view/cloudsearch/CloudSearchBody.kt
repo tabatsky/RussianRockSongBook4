@@ -26,6 +26,7 @@ import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateSearchState
 import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.commonview.stub.CommonSongListStub
 import jatx.russianrocksongbook.commonview.stub.ErrorSongListStub
+import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
 import jatx.russianrocksongbook.commonviewmodel.SelectScreen
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
@@ -41,7 +42,7 @@ internal fun CloudSearchBody(
     isPortrait: Boolean
 ) {
     val cloudViewModel = CloudViewModel.getInstance()
-    val theme = cloudViewModel.theme.collectAsState().value
+    val theme = LocalAppTheme.current
 
     val cloudState by cloudViewModel.cloudState.collectAsState()
 

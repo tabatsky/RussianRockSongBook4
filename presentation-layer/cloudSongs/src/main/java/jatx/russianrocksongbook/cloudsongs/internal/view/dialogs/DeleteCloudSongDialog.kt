@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.CloudViewModel
 import jatx.russianrocksongbook.commonview.font.toScaledSp
+import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 
 @Composable
@@ -24,7 +25,7 @@ internal fun DeleteCloudSongDialog(
     onDismiss: () -> Unit
 ) {
     val cloudViewModel = CloudViewModel.getInstance()
-    val theme = cloudViewModel.theme.collectAsState().value
+    val theme = LocalAppTheme.current
     val fontSizeTextSp = dimensionResource(id = R.dimen.text_size_12)
         .toScaledSp(cloudViewModel.fontScaler, ScalePow.TEXT)
 

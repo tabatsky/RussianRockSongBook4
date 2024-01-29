@@ -19,6 +19,7 @@ import androidx.tv.foundation.lazy.list.itemsIndexed
 import androidx.tv.foundation.lazy.list.rememberTvLazyListState
 import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.commonview.stub.CommonSongListStub
+import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
 import jatx.russianrocksongbook.commonviewmodel.SelectScreen
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
@@ -38,7 +39,7 @@ internal fun SongListBody(
 ) {
     val localViewModel = LocalViewModel.getInstance()
 
-    val theme = localViewModel.theme.collectAsState().value
+    val theme = LocalAppTheme.current
 
     val localState by localViewModel.localState.collectAsState()
 

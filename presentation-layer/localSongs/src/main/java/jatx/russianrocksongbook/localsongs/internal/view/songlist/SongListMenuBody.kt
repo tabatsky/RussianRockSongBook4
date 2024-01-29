@@ -13,6 +13,7 @@ import androidx.tv.foundation.lazy.list.TvLazyColumn
 import androidx.tv.foundation.lazy.list.itemsIndexed
 import androidx.tv.foundation.lazy.list.rememberTvLazyListState
 import jatx.russianrocksongbook.commonview.font.toScaledSp
+import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
 import jatx.russianrocksongbook.domain.repository.local.predefinedArtistList
 import jatx.russianrocksongbook.domain.repository.local.predefinedArtistsWithGroups
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
@@ -33,7 +34,7 @@ internal fun SongListMenuBody(
 ) {
     val localViewModel = LocalViewModel.getInstance()
 
-    val theme = localViewModel.theme.collectAsState().value
+    val theme = LocalAppTheme.current
 
     val localState by localViewModel.localState.collectAsState()
     val artistList = localState.artistList

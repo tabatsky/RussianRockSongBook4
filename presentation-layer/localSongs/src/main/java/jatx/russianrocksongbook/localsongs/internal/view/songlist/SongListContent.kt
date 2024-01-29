@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.ext.crop
+import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
 import jatx.russianrocksongbook.localsongs.internal.view.dialogs.VoiceHelpDialog
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.SpeechRecognize
@@ -28,7 +29,7 @@ internal fun SongListContent(
 ) {
     val localViewModel = LocalViewModel.getInstance()
 
-    val theme = localViewModel.theme.collectAsState().value
+    val theme = LocalAppTheme.current
 
     val localState by localViewModel.localState.collectAsState()
 

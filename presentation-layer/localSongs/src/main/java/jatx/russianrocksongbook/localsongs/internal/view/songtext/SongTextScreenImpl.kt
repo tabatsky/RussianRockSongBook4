@@ -19,6 +19,7 @@ import jatx.russianrocksongbook.commonview.dialogs.music.YandexMusicDialog
 import jatx.russianrocksongbook.commonview.dialogs.music.YoutubeMusicDialog
 import jatx.russianrocksongbook.commonview.dialogs.warning.WarningDialog
 import jatx.russianrocksongbook.commonview.font.toScaledSp
+import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
 import jatx.russianrocksongbook.commonviewmodel.OpenVkMusic
 import jatx.russianrocksongbook.commonviewmodel.OpenYandexMusic
 import jatx.russianrocksongbook.commonviewmodel.OpenYoutubeMusic
@@ -39,6 +40,7 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun SongTextScreenImpl(artist: String, position: Int) {
     val localViewModel = LocalViewModel.getInstance()
+    val theme = LocalAppTheme.current
 
     val localState by localViewModel.localState.collectAsState()
 
@@ -129,7 +131,6 @@ internal fun SongTextScreenImpl(artist: String, position: Int) {
         localViewModel.submitAction(SetEditorMode(false))
     }
 
-    val theme = localViewModel.theme.collectAsState().value
     val isEditorMode = localState.isEditorMode
 
     val fontSizeTitleSp = dimensionResource(id = R.dimen.text_size_20)

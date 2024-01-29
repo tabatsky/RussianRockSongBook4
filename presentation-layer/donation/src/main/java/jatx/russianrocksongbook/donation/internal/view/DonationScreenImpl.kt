@@ -6,11 +6,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
+import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
 import jatx.russianrocksongbook.donation.R
 import jatx.russianrocksongbook.donation.internal.viewmodel.DonationViewModel
 import jatx.russianrocksongbook.donation.internal.viewmodel.PurchaseItem
@@ -23,7 +23,7 @@ import jatx.russianrocksongbook.testing.APP_BAR_TITLE
 internal fun DonationScreenImpl() {
     val donationViewModel = DonationViewModel.getInstance()
 
-    val theme = donationViewModel.theme.collectAsState().value
+    val theme = LocalAppTheme.current
 
     val onPurchaseClick: (Int, Boolean) -> Unit = { index, isLandscape ->
         val sku = if (!isLandscape) SKUS[index] else SKUS_LANDSCAPE[index]

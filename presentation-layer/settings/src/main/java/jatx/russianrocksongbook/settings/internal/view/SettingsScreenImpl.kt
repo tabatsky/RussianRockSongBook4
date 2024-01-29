@@ -12,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.font.toScaledSp
+import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
 import jatx.russianrocksongbook.domain.repository.preferences.*
 import jatx.russianrocksongbook.settings.R
 import jatx.russianrocksongbook.settings.internal.viewmodel.ApplySettings
@@ -23,16 +24,16 @@ import jatx.russianrocksongbook.testing.APP_BAR_TITLE
 internal fun SettingsScreenImpl() {
     val settingsViewModel = SettingsViewModel.getInstance()
 
-    val theme = settingsViewModel.theme.collectAsState().value
+    val theme = LocalAppTheme.current
 
     var themeToSave by settingsViewModel.valueTheme
     val onThemePositionChanged: (Int) -> Unit = {
-        themeToSave = Theme.values()[it]
+        themeToSave = Theme.entries[it]
     }
 
     var fontScaleToSave by settingsViewModel.valueFontScale
     val onFontScalePositionChanged: (Int) -> Unit = {
-        fontScaleToSave = FontScale.values()[it]
+        fontScaleToSave = FontScale.entries[it]
     }
 
     var defaultArtistToSave by settingsViewModel.valueDefaultArtist
@@ -42,13 +43,13 @@ internal fun SettingsScreenImpl() {
 
     var orientationToSave by settingsViewModel.valueOrientation
     val onOrientationPositionChanged: (Int) -> Unit = {
-        orientationToSave = Orientation.values()[it]
+        orientationToSave = Orientation.entries[it]
     }
 
     var listenToMusicVariantToSave by settingsViewModel.valueListenToMusicVariant
     val onListenToMusicVariantPositionChanged: (Int) -> Unit = {
         listenToMusicVariantToSave =
-            ListenToMusicVariant.values()[it]
+            ListenToMusicVariant.entries[it]
     }
 
     var scrollSpeedToSave by settingsViewModel.valueScrollSpeed
