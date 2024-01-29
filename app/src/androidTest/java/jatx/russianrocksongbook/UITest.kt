@@ -2028,6 +2028,69 @@ class UITest {
     }
 
     @Test
+    fun test0501_addSongScreenIsClosingCorrectly() {
+        val testNumber = 500
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(DRAWER_BUTTON_MAIN)
+                .isDisplayed()
+        }
+        composeTestRule
+            .onNodeWithTag(DRAWER_BUTTON_MAIN)
+            .performClick()
+        Log.e("test $testNumber click", DRAWER_BUTTON_MAIN)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(ARTIST_ADD_SONG)
+                .isDisplayed()
+        }
+        composeTestRule
+            .onNodeWithText(ARTIST_ADD_SONG)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$ARTIST_ADD_SONG is displayed")
+        composeTestRule
+            .onNodeWithText(ARTIST_ADD_SONG)
+            .performClick()
+        Log.e("test $testNumber click", ARTIST_ADD_SONG)
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(stringConst.save)
+                .isDisplayed()
+        }
+        composeTestRule
+            .onNodeWithText(stringConst.save)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.save} is displayed")
+
+        Espresso.pressBack()
+        Log.e("test $testNumber action", "press back")
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(APP_BAR_TITLE)
+                .isDisplayed()
+        }
+
+        val actualArtist = composeTestRule
+            .onNodeWithTag(APP_BAR_TITLE)
+            .text ?: "error"
+
+        assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
+        Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
+
+        Espresso.pressBackUnconditionally()
+        Log.e("test $testNumber action", "press back")
+
+        composeTestRule.waitForCondition {
+            composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
+        }
+        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        Log.e("test $testNumber assert", "activity is destroyed")
+    }
+
+        @Test
     fun test0600_settingsScreenIsDisplayingAndClosingCorrectly() {
         val testNumber = 600
 
