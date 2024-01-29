@@ -22,9 +22,8 @@ internal class DonationViewModel @Inject constructor(
 
         @Composable
         fun getInstance(): DonationViewModel {
-            if (!storage.containsKey(key)){
-                storage[key] = hiltViewModel<DonationViewModel>()
-            }
+            storage[key] = hiltViewModel<DonationViewModel>()
+            storage[key]?.relaunchJobIfNecessary()
             return storage[key] as DonationViewModel
         }
     }

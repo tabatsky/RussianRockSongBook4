@@ -43,6 +43,7 @@ internal class StartViewModel @Inject constructor(
             if (!storage.containsKey(key)){
                 storage[key] = hiltViewModel<StartViewModel>()
             }
+            storage[key]?.relaunchJobIfNecessary()
             return storage[key] as StartViewModel
         }
     }

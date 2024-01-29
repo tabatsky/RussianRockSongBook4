@@ -129,6 +129,7 @@ open class CommonViewModel @Inject constructor(
         @Composable
         fun getInstance(): CommonViewModel {
             if (!storage.containsKey(key)) storage[key] = hiltViewModel()
+            storage[key]?.relaunchJobIfNecessary()
             return storage[key] as CommonViewModel
         }
 
@@ -139,11 +140,6 @@ open class CommonViewModel @Inject constructor(
 
     open fun resetState() = commonStateHolder.reset()
 
-    init {
-        collectActions()
-        collectEffects()
-    }
-
     fun reloadSettings() {
         storage.values.forEach { viewModel ->
             viewModel._theme.update { settings.theme }
@@ -151,20 +147,27 @@ open class CommonViewModel @Inject constructor(
         }
     }
 
-    private fun collectActions() {
-        collectActionsJob = viewModelScope.launch {
-            actions
-                .onEach(::handleAction)
-                .collect()
+    fun relaunchJobIfNecessary() {
+        if (collectActionsJob == null || collectActionsJob?.isActive != true) {
+            Log.e("relaunch", "collect actions")
+            collectActionsJob = collectActions()
+        }
+        if (collectEffectsJob == null || collectEffectsJob?.isActive != true) {
+            Log.e("relaunch", "collect effects")
+            collectEffectsJob = collectEffects()
         }
     }
 
-    private fun collectEffects() {
-        collectEffectsJob = viewModelScope.launch {
-            effects
-                .onEach(::handleEffect)
-                .collect()
-        }
+    private fun collectActions() = viewModelScope.launch {
+        actions
+            .onEach(::handleAction)
+            .collect()
+    }
+
+    private fun collectEffects() = viewModelScope.launch {
+        effects
+            .onEach(::handleEffect)
+            .collect()
     }
 
     fun submitAction(action: UIAction) {

@@ -33,6 +33,7 @@ class VoiceCommandViewModel @Inject constructor(
             if (!storage.containsKey(key)){
                 storage[key] = hiltViewModel<VoiceCommandViewModel>()
             }
+            storage[key]?.relaunchJobIfNecessary()
             return storage[key] as VoiceCommandViewModel
         }
 

@@ -15,6 +15,7 @@ import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.CloudViewModel
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateNeedScroll
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
+import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
 import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.testing.APP_BAR_TITLE
 
@@ -22,7 +23,7 @@ import jatx.russianrocksongbook.testing.APP_BAR_TITLE
 internal fun CloudSearchScreenImpl(randomKey: Int, isBackFromSong: Boolean) {
     val cloudViewModel = CloudViewModel.getInstance()
 
-    val theme = cloudViewModel.theme.collectAsState().value
+    val theme = LocalAppTheme.current
 
     var savedRandomKey by rememberSaveable { mutableIntStateOf(0) }
     val randomKeyChanged = randomKey != savedRandomKey

@@ -14,6 +14,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.commonview.font.toScaledSp
+import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.start.R
 import jatx.russianrocksongbook.start.internal.viewmodel.AsyncInit
@@ -27,7 +28,7 @@ internal fun StartScreenImpl() {
         startViewModel.submitAction(AsyncInit)
     }
 
-    val theme = startViewModel.theme.collectAsState().value
+    val theme = LocalAppTheme.current
 
     val startState by startViewModel.startState.collectAsState()
 

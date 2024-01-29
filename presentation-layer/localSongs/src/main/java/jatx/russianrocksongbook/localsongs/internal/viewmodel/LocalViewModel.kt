@@ -85,6 +85,7 @@ open class LocalViewModel @Inject constructor(
             if (!storage.containsKey(key)){
                 storage[key] = hiltViewModel<LocalViewModel>()
             }
+            storage[key]?.relaunchJobIfNecessary()
             return storage[key] as LocalViewModel
         }
 

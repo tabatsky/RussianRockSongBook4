@@ -15,6 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import jatx.russianrocksongbook.addartist.api.methods.copySongsFromDirToRepoWithPath
 import jatx.russianrocksongbook.addartist.api.methods.copySongsFromDirToRepoWithPickedDir
 import jatx.russianrocksongbook.addsongsfromdirhelper.api.AddSongsFromDirHelper
+import jatx.russianrocksongbook.commonview.theme.AppTheme
 import jatx.russianrocksongbook.commonviewmodel.Back
 import jatx.russianrocksongbook.debug.AppDebug
 import jatx.russianrocksongbook.domain.usecase.cloud.SendCrashUseCase
@@ -55,12 +56,14 @@ class MainActivity : ComponentActivity() {
         applyOrientation()
 
         setContent {
-            ActionsInjector()
-            BackHandler(true) {
-                Log.e("activity", "back")
-                back()
+            AppTheme {
+                ActionsInjector()
+                BackHandler(true) {
+                    Log.e("activity", "back")
+                    back()
+                }
+                CurrentScreen()
             }
-            CurrentScreen()
         }
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)

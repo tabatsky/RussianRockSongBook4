@@ -41,9 +41,8 @@ internal class SettingsViewModel @Inject constructor(
 
         @Composable
         fun getInstance(): SettingsViewModel {
-            if (!storage.containsKey(key)){
-                storage[key] = hiltViewModel<SettingsViewModel>()
-            }
+            storage[key] = hiltViewModel<SettingsViewModel>()
+            storage[key]?.relaunchJobIfNecessary()
             return storage[key] as SettingsViewModel
         }
     }
