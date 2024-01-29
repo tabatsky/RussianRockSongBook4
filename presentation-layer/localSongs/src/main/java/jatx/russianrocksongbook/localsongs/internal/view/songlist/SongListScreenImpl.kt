@@ -42,7 +42,7 @@ internal fun SongListScreenImpl(
     }
 
     LaunchedEffect(Unit) {
-        drawerState.close()
+        drawerState.snapTo(DrawerValue.Closed)
     }
 
     LaunchedEffect(artist to songTitleToPass) {
