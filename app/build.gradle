@@ -102,38 +102,58 @@ dependencies {
 
     debugImplementation testDeps.mockkAndroid
 
-    testImplementation testDeps.androidXCore
+    debugImplementation("androidx.test:core") {
+        version {
+            strictly versions.androidXTestCore
+        }
+    }
+
+    testImplementation("androidx.test:core") {
+        version {
+            strictly versions.androidXTestCore
+        }
+    }
     testImplementation testDeps.androidXCoreKtx
     testImplementation testDeps.androidXRunner
     testImplementation testDeps.androidXTruth
     testImplementation testDeps.androidXRules
 
-    testImplementation testDeps.androidXJUnit
+    androidTestImplementation("androidx.test:core") {
+        version {
+            strictly versions.androidXTestCore
+        }
+    }
 
-    testImplementation testDeps.androidXCoreTesting
-
-    androidTestImplementation testDeps.androidXCore
-    androidTestImplementation testDeps.androidXCoreKtx
-    androidTestImplementation testDeps.androidXRunner
-    androidTestImplementation testDeps.androidXTruth
-    androidTestImplementation testDeps.androidXRules
-
-    androidTestImplementation testDeps.androidXJUnit
+    androidTestImplementation("androidx.test.ext:junit") {
+        version {
+            strictly versions.androidXJUnit
+        }
+    }
 
     androidTestImplementation testDeps.androidXCoreTesting
 
     debugImplementation testDeps.androidXMonitor
 
     androidTestImplementation testDeps.espressoCore
-    androidTestImplementation testDeps.espressoContrib
+    androidTestImplementation(testDeps.espressoContrib) {
+        exclude group: 'org.checkerframework', module: 'checker'
+    }
 
     androidTestImplementation testDeps.hamcrest
 
-    androidTestImplementation testDeps.hiltAndroidTesting
+    androidTestImplementation(testDeps.hiltAndroidTesting) {
+        exclude group: 'androidx.test', module: 'core'
+    }
+    testImplementation(testDeps.hiltAndroidTesting) {
+        exclude group: 'androidx.test', module: 'core'
+    }
     kaptAndroidTest testDeps.hiltAndroidCompiler
 
     androidTestImplementation testDeps.composeUiTest
-    androidTestImplementation testDeps.composeUiTestJunit
+    androidTestImplementation(testDeps.composeUiTestJunit) {
+        exclude group: 'androidx.text', module: 'core'
+    }
+
     debugImplementation testDeps.composeUiTestManifest
 
     debugImplementation testDeps.kotlinReflect
