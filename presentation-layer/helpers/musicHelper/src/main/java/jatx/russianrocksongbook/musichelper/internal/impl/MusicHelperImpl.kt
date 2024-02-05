@@ -31,12 +31,7 @@ internal class MusicHelperImpl @Inject constructor(
             with(activity) {
                 val searchForEncoded = URLEncoder.encode(searchFor.replace(" ", "+"), "UTF-8")
                 val uri = "https://music.yandex.ru/search?text=$searchForEncoded"
-                startActivity(
-                    Intent.createChooser(
-                        Intent(Intent.ACTION_VIEW, Uri.parse(uri)),
-                        getString(R.string.search_at_yandex_music)
-                    )
-                )
+                showChooser(uri)
             }
         } catch (e: UnsupportedEncodingException) {
             commonViewModel?.submitEffect(
@@ -49,10 +44,8 @@ internal class MusicHelperImpl @Inject constructor(
         try {
             with(activity) {
                 val searchForEncoded = URLEncoder.encode(searchFor, "UTF-8")
-
                 //val uriApp = "https://vk.com/audio?q=$searchForEncoded"
                 val uriBrowser = "https://m.vk.com/audio?q=$searchForEncoded"
-
                 showChooser(uriBrowser)
             }
         } catch (e: UnsupportedEncodingException) {
@@ -71,12 +64,7 @@ internal class MusicHelperImpl @Inject constructor(
             with(activity) {
                 val searchForEncoded = URLEncoder.encode(searchFor.replace(" ", "+"), "UTF-8")
                 val uri = "https://music.youtube.com/search?q=$searchForEncoded"
-                startActivity(
-                    Intent.createChooser(
-                        Intent(Intent.ACTION_VIEW, Uri.parse(uri)),
-                        getString(R.string.search_at_youtube_music)
-                    )
-                )
+                showChooser(uri)
             }
         } catch (e: UnsupportedEncodingException) {
             commonViewModel?.submitEffect(
