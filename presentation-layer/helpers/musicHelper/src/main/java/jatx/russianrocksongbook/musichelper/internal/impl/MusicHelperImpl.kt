@@ -1,8 +1,10 @@
 package jatx.russianrocksongbook.musichelper.internal.impl
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.scopes.ActivityScoped
@@ -47,36 +49,20 @@ internal class MusicHelperImpl @Inject constructor(
         try {
             with(activity) {
                 val searchForEncoded = URLEncoder.encode(searchFor, "UTF-8")
-                val uriApp = "https://vk.com/audio?q=$searchForEncoded"
+
+                //val uriApp = "https://vk.com/audio?q=$searchForEncoded"
                 val uriBrowser = "https://m.vk.com/audio?q=$searchForEncoded"
-                val intentList = arrayListOf<Intent>()
-                listOf(
-                    "com.android.chrome",
-                    "com.yandex.browser",
-                    "com.opera.browser",
-                    "org.mozilla.firefox"
-                ).forEach {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uriBrowser))
-                    intent.setPackage(it)
-                    intentList.add(intent)
-                }
-                listOf(
-                    "com.uma.musicvk",
-                    "com.vkontakte.android"
-                ).forEach {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uriApp))
-                    intent.setPackage(it)
-                    intentList.add(intent)
-                }
+
+                val intentList = makeIntentList(uriBrowser) // + makeIntentList(uriApp)
 
                 val chooserIntent = Intent
                     .createChooser(
-                        intentList.removeAt(intentList.size - 1),
+                        intentList.last(),
                         getString(R.string.vk_music_chooser)
                     )
                 chooserIntent.putExtra(
                     Intent.EXTRA_INITIAL_INTENTS,
-                    intentList.toTypedArray()
+                    intentList.dropLast(1).toTypedArray()
                 )
                 startActivity(chooserIntent)
             }
@@ -108,5 +94,20 @@ internal class MusicHelperImpl @Inject constructor(
                 ShowToastWithResource(R.string.utf8_not_supported)
             )
         }
+    }
+}
+
+@SuppressLint("QueryPermissionsNeeded")
+fun Activity.makeIntentList(uri: String): List<Intent> {
+    val origIntent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+    val infoList = if (android.os.Build.VERSION.SDK_INT >= 23){
+        packageManager.queryIntentActivities(origIntent, PackageManager.MATCH_ALL)
+    } else{
+        packageManager.queryIntentActivities(origIntent, 0)
+    }
+    return infoList.map {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+        intent.setPackage(it.activityInfo.packageName)
+        intent
     }
 }
