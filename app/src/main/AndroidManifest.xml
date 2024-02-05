@@ -10,6 +10,15 @@
     <uses-permission android:name="com.android.vending.BILLING" />
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
 
+    <queries>
+        <package android:name="com.android.chrome" />
+        <package android:name="com.yandex.browser" />
+        <package android:name="com.opera.browser" />
+        <package android:name="org.mozilla.firefox" />
+        <package android:name="com.uma.musicvk" />
+        <package android:name="com.vkontakte.android" />
+    </queries>
+
     <application
         android:name=".App"
         android:allowBackup="true"
