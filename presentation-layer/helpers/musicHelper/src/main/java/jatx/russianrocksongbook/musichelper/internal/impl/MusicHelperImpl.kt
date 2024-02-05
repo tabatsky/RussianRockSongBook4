@@ -53,18 +53,7 @@ internal class MusicHelperImpl @Inject constructor(
                 //val uriApp = "https://vk.com/audio?q=$searchForEncoded"
                 val uriBrowser = "https://m.vk.com/audio?q=$searchForEncoded"
 
-                val intentList = makeIntentList(uriBrowser) // + makeIntentList(uriApp)
-
-                val chooserIntent = Intent
-                    .createChooser(
-                        intentList.last(),
-                        getString(R.string.vk_music_chooser)
-                    )
-                chooserIntent.putExtra(
-                    Intent.EXTRA_INITIAL_INTENTS,
-                    intentList.dropLast(1).toTypedArray()
-                )
-                startActivity(chooserIntent)
+                showChooser(uriBrowser)
             }
         } catch (e: UnsupportedEncodingException) {
             commonViewModel?.submitEffect(
@@ -97,8 +86,24 @@ internal class MusicHelperImpl @Inject constructor(
     }
 }
 
+
+private fun Activity.showChooser(uri: String) {
+    val intentList = makeIntentList(uri) // + makeIntentList(uriApp)
+
+    val chooserIntent = Intent
+        .createChooser(
+            intentList.last(),
+            getString(R.string.vk_music_chooser)
+        )
+    chooserIntent.putExtra(
+        Intent.EXTRA_INITIAL_INTENTS,
+        intentList.dropLast(1).toTypedArray()
+    )
+    startActivity(chooserIntent)
+}
+
 @SuppressLint("QueryPermissionsNeeded")
-fun Activity.makeIntentList(uri: String): List<Intent> {
+private fun Activity.makeIntentList(uri: String): List<Intent> {
     val origIntent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
     val infoList = if (android.os.Build.VERSION.SDK_INT >= 23){
         packageManager.queryIntentActivities(origIntent, PackageManager.MATCH_ALL)
