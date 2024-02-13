@@ -18,9 +18,9 @@ import jatx.russianrocksongbook.cloudsongs.internal.paging.ItemsAdapter
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.PerformCloudSearch
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.CloudViewModel
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.SearchState
-import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateNeedScroll
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateCloudSongListNeedScroll
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateOrderBy
-import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateScrollPosition
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateCloudSongListScrollPosition
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateSearchFor
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateSearchState
 import jatx.russianrocksongbook.commonview.font.toScaledSp
@@ -143,13 +143,13 @@ internal fun CloudSearchBody(
                             }
                             listState.scrollToItem(scrollPosition)
                             delay(100L)
-                            cloudViewModel.submitAction(UpdateNeedScroll(false))
+                            cloudViewModel.submitAction(UpdateCloudSongListNeedScroll(false))
                         }
                     } else {
                         snapshotFlow {
                             listState.firstVisibleItemIndex
                         }.collectLatest {
-                            cloudViewModel.submitAction(UpdateScrollPosition(it))
+                            cloudViewModel.submitAction(UpdateCloudSongListScrollPosition(it))
                         }
                     }
                 }
