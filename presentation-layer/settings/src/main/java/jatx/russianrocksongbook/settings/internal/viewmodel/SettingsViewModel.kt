@@ -42,7 +42,7 @@ internal class SettingsViewModel @Inject constructor(
         @Composable
         fun getInstance(): SettingsViewModel {
             storage[key] = hiltViewModel<SettingsViewModel>()
-            storage[key]?.relaunchJobIfNecessary()
+            storage[key]?.launchJobsIfNecessary()
             return storage[key] as SettingsViewModel
         }
     }

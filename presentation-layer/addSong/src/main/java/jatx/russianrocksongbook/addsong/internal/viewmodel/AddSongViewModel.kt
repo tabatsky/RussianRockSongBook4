@@ -45,7 +45,7 @@ internal class AddSongViewModel @Inject constructor(
         @Composable
         fun getInstance(): AddSongViewModel {
             storage[key] = hiltViewModel<AddSongViewModel>()
-            storage[key]?.relaunchJobIfNecessary()
+            storage[key]?.launchJobsIfNecessary()
             return storage[key] as AddSongViewModel
         }
     }
