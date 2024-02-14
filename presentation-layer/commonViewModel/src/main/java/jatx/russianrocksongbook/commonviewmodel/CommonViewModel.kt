@@ -128,8 +128,10 @@ open class CommonViewModel @Inject constructor(
 
         @Composable
         fun getInstance(): CommonViewModel {
-            if (!storage.containsKey(key)) storage[key] = hiltViewModel()
-            storage[key]?.relaunchJobIfNecessary()
+            if (!storage.containsKey(key)) {
+                storage[key] = hiltViewModel()
+            }
+            storage[key]?.launchJobsIfNecessary()
             return storage[key] as CommonViewModel
         }
 
@@ -147,7 +149,7 @@ open class CommonViewModel @Inject constructor(
         }
     }
 
-    fun relaunchJobIfNecessary() {
+    fun launchJobsIfNecessary() {
         if (collectActionsJob?.isActive != true) {
             collectActionsJob = collectActions()
         }

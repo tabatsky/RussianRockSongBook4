@@ -44,7 +44,7 @@ class VoiceCommandViewModelTest: LocalViewModelTest() {
             localStateHolder = localStateHolder,
             voiceCommandViewModelDeps = voiceCommandViewModelDeps
         )
-        voiceCommandViewModel.relaunchJobIfNecessary()
+        voiceCommandViewModel.launchJobsIfNecessary()
 
         every { getArtistsAsListUseCase.execute() } returns artistList
     }

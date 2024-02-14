@@ -87,7 +87,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
             localStateHolder = localStateHolder,
             localViewModelDeps = localViewModelDeps
         )
-        localViewModel.relaunchJobIfNecessary()
+        localViewModel.launchJobsIfNecessary()
 
         every { getArtistsUseCase.execute() } returns artistsFlow
         every { getCountByArtistUseCase.execute(any()) } answers {
