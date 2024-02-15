@@ -8,7 +8,7 @@ data class CommonState(
     val currentArtist: String,
     val appWasUpdated: Boolean,
     val artistList: List<String>,
-    val lastCloudSearchKey: Int
+    val lastRandomKey: Int
 ) {
     companion object {
         fun initial(defaultArtist: String) = CommonState(
@@ -16,7 +16,7 @@ data class CommonState(
             currentArtist = defaultArtist,
             appWasUpdated = false,
             artistList = listOf(),
-            lastCloudSearchKey = 0
+            lastRandomKey = 0
         )
     }
 }

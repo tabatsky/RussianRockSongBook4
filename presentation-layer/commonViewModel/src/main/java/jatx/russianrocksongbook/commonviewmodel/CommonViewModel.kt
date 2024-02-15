@@ -242,7 +242,7 @@ open class CommonViewModel @Inject constructor(
                 is ScreenVariant.CloudSongText -> {
                     selectScreen(
                         ScreenVariant.CloudSearch(
-                            randomKey = lastCloudSearchKey,
+                            randomKey = lastRandomKey,
                             isBackFromSong = true
                         ))
                 }
@@ -277,7 +277,7 @@ open class CommonViewModel @Inject constructor(
     }
 
     protected fun selectScreen(
-        screenVariant: ScreenVariant
+        newScreenVariant: ScreenVariant
     ) {
         val currentScreenVariant = commonStateHolder
             .commonState
@@ -295,67 +295,57 @@ open class CommonViewModel @Inject constructor(
             } else {
                 AppNavigator.popBackStack(true)
             }
-        }
-
-        if (currentScreenVariant is ScreenVariant.Start &&
-            screenVariant is ScreenVariant.SongList) {
+        } else if (currentScreenVariant is ScreenVariant.Start &&
+            newScreenVariant is ScreenVariant.SongList) {
 
             AppNavigator.popBackStack(true)
-        }
-
-        if (currentScreenVariant is ScreenVariant.Favorite &&
-            screenVariant is ScreenVariant.SongList) {
+        } else if (currentScreenVariant is ScreenVariant.Favorite &&
+            newScreenVariant is ScreenVariant.SongList) {
 
             AppNavigator.popBackStack(true)
-        }
-
-        if (currentScreenVariant is ScreenVariant.SongList &&
-            screenVariant is ScreenVariant.Favorite) {
+        } else if (currentScreenVariant is ScreenVariant.SongList &&
+            newScreenVariant is ScreenVariant.Favorite) {
 
             AppNavigator.popBackStack(true)
-        }
+        } else if (currentScreenVariant is ScreenVariant.SongList &&
+            newScreenVariant is ScreenVariant.SongList) {
 
-        if (currentScreenVariant is ScreenVariant.SongList &&
-            screenVariant is ScreenVariant.SongList) {
-
-            if (currentScreenVariant.artist == screenVariant.artist) {
+            if (currentScreenVariant.artist == newScreenVariant.artist) {
                 return
             }
 
             AppNavigator.popBackStack(true)
-        }
+        } else if (currentScreenVariant is ScreenVariant.AddSong &&
+            newScreenVariant is ScreenVariant.SongTextByArtistAndTitle) {
 
-        if (currentScreenVariant is ScreenVariant.AddSong &&
-            screenVariant is ScreenVariant.SongTextByArtistAndTitle) {
+            AppNavigator.popBackStack(true)
+        } else if (currentScreenVariant is ScreenVariant.AddArtist &&
+            newScreenVariant is ScreenVariant.SongList) {
 
             AppNavigator.popBackStack(true)
         }
 
-        if (currentScreenVariant is ScreenVariant.AddArtist &&
-            screenVariant is ScreenVariant.SongList) {
+        updateCurrentScreenAtCommonState(newScreenVariant)
+        AppNavigator.navigate(newScreenVariant)
 
-            AppNavigator.popBackStack(true)
-        }
-
-        updateCurrentScreenAtCommonState(screenVariant)
-        AppNavigator.navigate(screenVariant)
-
-        Log.e("navigated", screenVariant.destination)
+        Log.e("navigated", newScreenVariant.destination)
     }
 
     private fun updateCurrentScreenAtCommonState(screenVariant: ScreenVariant) {
         commonStateHolder.commonState.update { state ->
             val previousScreenVariant = state.currentScreenVariant
-            val randomKey = if (screenVariant is ScreenVariant.CloudSearch) {
-                screenVariant.randomKey
+            if (screenVariant is ScreenVariant.CloudSearch) {
+                state.copy(
+                    currentScreenVariant = screenVariant,
+                    previousScreenVariant = previousScreenVariant,
+                    lastRandomKey = screenVariant.randomKey
+                )
             } else {
-                state.lastCloudSearchKey
+                state.copy(
+                    currentScreenVariant = screenVariant,
+                    previousScreenVariant = previousScreenVariant
+                )
             }
-            state.copy(
-                currentScreenVariant = screenVariant,
-                previousScreenVariant = previousScreenVariant,
-                lastCloudSearchKey = randomKey
-            )
         }
     }
 
