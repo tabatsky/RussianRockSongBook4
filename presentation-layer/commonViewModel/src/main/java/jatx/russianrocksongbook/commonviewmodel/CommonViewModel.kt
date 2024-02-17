@@ -284,45 +284,42 @@ open class CommonViewModel @Inject constructor(
             .value
             .currentScreenVariant
 
-        if (currentScreenVariant is ScreenVariant.SongTextByArtistAndTitle) {
+        val previousScreenVariant = commonStateHolder
+            .commonState
+            .value
+            .previousScreenVariant
 
-            val previousScreenVariant = commonStateHolder
-                .commonState
-                .value
-                .previousScreenVariant
-            if (previousScreenVariant is ScreenVariant.Favorite) {
-                AppNavigator.popBackStack(true, 2)
-            } else {
-                AppNavigator.popBackStack(true)
-            }
-        } else if (currentScreenVariant is ScreenVariant.Start &&
-            newScreenVariant is ScreenVariant.SongList) {
+        val isSongByArtistAndTitle = currentScreenVariant is ScreenVariant.SongTextByArtistAndTitle
+        val wasFavorite = previousScreenVariant is ScreenVariant.Favorite
+        val isStart = currentScreenVariant is ScreenVariant.Start
+        val isFavorite = currentScreenVariant is ScreenVariant.Favorite
+        val becomeSongList = newScreenVariant is ScreenVariant.SongList
+        val isSongList = currentScreenVariant is ScreenVariant.SongList
+        val becomeFavorite = newScreenVariant is ScreenVariant.Favorite
+        val isAddSong = currentScreenVariant is ScreenVariant.AddSong
+        val becomeSongByArtistAndTitle = newScreenVariant is ScreenVariant.SongTextByArtistAndTitle
+        val isAddArtist = currentScreenVariant is ScreenVariant.AddArtist
 
+        val artistNow = (currentScreenVariant as? ScreenVariant.SongList)?.artist
+        val artistBecome = (newScreenVariant as? ScreenVariant.SongList)?.artist
+
+        val needToPopTwice = isSongByArtistAndTitle && wasFavorite
+        val needToReturn = isSongList && becomeSongList && artistNow == artistBecome
+
+        var needToPop = false
+        needToPop = needToPop || isSongByArtistAndTitle
+        needToPop = needToPop || isStart && becomeSongList
+        needToPop = needToPop || isFavorite && becomeSongList
+        needToPop = needToPop || isSongList && becomeFavorite
+        needToPop = needToPop || isAddSong && becomeSongByArtistAndTitle
+        needToPop = needToPop || isAddArtist && becomeSongList
+
+        if (needToPopTwice) {
+            AppNavigator.popBackStack(true, 2)
+        } else if (needToPop) {
             AppNavigator.popBackStack(true)
-        } else if (currentScreenVariant is ScreenVariant.Favorite &&
-            newScreenVariant is ScreenVariant.SongList) {
-
-            AppNavigator.popBackStack(true)
-        } else if (currentScreenVariant is ScreenVariant.SongList &&
-            newScreenVariant is ScreenVariant.Favorite) {
-
-            AppNavigator.popBackStack(true)
-        } else if (currentScreenVariant is ScreenVariant.SongList &&
-            newScreenVariant is ScreenVariant.SongList) {
-
-            if (currentScreenVariant.artist == newScreenVariant.artist) {
-                return
-            }
-
-            AppNavigator.popBackStack(true)
-        } else if (currentScreenVariant is ScreenVariant.AddSong &&
-            newScreenVariant is ScreenVariant.SongTextByArtistAndTitle) {
-
-            AppNavigator.popBackStack(true)
-        } else if (currentScreenVariant is ScreenVariant.AddArtist &&
-            newScreenVariant is ScreenVariant.SongList) {
-
-            AppNavigator.popBackStack(true)
+        } else if (needToReturn) {
+            return
         }
 
         updateCurrentScreenAtCommonState(newScreenVariant)
