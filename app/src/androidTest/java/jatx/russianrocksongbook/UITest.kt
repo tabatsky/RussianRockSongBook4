@@ -486,6 +486,8 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "$TITLE_1_2 is displayed")
 
+        composeTestRule.waitForTimeout(timeout)
+
         composeTestRule
             .onNodeWithText(TITLE_1_3)
             .assertDoesNotExist()
