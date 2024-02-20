@@ -475,6 +475,8 @@ class UITest {
             .onNodeWithText(TITLE_1_2)
             .assertDoesNotExist()
         Log.e("test $testNumber assert", "$TITLE_1_2 does not exist")
+        composeTestRule.waitForTimeout(timeout)
+
         val indexSong2 = (titles.indexOf(TITLE_1_2) - 3)
             .takeIf { it >= 0 }
             ?: 0
