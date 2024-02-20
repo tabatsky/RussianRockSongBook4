@@ -3,6 +3,7 @@ package jatx.russianrocksongbook
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
@@ -11,6 +12,7 @@ import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.lifecycle.Lifecycle
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.action.ViewActions
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.runner.AndroidJUnitRunner
 import androidx.test.uiautomator.UiDevice
@@ -39,6 +41,8 @@ import jatx.russianrocksongbook.localsongs.api.methods.selectSongByArtistAndTitl
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import jatx.russianrocksongbook.testing.*
 import leakcanary.DetectLeaksAfterTestSuccess
+import org.hamcrest.Description
+import org.hamcrest.TypeSafeDiagnosingMatcher
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -441,7 +445,7 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(ARTIST_1))
         Log.e("test $testNumber assert", "app bar title starts equally with $ARTIST_1")
 
-        Espresso.pressBackUnconditionally()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -2111,7 +2115,7 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        Espresso.pressBackUnconditionally()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -2176,7 +2180,7 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        Espresso.pressBackUnconditionally()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -2345,7 +2349,7 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        Espresso.pressBackUnconditionally()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -2510,7 +2514,7 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        Espresso.pressBackUnconditionally()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -2579,7 +2583,7 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        Espresso.pressBackUnconditionally()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -2650,7 +2654,7 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        Espresso.pressBackUnconditionally()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -2724,7 +2728,7 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        Espresso.pressBackUnconditionally()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -2800,7 +2804,7 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        Espresso.pressBackUnconditionally()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -2917,7 +2921,7 @@ class UITest {
             .assertDoesNotExist()
         Log.e("test $testNumber assert", "$TITLE_1_3 does not exist")
 
-        Espresso.pressBackUnconditionally()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3052,7 +3056,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song title is displayed correctly")
 
-        Espresso.pressBackUnconditionally()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3110,7 +3114,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song title is displayed correctly")
 
-        Espresso.pressBackUnconditionally()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3180,7 +3184,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song title is displayed correctly")
 
-        Espresso.pressBackUnconditionally()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3252,7 +3256,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song title is displayed correctly")
 
-        Espresso.pressBackUnconditionally()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3374,7 +3378,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song title is displayed correctly")
 
-        Espresso.pressBackUnconditionally()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3498,7 +3502,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song title is displayed correctly")
 
-        Espresso.pressBackUnconditionally()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3669,7 +3673,7 @@ class UITest {
         assertTrue(actualArtistAfterSecondBackPressing.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        Espresso.pressBackUnconditionally()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3830,7 +3834,7 @@ class UITest {
         assertTrue(actualArtistAfterSecondBackPressing.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        Espresso.pressBackUnconditionally()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3873,6 +3877,25 @@ fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.waitForCondition
     } catch (e: ComposeTimeoutException) {
         Log.e("test wait", "timeout")
     }
+}
+
+fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.pressBackUnconditionally() {
+    val rootView = this.activity.findViewById<View>(android.R.id.content).rootView
+    val rootMatcher = object: TypeSafeDiagnosingMatcher<View>() {
+
+        override fun describeTo(description: Description?) {
+            description?.appendText("view equals to rootView")
+        }
+
+        override fun matchesSafely(item: View?, mismatchDescription: Description?): Boolean {
+            if (rootView !== item) {
+                mismatchDescription?.appendText("view and rootView mismatch")
+                return false
+            }
+            return true
+        }
+    }
+    Espresso.onView(rootMatcher).perform(ViewActions.pressBackUnconditionally())
 }
 
 private const val anrText = "responding"
