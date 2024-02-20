@@ -466,7 +466,6 @@ class UITest {
                 .onNodeWithText(TITLE_1_1)
                 .isDisplayed()
         }
-
         composeTestRule
             .onNodeWithText(TITLE_1_1)
             .assertIsDisplayed()
@@ -483,6 +482,7 @@ class UITest {
             .onNodeWithTag(SONG_LIST_LAZY_COLUMN)
             .performScrollToIndex(indexSong2)
         Log.e("test $testNumber scroll", "songList to index $indexSong2")
+        composeTestRule.waitForTimeout(timeout)
         composeTestRule.waitForCondition {
             composeTestRule
                 .onNodeWithText(TITLE_1_2)
@@ -506,6 +506,7 @@ class UITest {
             .onNodeWithTag(SONG_LIST_LAZY_COLUMN)
             .performScrollToIndex(indexSong3)
         Log.e("test $testNumber scroll", "songList to index $indexSong3")
+        composeTestRule.waitForTimeout(timeout)
         composeTestRule.waitForCondition {
             composeTestRule
                 .onNodeWithText(TITLE_1_3)
@@ -515,6 +516,8 @@ class UITest {
             .onNodeWithText(TITLE_1_3)
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "$TITLE_1_3 is displayed")
+
+        composeTestRule.waitForTimeout(timeout)
 
         composeTestRule
             .onNodeWithText(TITLE_1_4)
