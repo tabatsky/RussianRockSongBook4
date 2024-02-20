@@ -557,6 +557,8 @@ class UITest {
                 .text?.startEquallyWith(ARTIST_1) ?: false
         }
 
+        composeTestRule.waitForTimeout(timeout)
+
         val songs = localRepository
             .getSongsByArtistAsList(ARTIST_1)
         val titles = songs
