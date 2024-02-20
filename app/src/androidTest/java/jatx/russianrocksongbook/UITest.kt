@@ -3,7 +3,6 @@ package jatx.russianrocksongbook
 import android.app.Application
 import android.content.Context
 import android.util.Log
-import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
@@ -12,6 +11,11 @@ import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.lifecycle.Lifecycle
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.runner.AndroidJUnitRunner
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -433,7 +437,7 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(ARTIST_1))
         Log.e("test $testNumber assert", "app bar title starts equally with $ARTIST_1")
 
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
@@ -2081,7 +2085,7 @@ class UITest {
         Log.e("test $testNumber input", ARTIST_NEW)
 
         Espresso.closeSoftKeyboard()
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBack()
         Log.e("test $testNumber action", "press back")
 
@@ -2098,7 +2102,7 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
@@ -2164,7 +2168,7 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
@@ -2318,7 +2322,7 @@ class UITest {
         Log.e("test $testNumber input", ARTIST_NEW)
 
         Espresso.closeSoftKeyboard()
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBack()
         Log.e("test $testNumber action", "press back")
 
@@ -2335,7 +2339,7 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
@@ -2501,7 +2505,7 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
@@ -2555,7 +2559,7 @@ class UITest {
                 Log.e("test $testNumber assert", "$it is displayed")
             }
 
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBack()
         Log.e("test $testNumber action", "press back")
 
@@ -2572,7 +2576,7 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
@@ -2644,7 +2648,7 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
@@ -2703,7 +2707,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "${stringConst.choose} is displayed")
 
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBack()
         Log.e("test $testNumber action", "press back")
 
@@ -2720,7 +2724,7 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
@@ -2797,7 +2801,7 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
@@ -2915,7 +2919,7 @@ class UITest {
             .assertDoesNotExist()
         Log.e("test $testNumber assert", "$TITLE_1_3 does not exist")
 
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
@@ -3030,7 +3034,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song text is displayed correctly")
 
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBack()
         Log.e("test $testNumber action", "press back")
 
@@ -3052,7 +3056,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song title is displayed correctly")
 
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
@@ -3111,7 +3115,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song title is displayed correctly")
 
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
@@ -3161,7 +3165,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song text is displayed correctly")
 
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBack()
         Log.e("test $testNumber action", "press back")
 
@@ -3183,7 +3187,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song title is displayed correctly")
 
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
@@ -3256,7 +3260,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song title is displayed correctly")
 
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
@@ -3358,7 +3362,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song text is displayed correctly")
 
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBack()
         Log.e("test $testNumber action", "press back")
 
@@ -3380,7 +3384,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song title is displayed correctly")
 
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
@@ -3505,7 +3509,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song title is displayed correctly")
 
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
@@ -3623,7 +3627,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "cloud song 2 text is displayed correctly")
 
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBack()
         Log.e("test $testNumber action", "press back")
 
@@ -3662,7 +3666,7 @@ class UITest {
         Log.e("test $testNumber input", "Ло")
         Espresso.closeSoftKeyboard()
 
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBack()
         Log.e("test $testNumber action", "press back")
 
@@ -3679,7 +3683,7 @@ class UITest {
         assertTrue(actualArtistAfterSecondBackPressing.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
@@ -3797,7 +3801,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "cloud song 2 text is displayed correctly")
 
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBack()
         Log.e("test $testNumber action", "press back")
 
@@ -3842,7 +3846,7 @@ class UITest {
         assertTrue(actualArtistAfterSecondBackPressing.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        composeTestRule.requestRootViewFocus()
+        composeTestRule.closeSystemDialog()
         Espresso.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
@@ -3888,12 +3892,14 @@ fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.waitForCondition
     }
 }
 
-fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.requestRootViewFocus() {
-    val rootView = this.activity.findViewById<View>(android.R.id.content).rootView
-    rootView.post {
-        rootView.requestFocus()
+fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.closeSystemDialog() {
+    try {
+        onView(withText("Wait")).check(matches(isDisplayed())).perform(ViewActions.click())
+        Log.e("test", "Wait button clicked")
+    } catch (e: Exception) {
+        Log.e("test", "Wait button is not displaying")
     }
-    //this.waitForCondition { rootView.isFocused }
+    this.waitForTimeout(timeout)
 }
 
 class StringConst @Inject constructor(
