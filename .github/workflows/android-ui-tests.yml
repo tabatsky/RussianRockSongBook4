@@ -54,5 +54,5 @@ jobs:
           disable-animations: true
           script: |
             adb logcat -c
-            adb logcat *:E &
+            adb logcat *:E | grep test &
             ./gradlew app:connectedAndroidTest
