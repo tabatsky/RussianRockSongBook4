@@ -2,9 +2,7 @@ package jatx.russianrocksongbook.view
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.foundation.focusable
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -67,8 +65,6 @@ fun CurrentScreen() {
 
     NavHost(
         navController,
-        modifier = Modifier
-            .focusable(),
         startDestination = destinationStart,
         enterTransition = { EnterTransition.None },
         popEnterTransition = { EnterTransition.None },
