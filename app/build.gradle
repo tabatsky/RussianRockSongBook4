@@ -80,6 +80,7 @@ dependencies {
     implementation commonDeps.lifecycleViewmodel
 
     implementation diDeps.hiltAndroid
+    implementation 'androidx.test.uiautomator:uiautomator-v18:2.2.0-alpha1'
     kapt diDeps.hiltCompiler
     implementation diDeps.hiltExtensions
     kapt diDeps.hiltExtensionsProcessor

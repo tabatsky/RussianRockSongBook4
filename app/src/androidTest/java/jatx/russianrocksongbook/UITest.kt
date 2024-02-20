@@ -16,7 +16,12 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.runner.AndroidJUnitRunner
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiObject
+import androidx.test.uiautomator.UiObjectNotFoundException
+import androidx.test.uiautomator.UiSelector
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -122,6 +127,8 @@ class UITest {
         TestingConfig.isTesting = true
 
         hiltRule.inject()
+
+        UiDevice.getInstance(getInstrumentation()).registerANRWatcher()
 
         settingsRepository.orientation = Orientation.RANDOM
         settingsRepository.defaultArtist = ARTIST_KINO
@@ -556,8 +563,8 @@ class UITest {
                 .onNodeWithTag(APP_BAR_TITLE)
                 .text?.startEquallyWith(ARTIST_1) ?: false
         }
-
-        composeTestRule.waitForTimeout(timeout)
+        
+        
 
         val songs = localRepository
             .getSongsByArtistAsList(ARTIST_1)
@@ -3907,6 +3914,40 @@ fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.closeSystemDialo
         Log.e("test", "Wait button is not displaying")
     }
     this.waitForTimeout(timeout)
+}
+
+private const val anrText = "isn't responding"
+private fun UiDevice.registerANRWatcher() = let { uiDevice ->
+    uiDevice.registerWatcher("ANR") {
+        val anrDialog = uiDevice.findObject(
+            UiSelector()
+                .packageName("android")
+                .textContains(anrText)
+        )
+        checkForAnrDialogToClose(anrDialog)
+    }
+}
+
+private fun UiDevice.checkForAnrDialogToClose(anrDialog: UiObject): Boolean {
+    return anrDialog.exists() && closeAnrWithWait(anrDialog)
+}
+
+private fun UiDevice.closeAnrWithWait(anrDialog: UiObject): Boolean = let { uiDevice ->
+    Log.i("test", "ANR dialog detected!")
+    try {
+        uiDevice.findObject(
+            UiSelector().text("Wait").className("android.widget.Button").packageName(
+                "android"
+            )
+        ).click()
+        val anrDialogText = anrDialog.text
+        val appName = anrDialogText.substring(0, anrDialogText.length - anrText.length)
+        Log.e("test", String.format("Application \"%s\" is not responding!", appName))
+    } catch (e: UiObjectNotFoundException) {
+        Log.e("test", "Detected ANR, but window disappeared!")
+    }
+    Log.e("test", "ANR dialog closed: pressed on wait!")
+    return true
 }
 
 class StringConst @Inject constructor(
