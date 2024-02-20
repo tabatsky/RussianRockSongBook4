@@ -2067,6 +2067,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "${stringConst.save} is displayed")
 
+        composeTestRule.waitForTimeout(timeout)
         Espresso.pressBack()
         Log.e("test $testNumber action", "press back")
 
@@ -2297,6 +2298,7 @@ class UITest {
             "$TEXT_FIELD_SCROLL_SPEED text is ${settingsRepository.scrollSpeed}"
         )
 
+        composeTestRule.waitForTimeout(timeout)
         Espresso.pressBack()
         Log.e("test $testNumber action", "press back")
 
@@ -2533,6 +2535,7 @@ class UITest {
                 Log.e("test $testNumber assert", "$it is displayed")
             }
 
+        composeTestRule.waitForTimeout(timeout)
         Espresso.pressBack()
         Log.e("test $testNumber action", "press back")
 
@@ -2680,6 +2683,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "${stringConst.choose} is displayed")
 
+        composeTestRule.waitForTimeout(timeout)
         Espresso.pressBack()
         Log.e("test $testNumber action", "press back")
 
@@ -3006,6 +3010,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song text is displayed correctly")
 
+        composeTestRule.waitForTimeout(timeout)
         Espresso.pressBack()
         Log.e("test $testNumber action", "press back")
 
@@ -3136,6 +3141,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song text is displayed correctly")
 
+        composeTestRule.waitForTimeout(timeout)
         Espresso.pressBack()
         Log.e("test $testNumber action", "press back")
 
@@ -3332,6 +3338,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song text is displayed correctly")
 
+        composeTestRule.waitForTimeout(timeout)
         Espresso.pressBack()
         Log.e("test $testNumber action", "press back")
 
@@ -3596,6 +3603,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "cloud song 2 text is displayed correctly")
 
+        composeTestRule.waitForTimeout(timeout)
         Espresso.pressBack()
         Log.e("test $testNumber action", "press back")
 
@@ -3622,6 +3630,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song title is displayed correctly")
 
+        composeTestRule.waitForTimeout(timeout)
         Espresso.pressBack()
         Log.e("test $testNumber action", "press back")
 
@@ -3756,6 +3765,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "cloud song 2 text is displayed correctly")
 
+        composeTestRule.waitForTimeout(timeout)
         Espresso.pressBack()
         Log.e("test $testNumber action", "press back")
 
