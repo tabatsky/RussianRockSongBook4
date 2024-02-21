@@ -2100,7 +2100,7 @@ class UITest {
         Log.e("test $testNumber input", ARTIST_NEW)
 
         Espresso.closeSoftKeyboard()
-        Espresso.pressBack()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -2334,7 +2334,7 @@ class UITest {
         Log.e("test $testNumber input", ARTIST_NEW)
 
         Espresso.closeSoftKeyboard()
-        Espresso.pressBack()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -2568,7 +2568,7 @@ class UITest {
                 Log.e("test $testNumber assert", "$it is displayed")
             }
 
-        Espresso.pressBack()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -2713,7 +2713,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "${stringConst.choose} is displayed")
 
-        Espresso.pressBack()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3036,7 +3036,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song text is displayed correctly")
 
-        Espresso.pressBack()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3164,7 +3164,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song text is displayed correctly")
 
-        Espresso.pressBack()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3358,7 +3358,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song text is displayed correctly")
 
-        Espresso.pressBack()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3620,7 +3620,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "cloud song 2 text is displayed correctly")
 
-        Espresso.pressBack()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3658,7 +3658,7 @@ class UITest {
         Log.e("test $testNumber input", "Ло")
         Espresso.closeSoftKeyboard()
 
-        Espresso.pressBack()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3791,7 +3791,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "cloud song 2 text is displayed correctly")
 
-        Espresso.pressBack()
+        composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
