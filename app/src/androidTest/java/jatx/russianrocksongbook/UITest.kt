@@ -550,8 +550,6 @@ class UITest {
                 .onNodeWithTag(APP_BAR_TITLE)
                 .text?.startEquallyWith(ARTIST_1) ?: false
         }
-        
-        
 
         val songs = localRepository
             .getSongsByArtistAsList(ARTIST_1)
@@ -560,6 +558,7 @@ class UITest {
         val songIndex1 = titles.indexOf(TITLE_1_3)
         val song1 = songs[songIndex1]
 
+        composeTestRule.waitForTimeout(timeout)
         composeTestRule.waitForCondition {
             composeTestRule
                 .onNodeWithTag(SONG_LIST_LAZY_COLUMN)
@@ -574,7 +573,6 @@ class UITest {
                 .onNodeWithText(TITLE_1_3)
                 .isDisplayed()
         }
-
         composeTestRule
             .onNodeWithText(TITLE_1_3)
             .assertIsDisplayed()
