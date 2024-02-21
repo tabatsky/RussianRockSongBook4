@@ -128,9 +128,9 @@ class UITest {
 
         hiltRule.inject()
 
-        UiDevice.getInstance(getInstrumentation()).registerANRWatcher {
-            composeTestRule.waitForTimeout(timeout)
-        }
+//        UiDevice.getInstance(getInstrumentation()).registerANRWatcher {
+//            composeTestRule.waitForTimeout(timeout)
+//        }
 
         settingsRepository.orientation = Orientation.RANDOM
         settingsRepository.defaultArtist = ARTIST_KINO
@@ -3881,75 +3881,78 @@ fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.waitForCondition
 }
 
 fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.pressBackUnconditionally() {
-    closeSystemDialogs()
-
-    val rootView = this.activity.findViewById<View>(android.R.id.content).rootView
-    val rootMatcher = object: TypeSafeDiagnosingMatcher<View>() {
-
-        override fun describeTo(description: Description?) {
-            description?.appendText("view equals to rootView")
-        }
-
-        override fun matchesSafely(item: View?, mismatchDescription: Description?): Boolean {
-            if (rootView !== item) {
-                mismatchDescription?.appendText("view and rootView mismatch")
-                return false
-            }
-            return true
-        }
-    }
-    Espresso.onView(rootMatcher).perform(ViewActions.pressBackUnconditionally())
+    Espresso.closeSoftKeyboard()
+    waitForTimeout(timeout)
+    Espresso.pressBackUnconditionally()
+//    closeSystemDialogs()
+//
+//    val rootView = this.activity.findViewById<View>(android.R.id.content).rootView
+//    val rootMatcher = object: TypeSafeDiagnosingMatcher<View>() {
+//
+//        override fun describeTo(description: Description?) {
+//            description?.appendText("view equals to rootView")
+//        }
+//
+//        override fun matchesSafely(item: View?, mismatchDescription: Description?): Boolean {
+//            if (rootView !== item) {
+//                mismatchDescription?.appendText("view and rootView mismatch")
+//                return false
+//            }
+//            return true
+//        }
+//    }
+//    Espresso.onView(rootMatcher).perform(ViewActions.pressBackUnconditionally())
 }
 
-private fun closeSystemDialogs() {
-    try {
-        Log.e("test", "trying to close system dialogs")
-        UiDevice
-            .getInstance(getInstrumentation())
-            .executeShellCommand(
-                "am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS"
-            )
-    } catch (e: IOException) {
-        Log.e("test", "exception", e)
-    }
-}
-
-private const val anrText = "responding"
-private fun UiDevice.registerANRWatcher(onWait: () -> Unit) = let { uiDevice ->
-    uiDevice.registerWatcher("ANR") {
-        Log.e("test", "ANR dialog detected!")
-        val anrDialog = uiDevice.findObject(
-            UiSelector()
-                .packageName("android")
-                .textContains(anrText)
-        )
-        val result = checkForAnrDialogToClose(anrDialog)
-        onWait()
-        result
-    }
-}
-
-private fun UiDevice.checkForAnrDialogToClose(anrDialog: UiObject): Boolean {
-    return anrDialog.exists() && closeAnrWithWait(anrDialog)
-}
-
-private fun UiDevice.closeAnrWithWait(anrDialog: UiObject): Boolean = let { uiDevice ->
-    Log.e("test", "ANR: trying to close")
-    try {
-        uiDevice.findObject(
-            UiSelector().text("Wait").className("android.widget.Button").packageName(
-                "android"
-            )
-        ).click()
-        val anrDialogText = anrDialog.text
-        val appName = anrDialogText.substring(0, anrDialogText.length - anrText.length)
-        Log.e("test", String.format("Application \"%s\" is not responding!", appName))
-    } catch (e: UiObjectNotFoundException) {
-        Log.e("test", "Detected ANR, but window disappeared!")
-    }
-    Log.e("test", "ANR dialog closed: pressed on wait!")
-    return true
-}
+//private fun closeSystemDialogs() {
+//    try {
+//        Log.e("test", "trying to close system dialogs")
+//        UiDevice
+//            .getInstance(getInstrumentation())
+//            .executeShellCommand(
+//                "am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS"
+//            )
+//    } catch (e: IOException) {
+//        Log.e("test", "exception", e)
+//    }
+//}
+//
+//private const val anrText = "responding"
+//private fun UiDevice.registerANRWatcher(onWait: () -> Unit) = let { uiDevice ->
+//    uiDevice.registerWatcher("ANR") {
+//        Log.e("test", "ANR dialog detected!")
+//        val anrDialog = uiDevice.findObject(
+//            UiSelector()
+//                .packageName("android")
+//                .textContains(anrText)
+//        )
+//        val result = checkForAnrDialogToClose(anrDialog)
+//        onWait()
+//        result
+//    }
+//}
+//
+//private fun UiDevice.checkForAnrDialogToClose(anrDialog: UiObject): Boolean {
+//    return anrDialog.exists() && closeAnrWithWait(anrDialog)
+//}
+//
+//private fun UiDevice.closeAnrWithWait(anrDialog: UiObject): Boolean = let { uiDevice ->
+//    Log.e("test", "ANR: trying to close")
+//    try {
+//        uiDevice.findObject(
+//            UiSelector().text("Wait").className("android.widget.Button").packageName(
+//                "android"
+//            )
+//        ).click()
+//        val anrDialogText = anrDialog.text
+//        val appName = anrDialogText.substring(0, anrDialogText.length - anrText.length)
+//        Log.e("test", String.format("Application \"%s\" is not responding!", appName))
+//    } catch (e: UiObjectNotFoundException) {
+//        Log.e("test", "Detected ANR, but window disappeared!")
+//    }
+//    Log.e("test", "ANR dialog closed: pressed on wait!")
+//    return true
+//}
 
 class StringConst @Inject constructor(
     @ApplicationContext context: Context
