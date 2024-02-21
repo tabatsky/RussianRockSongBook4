@@ -54,6 +54,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
 import org.junit.runners.MethodSorters
+import java.io.IOException
 import javax.inject.Inject
 
 
@@ -3880,6 +3881,8 @@ fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.waitForCondition
 }
 
 fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.pressBackUnconditionally() {
+    closeSystemDialogs()
+
     val rootView = this.activity.findViewById<View>(android.R.id.content).rootView
     val rootMatcher = object: TypeSafeDiagnosingMatcher<View>() {
 
@@ -3896,6 +3899,19 @@ fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.pressBackUncondi
         }
     }
     Espresso.onView(rootMatcher).perform(ViewActions.pressBackUnconditionally())
+}
+
+private fun closeSystemDialogs() {
+    try {
+        Log.e("test", "trying to close system dialogs")
+        UiDevice
+            .getInstance(getInstrumentation())
+            .executeShellCommand(
+                "am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS"
+            )
+    } catch (e: IOException) {
+        Log.e("test", "exception", e)
+    }
 }
 
 private const val anrText = "responding"
