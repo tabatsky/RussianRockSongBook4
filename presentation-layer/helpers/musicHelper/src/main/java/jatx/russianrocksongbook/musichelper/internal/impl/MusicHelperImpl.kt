@@ -81,7 +81,7 @@ private fun Activity.showChooser(uri: String) {
     val chooserIntent = Intent
         .createChooser(
             intentList.last(),
-            getString(R.string.vk_music_chooser)
+            getString(R.string.chooser_text)
         )
     chooserIntent.putExtra(
         Intent.EXTRA_INITIAL_INTENTS,
