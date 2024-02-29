@@ -70,6 +70,7 @@ internal val artistMap = mapOf(
     "Глеб Самойлоff & The Matrixx" to R.raw.samoiloff,
     "Год Змеи" to R.raw.god_zmei,
     "Гражданская Оборона" to R.raw.grob,
+    "Дайте танк (!)" to R.raw.dajte_tank,
     "ДДТ" to R.raw.ddt,
     "Дельфин" to R.raw.dolphin,
     "Дом Кукол" to R.raw.dom_kukol,
