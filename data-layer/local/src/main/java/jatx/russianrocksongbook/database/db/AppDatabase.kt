@@ -37,11 +37,11 @@ internal abstract class AppDatabase : RoomDatabase() {
             .build()
 
         private val MIGRATION_16_17 = object: Migration(16, 17) {
-            override fun migrate(database: SupportSQLiteDatabase) {
+            override fun migrate(db: SupportSQLiteDatabase) {
                 Log.e("migrating", "16 to 17")
                 //database.execSQL("ALTER TABLE songs ADD COLUMN id INTEGER DEFAULT 0")
-                database.execSQL("ALTER TABLE songs RENAME TO old_songs")
-                database.execSQL("""
+                db.execSQL("ALTER TABLE songs RENAME TO old_songs")
+                db.execSQL("""
                         CREATE TABLE songs 
                         (id INTEGER PRIMARY KEY AUTOINCREMENT,
                         artist TEXT NOT NULL,
@@ -52,15 +52,15 @@ internal abstract class AppDatabase : RoomDatabase() {
                         outOfTheBox INTEGER NOT NULL DEFAULT 1,
                         origTextMD5 TEXT NOT NULL)
                         """)
-                database.execSQL("""
+                db.execSQL("""
                     CREATE UNIQUE INDEX the_index ON songs (artist, title) 
                 """)
-                database.execSQL("""
+                db.execSQL("""
                     INSERT INTO songs 
                     (artist, title, text, favorite, deleted, outOfTheBox, origTextMD5) 
                     SELECT artist, title, text, favorite=='yes', deleted, outOfTheBox, origTextMD5 FROM old_songs
                 """)
-                database.execSQL("DROP TABLE old_songs")
+                db.execSQL("DROP TABLE old_songs")
             }
         }
     }

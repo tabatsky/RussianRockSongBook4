@@ -60,7 +60,7 @@ dependencies {
     api project(':domain-layer:models:local')
     api project(':domain-layer:repository:preferences')
 
-    api project(':data-layer:database')
+    api project(':data-layer:local')
     api project(':data-layer:preferences')
     api project(':presentation-layer:commonViewModel')
     api project(':presentation-layer:commonView')
