@@ -102,7 +102,7 @@ jobs:
       run: gradle wrapper
       
     - name: Assemble Debug
-      run: ./gradlew data-layer:database:test   
+      run: ./gradlew data-layer:local:test
 
   dataLayerNetworkingUnitTests:
     runs-on: ubuntu-latest
@@ -120,7 +120,7 @@ jobs:
       run: gradle wrapper
       
     - name: Assemble Debug
-      run: ./gradlew data-layer:networking:test             
+      run: ./gradlew data-layer:cloud:test
       
   dataLayerPreferencesUnitTests:
     runs-on: ubuntu-latest
