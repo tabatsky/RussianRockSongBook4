@@ -58,8 +58,8 @@ dependencies {
 
     api project(':domain-layer:usecase:cloud')
     api project(':domain-layer:usecase:local')
-    api project(':data-layer:database')
-    api project(':data-layer:networking')
+    api project(':data-layer:local')
+    api project(':data-layer:cloud')
     api project(':data-layer:preferences')
     api project(':presentation-layer:commonViewModel')
     api project(':presentation-layer:commonView')
