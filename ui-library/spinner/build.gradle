@@ -2,7 +2,6 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android'
     id 'kotlin-kapt'
-    id 'com.google.dagger.hilt.android'
 }
 
 android {
@@ -35,40 +34,14 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion versions.composeCompiler
     }
-    namespace 'jatx.russianrocksongbook.cloudsongs'
+    namespace 'jatx.spinner'
 }
 
 dependencies {
-
     implementation commonDeps.coroutines
     implementation commonDeps.coreKtx
     implementation commonDeps.material
-    implementation commonDeps.activityCompose
     implementation commonDeps.composeUi
     implementation commonDeps.composeMaterial
     implementation commonDeps.composeUiTooling
-    implementation commonDeps.navigationCompose
-    implementation commonDeps.lifecycleRuntime
-    implementation commonDeps.lifecycleViewmodel
-
-    implementation commonDeps.pagingCompose
-
-    implementation diDeps.hiltAndroid
-    kapt diDeps.hiltCompiler
-    implementation diDeps.hiltExtensions
-    kapt diDeps.hiltExtensionsProcessor
-    implementation diDeps.hiltNavigationCompose
-
-    api project(':ui-library:clickableWordsTextCompose')
-    api project(':ui-library:spinner')
-
-    api project(':domain-layer:usecase:cloud')
-    api project(':domain-layer:usecase:local')
-    api project(':data-layer:local')
-    api project(':data-layer:cloud')
-    api project(':data-layer:preferences')
-    api project(':presentation-layer:commonViewModel')
-    api project(':presentation-layer:commonView')
-
-    api project(':core:testing')
 }

@@ -40,4 +40,4 @@ include ':app'
 include ':presentation-layer:navigation'
 include ':versionChecker'
 include ':ui-library:clickableWordsTextCompose'
-
+include ':ui-library:spinner'

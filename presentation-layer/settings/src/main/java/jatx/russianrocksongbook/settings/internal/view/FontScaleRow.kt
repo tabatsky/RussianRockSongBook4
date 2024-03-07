@@ -12,7 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import jatx.russianrocksongbook.commonview.spinner.Spinner
+import jatx.spinner.Spinner
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.settings.R
 import jatx.russianrocksongbook.settings.internal.viewmodel.SettingsViewModel
@@ -46,7 +46,9 @@ internal fun FontScaleRow(
             modifier = Modifier
                 .weight(1.0f)
                 .height(60.dp),
-            theme = theme,
+            colorMain = theme.colorMain,
+            colorBg = theme.colorBg,
+            colorCommon = theme.colorCommon,
             testTag = FONT_SCALE_SPINNER,
             fontSize = fontSize,
             valueList = valueList,
