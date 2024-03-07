@@ -1,0 +1,95 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
+}
+
+android {
+    compileSdk 34
+
+    defaultConfig {
+        minSdk 21
+        targetSdk 34
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion versions.composeCompiler
+    }
+    namespace 'jatx.russianrocksongbook.localsongs'
+
+    sourceSets {
+        test {
+            java.srcDir project(":presentation:commonViewModel").file("src/test/java")
+        }
+    }
+
+    testOptions {
+        unitTests.includeAndroidResources  = true
+        unitTests.returnDefaultValues = true
+    }
+}
+
+dependencies {
+
+    implementation commonDeps.coroutines
+    implementation commonDeps.coreKtx
+    implementation commonDeps.material
+    implementation commonDeps.activityCompose
+    implementation commonDeps.composeUi
+    implementation commonDeps.composeMaterial
+    implementation commonDeps.composeMaterial3
+    implementation commonDeps.composeUiTooling
+    implementation commonDeps.navigationCompose
+    implementation commonDeps.lifecycleRuntime
+    implementation commonDeps.lifecycleViewmodel
+
+    implementation diDeps.hiltAndroid
+    kapt diDeps.hiltCompiler
+    implementation diDeps.hiltExtensions
+    kapt diDeps.hiltExtensionsProcessor
+    implementation diDeps.hiltNavigationCompose
+
+    implementation tvDeps.tvFoundation
+    implementation tvDeps.tvMaterial
+
+    api project(':ui-library:clickableWordsTextCompose')
+
+    api project(':domain:usecase:cloud')
+    api project(':domain:usecase:local')
+    api project(':data:local')
+    api project(':data:cloud')
+    api project(':data:preferences')
+    api project(':presentation:commonViewModel')
+    api project(':presentation:commonView')
+    api project(':presentation:whatsNewDialog')
+    api project(':presentation:helpers:voiceCommands')
+
+    api project(':core:testing')
+
+    testImplementation testDeps.junit
+    testImplementation testDeps.mockk
+    testImplementation testDeps.coroutinesTest
+    testImplementation testDeps.androidXCoreTesting
+    testApi project(':presentation:commonViewModel')
+
+}

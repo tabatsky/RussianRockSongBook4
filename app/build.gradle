@@ -84,17 +84,17 @@ dependencies {
     implementation diDeps.hiltExtensions
     kapt diDeps.hiltExtensionsProcessor
 
-    api project(':presentation-layer:localSongs')
-    api project(':presentation-layer:cloudSongs')
-    api project(':presentation-layer:addArtist')
-    api project(':presentation-layer:addSong')
-    api project(':presentation-layer:donation')
-    api project(':presentation-layer:settings')
-    api project(':presentation-layer:start')
+    api project(':presentation:localSongs')
+    api project(':presentation:cloudSongs')
+    api project(':presentation:addArtist')
+    api project(':presentation:addSong')
+    api project(':presentation:donation')
+    api project(':presentation:settings')
+    api project(':presentation:start')
 
-    api project(':presentation-layer:helpers:addSongsFromDirHelper')
-    api project(':presentation-layer:helpers:donationHelper')
-    api project(':presentation-layer:helpers:musicHelper')
+    api project(':presentation:helpers:addSongsFromDirHelper')
+    api project(':presentation:helpers:donationHelper')
+    api project(':presentation:helpers:musicHelper')
 
     api project(':core:testing')
 

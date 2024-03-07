@@ -52,4 +52,4 @@ jobs:
           script: |
             adb logcat -c
             adb logcat *:E &
-            ./gradlew data-layer:local:connectedAndroidTest
+            ./gradlew data:local:connectedAndroidTest
