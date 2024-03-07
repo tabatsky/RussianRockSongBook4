@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jatx.russianrocksongbook.commonview.spinner.SpinnerState
 import jatx.russianrocksongbook.commonviewmodel.CommonStateHolder
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModelDeps
@@ -12,6 +11,7 @@ import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.domain.repository.preferences.ListenToMusicVariant
 import jatx.russianrocksongbook.domain.repository.preferences.Orientation
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
+import jatx.spinner.SpinnerState
 import javax.inject.Inject
 
 @HiltViewModel

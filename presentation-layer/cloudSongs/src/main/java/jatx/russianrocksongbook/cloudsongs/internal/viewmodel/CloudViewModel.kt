@@ -18,7 +18,6 @@ import io.reactivex.schedulers.Schedulers
 import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.paging.CONFIG
 import jatx.russianrocksongbook.cloudsongs.internal.paging.CloudSongSource
-import jatx.russianrocksongbook.commonview.spinner.SpinnerState
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_ERROR
@@ -28,6 +27,7 @@ import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.domain.models.music.Music
 import jatx.russianrocksongbook.domain.models.warning.Warnable
 import jatx.russianrocksongbook.navigation.ScreenVariant
+import jatx.spinner.SpinnerState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine

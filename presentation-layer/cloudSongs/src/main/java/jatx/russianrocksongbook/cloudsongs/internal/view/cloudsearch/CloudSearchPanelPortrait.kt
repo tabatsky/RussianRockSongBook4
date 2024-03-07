@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.CloudViewModel
-import jatx.russianrocksongbook.commonview.spinner.Spinner
+import jatx.spinner.Spinner
 import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.testing.SEARCH_BUTTON
@@ -68,11 +68,13 @@ internal fun CloudSearchPanelPortrait(
                     .fillMaxWidth()
                     .height(size1)
                     .padding(padding),
-                theme = theme,
+                colorMain = theme.colorMain,
+                colorBg = theme.colorBg,
+                colorCommon = theme.colorCommon,
                 fontSize = fontSizeTextSp,
-                valueList = OrderBy.values().map { it.orderByRus }.toTypedArray(),
+                valueList = OrderBy.entries.map { it.orderByRus }.toTypedArray(),
                 initialPosition = orderBy.ordinal,
-                onPositionChanged = { onOrderByValueChange(OrderBy.values()[it]) },
+                onPositionChanged = { onOrderByValueChange(OrderBy.entries[it]) },
                 spinnerState = cloudViewModel.spinnerStateOrderBy
             )
         }

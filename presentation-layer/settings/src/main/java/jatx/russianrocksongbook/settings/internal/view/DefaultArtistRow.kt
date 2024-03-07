@@ -13,7 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import jatx.russianrocksongbook.commonview.spinner.Spinner
+import jatx.spinner.Spinner
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_ADD_ARTIST
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_ADD_SONG
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_CLOUD_SONGS
@@ -61,7 +61,9 @@ internal fun DefaultArtistRow(
             modifier = Modifier
                 .weight(1.0f)
                 .height(60.dp),
-            theme = theme,
+            colorMain = theme.colorMain,
+            colorBg = theme.colorBg,
+            colorCommon = theme.colorCommon,
             testTag = DEFAULT_ARTIST_SPINNER,
             fontSize = fontSize,
             valueList = valueList,

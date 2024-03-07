@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.commonview.spinner
+package jatx.spinner
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -8,15 +8,17 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
-import jatx.russianrocksongbook.domain.repository.preferences.Theme
 
 @Composable
 fun Spinner(
     modifier: Modifier,
-    theme: Theme,
+    colorMain: Color,
+    colorBg: Color,
+    colorCommon: Color,
     testTag: String? = null,
     fontSize: TextUnit,
     valueList: Array<String>,
@@ -53,8 +55,8 @@ fun Spinner(
                 .fillMaxSize(),
             colors = ButtonDefaults
                 .buttonColors(
-                    backgroundColor = theme.colorCommon,
-                    contentColor = theme.colorMain
+                    backgroundColor = colorCommon,
+                    contentColor = colorMain
                 ),
             onClick = {
                 setExpanded(!theState.isExpanded)
@@ -69,7 +71,7 @@ fun Spinner(
         }
         DropdownMenu(
             modifier = Modifier
-                .background(theme.colorMain),
+                .background(colorMain),
             expanded = theState.isExpanded,
             onDismissRequest = { setExpanded(false) }) {
             valueList.forEachIndexed { index, string ->
@@ -82,7 +84,7 @@ fun Spinner(
                 ) {
                     Text(
                         text = string,
-                        color = theme.colorBg
+                        color = colorBg
                     )
                 }
             }
