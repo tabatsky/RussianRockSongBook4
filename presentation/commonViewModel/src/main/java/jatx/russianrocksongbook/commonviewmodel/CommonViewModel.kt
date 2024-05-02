@@ -35,7 +35,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 open class CommonViewModel @Inject constructor(
-    private val commonStateHolder: CommonStateHolder,
+    private val appStateHolder: AppStateHolder,
     commonViewModelDeps: CommonViewModelDeps
 ): ViewModel() {
     val settings =
@@ -57,6 +57,10 @@ open class CommonViewModel @Inject constructor(
 
     private val _fontScaler = MutableStateFlow(settings.fontScaler)
     val fontScaler = _fontScaler.asStateFlow()
+
+    val isTV = commonViewModelDeps.tvDetector.isTV
+
+    val appStateFlow = appStateHolder.appStateFlow
 
     protected open val currentMusic: Music? = null
 
@@ -105,10 +109,6 @@ open class CommonViewModel @Inject constructor(
         }
     }
 
-    val isTV = commonViewModelDeps.tvDetector.isTV
-
-    val commonState = commonStateHolder.commonState.asStateFlow()
-
     private val _actions = MutableSharedFlow<UIAction>(
         replay = 0,
         extraBufferCapacity = 1,
@@ -140,7 +140,7 @@ open class CommonViewModel @Inject constructor(
         fun clearStorage() = storage.clear()
     }
 
-    open fun resetState() = commonStateHolder.reset()
+    open fun resetState() = appStateHolder.reset()
 
     fun reloadSettings() {
         storage.values.forEach { viewModel ->
@@ -208,7 +208,7 @@ open class CommonViewModel @Inject constructor(
     }
 
     private fun backByDestinationChangedListener() {
-        with (commonState.value) {
+        with (appStateFlow.value) {
             Log.e("back from", currentScreenVariant.toString())
             when (currentScreenVariant) {
                 is ScreenVariant.Start -> {
@@ -265,7 +265,7 @@ open class CommonViewModel @Inject constructor(
 
     private fun backByUserPressBackButton() {
         AppNavigator.popBackStack()
-        when (commonState.value.currentScreenVariant) {
+        when (appStateFlow.value.currentScreenVariant) {
             is ScreenVariant.SongList,
             is ScreenVariant.Favorite -> {
                 needReset = true
@@ -279,13 +279,11 @@ open class CommonViewModel @Inject constructor(
     protected fun selectScreen(
         newScreenVariant: ScreenVariant
     ) {
-        val currentScreenVariant = commonStateHolder
-            .commonState
+        val currentScreenVariant = appStateFlow
             .value
             .currentScreenVariant
 
-        val previousScreenVariant = commonStateHolder
-            .commonState
+        val previousScreenVariant = appStateFlow
             .value
             .previousScreenVariant
 
@@ -329,28 +327,34 @@ open class CommonViewModel @Inject constructor(
     }
 
     private fun updateCurrentScreenAtCommonState(screenVariant: ScreenVariant) {
-        commonStateHolder.commonState.update { state ->
-            val previousScreenVariant = state.currentScreenVariant
-            if (screenVariant is ScreenVariant.CloudSearch) {
-                state.copy(
-                    currentScreenVariant = screenVariant,
-                    previousScreenVariant = previousScreenVariant,
-                    lastRandomKey = screenVariant.randomKey
-                )
-            } else {
-                state.copy(
-                    currentScreenVariant = screenVariant,
-                    previousScreenVariant = previousScreenVariant
-                )
-            }
+        val appState = appStateFlow.value
+        val previousScreenVariant = appState.currentScreenVariant
+        val newState = if (screenVariant is ScreenVariant.CloudSearch) {
+            appState.copy(
+                currentScreenVariant = screenVariant,
+                previousScreenVariant = previousScreenVariant,
+                lastRandomKey = screenVariant.randomKey
+            )
+        } else {
+            appState.copy(
+                currentScreenVariant = screenVariant,
+                previousScreenVariant = previousScreenVariant
+            )
         }
+        changeAppState(newState)
     }
 
     protected fun setAppWasUpdated(wasUpdated: Boolean) {
-        commonStateHolder.commonState.update {
-            it.copy(appWasUpdated = wasUpdated)
-        }
+        val appState = appStateFlow.value
+        val newState = appState.copy(appWasUpdated = wasUpdated)
+        changeAppState(newState)
     }
+
+    protected fun changeAppState(appState: AppState) = appStateHolder.changeAppState(appState)
+
+    protected fun changeCustomState(key: String, customState: CustomState) =
+        appStateHolder.changeCustomState(key, customState)
+
 
     protected fun showToast(toastText: String) = toasts.showToast(toastText)
 

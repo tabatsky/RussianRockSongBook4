@@ -39,7 +39,7 @@ class CloudViewModel @Inject constructor(
     private val cloudStateHolder: CloudStateHolder,
     cloudViewModelDeps: CloudViewModelDeps
 ): CommonViewModel(
-    cloudStateHolder.commonStateHolder,
+    cloudStateHolder.appStateHolder,
     cloudViewModelDeps.commonViewModelDeps
 ) {
     private val addSongFromCloudUseCase =
@@ -56,13 +56,13 @@ class CloudViewModel @Inject constructor(
     private val allLikes = mutableStateMapOf<CloudSong, Int>()
     private val allDislikes = mutableStateMapOf<CloudSong, Int>()
 
-    val cloudState = cloudStateHolder.cloudState.asStateFlow()
+    val cloudStateFlow = cloudStateHolder.cloudStateFlow.asStateFlow()
 
     override val currentMusic: Music?
-        get() = cloudState.value.currentCloudSong
+        get() = cloudStateFlow.value.currentCloudSong
 
     override val currentWarnable: Warnable?
-        get() = cloudState.value.currentCloudSong
+        get() = cloudStateFlow.value.currentCloudSong
 
     companion object {
         private const val key = "Cloud"
@@ -134,56 +134,56 @@ class CloudViewModel @Inject constructor(
     }
 
     private fun updateSearchState(searchState: SearchState) {
-        cloudStateHolder.cloudState.update {
+        cloudStateHolder.cloudStateFlow.update {
             it.copy(searchState = searchState)
         }
     }
 
     private fun updateSearchFor(searchFor: String) {
-        cloudStateHolder.cloudState.update {
+        cloudStateHolder.cloudStateFlow.update {
             it.copy(searchFor = searchFor)
         }
     }
 
     private fun updateOrderBy(orderBy: OrderBy) {
-        cloudStateHolder.cloudState.update {
+        cloudStateHolder.cloudStateFlow.update {
             it.copy(orderBy = orderBy)
         }
     }
 
     private fun updateCurrentCloudSongCount(count: Int) {
-        cloudStateHolder.cloudState.update {
+        cloudStateHolder.cloudStateFlow.update {
             it.copy(currentCloudSongCount = count)
         }
     }
 
     private fun updateCurrentCloudSong(cloudSong: CloudSong?) {
-        cloudStateHolder.cloudState.update {
+        cloudStateHolder.cloudStateFlow.update {
             it.copy(currentCloudSong = cloudSong)
         }
     }
 
     private fun selectCloudSong(position: Int) {
-        cloudStateHolder.cloudState.update {
+        cloudStateHolder.cloudStateFlow.update {
             it.copy(cloudSongPosition = position, scrollPosition = position, needScroll = true)
         }
     }
 
     private fun updateScrollPosition(position: Int) {
-        cloudStateHolder.cloudState.update {
+        cloudStateHolder.cloudStateFlow.update {
             it.copy(scrollPosition = position)
         }
     }
 
     private fun updateNeedScroll(needScroll: Boolean) {
-        cloudStateHolder.cloudState.update {
+        cloudStateHolder.cloudStateFlow.update {
             it.copy(needScroll = needScroll)
         }
     }
 
     private fun nextCloudSong() {
-        val currentPosition = cloudState.value.cloudSongPosition
-        val songCount = cloudState.value.currentCloudSongCount
+        val currentPosition = cloudStateFlow.value.cloudSongPosition
+        val songCount = cloudStateFlow.value.currentCloudSongCount
         if (currentPosition + 1 < songCount)
             selectScreen(
                 ScreenVariant
@@ -191,7 +191,7 @@ class CloudViewModel @Inject constructor(
     }
 
     private fun prevCloudSong() {
-        val currentPosition = cloudState.value.cloudSongPosition
+        val currentPosition = cloudStateFlow.value.cloudSongPosition
         if (currentPosition > 0)
             selectScreen(
                 ScreenVariant
@@ -200,7 +200,7 @@ class CloudViewModel @Inject constructor(
 
     @SuppressLint("CheckResult")
     private fun deleteCurrentFromCloud(secret1: String, secret2: String) {
-        cloudState.value.currentCloudSong?.let {
+        cloudStateFlow.value.currentCloudSong?.let {
             deleteFromCloudUseCase
                 .execute(secret1, secret2, it)
                 .subscribeOn(Schedulers.io())
@@ -228,7 +228,7 @@ class CloudViewModel @Inject constructor(
     }
 
     private fun downloadCurrent() {
-        cloudState.value.currentCloudSong?.let {
+        cloudStateFlow.value.currentCloudSong?.let {
             addSongFromCloudUseCase.execute(it)
             showToast(R.string.toast_chords_saved_and_added_to_favorite)
         }
@@ -236,7 +236,7 @@ class CloudViewModel @Inject constructor(
 
     @SuppressLint("CheckResult")
     private fun voteForCurrent(voteValue: Int) {
-        cloudState.value.currentCloudSong?.let { cloudSong ->
+        cloudStateFlow.value.currentCloudSong?.let { cloudSong ->
             voteUseCase
                 .execute(cloudSong, voteValue)
                 .subscribeOn(Schedulers.io())
@@ -263,7 +263,7 @@ class CloudViewModel @Inject constructor(
     }
 
     private fun updateCloudSongsFlow(flow: Flow<PagingData<CloudSong>>?) {
-        cloudStateHolder.cloudState.update {
+        cloudStateHolder.cloudStateFlow.update {
             it.copy(cloudSongsFlow = flow)
         }
     }

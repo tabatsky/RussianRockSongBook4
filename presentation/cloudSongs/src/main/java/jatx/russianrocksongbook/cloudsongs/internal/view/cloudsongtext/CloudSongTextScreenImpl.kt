@@ -53,7 +53,7 @@ internal fun CloudSongTextScreenImpl(position: Int) {
 
     cloudViewModel.submitAction(SelectCloudSong(position))
 
-    val cloudState by cloudViewModel.cloudState.collectAsState()
+    val cloudState by cloudViewModel.cloudStateFlow.collectAsState()
 
     val cloudSongsFlow = cloudState.cloudSongsFlow
 

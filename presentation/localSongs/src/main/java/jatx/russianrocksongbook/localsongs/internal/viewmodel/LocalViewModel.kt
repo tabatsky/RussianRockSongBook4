@@ -23,10 +23,6 @@ import jatx.russianrocksongbook.navigation.AppNavigator
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.SharingStarted.Companion.Eagerly
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -36,7 +32,7 @@ open class LocalViewModel @Inject constructor(
     private val localStateHolder: LocalStateHolder,
     localViewModelDeps: LocalViewModelDeps
 ): CommonViewModel(
-    localStateHolder.commonStateHolder,
+    localStateHolder.appStateHolder,
     localViewModelDeps.commonViewModelDeps
 ) {
     private val getSongsByArtistUseCase =
@@ -56,14 +52,9 @@ open class LocalViewModel @Inject constructor(
 
     val editorText = mutableStateOf("")
 
-    val localState = combine(localStateHolder.localState, commonState) { local, common ->
-            local.copy(commonState = common)
-        }
-        .stateIn(
-            viewModelScope,
-            Eagerly,
-            localStateHolder.localState.value
-        )
+    val localStateFlow by lazy {
+        localStateHolder.localStateFlow
+    }
 
     private var showSongsJob: Job? = null
     private var selectSongJob: Job? = null
@@ -72,10 +63,10 @@ open class LocalViewModel @Inject constructor(
     private var uploadSongDisposable: Disposable? = null
 
     override val currentMusic: Music?
-        get() = localState.value.currentSong
+        get() = localStateFlow.value.currentSong
 
     override val currentWarnable: Warnable?
-        get() = localState.value.currentSong
+        get() = localStateFlow.value.currentSong
 
     companion object {
         private const val key = "Local"
@@ -86,11 +77,15 @@ open class LocalViewModel @Inject constructor(
                 storage[key] = hiltViewModel<LocalViewModel>()
             }
             storage[key]?.launchJobsIfNecessary()
-            return storage[key] as LocalViewModel
+            return (storage[key] as LocalViewModel).also {
+                it.startMappingLocalState()
+            }
         }
 
         fun getStoredInstance() = storage[key] as? LocalViewModel
     }
+
+    private fun startMappingLocalState() = localStateHolder.startMapping(viewModelScope)
 
     override fun resetState() = localStateHolder.reset()
 
@@ -109,7 +104,7 @@ open class LocalViewModel @Inject constructor(
             is ReviewApp -> reviewApp()
             is ShowDevSite -> showDevSite()
             is UpdateArtists -> updateArtists()
-            is UpdateCurrentSong -> updateCurrentSong(action.song, localState.value.currentSongPosition)
+            is UpdateCurrentSong -> updateCurrentSong(action.song, localStateFlow.value.currentSongPosition)
             is UpdateMenuScrollPosition -> updateMenuScrollPosition(action.position)
             is UpdateMenuExpandedArtistGroup -> updateMenuExpandedArtistGroup(action.artistGroup)
             is UpdateSongListScrollPosition -> updateSongListScrollPosition(action.position)
@@ -178,7 +173,7 @@ open class LocalViewModel @Inject constructor(
                         .execute(artist)
                         .collect { songs ->
                             withContext(Dispatchers.Main) {
-                                val oldArtist = localState.value.currentSongList.getOrNull(0)?.artist
+                                val oldArtist = localStateFlow.value.currentSongList.getOrNull(0)?.artist
                                     ?: "null"
                                 val newArtist = songs.getOrNull(0)?.artist ?: "null"
                                 if (newArtist == artist || newArtist == "null" || artist == ARTIST_FAVORITE) {
@@ -224,14 +219,20 @@ open class LocalViewModel @Inject constructor(
 
         Log.e("select song", position.toString())
 
-        val oldArtist = localState.value.currentSong?.artist
-        val oldTitle = localState.value.currentSong?.title
+        val oldArtist = localStateFlow.value.currentSong?.artist
+        val oldTitle = localStateFlow.value.currentSong?.title
+
+        Log.e("select song", "oldArtist: $oldArtist")
+        Log.e("select song", "oldTitle: $oldTitle")
+
+        val currentArtist = appStateFlow.value.currentArtist
+        Log.e("select song", "currentArtist: $currentArtist")
 
         selectSongJob = viewModelScope
             .launch {
                 withContext(Dispatchers.IO) {
                     getSongByArtistAndPositionUseCase
-                        .execute(localState.value.currentArtist, position)
+                        .execute(currentArtist, position)
                         .collect { song ->
                             withContext(Dispatchers.Main) {
                                 updateCurrentSong(song, position)
@@ -253,7 +254,8 @@ open class LocalViewModel @Inject constructor(
     }
 
     private fun nextSong() {
-        with (localState.value) {
+        val currentArtist = appStateFlow.value.currentArtist
+        with (localStateFlow.value) {
             if (currentSongCount > 0) {
                 selectScreen(
                     ScreenVariant
@@ -266,7 +268,8 @@ open class LocalViewModel @Inject constructor(
     }
 
     private fun prevSong() {
-        with (localState.value) {
+        val currentArtist = appStateFlow.value.currentArtist
+        with (localStateFlow.value) {
             if (currentSongCount > 0) {
                 if (currentSongPosition > 0) {
                     selectScreen(
@@ -295,9 +298,10 @@ open class LocalViewModel @Inject constructor(
 
     private fun setFavorite(favorite: Boolean) {
         Log.e("set favorite", favorite.toString())
-        with (localState.value) {
+        val currentArtist = appStateFlow.value.currentArtist
+        with (localStateFlow.value) {
             currentSong?.copy(favorite = favorite)?.let {
-                updateCurrentSong(it, localState.value.currentSongPosition)
+                updateCurrentSong(it, currentSongPosition)
                 saveSong(it)
                 if (!favorite && currentArtist == ARTIST_FAVORITE) {
                     val newSongCount = getCountByArtistUseCase.execute(ARTIST_FAVORITE)
@@ -334,7 +338,8 @@ open class LocalViewModel @Inject constructor(
     }
 
     private fun deleteCurrentToTrash() {
-        with (localState.value) {
+        val currentArtist = appStateFlow.value.currentArtist
+        with (localStateFlow.value) {
             currentSong?.let {
                 deleteSongToTrashUseCase.execute(it)
                 val newSongCount = getCountByArtistUseCase.execute(currentArtist)
@@ -371,7 +376,7 @@ open class LocalViewModel @Inject constructor(
     }
 
     private fun uploadCurrentToCloud() {
-        localState.value.currentSong?.let { song ->
+        localStateFlow.value.currentSong?.let { song ->
             setUploadButtonEnabled(false)
             uploadSongDisposable?.let {
                 if (!it.isDisposed) it.dispose()
@@ -418,81 +423,85 @@ open class LocalViewModel @Inject constructor(
     }
 
     private fun updateCurrentSong(song: Song?, position: Int) {
-        localStateHolder.localState.update {
-            it.copy(
-                currentSong = song,
-                currentSongPosition = position,
-                songListScrollPosition = position,
-                songListNeedScroll = true
-            )
-        }
+        val localState = localStateFlow.value
+        val newState = localState.copy(
+            currentSong = song,
+            currentSongPosition = position,
+            songListScrollPosition = position,
+            songListNeedScroll = true
+        )
+        changeLocalState(newState)
     }
 
     private fun updateMenuScrollPosition(position: Int) {
-        localStateHolder.localState.update {
-            it.copy(menuScrollPosition = position)
-        }
+        val localState = localStateFlow.value
+        val newState = localState.copy(menuScrollPosition = position)
+        changeLocalState(newState)
     }
 
     private fun updateMenuExpandedArtistGroup(artistGroup: String) {
-        localStateHolder.localState.update {
-            it.copy(menuExpandedArtistGroup = artistGroup)
-        }
+        val localState = localStateFlow.value
+        val newState = localState.copy(menuExpandedArtistGroup = artistGroup)
+        changeLocalState(newState)
     }
 
     private fun updateSongListScrollPosition(position: Int) {
-        localStateHolder.localState.update {
-            it.copy(songListScrollPosition = position)
-        }
+        val localState = localStateFlow.value
+        val newState = localState.copy(songListScrollPosition = position)
+        changeLocalState(newState)
     }
 
     private fun updateSongListNeedScroll(needScroll: Boolean) {
-        localStateHolder.localState.update {
-            it.copy(songListNeedScroll = needScroll)
-        }
+        val localState = localStateFlow.value
+        val newState = localState.copy(songListNeedScroll = needScroll)
+        changeLocalState(newState)
     }
 
     private fun setEditorMode(editorMode: Boolean) {
-        localStateHolder.localState.update {
-            it.copy(isEditorMode = editorMode)
-        }
+        val localState = localStateFlow.value
+        val newState = localState.copy(isEditorMode = editorMode)
+        changeLocalState(newState)
     }
 
     private fun setAutoPlayMode(autoPlayMode: Boolean) {
-        localStateHolder.localState.update {
-            it.copy(isAutoPlayMode = autoPlayMode)
-        }
-    }
-
-    private fun updateArtists(artists: List<String>) {
-        localStateHolder.commonStateHolder.commonState.update {
-            it.copy(artistList = artists)
-        }
-    }
-
-    private fun updateCurrentArtist(artist: String) {
-        localStateHolder.commonStateHolder.commonState.update {
-            it.copy(currentArtist = artist)
-        }
+        val localState = localStateFlow.value
+        val newState = localState.copy(isAutoPlayMode = autoPlayMode)
+        changeLocalState(newState)
     }
 
     private fun updateCurrentSongCount(count: Int) {
-        localStateHolder.localState.update {
-            it.copy(currentSongCount = count)
-        }
+        val localState = localStateFlow.value
+        val newState = localState.copy(currentSongCount = count)
+        changeLocalState(newState)
     }
 
     private fun updateCurrentSongList(songList: List<Song>) {
-        localStateHolder.localState.update {
-            it.copy(currentSongList = songList)
-        }
+        val localState = localStateFlow.value
+        val newState = localState.copy(currentSongList = songList)
+        changeLocalState(newState)
     }
 
     private fun setUploadButtonEnabled(enabled: Boolean) {
-        localStateHolder.localState.update {
-            it.copy(isUploadButtonEnabled = enabled)
-        }
+        val localState = localStateFlow.value
+        val newState = localState.copy(isUploadButtonEnabled = enabled)
+        changeLocalState(newState)
     }
+
+    private fun changeLocalState(localState: LocalState) =
+        localStateHolder.changeLocalState(localState)
+
+    private fun updateArtists(artists: List<String>) {
+        val appState = appStateFlow.value
+        val newState = appState.copy(artistList = artists)
+        changeAppState(newState)
+    }
+
+    private fun updateCurrentArtist(artist: String) {
+        val appState = appStateFlow.value
+        val newState = appState.copy(currentArtist = artist)
+        changeAppState(newState)
+    }
+
     private fun updateEditorText(text: String) {
         editorText.value = text
     }

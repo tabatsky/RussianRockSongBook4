@@ -23,7 +23,7 @@ import jatx.russianrocksongbook.testing.APP_BAR_TITLE
 internal fun AddArtistScreenImpl() {
     val addArtistViewModel = AddArtistViewModel.getInstance()
 
-    val addArtistState by addArtistViewModel.addArtistState.collectAsState()
+    val addArtistState by addArtistViewModel.addArtistStateFlow.collectAsState()
 
     val showUploadDialog = addArtistState.showUploadDialogForDir
     val newArtist = addArtistState.newArtist

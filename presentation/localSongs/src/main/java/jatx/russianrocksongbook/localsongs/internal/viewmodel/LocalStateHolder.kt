@@ -1,19 +1,39 @@
 package jatx.russianrocksongbook.localsongs.internal.viewmodel
 
-import jatx.russianrocksongbook.commonviewmodel.CommonStateHolder
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.update
+import jatx.russianrocksongbook.commonviewmodel.AppStateHolder
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.properties.Delegates
+
+const val localKey = "local"
 
 @Singleton
 class LocalStateHolder @Inject constructor(
-    val commonStateHolder: CommonStateHolder
+    val appStateHolder: AppStateHolder
 ) {
-    val localState = MutableStateFlow(
-        LocalState.initial(commonStateHolder.commonState.value))
+
+    var localStateFlow by Delegates.notNull<StateFlow<LocalState>>()
+
+    fun startMapping(coroutineScope: CoroutineScope) {
+        localStateFlow = appStateHolder.appStateFlow.mapNotNull {
+            it.customStateMap[localKey] as? LocalState
+        }.stateIn(
+            coroutineScope,
+            SharingStarted.Eagerly,
+            LocalState.initial()
+        )
+    }
+
+    fun changeLocalState(localState: LocalState) =
+        appStateHolder.changeCustomState(localKey, localState)
 
     fun reset() {
-        localState.update { LocalState.initial(commonStateHolder.commonState.value) }
+        val localState = LocalState.initial()
+        changeLocalState(localState)
     }
 }

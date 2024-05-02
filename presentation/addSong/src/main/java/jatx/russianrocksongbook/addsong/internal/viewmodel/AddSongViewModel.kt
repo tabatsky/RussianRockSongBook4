@@ -23,7 +23,7 @@ internal class AddSongViewModel @Inject constructor(
     private val addSongStateHolder: AddSongStateHolder,
     addSongViewModelDeps: AddSongViewModelDeps
 ): CommonViewModel(
-    addSongStateHolder.commonStateHolder,
+    addSongStateHolder.appStateHolder,
     addSongViewModelDeps.commonViewModelDeps
 ) {
     private val insertReplaceUserSongUseCase =
@@ -37,7 +37,7 @@ internal class AddSongViewModel @Inject constructor(
     val title = mutableStateOf("")
     val text = mutableStateOf("")
 
-    val addSongState = addSongStateHolder.addSongState.asStateFlow()
+    val addSongStateFlow = addSongStateHolder.addSongStateFlow.asStateFlow()
 
     companion object {
         private const val key = "AddSong"
@@ -70,14 +70,14 @@ internal class AddSongViewModel @Inject constructor(
     private fun showUploadOfferForSong(song: Song) {
         Log.e("upload", "show offer")
 
-        addSongStateHolder.addSongState.update {
+        addSongStateHolder.addSongStateFlow.update {
             it.copy(showUploadDialogForSong = true, newSong = song)
         }
     }
 
     private fun hideUploadOfferForSong() {
         Log.e("upload", "hide offer")
-        addSongStateHolder.addSongState.update {
+        addSongStateHolder.addSongStateFlow.update {
             it.copy(showUploadDialogForSong = false)
         }
     }
@@ -94,7 +94,7 @@ internal class AddSongViewModel @Inject constructor(
     }
 
     private fun uploadNewToCloud() {
-        addSongState.value.newSong?.let { song ->
+        addSongStateFlow.value.newSong?.let { song ->
             uploadSongDisposable?.let {
                 if (!it.isDisposed) it.dispose()
             }
@@ -119,7 +119,7 @@ internal class AddSongViewModel @Inject constructor(
 
     private fun showNewSong() {
         Log.e("show", "new song")
-        addSongState.value.newSong?.let {
+        addSongStateFlow.value.newSong?.let {
             callbacks.onSongByArtistAndTitleSelected(it.artist, it.title)
         }
     }

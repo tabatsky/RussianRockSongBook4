@@ -42,7 +42,7 @@ internal fun SongTextScreenImpl(artist: String, position: Int) {
     val localViewModel = LocalViewModel.getInstance()
     val theme = LocalAppTheme.current
 
-    val localState by localViewModel.localState.collectAsState()
+    val localState by localViewModel.localStateFlow.collectAsState()
 
     val song = localState.currentSong
 

@@ -1,15 +1,15 @@
 package jatx.russianrocksongbook.addartist.internal.viewmodel
 
 import dagger.hilt.android.scopes.ActivityRetainedScoped
-import jatx.russianrocksongbook.commonviewmodel.CommonStateHolder
+import jatx.russianrocksongbook.commonviewmodel.AppStateHolder
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 @ActivityRetainedScoped
 internal class AddArtistStateHolder @Inject constructor(
-    val commonStateHolder: CommonStateHolder
+    val appStateHolder: AppStateHolder
 ) {
-    val addArtistState = MutableStateFlow(
+    val addArtistStateFlow = MutableStateFlow(
         AddArtistState.initial()
     )
 }

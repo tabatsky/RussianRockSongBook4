@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jatx.russianrocksongbook.commonviewmodel.CommonStateHolder
+import jatx.russianrocksongbook.commonviewmodel.AppStateHolder
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModelDeps
 import jatx.russianrocksongbook.commonviewmodel.UIAction
@@ -16,10 +16,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class SettingsViewModel @Inject constructor(
-    commonStateHolder: CommonStateHolder,
+    appStateHolder: AppStateHolder,
     commonViewModelDeps: CommonViewModelDeps
 ): CommonViewModel(
-    commonStateHolder,
+    appStateHolder,
     commonViewModelDeps
 ) {
     val spinnerStateDefaultArtist = mutableStateOf(SpinnerState(0, false))
