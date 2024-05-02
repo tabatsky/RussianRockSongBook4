@@ -77,15 +77,11 @@ open class LocalViewModel @Inject constructor(
                 storage[key] = hiltViewModel<LocalViewModel>()
             }
             storage[key]?.launchJobsIfNecessary()
-            return (storage[key] as LocalViewModel).also {
-                it.startMappingLocalState()
-            }
+            return (storage[key] as LocalViewModel)
         }
 
         fun getStoredInstance() = storage[key] as? LocalViewModel
     }
-
-    private fun startMappingLocalState() = localStateHolder.startMapping(viewModelScope)
 
     override fun resetState() = localStateHolder.reset()
 
