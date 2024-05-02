@@ -8,6 +8,7 @@ import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.usecase.local.GetArtistsAsListUseCase
 import jatx.russianrocksongbook.domain.usecase.local.GetSongsByVoiceSearchUseCase
 import jatx.russianrocksongbook.localsongs.R
+import jatx.russianrocksongbook.commonviewmodel.waitForCondition
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.FixMethodOrder

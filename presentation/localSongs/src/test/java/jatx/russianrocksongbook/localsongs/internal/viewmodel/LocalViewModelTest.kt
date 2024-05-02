@@ -14,6 +14,7 @@ import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModelTest
 import jatx.russianrocksongbook.commonviewmodel.SelectScreen
 import jatx.russianrocksongbook.commonviewmodel.ShowSongs
+import jatx.russianrocksongbook.commonviewmodel.waitForCondition
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Assert.assertEquals
@@ -270,13 +271,4 @@ open class LocalViewModelTest: CommonViewModelTest() {
             toasts.showToast(R.string.toast_deleted_to_trash)
         }
     }
-}
-
-fun waitForCondition(condition: () -> Boolean) {
-    var counter = 0
-    while (!condition() && counter < 1000) {
-        TimeUnit.MILLISECONDS.sleep(10)
-        counter++
-    }
-    assertTrue(condition())
 }

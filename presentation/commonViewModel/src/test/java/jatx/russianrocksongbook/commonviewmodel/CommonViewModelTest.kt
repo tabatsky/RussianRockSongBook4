@@ -13,13 +13,17 @@ import jatx.russianrocksongbook.commonviewmodel.deps.Resources
 import jatx.russianrocksongbook.commonviewmodel.deps.TVDetector
 import jatx.russianrocksongbook.commonviewmodel.deps.Toasts
 import jatx.russianrocksongbook.domain.usecase.cloud.AddWarningUseCase
+import jatx.russianrocksongbook.navigation.AppNavigator
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import kotlinx.coroutines.flow.update
 import org.junit.*
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.runners.MethodSorters
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
+import java.util.Stack
+import java.util.concurrent.TimeUnit
 
 @MockKExtension.ConfirmVerification
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -70,6 +74,23 @@ open class CommonViewModelTest {
             0
         }
 
+        mockkObject(AppNavigator)
+
+        val screenVariantStack = Stack<ScreenVariant>()
+        val screenVariantSlot = slot<ScreenVariant>()
+
+        every { AppNavigator.navigate(capture(screenVariantSlot)) } answers {
+            val screenVariant = screenVariantSlot.captured
+            screenVariantStack.push(screenVariant)
+        }
+        every { AppNavigator.popBackStack() } answers {
+            if (screenVariantStack.isNotEmpty()) {
+                val screenVariant = screenVariantStack.pop()
+                val appState = appStateHolder.appStateFlow.value
+                val newState = appState.copy(currentScreenVariant = screenVariant)
+                appStateHolder.changeAppState(newState)
+            }
+        }
 
         every { toasts.showToast(anyInt()) } just runs
         every { toasts.showToast(anyString()) } just runs
@@ -84,12 +105,31 @@ open class CommonViewModelTest {
             val appState = appStateHolder.appStateFlow.value
             when (action) {
                 is SelectScreen -> {
-                    val newState = appState.copy(currentScreenVariant = action.screenVariant)
+                    val screenVariant = action.screenVariant
+                    println(screenVariant)
+                    val appState = appStateHolder.appStateFlow.value
+                    val newState = if (screenVariant is ScreenVariant.CloudSearch) {
+                        appState.copy(
+                            currentScreenVariant = screenVariant,
+                            lastRandomKey = screenVariant.randomKey
+                        )
+                    } else if (screenVariant is ScreenVariant.SongList) {
+                        appState.copy(
+                            currentScreenVariant = screenVariant,
+                            currentArtist = screenVariant.artist
+                        )
+                    } else {
+                        appState.copy(currentScreenVariant = screenVariant)
+                    }
                     appStateHolder.changeAppState(newState)
+                    AppNavigator.navigate(action.screenVariant)
                 }
                 is AppWasUpdated -> {
                     val newState = appState.copy(appWasUpdated = action.wasUpdated)
                     appStateHolder.changeAppState(newState)
+                }
+                else -> {
+                    _commonViewModel.submitAction(action)
                 }
             }
         }
@@ -101,7 +141,7 @@ open class CommonViewModelTest {
     }
 
     @Test
-    fun test003_selectScreen_CloudSearch_isWorkingCorrect() {
+    fun test001_selectScreen_CloudSearch_isWorkingCorrect() {
         commonViewModel.submitAction(SelectScreen(ScreenVariant.CloudSearch(128, false)))
         assertEquals(ScreenVariant.CloudSearch(128,false), commonViewModel.appStateFlow.value.currentScreenVariant)
         commonViewModel.submitAction(SelectScreen(ScreenVariant.CloudSearch(137,true)))
@@ -109,7 +149,33 @@ open class CommonViewModelTest {
     }
 
     @Test
-    fun test004_toasts_isWorkingCorrect() {
+    fun test002_selectScreen_CloudSearch_withBackPressing_isWorkingCorrect() {
+        commonViewModel.submitAction(SelectScreen(ScreenVariant.SongList("Кино")))
+        assertEquals(ScreenVariant.SongList("Кино"), commonViewModel.appStateFlow.value.currentScreenVariant)
+        commonViewModel.submitAction(SelectScreen(ScreenVariant.CloudSearch(137,true)))
+        assertEquals(ScreenVariant.CloudSearch(137, true), commonViewModel.appStateFlow.value.currentScreenVariant)
+        commonViewModel.submitAction(Back(true))
+        waitForCondition {
+            commonViewModel.appStateFlow.value.currentScreenVariant is ScreenVariant.SongList
+        }
+        assertEquals(ScreenVariant.SongList("Кино", isBackFromSomeScreen = true), commonViewModel.appStateFlow.value.currentScreenVariant)
+    }
+
+    @Test
+    fun test003_selectScreen_CloudSongText_withBackPressing_isWorkingCorrect() {
+        commonViewModel.submitAction(SelectScreen(ScreenVariant.CloudSearch(128,false)))
+        assertEquals(ScreenVariant.CloudSearch(128,false), commonViewModel.appStateFlow.value.currentScreenVariant)
+        commonViewModel.submitAction(SelectScreen(ScreenVariant.CloudSongText(13)))
+        assertEquals(ScreenVariant.CloudSongText(13), commonViewModel.appStateFlow.value.currentScreenVariant)
+        commonViewModel.submitAction(Back(true))
+        waitForCondition {
+            commonViewModel.appStateFlow.value.currentScreenVariant is ScreenVariant.CloudSearch
+        }
+        assertEquals(ScreenVariant.CloudSearch(128,true), commonViewModel.appStateFlow.value.currentScreenVariant)
+    }
+
+    @Test
+    fun test020_toasts_isWorkingCorrect() {
         commonViewModel.submitEffect(ShowToastWithResource(137))
         commonViewModel.submitEffect(ShowToastWithText("Hello, world!"))
 
@@ -120,10 +186,19 @@ open class CommonViewModelTest {
     }
 
     @Test
-    fun test005_setAppWasUpdated_isWorkingCorrect() {
+    fun test030_setAppWasUpdated_isWorkingCorrect() {
         commonViewModel.submitAction(AppWasUpdated(true))
         assertEquals(commonViewModel.appStateFlow.value.appWasUpdated, true)
         commonViewModel.submitAction(AppWasUpdated(false))
         assertEquals(commonViewModel.appStateFlow.value.appWasUpdated, false)
     }
+}
+
+fun waitForCondition(condition: () -> Boolean) {
+    var counter = 0
+    while (!condition() && counter < 1000) {
+        TimeUnit.MILLISECONDS.sleep(10)
+        counter++
+    }
+    assertTrue(condition())
 }
