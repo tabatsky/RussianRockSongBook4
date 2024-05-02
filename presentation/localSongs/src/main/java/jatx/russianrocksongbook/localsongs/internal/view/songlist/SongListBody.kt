@@ -41,9 +41,10 @@ internal fun SongListBody(
 
     val theme = LocalAppTheme.current
 
-    val localState by localViewModel.localState.collectAsState()
+    val localState by localViewModel.localStateFlow.collectAsState()
+    val appState by localViewModel.appStateFlow.collectAsState()
 
-    val currentArtist = localState.currentArtist
+    val currentArtist = appState.currentArtist
     val songList = localState.currentSongList
 
     val scrollPosition = localState.songListScrollPosition

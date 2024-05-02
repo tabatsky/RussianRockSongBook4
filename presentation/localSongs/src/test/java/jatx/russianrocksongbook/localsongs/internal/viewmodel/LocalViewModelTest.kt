@@ -71,7 +71,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
     @Before
     fun initLocal() {
-        localStateHolder = LocalStateHolder(commonStateHolder)
+        localStateHolder = LocalStateHolder(appStateHolder)
         localViewModelDeps = LocalViewModelDeps(
             commonViewModelDeps = commonViewModelDeps,
             getSongsByArtistUseCase = getSongsByArtistUseCase,

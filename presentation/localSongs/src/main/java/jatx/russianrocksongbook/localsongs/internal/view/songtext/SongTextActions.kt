@@ -22,7 +22,7 @@ internal fun SongTextActions(
 ) {
     val localViewModel = LocalViewModel.getInstance()
 
-    val localState by localViewModel.localState.collectAsState()
+    val localState by localViewModel.localStateFlow.collectAsState()
 
     if (localState.isAutoPlayMode) {
         val onPauseClick = {

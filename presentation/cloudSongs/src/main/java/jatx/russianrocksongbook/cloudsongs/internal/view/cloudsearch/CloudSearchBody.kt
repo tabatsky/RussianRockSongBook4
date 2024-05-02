@@ -44,7 +44,7 @@ internal fun CloudSearchBody(
     val cloudViewModel = CloudViewModel.getInstance()
     val theme = LocalAppTheme.current
 
-    val cloudState by cloudViewModel.cloudState.collectAsState()
+    val cloudState by cloudViewModel.cloudStateFlow.collectAsState()
 
     val searchState = cloudState.searchState
 

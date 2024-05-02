@@ -1,6 +1,6 @@
 package jatx.russianrocksongbook.cloudsongs.internal.viewmodel
 
-import jatx.russianrocksongbook.commonviewmodel.CommonStateHolder
+import jatx.russianrocksongbook.commonviewmodel.AppStateHolder
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
@@ -8,11 +8,11 @@ import javax.inject.Singleton
 
 @Singleton
 class CloudStateHolder @Inject constructor(
-    val commonStateHolder: CommonStateHolder
+    val appStateHolder: AppStateHolder
 ) {
-    val cloudState = MutableStateFlow(CloudState.initial())
+    val cloudStateFlow = MutableStateFlow(CloudState.initial())
 
     fun reset() {
-        cloudState.update { CloudState.initial() }
+        cloudStateFlow.update { CloudState.initial() }
     }
 }

@@ -33,7 +33,7 @@ class VoiceCommandViewModelTest: LocalViewModelTest() {
 
     @Before
     fun initVoiceCommand() {
-        localStateHolder = LocalStateHolder(commonStateHolder)
+        localStateHolder = LocalStateHolder(appStateHolder)
         voiceCommandViewModelDeps = VoiceCommandViewModelDeps(
             localViewModelDeps = localViewModelDeps,
             getArtistsAsListUseCase = getArtistsAsListUseCase,

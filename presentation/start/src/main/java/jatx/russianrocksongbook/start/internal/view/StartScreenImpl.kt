@@ -30,7 +30,7 @@ internal fun StartScreenImpl() {
 
     val theme = LocalAppTheme.current
 
-    val startState by startViewModel.startState.collectAsState()
+    val startState by startViewModel.startStateFlow.collectAsState()
 
     val currentProgress = startState.stubCurrentProgress
     val totalProgress = startState.stubTotalProgress

@@ -36,7 +36,7 @@ internal fun AddSongScreenImpl() {
         }
     }
 
-    val addSongState by addSongViewModel.addSongState.collectAsState()
+    val addSongState by addSongViewModel.addSongStateFlow.collectAsState()
     val showUploadDialog = addSongState.showUploadDialogForSong
 
     val theme = addSongViewModel.theme.collectAsState().value

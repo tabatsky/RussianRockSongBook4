@@ -52,7 +52,7 @@ open class CommonViewModelTest {
     lateinit var commonViewModelDeps: CommonViewModelDeps
 
     @InjectMockKs
-    lateinit var commonStateHolder: CommonStateHolder
+    lateinit var appStateHolder: AppStateHolder
 
     private lateinit var commonViewModel: CommonViewModel
 
@@ -74,7 +74,7 @@ open class CommonViewModelTest {
         every { toasts.showToast(anyInt()) } just runs
         every { toasts.showToast(anyString()) } just runs
 
-        val _commonViewModel = CommonViewModel(commonStateHolder, commonViewModelDeps)
+        val _commonViewModel = CommonViewModel(appStateHolder, commonViewModelDeps)
         _commonViewModel.launchJobsIfNecessary()
         commonViewModel = spyk(_commonViewModel)
 
@@ -83,12 +83,12 @@ open class CommonViewModelTest {
             val action = actionSlot.captured
             when (action) {
                 is SelectScreen -> {
-                    commonStateHolder.commonState.update {
+                    appStateHolder.commonState.update {
                         it.copy(currentScreenVariant = action.screenVariant)
                     }
                 }
                 is AppWasUpdated -> {
-                    commonStateHolder.commonState.update {
+                    appStateHolder.commonState.update {
                         it.copy(appWasUpdated = action.wasUpdated)
                     }
                 }

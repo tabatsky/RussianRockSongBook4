@@ -36,8 +36,9 @@ internal fun SongListMenuBody(
 
     val theme = LocalAppTheme.current
 
-    val localState by localViewModel.localState.collectAsState()
-    val artistList = localState.artistList
+    val localState by localViewModel.localStateFlow.collectAsState()
+    val appState by localViewModel.appStateFlow.collectAsState()
+    val artistList = appState.artistList
 
     val predefinedWithGroups = artistList.predefinedArtistsWithGroups()
 

@@ -31,8 +31,8 @@ internal fun WhatsNewDialogImpl() {
     val fontSizeTitleSp = dimensionResource(id = R.dimen.text_size_20)
         .toScaledSp(ScalePow.TEXT)
 
-    val commonState by commonViewModel.commonState.collectAsState()
-    val appWasUpdated = commonState.appWasUpdated
+    val appState by commonViewModel.appStateFlow.collectAsState()
+    val appWasUpdated = appState.appWasUpdated
     val onDismiss = {
         commonViewModel.submitAction(AppWasUpdated(false))
     }

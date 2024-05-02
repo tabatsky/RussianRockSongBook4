@@ -1,15 +1,15 @@
 package jatx.russianrocksongbook.start.internal.viewmodel
 
 import dagger.hilt.android.scopes.ActivityRetainedScoped
-import jatx.russianrocksongbook.commonviewmodel.CommonStateHolder
+import jatx.russianrocksongbook.commonviewmodel.AppStateHolder
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 @ActivityRetainedScoped
 internal class StartStateHolder @Inject constructor(
-    val commonStateHolder: CommonStateHolder
+    val appStateHolder: AppStateHolder
 ) {
-    val startState = MutableStateFlow(
+    val startStateFlow = MutableStateFlow(
         StartState.initial()
     )
 }

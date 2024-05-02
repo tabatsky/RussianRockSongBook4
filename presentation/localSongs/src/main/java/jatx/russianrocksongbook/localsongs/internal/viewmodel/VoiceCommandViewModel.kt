@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VoiceCommandViewModel @Inject constructor(
-    private val localStateHolder: LocalStateHolder,
+    localStateHolder: LocalStateHolder,
     voiceCommandViewModelDeps: VoiceCommandViewModelDeps
 ): LocalViewModel(
     localStateHolder,
@@ -78,7 +78,8 @@ class VoiceCommandViewModel @Inject constructor(
             if (songList.isEmpty()) {
                 showToast(R.string.toast_song_not_found)
             } else {
-                val currentArtist = localStateHolder.localState.value.currentArtist
+                val currentArtist = appStateFlow
+                    .value.currentArtist
                 val currentIndex = songList
                     .indexOfFirst { it.artist.voiceFilter() == currentArtist.voiceFilter() }
                 val index = if (currentIndex < 0) 0 else currentIndex

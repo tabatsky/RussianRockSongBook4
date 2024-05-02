@@ -23,7 +23,7 @@ internal class AddArtistViewModel @Inject constructor(
     private val addArtistStateHolder: AddArtistStateHolder,
     addArtistViewModelDeps: AddArtistViewModelDeps
 ): CommonViewModel(
-    addArtistStateHolder.commonStateHolder,
+    addArtistStateHolder.appStateHolder,
     addArtistViewModelDeps.commonViewModelDeps
 ) {
     private val insertReplaceUserSongsUseCase =
@@ -33,8 +33,8 @@ internal class AddArtistViewModel @Inject constructor(
     private val fileSystemAdapter =
         addArtistViewModelDeps.fileSystemRepository
 
-    val addArtistState = addArtistStateHolder
-        .addArtistState.asStateFlow()
+    val addArtistStateFlow = addArtistStateHolder
+        .addArtistStateFlow.asStateFlow()
 
     private var uploadListDisposable: Disposable? = null
 
@@ -66,7 +66,7 @@ internal class AddArtistViewModel @Inject constructor(
     }
 
     private fun showUploadOfferForDir(artist: String, songs: List<Song>) {
-        addArtistStateHolder.addArtistState.update {
+        addArtistStateHolder.addArtistStateFlow.update {
             it.copy(
                 showUploadDialogForDir = true,
                 newArtist = artist,
@@ -76,7 +76,7 @@ internal class AddArtistViewModel @Inject constructor(
     }
 
     private fun hideUploadOfferForDir() {
-        addArtistStateHolder.addArtistState.update {
+        addArtistStateHolder.addArtistStateFlow.update {
             it.copy(showUploadDialogForDir = false)
         }
     }
@@ -86,7 +86,7 @@ internal class AddArtistViewModel @Inject constructor(
             if (!it.isDisposed) it.dispose()
         }
         uploadListDisposable = addSongListToCloudUseCase
-            .execute(addArtistState.value.uploadSongList)
+            .execute(addArtistStateFlow.value.uploadSongList)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ result ->
@@ -98,7 +98,7 @@ internal class AddArtistViewModel @Inject constructor(
                                 it.success, it.duplicate, it.error
                             )
                             showToast(toastText)
-                            callbacks.onArtistSelected(addArtistState.value.newArtist)
+                            callbacks.onArtistSelected(addArtistStateFlow.value.newArtist)
                         }
                     }
                     STATUS_ERROR -> showToast(result.message ?: "")

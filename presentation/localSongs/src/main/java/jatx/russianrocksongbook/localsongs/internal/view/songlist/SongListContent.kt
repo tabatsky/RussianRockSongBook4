@@ -31,9 +31,9 @@ internal fun SongListContent(
 
     val theme = LocalAppTheme.current
 
-    val localState by localViewModel.localState.collectAsState()
+    val appState by localViewModel.appStateFlow.collectAsState()
 
-    val artist = localState.currentArtist
+    val artist = appState.currentArtist
 
     BoxWithConstraints(
         modifier = Modifier

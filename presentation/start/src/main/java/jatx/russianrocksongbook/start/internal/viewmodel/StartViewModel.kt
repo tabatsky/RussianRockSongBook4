@@ -20,14 +20,14 @@ internal class StartViewModel @Inject constructor(
     private val startStateHolder: StartStateHolder,
     startViewModelDeps: StartViewModelDeps
 ): CommonViewModel(
-    startStateHolder.commonStateHolder,
+    startStateHolder.appStateHolder,
     startViewModelDeps.commonViewModelDeps
 ) {
     private val localRepoInitializer =
         startViewModelDeps.localRepoInitializer
 
-    val startState = startStateHolder
-        .startState.asStateFlow()
+    val startStateFlow = startStateHolder
+        .startStateFlow.asStateFlow()
 
     val needShowStartScreen = settings.appWasUpdated
 
@@ -83,7 +83,7 @@ internal class StartViewModel @Inject constructor(
     }
 
     private fun updateStubProgress(current: Int, total: Int) {
-        startStateHolder.startState.update {
+        startStateHolder.startStateFlow.update {
             it.copy(stubCurrentProgress = current, stubTotalProgress = total)
         }
     }

@@ -1,11 +1,9 @@
 package jatx.russianrocksongbook.localsongs.internal.viewmodel
 
-import jatx.russianrocksongbook.commonviewmodel.CommonState
+import jatx.russianrocksongbook.commonviewmodel.CustomState
 import jatx.russianrocksongbook.domain.models.local.Song
-import jatx.russianrocksongbook.navigation.ScreenVariant
 
 data class LocalState(
-    val commonState: CommonState,
     val currentSongCount: Int,
     val currentSongList: List<Song>,
     val currentSongPosition: Int,
@@ -17,10 +15,12 @@ data class LocalState(
     val menuExpandedArtistGroup: String,
     val songListScrollPosition: Int,
     val songListNeedScroll: Boolean
-) {
+): CustomState {
+
+    override fun toString() = "$currentSongCount ${currentSongList.size} $currentSongPosition ${currentSong?.title}"
+
     companion object {
-        fun initial(commonState: CommonState) = LocalState(
-            commonState = commonState,
+        fun initial() = LocalState(
             currentSongCount = 0,
             currentSongList = listOf(),
             currentSongPosition = 0,
@@ -34,13 +34,4 @@ data class LocalState(
             songListNeedScroll = false
         )
     }
-
-    val currentArtist: String
-        get() = commonState.currentArtist
-
-    val artistList: List<String>
-        get() = commonState.artistList
-
-    val currentScreenVariant: ScreenVariant
-        get() = commonState.currentScreenVariant
 }
