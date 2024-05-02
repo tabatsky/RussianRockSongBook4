@@ -81,25 +81,17 @@ open class CommonViewModelTest {
         val actionSlot = slot<UIAction>()
         every { commonViewModel.submitAction(capture(actionSlot)) } answers {
             val action = actionSlot.captured
+            val appState = appStateHolder.appStateFlow.value
             when (action) {
                 is SelectScreen -> {
-                    appStateHolder.commonState.update {
-                        it.copy(currentScreenVariant = action.screenVariant)
-                    }
+                    val newState = appState.copy(currentScreenVariant = action.screenVariant)
+                    appStateHolder.changeAppState(newState)
                 }
                 is AppWasUpdated -> {
-                    appStateHolder.commonState.update {
-                        it.copy(appWasUpdated = action.wasUpdated)
-                    }
+                    val newState = appState.copy(appWasUpdated = action.wasUpdated)
+                    appStateHolder.changeAppState(newState)
                 }
             }
-        }
-
-        verifySequence {
-            settingsRepository.defaultArtist
-            settingsRepository.theme
-            settingsRepository.fontScaler
-            tvDetector.isTV
         }
     }
 
@@ -111,10 +103,9 @@ open class CommonViewModelTest {
     @Test
     fun test003_selectScreen_CloudSearch_isWorkingCorrect() {
         commonViewModel.submitAction(SelectScreen(ScreenVariant.CloudSearch(128, false)))
-        assertEquals(ScreenVariant.CloudSearch(128,false), commonViewModel.commonState.value.currentScreenVariant)
+        assertEquals(ScreenVariant.CloudSearch(128,false), commonViewModel.appStateFlow.value.currentScreenVariant)
         commonViewModel.submitAction(SelectScreen(ScreenVariant.CloudSearch(137,true)))
-        assertEquals(ScreenVariant.CloudSearch(137, true), commonViewModel.commonState.value.currentScreenVariant)
-
+        assertEquals(ScreenVariant.CloudSearch(137, true), commonViewModel.appStateFlow.value.currentScreenVariant)
     }
 
     @Test
@@ -131,8 +122,8 @@ open class CommonViewModelTest {
     @Test
     fun test005_setAppWasUpdated_isWorkingCorrect() {
         commonViewModel.submitAction(AppWasUpdated(true))
-        assertEquals(commonViewModel.commonState.value.appWasUpdated, true)
+        assertEquals(commonViewModel.appStateFlow.value.appWasUpdated, true)
         commonViewModel.submitAction(AppWasUpdated(false))
-        assertEquals(commonViewModel.commonState.value.appWasUpdated, false)
+        assertEquals(commonViewModel.appStateFlow.value.appWasUpdated, false)
     }
 }
