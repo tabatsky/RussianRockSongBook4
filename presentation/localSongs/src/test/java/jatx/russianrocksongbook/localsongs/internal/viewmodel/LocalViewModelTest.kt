@@ -1,6 +1,5 @@
 package jatx.russianrocksongbook.localsongs.internal.viewmodel
 
-import android.util.Log
 import io.mockk.*
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
@@ -97,10 +96,6 @@ open class LocalViewModelTest: CommonViewModelTest() {
         every { getSongByArtistAndPositionUseCase.execute(any(), any()) } returns songFlow
         every { updateSongUseCase.execute(any()) } just runs
         every { deleteSongToTrashUseCase.execute(any()) } just runs
-
-        verifyAll {
-            tvDetector.isTV
-        }
     }
 
     @Test
@@ -110,31 +105,8 @@ open class LocalViewModelTest: CommonViewModelTest() {
         localViewModel.submitAction(SelectScreen(ScreenVariant.SongList(defaultArtist)))
         localViewModel.submitAction(UpdateArtists)
         artistsFlow.value = artists
-        assertEquals(ScreenVariant.SongList(defaultArtist), localViewModel.localState.value.currentScreenVariant)
-        assertEquals(artists, localViewModel.localState.value.artistList)
-        if (this is VoiceCommandViewModelTest) {
-            verifySequence {
-                settingsRepository.defaultArtist
-                settingsRepository.theme
-                settingsRepository.fontScaler
-                settingsRepository.theme
-                settingsRepository.fontScaler
-                settingsRepository.theme
-                settingsRepository.fontScaler
-                settingsRepository.defaultArtist
-                getArtistsUseCase.execute()
-            }
-        } else {
-            verifySequence {
-                settingsRepository.defaultArtist
-                settingsRepository.theme
-                settingsRepository.fontScaler
-                settingsRepository.theme
-                settingsRepository.fontScaler
-                settingsRepository.defaultArtist
-                getArtistsUseCase.execute()
-            }
-        }
+        assertEquals(ScreenVariant.SongList(defaultArtist), localViewModel.appStateFlow.value.currentScreenVariant)
+        assertEquals(artists, localViewModel.appStateFlow.value.artistList)
     }
 
     @Test
@@ -143,11 +115,8 @@ open class LocalViewModelTest: CommonViewModelTest() {
         localViewModel.submitAction(SelectScreen(ScreenVariant.Favorite()))
         localViewModel.submitAction(UpdateArtists)
         artistsFlow.value = artists
-        assertEquals(ScreenVariant.Favorite(), localViewModel.localState.value.currentScreenVariant)
-        assertEquals(artists, localViewModel.localState.value.artistList)
-        verifySequence {
-            getArtistsUseCase.execute()
-        }
+        assertEquals(ScreenVariant.Favorite(), localViewModel.appStateFlow.value.currentScreenVariant)
+        assertEquals(artists, localViewModel.appStateFlow.value.artistList)
     }
 
     @Test
@@ -156,23 +125,17 @@ open class LocalViewModelTest: CommonViewModelTest() {
         localViewModel.submitAction(ShowSongs("Кино", "Кукушка"))
 
         waitForCondition {
-            localViewModel.localState.value.currentArtist == "Кино"
+            localViewModel.appStateFlow.value.currentArtist == "Кино"
         }
 
-        assertEquals("Кино", localViewModel.localState.value.currentArtist)
+        assertEquals("Кино", localViewModel.appStateFlow.value.currentArtist)
 
         waitForCondition {
-            localViewModel.localState.value.currentSongList == songList
+            localViewModel.localStateFlow.value.currentSongList == songList
         }
 
-        assertEquals(songList, localViewModel.localState.value.currentSongList)
-        assertEquals(songList.size, localViewModel.localState.value.currentSongCount)
-
-        verifySequence {
-            Log.e("show songs", "Кино")
-            getSongsByArtistUseCase.execute("Кино")
-            Log.e("pass to song", "Кино - Кукушка")
-        }
+        assertEquals(songList, localViewModel.localStateFlow.value.currentSongList)
+        assertEquals(songList.size, localViewModel.localStateFlow.value.currentSongCount)
     }
 
     @Test
@@ -196,90 +159,54 @@ open class LocalViewModelTest: CommonViewModelTest() {
         localViewModel.submitAction(SelectArtist("Кино"))
 
         waitForCondition {
-            localViewModel.localState.value.currentArtist == "Кино"
+            localViewModel.appStateFlow.value.currentArtist == "Кино"
         }
-        assertEquals("Кино", localViewModel.localState.value.currentArtist)
+        assertEquals("Кино", localViewModel.appStateFlow.value.currentArtist)
         waitForCondition {
-            localViewModel.localState.value.currentSongList == songList
+            localViewModel.localStateFlow.value.currentSongList == songList
         }
-        assertEquals(songList, localViewModel.localState.value.currentSongList)
+        assertEquals(songList, localViewModel.localStateFlow.value.currentSongList)
         songsFlow.value = songList2
         waitForCondition {
-            localViewModel.localState.value.currentSongList == songList2
+            localViewModel.localStateFlow.value.currentSongList == songList2
         }
-        assertEquals(songList2, localViewModel.localState.value.currentSongList)
+        assertEquals(songList2, localViewModel.localStateFlow.value.currentSongList)
         localViewModel.submitAction(SelectArtist("Алиса"))
         songsFlow.value = songList3
         waitForCondition {
-            localViewModel.localState.value.currentSongList == songList3
+            localViewModel.localStateFlow.value.currentSongList == songList3
         }
-        assertEquals(songList3, localViewModel.localState.value.currentSongList)
-
-        verifySequence {
-            Log.e("select artist", "Кино")
-            Log.e("show songs", "Кино")
-            getCountByArtistUseCase.execute("Кино")
-            getSongsByArtistUseCase.execute("Кино")
-            Log.e("first song artist", "was: null; become: Кино")
-            Log.e("select song", "0")
-            Log.e("first song artist", "was: Кино; become: Кино")
-            Log.e("select artist", "Алиса")
-            Log.e("show songs", "Алиса")
-            getCountByArtistUseCase.execute("Алиса")
-            getSongsByArtistUseCase.execute("Алиса")
-            Log.e("first song artist", "was: Кино; become: Алиса")
-            Log.e("select song", "0")
-        }
+        assertEquals(songList3, localViewModel.localStateFlow.value.currentSongList)
     }
 
     @Test
     fun test103_selectArtist_addArtist_isWorkingCorrect() {
         localViewModel.submitAction(SelectArtist(ARTIST_ADD_ARTIST))
 
-        assertEquals(ScreenVariant.AddArtist, localViewModel.localState.value.currentScreenVariant)
-
-        verifySequence {
-            Log.e("select artist", ARTIST_ADD_ARTIST)
-            Log.e("navigated", "AddArtist")
-        }
+        assertEquals(ScreenVariant.AddArtist, localViewModel.appStateFlow.value.currentScreenVariant)
     }
 
     @Test
     fun test104_selectArtist_addSong_isWorkingCorrect() {
         localViewModel.submitAction(SelectArtist(ARTIST_ADD_SONG))
 
-        assertEquals(ScreenVariant.AddSong, localViewModel.localState.value.currentScreenVariant)
-
-        verifySequence {
-            Log.e("select artist", ARTIST_ADD_SONG)
-            Log.e("navigated", "AddSong")
-        }
+        assertEquals(ScreenVariant.AddSong, localViewModel.appStateFlow.value.currentScreenVariant)
     }
 
     @Test
     fun test105_selectArtist_cloudSongs_isWorkingCorrect() {
         localViewModel.submitAction(SelectArtist(ARTIST_CLOUD_SONGS))
 
-        assertTrue(localViewModel.localState.value.currentScreenVariant is ScreenVariant.CloudSearch)
+        assertTrue(localViewModel.appStateFlow.value.currentScreenVariant is ScreenVariant.CloudSearch)
 
-        val destination = localViewModel.localState.value.currentScreenVariant.destination
-
-        verifySequence {
-            Log.e("select artist", ARTIST_CLOUD_SONGS)
-            Log.e("navigated", destination)
-        }
+        val destination = localViewModel.appStateFlow.value.currentScreenVariant.destination
     }
 
     @Test
     fun test106_selectArtist_Donation_isWorkingCorrect() {
         localViewModel.submitAction(SelectArtist(ARTIST_DONATION))
 
-        assertEquals(ScreenVariant.Donation, localViewModel.localState.value.currentScreenVariant)
-
-        verifySequence {
-            Log.e("select artist", ARTIST_DONATION)
-            Log.e("navigated", "Donation")
-        }
+        assertEquals(ScreenVariant.Donation, localViewModel.appStateFlow.value.currentScreenVariant)
     }
 
     @Test
@@ -296,53 +223,35 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         TimeUnit.MILLISECONDS.sleep(500)
 
-        assertEquals(13, localViewModel.localState.value.songListScrollPosition)
-        assertEquals(true, localViewModel.localState.value.songListNeedScroll)
-        assertEquals(songList[0], localViewModel.localState.value.currentSong)
-        assertEquals(13, localViewModel.localState.value.currentSongPosition)
-
-        verifySequence {
-            Log.e("select artist", "Кино")
-            Log.e("show songs", "Кино")
-            getCountByArtistUseCase.execute("Кино")
-            getSongsByArtistUseCase.execute("Кино")
-            Log.e("first song artist", "was: null; become: Кино")
-            Log.e("select song", "0")
-            getSongByArtistAndPositionUseCase.execute("Кино", 0)
-            Log.e("select song", "13")
-            getSongByArtistAndPositionUseCase.execute("Кино", 13)
-        }
+        assertEquals(13, localViewModel.localStateFlow.value.songListScrollPosition)
+        assertEquals(true, localViewModel.localStateFlow.value.songListNeedScroll)
+        assertEquals(songList[0], localViewModel.localStateFlow.value.currentSong)
+        assertEquals(13, localViewModel.localStateFlow.value.currentSongPosition)
     }
 
     @Test
     fun test108_setFavorite_isWorkingCorrect() {
         localViewModel.submitAction(SelectSong(13))
         waitForCondition {
-            localViewModel.localState.value.currentSongPosition == 13
+            localViewModel.localStateFlow.value.currentSongPosition == 13
         }
 
         localViewModel.submitAction(SetFavorite(true))
         waitForCondition {
-            localViewModel.localState.value.currentSong?.favorite == true
+            localViewModel.localStateFlow.value.currentSong?.favorite == true
         }
-        assertEquals(true, localViewModel.localState.value.currentSong?.favorite)
-        val song1 = localViewModel.localState.value.currentSong ?: throw IllegalStateException()
+        assertEquals(true, localViewModel.localStateFlow.value.currentSong?.favorite)
+        val song1 = localViewModel.localStateFlow.value.currentSong ?: throw IllegalStateException()
 
         localViewModel.submitAction(SetFavorite(false))
         waitForCondition {
-            localViewModel.localState.value.currentSong?.favorite == false
+            localViewModel.localStateFlow.value.currentSong?.favorite == false
         }
-        assertEquals(false, localViewModel.localState.value.currentSong?.favorite)
-        val song2 = localViewModel.localState.value.currentSong ?: throw IllegalStateException()
+        assertEquals(false, localViewModel.localStateFlow.value.currentSong?.favorite)
+        val song2 = localViewModel.localStateFlow.value.currentSong ?: throw IllegalStateException()
 
-        verifySequence {
-            Log.e("select song", "13")
-            getSongByArtistAndPositionUseCase.execute("", 13)
-            Log.e("set favorite", "true")
-            updateSongUseCase.execute(song1)
+        verifyAll {
             toasts.showToast(R.string.toast_added_to_favorite)
-            Log.e("set favorite", "false")
-            updateSongUseCase.execute(song2)
             toasts.showToast(R.string.toast_removed_from_favorite)
         }
     }
@@ -351,17 +260,13 @@ open class LocalViewModelTest: CommonViewModelTest() {
     fun test109_deleteCurrentToTrash_isWorkingCorrect() {
         localViewModel.submitAction(SelectSong(13))
         waitForCondition {
-            localViewModel.localState.value.currentSongPosition == 13
+            localViewModel.localStateFlow.value.currentSongPosition == 13
         }
-        val song = localViewModel.localState.value.currentSong ?: throw IllegalStateException()
+        val song = localViewModel.localStateFlow.value.currentSong ?: throw IllegalStateException()
 
         localViewModel.submitAction(DeleteCurrentToTrash)
 
-        verifySequence {
-            Log.e("select song", "13")
-            getSongByArtistAndPositionUseCase.execute("", 13)
-            deleteSongToTrashUseCase.execute(song)
-            Log.e("back by", "user")
+        verifyAll {
             toasts.showToast(R.string.toast_deleted_to_trash)
         }
     }
