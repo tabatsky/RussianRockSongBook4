@@ -352,10 +352,6 @@ open class CommonViewModel @Inject constructor(
 
     protected fun changeAppState(appState: AppState) = appStateHolder.changeAppState(appState)
 
-    protected fun changeCustomState(key: String, customState: CustomState) =
-        appStateHolder.changeCustomState(key, customState)
-
-
     protected fun showToast(toastText: String) = toasts.showToast(toastText)
 
     protected fun showToast(@StringRes resId: Int) = toasts.showToast(resId)

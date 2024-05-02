@@ -14,13 +14,6 @@ data class AppState(
     val customStateMap: Map<String, CustomState>
 ) {
 
-    fun changeCustomState(key: String, customState: CustomState): AppState {
-        val hashMap = hashMapOf<String, CustomState>()
-        hashMap.putAll(this.customStateMap)
-        hashMap[key] = customState
-        return this.copy(customStateMap = hashMap)
-    }
-
     companion object {
         fun initial(defaultArtist: String) = AppState(
             currentScreenVariant = ScreenVariant.Start,

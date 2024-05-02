@@ -14,16 +14,12 @@ class AppStateHolder @Inject constructor(
 
     val appStateFlow = _appStateFlow.asStateFlow()
 
-    fun reset() {
-        _appStateFlow.value = AppState.initial(settingsRepository.defaultArtist)
-    }
-
     fun changeAppState(appState: AppState) {
         _appStateFlow.value = appState
     }
 
-    fun changeCustomState(key: String, customState: CustomState) {
-        _appStateFlow.value =
-            _appStateFlow.value.changeCustomState(key, customState)
+    fun reset() {
+        val appState = AppState.initial(settingsRepository.defaultArtist)
+        changeAppState(appState)
     }
 }
