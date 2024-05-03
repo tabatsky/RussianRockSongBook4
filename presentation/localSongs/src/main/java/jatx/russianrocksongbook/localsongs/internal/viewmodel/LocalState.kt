@@ -1,6 +1,5 @@
 package jatx.russianrocksongbook.localsongs.internal.viewmodel
 
-import jatx.russianrocksongbook.commonviewmodel.CustomState
 import jatx.russianrocksongbook.domain.models.local.Song
 
 data class LocalState(
@@ -15,7 +14,7 @@ data class LocalState(
     val menuExpandedArtistGroup: String,
     val songListScrollPosition: Int,
     val songListNeedScroll: Boolean
-): CustomState {
+) {
 
     override fun toString() = "$currentSongCount ${currentSongList.size} $currentSongPosition ${currentSong?.title}"
 
