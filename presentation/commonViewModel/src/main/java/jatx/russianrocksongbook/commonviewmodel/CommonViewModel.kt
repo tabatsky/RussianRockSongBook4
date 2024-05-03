@@ -320,13 +320,13 @@ open class CommonViewModel @Inject constructor(
             return
         }
 
-        updateCurrentScreenAtAppState(newScreenVariant)
+        changeCurrentScreenVariant(newScreenVariant)
         AppNavigator.navigate(newScreenVariant)
 
         Log.e("navigated", newScreenVariant.destination)
     }
 
-    private fun updateCurrentScreenAtAppState(screenVariant: ScreenVariant) {
+    private fun changeCurrentScreenVariant(screenVariant: ScreenVariant) {
         val appState = appStateFlow.value
         val previousScreenVariant = appState.currentScreenVariant
         val newState = if (screenVariant is ScreenVariant.CloudSearch) {

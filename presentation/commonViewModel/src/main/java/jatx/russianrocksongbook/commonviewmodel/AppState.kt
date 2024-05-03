@@ -2,16 +2,13 @@ package jatx.russianrocksongbook.commonviewmodel
 
 import jatx.russianrocksongbook.navigation.ScreenVariant
 
-interface CustomState
-
 data class AppState(
     val currentScreenVariant: ScreenVariant,
     val previousScreenVariant: ScreenVariant? = null,
     val currentArtist: String,
     val appWasUpdated: Boolean,
     val artistList: List<String>,
-    val lastRandomKey: Int,
-    val customStateMap: Map<String, CustomState>
+    val lastRandomKey: Int
 ) {
 
     companion object {
@@ -20,8 +17,7 @@ data class AppState(
             currentArtist = defaultArtist,
             appWasUpdated = false,
             artistList = listOf(),
-            lastRandomKey = 0,
-            customStateMap = hashMapOf()
+            lastRandomKey = 0
         )
     }
 }

@@ -12,6 +12,9 @@ import jatx.russianrocksongbook.domain.usecase.cloud.AddSongToCloudUseCase
 import jatx.russianrocksongbook.domain.usecase.local.*
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModelTest
+import jatx.russianrocksongbook.commonviewmodel.OpenVkMusic
+import jatx.russianrocksongbook.commonviewmodel.OpenYandexMusic
+import jatx.russianrocksongbook.commonviewmodel.OpenYoutubeMusic
 import jatx.russianrocksongbook.commonviewmodel.SelectScreen
 import jatx.russianrocksongbook.commonviewmodel.ShowSongs
 import jatx.russianrocksongbook.commonviewmodel.waitForCondition
@@ -268,7 +271,59 @@ open class LocalViewModelTest: CommonViewModelTest() {
         localViewModel.submitAction(DeleteCurrentToTrash)
 
         verifyAll {
+            deleteSongToTrashUseCase.execute(song)
             toasts.showToast(R.string.toast_deleted_to_trash)
+        }
+    }
+
+    @Test
+    fun test110_openingYandexMusic_isWorkingCorrect() {
+        localViewModel.submitAction(SelectSong(2))
+
+        waitForCondition {
+            localViewModel.localStateFlow.value.currentSongPosition == 2
+        }
+        val song = localViewModel.localStateFlow.value.currentSong ?: throw IllegalStateException()
+        val searchFor = song.searchFor
+
+        localViewModel.submitAction(OpenYandexMusic(true))
+
+        verifyAll {
+            callbacks.onOpenYandexMusic(searchFor)
+        }
+    }
+
+    @Test
+    fun test111_openingYoutubeMusic_isWorkingCorrect() {
+        localViewModel.submitAction(SelectSong(2))
+
+        waitForCondition {
+            localViewModel.localStateFlow.value.currentSongPosition == 2
+        }
+        val song = localViewModel.localStateFlow.value.currentSong ?: throw IllegalStateException()
+        val searchFor = song.searchFor
+
+        localViewModel.submitAction(OpenYoutubeMusic(true))
+
+        verifyAll {
+            callbacks.onOpenYoutubeMusic(searchFor)
+        }
+    }
+
+    @Test
+    fun test112_openingVkMusic_isWorkingCorrect() {
+        localViewModel.submitAction(SelectSong(2))
+
+        waitForCondition {
+            localViewModel.localStateFlow.value.currentSongPosition == 2
+        }
+        val song = localViewModel.localStateFlow.value.currentSong ?: throw IllegalStateException()
+        val searchFor = song.searchFor
+
+        localViewModel.submitAction(OpenVkMusic(true))
+
+        verifyAll {
+            callbacks.onOpenVkMusic(searchFor)
         }
     }
 }
