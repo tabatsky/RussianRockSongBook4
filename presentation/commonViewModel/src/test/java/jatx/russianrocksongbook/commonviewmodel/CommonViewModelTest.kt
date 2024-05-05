@@ -1,22 +1,23 @@
 package jatx.russianrocksongbook.commonviewmodel
 
 import android.util.Log
-import androidx.navigation.NavController
 import io.mockk.*
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit4.MockKRule
 import io.mockk.junit5.MockKExtension
+import io.reactivex.Single
 import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
 import jatx.russianrocksongbook.testutils.TestViewModelScopeRule
 import jatx.russianrocksongbook.commonviewmodel.deps.Callbacks
 import jatx.russianrocksongbook.commonviewmodel.deps.Resources
 import jatx.russianrocksongbook.commonviewmodel.deps.TVDetector
 import jatx.russianrocksongbook.commonviewmodel.deps.Toasts
+import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithoutData
+import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.domain.usecase.cloud.AddWarningUseCase
 import jatx.russianrocksongbook.navigation.AppNavigator
 import jatx.russianrocksongbook.navigation.ScreenVariant
-import kotlinx.coroutines.flow.update
 import org.junit.*
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -100,6 +101,9 @@ open class CommonViewModelTest {
         every { callbacks.onOpenYoutubeMusic(anyString()) } just runs
         every { callbacks.onOpenVkMusic(anyString()) } just runs
 
+        every { addWarningUseCase.execute(any(), anyString()) } returns
+                Single.just(ResultWithoutData(STATUS_SUCCESS, null))
+
         val _commonViewModel = CommonViewModel(appStateHolder, commonViewModelDeps)
         _commonViewModel.launchJobsIfNecessary()
         commonViewModel = spyk(_commonViewModel)
@@ -142,7 +146,7 @@ open class CommonViewModelTest {
     }
 
     @Test
-    fun test001_selectScreen_CloudSearch_withBackPressing_isWorkingCorrect() {
+    fun test003_selectScreen_CloudSearch_withBackPressing_isWorkingCorrect() {
         commonViewModel.submitAction(SelectScreen(ScreenVariant.SongList("Кино")))
         assertEquals(ScreenVariant.SongList("Кино"), commonViewModel.appStateFlow.value.currentScreenVariant)
         commonViewModel.submitAction(SelectScreen(ScreenVariant.CloudSearch(137,true)))
@@ -155,7 +159,7 @@ open class CommonViewModelTest {
     }
 
     @Test
-    fun test002_selectScreen_CloudSongText_withBackPressing_isWorkingCorrect() {
+    fun test004_selectScreen_CloudSongText_withBackPressing_isWorkingCorrect() {
         commonViewModel.submitAction(SelectScreen(ScreenVariant.CloudSearch(137,false)))
         assertEquals(ScreenVariant.CloudSearch(137,false), commonViewModel.appStateFlow.value.currentScreenVariant)
         commonViewModel.submitAction(SelectScreen(ScreenVariant.CloudSongText(13)))
@@ -168,7 +172,7 @@ open class CommonViewModelTest {
     }
 
     @Test
-    fun test003_selectScreen_SongText_withBackPressing_isWorkingCorrect() {
+    fun test005_selectScreen_SongText_withBackPressing_isWorkingCorrect() {
         commonViewModel.submitAction(SelectScreen(ScreenVariant.SongList("Кино")))
         assertEquals(ScreenVariant.SongList("Кино"), commonViewModel.appStateFlow.value.currentScreenVariant)
         commonViewModel.submitAction(SelectScreen(ScreenVariant.SongText("Кино", 13)))
@@ -181,7 +185,7 @@ open class CommonViewModelTest {
     }
 
     @Test
-    fun test004_selectScreen_Settings_withBackPressing_isWorkingCorrect() {
+    fun test006_selectScreen_Settings_withBackPressing_isWorkingCorrect() {
         commonViewModel.submitAction(SelectScreen(ScreenVariant.SongList("Кино")))
         assertEquals(ScreenVariant.SongList("Кино"), commonViewModel.appStateFlow.value.currentScreenVariant)
         commonViewModel.submitAction(SelectScreen(ScreenVariant.Settings))

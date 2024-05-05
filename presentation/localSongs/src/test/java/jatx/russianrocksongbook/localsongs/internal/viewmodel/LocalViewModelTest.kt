@@ -16,6 +16,7 @@ import jatx.russianrocksongbook.commonviewmodel.OpenVkMusic
 import jatx.russianrocksongbook.commonviewmodel.OpenYandexMusic
 import jatx.russianrocksongbook.commonviewmodel.OpenYoutubeMusic
 import jatx.russianrocksongbook.commonviewmodel.SelectScreen
+import jatx.russianrocksongbook.commonviewmodel.SendWarning
 import jatx.russianrocksongbook.commonviewmodel.ShowSongs
 import jatx.russianrocksongbook.commonviewmodel.waitForCondition
 import jatx.russianrocksongbook.navigation.ScreenVariant
@@ -325,5 +326,69 @@ open class LocalViewModelTest: CommonViewModelTest() {
         verifyAll {
             callbacks.onOpenVkMusic(searchFor)
         }
+    }
+
+    @Test
+    fun test113_sendingWarning_isWorkingCorrect() {
+        localViewModel.submitAction(SelectSong(2))
+
+        waitForCondition {
+            localViewModel.localStateFlow.value.currentSongPosition == 2
+        }
+        val song = localViewModel.localStateFlow.value.currentSong ?: throw IllegalStateException()
+
+        localViewModel.submitAction(SendWarning("some comment"))
+
+        TimeUnit.MILLISECONDS.sleep(500L)
+
+        verifyAll {
+            addWarningUseCase.execute(song, "some comment")
+        }
+    }
+
+    @Test
+    fun test114_nextSong_isWorkingCorrect() {
+        songsFlow.value = songList + songList + songList + songList
+
+        localViewModel.submitAction(SelectArtist("Кино"))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        localViewModel.submitAction(SelectSong(13))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        localViewModel.submitAction(SelectScreen(ScreenVariant.SongText("Кино", 13)))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        localViewModel.submitAction(NextSong)
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        assertEquals(ScreenVariant.SongText("Кино", 14), localViewModel.appStateFlow.value.currentScreenVariant)
+    }
+
+    @Test
+    fun test115_prevSong_isWorkingCorrect() {
+        songsFlow.value = songList + songList + songList + songList
+
+        localViewModel.submitAction(SelectArtist("Кино"))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        localViewModel.submitAction(SelectSong(13))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        localViewModel.submitAction(SelectScreen(ScreenVariant.SongText("Кино", 13)))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        localViewModel.submitAction(PrevSong)
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        assertEquals(ScreenVariant.SongText("Кино", 12), localViewModel.appStateFlow.value.currentScreenVariant)
     }
 }
