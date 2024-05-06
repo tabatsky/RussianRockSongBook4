@@ -235,7 +235,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
     }
 
     @Test
-    fun test108_setFavorite_isWorkingCorrect() {
+    fun test108A_setFavorite_true_isWorkingCorrect() {
         localViewModel.submitAction(SelectSong(13))
         waitForCondition {
             localViewModel.localStateFlow.value.currentSongPosition == 13
@@ -262,7 +262,11 @@ open class LocalViewModelTest: CommonViewModelTest() {
     }
 
     @Test
-    fun test109_deleteCurrentToTrash_isWorkingCorrect() {
+    fun test109A_deleteCurrentToTrash_emptyList_isWorkingCorrect() {
+        songsFlow.value = listOf()
+
+        localViewModel.submitAction(SelectArtist("Кино"))
+
         localViewModel.submitAction(SelectSong(13))
         waitForCondition {
             localViewModel.localStateFlow.value.currentSongPosition == 13
@@ -273,6 +277,53 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         verifyAll {
             deleteSongToTrashUseCase.execute(song)
+            getCountByArtistUseCase.execute("Кино")
+            toasts.showToast(R.string.toast_deleted_to_trash)
+        }
+    }
+
+    @Test
+    fun test109B_deleteCurrentToTrash_notEmptyList_regular_isWorkingCorrect() {
+        songsFlow.value = songList
+
+        localViewModel.submitAction(SelectArtist("Кино"))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        localViewModel.submitAction(SelectSong(2))
+        waitForCondition {
+            localViewModel.localStateFlow.value.currentSongPosition == 2
+        }
+        val song = localViewModel.localStateFlow.value.currentSong ?: throw IllegalStateException()
+
+        localViewModel.submitAction(DeleteCurrentToTrash)
+
+        verifyAll {
+            deleteSongToTrashUseCase.execute(song)
+            getCountByArtistUseCase.execute("Кино")
+            toasts.showToast(R.string.toast_deleted_to_trash)
+        }
+    }
+
+    @Test
+    fun test109C_deleteCurrentToTrash_notEmptyList_last_isWorkingCorrect() {
+        songsFlow.value = songList
+
+        localViewModel.submitAction(SelectArtist("Кино"))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        localViewModel.submitAction(SelectSong(songsFlow.value.size))
+        waitForCondition {
+            localViewModel.localStateFlow.value.currentSongPosition == songsFlow.value.size
+        }
+        val song = localViewModel.localStateFlow.value.currentSong ?: throw IllegalStateException()
+
+        localViewModel.submitAction(DeleteCurrentToTrash)
+
+        verifyAll {
+            deleteSongToTrashUseCase.execute(song)
+            getCountByArtistUseCase.execute("Кино")
             toasts.showToast(R.string.toast_deleted_to_trash)
         }
     }
@@ -347,7 +398,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
     }
 
     @Test
-    fun test114_nextSong_isWorkingCorrect() {
+    fun test114_nextSong_regular_isWorkingCorrect() {
         songsFlow.value = songList + songList + songList + songList
 
         localViewModel.submitAction(SelectArtist("Кино"))
@@ -370,7 +421,30 @@ open class LocalViewModelTest: CommonViewModelTest() {
     }
 
     @Test
-    fun test115_prevSong_isWorkingCorrect() {
+    fun test115_nextSong_last_isWorkingCorrect() {
+        songsFlow.value = songList + songList + songList + songList
+
+        localViewModel.submitAction(SelectArtist("Кино"))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        localViewModel.submitAction(SelectSong(songsFlow.value.size - 1))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        localViewModel.submitAction(SelectScreen(ScreenVariant.SongText("Кино", 13)))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        localViewModel.submitAction(NextSong)
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        assertEquals(ScreenVariant.SongText("Кино", 0), localViewModel.appStateFlow.value.currentScreenVariant)
+    }
+
+    @Test
+    fun test116_prevSong_regular_isWorkingCorrect() {
         songsFlow.value = songList + songList + songList + songList
 
         localViewModel.submitAction(SelectArtist("Кино"))
@@ -390,5 +464,93 @@ open class LocalViewModelTest: CommonViewModelTest() {
         TimeUnit.MILLISECONDS.sleep(500)
 
         assertEquals(ScreenVariant.SongText("Кино", 12), localViewModel.appStateFlow.value.currentScreenVariant)
+    }
+
+    @Test
+    fun test117_prevSong_first_isWorkingCorrect() {
+        songsFlow.value = songList + songList + songList + songList
+
+        localViewModel.submitAction(SelectArtist("Кино"))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        localViewModel.submitAction(SelectSong(0))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        localViewModel.submitAction(SelectScreen(ScreenVariant.SongText("Кино", 0)))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        localViewModel.submitAction(PrevSong)
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        assertEquals(ScreenVariant.SongText("Кино", songsFlow.value.size - 1), localViewModel.appStateFlow.value.currentScreenVariant)
+    }
+
+    @Test
+    fun test118_updateCurrentSong_isWorkingCorrect() {
+        val song = songList[0]
+
+        localViewModel.submitAction(UpdateCurrentSong(song))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        assertEquals(song, localViewModel.localStateFlow.value.currentSong)
+    }
+
+    @Test
+    fun test119_updateMenuScrollPosition_isWorkingCorrect() {
+        localViewModel.submitAction(UpdateMenuScrollPosition(5))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        assertEquals(5, localViewModel.localStateFlow.value.menuScrollPosition)
+    }
+
+    @Test
+    fun test120_updateMenuExpandedArtistGroup_isWorkingCorrect() {
+        localViewModel.submitAction(UpdateMenuExpandedArtistGroup("F"))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        assertEquals("F", localViewModel.localStateFlow.value.menuExpandedArtistGroup)
+    }
+
+    @Test
+    fun test121_updateSongListScrollPosition_isWorkingCorrect() {
+        localViewModel.submitAction(UpdateSongListScrollPosition(5))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        assertEquals(5, localViewModel.localStateFlow.value.songListScrollPosition)
+    }
+
+    @Test
+    fun test122_updateSongListNeedScroll_isWorkingCorrect() {
+        localViewModel.submitAction(UpdateSongListNeedScroll(true))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        assertEquals(true, localViewModel.localStateFlow.value.songListNeedScroll)
+    }
+
+    @Test
+    fun test123_setEditorMode_isWorkingCorrect() {
+        localViewModel.submitAction(SetEditorMode(true))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        assertEquals(true, localViewModel.localStateFlow.value.isEditorMode)
+    }
+
+    @Test
+    fun test124_setAutoPlayMode_isWorkingCorrect() {
+        localViewModel.submitAction(SetAutoPlayMode(true))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        assertEquals(true, localViewModel.localStateFlow.value.isAutoPlayMode)
     }
 }
