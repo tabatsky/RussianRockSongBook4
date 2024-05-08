@@ -16,8 +16,6 @@ data class LocalState(
     val songListNeedScroll: Boolean
 ) {
 
-    override fun toString() = "$currentSongCount ${currentSongList.size} $currentSongPosition ${currentSong?.title}"
-
     companion object {
         fun initial() = LocalState(
             currentSongCount = 0,
