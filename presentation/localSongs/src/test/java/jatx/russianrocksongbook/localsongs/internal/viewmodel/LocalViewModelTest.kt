@@ -19,6 +19,7 @@ import jatx.russianrocksongbook.commonviewmodel.SelectScreen
 import jatx.russianrocksongbook.commonviewmodel.SendWarning
 import jatx.russianrocksongbook.commonviewmodel.ShowSongs
 import jatx.russianrocksongbook.commonviewmodel.waitForCondition
+import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Assert.assertEquals
@@ -99,7 +100,22 @@ open class LocalViewModelTest: CommonViewModelTest() {
         }
         every { getSongsByArtistUseCase.execute(any()) } returns songsFlow
         every { getSongByArtistAndPositionUseCase.execute(any(), any()) } returns songFlow
-        every { updateSongUseCase.execute(any()) } just runs
+
+        val songSlot = slot<Song>()
+        every { updateSongUseCase.execute(capture(songSlot)) } answers {
+            val song = songSlot.captured
+
+            songFlow.value = song
+
+            if (appStateHolder.appStateFlow.value.currentArtist == ARTIST_FAVORITE &&
+                !song.favorite) {
+
+                val songs = songsFlow.value
+                songsFlow.value = songs.filter {
+                    it.artist != song.artist || it.title != song.title
+                }
+            }
+        }
         every { deleteSongToTrashUseCase.execute(any()) } just runs
     }
 
@@ -235,7 +251,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
     }
 
     @Test
-    fun test108A_setFavorite_true_isWorkingCorrect() {
+    fun test108A_setFavorite_isWorkingCorrect() {
         localViewModel.submitAction(SelectSong(13))
         waitForCondition {
             localViewModel.localStateFlow.value.currentSongPosition == 13
@@ -257,6 +273,97 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         verifyAll {
             toasts.showToast(R.string.toast_added_to_favorite)
+            toasts.showToast(R.string.toast_removed_from_favorite)
+        }
+    }
+
+    @Test
+    fun test108B_deleteFromFavorite_singleSong_isWorkingCorrect() {
+        val song = songList[0].copy(favorite = true)
+        songsFlow.value = listOf(song)
+        songFlow.value = song
+
+        TimeUnit.MILLISECONDS.sleep(500)
+        localViewModel.submitAction(SelectArtist(ARTIST_FAVORITE))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+        localViewModel.submitAction(SelectSong(0))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+        localViewModel.submitAction(SelectScreen(ScreenVariant.SongText(ARTIST_FAVORITE, 0)))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+        localViewModel.submitAction(SetFavorite(false))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        println(localStateHolder.localStateFlow.value.toString())
+
+        assertEquals(false, localStateHolder.localStateFlow.value.currentSong?.favorite)
+
+        verifyAll {
+            toasts.showToast(R.string.toast_removed_from_favorite)
+        }
+    }
+
+    @Test
+    fun test108C_deleteFromFavorite_lastSongAtList_isWorkingCorrect() {
+        val song = songList[0]
+        songsFlow.value = listOf(songList[1], songList[2], song).map {
+            it.copy(favorite = true)
+        }
+        songFlow.value = song.copy(favorite = true)
+
+        TimeUnit.MILLISECONDS.sleep(500)
+        localViewModel.submitAction(SelectArtist(ARTIST_FAVORITE))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+        localViewModel.submitAction(SelectSong(2))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+        localViewModel.submitAction(SelectScreen(ScreenVariant.SongText(ARTIST_FAVORITE, 2)))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+        localViewModel.submitAction(SetFavorite(false))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        println(localStateHolder.localStateFlow.value.toString())
+
+        assertEquals(false, localStateHolder.localStateFlow.value.currentSong?.favorite)
+
+        verifyAll {
+            toasts.showToast(R.string.toast_removed_from_favorite)
+        }
+    }
+
+    @Test
+    fun test108D_deleteFromFavorite_notLastSongAtList_isWorkingCorrect() {
+        val song = songList[0]
+        songsFlow.value = listOf(songList[1], song, songList[2]).map {
+            it.copy(favorite = true)
+        }
+        songFlow.value = song.copy(favorite = true)
+
+        TimeUnit.MILLISECONDS.sleep(500)
+        localViewModel.submitAction(SelectArtist(ARTIST_FAVORITE))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+        localViewModel.submitAction(SelectSong(1))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+        localViewModel.submitAction(SelectScreen(ScreenVariant.SongText(ARTIST_FAVORITE, 1)))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+        localViewModel.submitAction(SetFavorite(false))
+
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        println(localStateHolder.localStateFlow.value.toString())
+
+        assertEquals(false, localStateHolder.localStateFlow.value.currentSong?.favorite)
+
+        verifyAll {
             toasts.showToast(R.string.toast_removed_from_favorite)
         }
     }
