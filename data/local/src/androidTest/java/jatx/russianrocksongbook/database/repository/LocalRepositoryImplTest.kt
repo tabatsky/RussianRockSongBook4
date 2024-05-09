@@ -59,15 +59,8 @@ class LocalRepositoryImplTest {
 
     @Test
     fun test1_fillDbFromJSON() {
-        val localRepositoryInitializer = LocalRepositoryInitializerImpl(
-            localRepo,
-            ApplicationProvider.getApplicationContext()
-        )
-        runBlocking {
-            localRepositoryInitializer.fillDbFromJSONResources().collect {
-                Log.e("fillDbFromJSON", it.toString())
-            }
-        }
+        fillDB()
+
         val artists1 = artistMap.keys.toList()
         val artists2 = localRepo.getArtistsAsList()
         artists1.forEach {
@@ -130,5 +123,39 @@ class LocalRepositoryImplTest {
         val songFromDb2 = localRepo.getSongByArtistAndTitle(ARTIST_NEW, TITLE_NEW)
         assertNotNull(songFromDb2)
         assertFalse(songFromDb2!!.favorite)
+    }
+
+    @Test
+    fun test4_textSearchOneWord() {
+        fillDB()
+
+        val words = "перемен".split(" ")
+        val songs = localRepo.getSongsByTextSearch(words)
+        songs.forEach {
+            Log.e("song", "${it.artist} ${it.title}")
+        }
+    }
+
+    @Test
+    fun test5_textSearchManyWords() {
+        fillDB()
+
+        val words = "если есть пачка кармане".split(" ")
+        val songs = localRepo.getSongsByTextSearch(words)
+        songs.forEach {
+            Log.e("song", "${it.artist} ${it.title}")
+        }
+    }
+
+    private fun fillDB() {
+        val localRepositoryInitializer = LocalRepositoryInitializerImpl(
+            localRepo,
+            ApplicationProvider.getApplicationContext()
+        )
+        runBlocking {
+            localRepositoryInitializer.fillDbFromJSONResources().collect {
+                Log.e("fillDbFromJSON", it.toString())
+            }
+        }
     }
 }
