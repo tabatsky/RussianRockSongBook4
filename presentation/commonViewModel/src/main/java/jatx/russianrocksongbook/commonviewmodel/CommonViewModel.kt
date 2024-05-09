@@ -217,14 +217,14 @@ open class CommonViewModel @Inject constructor(
 
                 is ScreenVariant.SongText  -> {
                     if (currentArtist != ARTIST_FAVORITE) {
-                        changeCurrentScreenVariant(
+                        selectScreen(
                             ScreenVariant.SongList(
                                 artist = currentArtist,
                                 isBackFromSomeScreen = true
                             )
                         )
                     } else {
-                        changeCurrentScreenVariant(ScreenVariant.Favorite(isBackFromSomeScreen = true))
+                        selectScreen(ScreenVariant.Favorite(isBackFromSomeScreen = true))
                     }
                 }
 
@@ -240,7 +240,7 @@ open class CommonViewModel @Inject constructor(
                 }
 
                 is ScreenVariant.CloudSongText -> {
-                    changeCurrentScreenVariant(
+                    selectScreen(
                         ScreenVariant.CloudSearch(
                             randomKey = lastRandomKey,
                             isBackFromSong = true
@@ -249,14 +249,14 @@ open class CommonViewModel @Inject constructor(
 
                 else -> {
                     if (currentArtist != ARTIST_FAVORITE) {
-                        changeCurrentScreenVariant(
+                        selectScreen(
                             ScreenVariant.SongList(
                                 artist = currentArtist,
                                 isBackFromSomeScreen = true
                             )
                         )
                     } else {
-                        changeCurrentScreenVariant(ScreenVariant.Favorite(isBackFromSomeScreen = true))
+                        selectScreen(ScreenVariant.Favorite(isBackFromSomeScreen = true))
                     }
                 }
             }
