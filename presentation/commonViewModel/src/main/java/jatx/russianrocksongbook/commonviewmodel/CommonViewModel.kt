@@ -217,14 +217,14 @@ open class CommonViewModel @Inject constructor(
 
                 is ScreenVariant.SongText  -> {
                     if (currentArtist != ARTIST_FAVORITE) {
-                        selectScreen(
+                        changeCurrentScreenVariant(
                             ScreenVariant.SongList(
                                 artist = currentArtist,
                                 isBackFromSomeScreen = true
                             )
                         )
                     } else {
-                        selectScreen(ScreenVariant.Favorite(isBackFromSomeScreen = true))
+                        changeCurrentScreenVariant(ScreenVariant.Favorite(isBackFromSomeScreen = true))
                     }
                 }
 
@@ -240,7 +240,7 @@ open class CommonViewModel @Inject constructor(
                 }
 
                 is ScreenVariant.CloudSongText -> {
-                    selectScreen(
+                    changeCurrentScreenVariant(
                         ScreenVariant.CloudSearch(
                             randomKey = lastRandomKey,
                             isBackFromSong = true
@@ -249,14 +249,14 @@ open class CommonViewModel @Inject constructor(
 
                 else -> {
                     if (currentArtist != ARTIST_FAVORITE) {
-                        selectScreen(
+                        changeCurrentScreenVariant(
                             ScreenVariant.SongList(
                                 artist = currentArtist,
                                 isBackFromSomeScreen = true
                             )
                         )
                     } else {
-                        selectScreen(ScreenVariant.Favorite(isBackFromSomeScreen = true))
+                        changeCurrentScreenVariant(ScreenVariant.Favorite(isBackFromSomeScreen = true))
                     }
                 }
             }
@@ -326,7 +326,7 @@ open class CommonViewModel @Inject constructor(
         Log.e("navigated", newScreenVariant.destination)
     }
 
-    private fun changeCurrentScreenVariant(screenVariant: ScreenVariant) {
+    fun changeCurrentScreenVariant(screenVariant: ScreenVariant) {
         val appState = appStateFlow.value
         val previousScreenVariant = appState.currentScreenVariant
         val newState = if (screenVariant is ScreenVariant.CloudSearch) {

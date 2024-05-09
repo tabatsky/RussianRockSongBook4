@@ -76,6 +76,8 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
     @Before
     fun initLocal() {
+        initCommon()
+
         localStateHolder = LocalStateHolder(appStateHolder)
         localViewModelDeps = LocalViewModelDeps(
             commonViewModelDeps = commonViewModelDeps,
@@ -284,6 +286,9 @@ open class LocalViewModelTest: CommonViewModelTest() {
         songFlow.value = song
 
         TimeUnit.MILLISECONDS.sleep(500)
+        localViewModel.submitAction(SelectScreen(ScreenVariant.Favorite()))
+
+        TimeUnit.MILLISECONDS.sleep(500)
         localViewModel.submitAction(SelectArtist(ARTIST_FAVORITE))
 
         TimeUnit.MILLISECONDS.sleep(500)
@@ -300,6 +305,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
         println(localStateHolder.localStateFlow.value.toString())
 
         assertEquals(false, localStateHolder.localStateFlow.value.currentSong?.favorite)
+        assertEquals(ScreenVariant.Favorite(isBackFromSomeScreen = true), appStateHolder.appStateFlow.value.currentScreenVariant)
 
         verifyAll {
             toasts.showToast(R.string.toast_removed_from_favorite)
@@ -313,6 +319,9 @@ open class LocalViewModelTest: CommonViewModelTest() {
             it.copy(favorite = true)
         }
         songFlow.value = song.copy(favorite = true)
+
+        TimeUnit.MILLISECONDS.sleep(500)
+        localViewModel.submitAction(SelectScreen(ScreenVariant.Favorite()))
 
         TimeUnit.MILLISECONDS.sleep(500)
         localViewModel.submitAction(SelectArtist(ARTIST_FAVORITE))
@@ -331,6 +340,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
         println(localStateHolder.localStateFlow.value.toString())
 
         assertEquals(false, localStateHolder.localStateFlow.value.currentSong?.favorite)
+        assertEquals(ScreenVariant.SongText(ARTIST_FAVORITE, 1), appStateHolder.appStateFlow.value.currentScreenVariant)
 
         verifyAll {
             toasts.showToast(R.string.toast_removed_from_favorite)
@@ -344,6 +354,9 @@ open class LocalViewModelTest: CommonViewModelTest() {
             it.copy(favorite = true)
         }
         songFlow.value = song.copy(favorite = true)
+
+        TimeUnit.MILLISECONDS.sleep(500)
+        localViewModel.submitAction(SelectScreen(ScreenVariant.Favorite()))
 
         TimeUnit.MILLISECONDS.sleep(500)
         localViewModel.submitAction(SelectArtist(ARTIST_FAVORITE))
@@ -362,6 +375,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
         println(localStateHolder.localStateFlow.value.toString())
 
         assertEquals(false, localStateHolder.localStateFlow.value.currentSong?.favorite)
+        assertEquals(ScreenVariant.SongText(ARTIST_FAVORITE, 1), appStateHolder.appStateFlow.value.currentScreenVariant)
 
         verifyAll {
             toasts.showToast(R.string.toast_removed_from_favorite)
@@ -659,5 +673,23 @@ open class LocalViewModelTest: CommonViewModelTest() {
         TimeUnit.MILLISECONDS.sleep(500)
 
         assertEquals(true, localViewModel.localStateFlow.value.isAutoPlayMode)
+    }
+
+    @Test
+    fun test125_reviewApp_isWorkingCorrect() {
+        localViewModel.submitAction(ReviewApp)
+
+        verifyAll {
+            callbacks.onReviewApp()
+        }
+    }
+
+    @Test
+    fun test125_openDevSite_isWorkingCorrect() {
+        localViewModel.submitAction(ShowDevSite)
+
+        verifyAll {
+            callbacks.onShowDevSite()
+        }
     }
 }
