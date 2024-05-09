@@ -12,6 +12,7 @@ import jatx.russianrocksongbook.domain.models.local.songTextHash
 import jatx.russianrocksongbook.domain.repository.local.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.lang.StringBuilder
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -85,6 +86,25 @@ class LocalRepositoryImpl @Inject constructor(
 
     override fun getSongsByVoiceSearch(voiceSearch: String): List<Song> {
         val query = SimpleSQLiteQuery(voiceSearchQueryCached, arrayOf(voiceSearch, voiceSearch))
+        return songDao
+            .getSongsRawQuery(query)
+            .map { it.toSong() }
+    }
+
+    override fun getSongsByTextSearch(words: List<String>): List<Song> {
+        if (words.isEmpty() || words[0].isEmpty()) return listOf()
+        val sb = StringBuilder()
+        sb.append("SELECT * FROM songs")
+        words[0].let {
+            sb.append(" WHERE text LIKE '%' || ? || '%'")
+        }
+        words.drop(1).forEach {
+            sb.append(" AND text LIKE '%' || ? || '%'")
+        }
+
+        val queryStr = sb.toString()
+        val query = SimpleSQLiteQuery(queryStr, words.toTypedArray())
+
         return songDao
             .getSongsRawQuery(query)
             .map { it.toSong() }

@@ -34,6 +34,7 @@ interface LocalRepository {
     fun getSongsByArtist(artist: String): Flow<List<Song>>
     fun getSongsByArtistAsList(artist: String): List<Song>
     fun getSongsByVoiceSearch(voiceSearch: String): List<Song>
+    fun getSongsByTextSearch(words: List<String>): List<Song>
     fun getSongByArtistAndPosition(artist: String, position: Int): Flow<Song?>
     fun getSongByArtistAndTitle(artist: String, title: String): Song?
     fun setFavorite(favorite: Boolean, artist: String, title: String)
