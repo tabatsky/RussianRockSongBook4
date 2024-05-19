@@ -90,7 +90,7 @@ class CloudRepositoryImpl @Inject constructor(
         userInfo.deviceIdHash
     )
 
-    override fun pagedSearch(
+    override suspend fun pagedSearch(
         searchFor: String,
         orderBy: OrderBy,
         page: Int

@@ -58,8 +58,6 @@ dependencies {
     api project(':domain:repository:cloud')
     api project(':domain:repository:local')
 
-    api project(':net-library:SynchronousCallAdapterFactory')
-
     testImplementation testDeps.junit
     testImplementation testDeps.mockk
     testImplementation testDeps.coroutinesTest
