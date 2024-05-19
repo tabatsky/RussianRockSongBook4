@@ -1,5 +1,7 @@
 package jatx.russianrocksongbook.domain.usecase.cloud
 
+import io.mockk.coEvery
+import io.mockk.coVerifySequence
 import io.mockk.every
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
@@ -12,11 +14,14 @@ import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.cloud.CloudRepository
 import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.domain.repository.cloud.result.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runners.MethodSorters
+import java.util.concurrent.TimeUnit
 
 @MockKExtension.ConfirmVerification
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -199,14 +204,17 @@ class CloudUseCaseTest {
 
     @Test
     fun test006_pagedSearchUseCase_isWorkingCorrect() {
-        every { cloudRepository.pagedSearch(any(), any(), any()) } returns
+        coEvery { cloudRepository.pagedSearch(any(), any(), any()) } returns
                 resultWithCloudSongListResultData
 
-        val result = pagedSearchUseCase.execute("Кино", OrderBy.BY_ARTIST, 3)
+        GlobalScope.launch {
+            val result = pagedSearchUseCase.execute("Кино", OrderBy.BY_ARTIST, 3)
+            assertEquals(resultWithCloudSongListResultData, result)
+        }
 
-        assertEquals(resultWithCloudSongListResultData, result)
+        TimeUnit.MILLISECONDS.sleep(500)
 
-        verifySequence {
+        coVerifySequence {
             cloudRepository.pagedSearch("Кино", OrderBy.BY_ARTIST, 3)
         }
     }

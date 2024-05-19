@@ -1,6 +1,8 @@
 package jatx.russianrocksongbook.networking.repository
 
 import com.google.gson.Gson
+import io.mockk.coEvery
+import io.mockk.coVerifySequence
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit4.MockKRule
@@ -19,12 +21,15 @@ import jatx.russianrocksongbook.networking.converters.toWarningApiModel
 import jatx.russianrocksongbook.networking.apimodels.ResultWithCloudSongApiModelListData
 import jatx.russianrocksongbook.networking.songbookapi.RetrofitClient
 import jatx.russianrocksongbook.networking.songbookapi.SongBookAPI
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runners.MethodSorters
+import java.util.concurrent.TimeUnit
 
 @MockKExtension.ConfirmVerification
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -178,18 +183,21 @@ class CloudRepositoryImplTest {
 
     @Test
     fun test008_pagedSearch_isWorkingCorrect() {
-        every { songBookAPI.pagedSearch(any(), any(), any()) } returns
+        coEvery { songBookAPI.pagedSearch(any(), any(), any()) } returns
                 ResultWithCloudSongApiModelListData(
                     status = "success",
                     message = null,
                     data = cloudSongList.map { it.toCloudSongApiModel() }
                 )
 
-        val result = cloudRepository.pagedSearch("Сплин", OrderBy.BY_ARTIST, 3)
+        GlobalScope.launch {
+            val result = cloudRepository.pagedSearch("Сплин", OrderBy.BY_ARTIST, 3)
+            assertEquals(cloudSongList, result.data)
+        }
 
-        assertEquals(cloudSongList, result.data)
+        TimeUnit.MILLISECONDS.sleep(500)
 
-        verifySequence {
+        coVerifySequence {
             songBookAPI.pagedSearch("Сплин", OrderBy.BY_ARTIST.orderBy, 3)
         }
     }
