@@ -58,7 +58,7 @@ internal interface SongBookAPI {
     ): Single<ResultWithNumber>
 
     @GET("songs/pagedSearchWithLikes/{searchFor}/{orderBy}/{page}")
-    fun pagedSearch(
+    suspend fun pagedSearch(
         @Path("searchFor") searchFor: String,
         @Path("orderBy") orderBy: String,
         @Path("page") page: Int

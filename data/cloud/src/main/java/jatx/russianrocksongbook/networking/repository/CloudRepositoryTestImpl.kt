@@ -125,7 +125,7 @@ internal class CloudRepositoryTestImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override fun pagedSearch(
+    override suspend fun pagedSearch(
         searchFor: String,
         orderBy: OrderBy,
         page: Int

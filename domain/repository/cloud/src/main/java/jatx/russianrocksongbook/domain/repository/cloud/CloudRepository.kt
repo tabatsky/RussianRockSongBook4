@@ -27,7 +27,7 @@ interface CloudRepository {
     fun getUploadsCountForUser(userInfo: UserInfo):
             Single<ResultWithNumber>
 
-    fun pagedSearch(searchFor: String, orderBy: OrderBy = OrderBy.BY_ID_DESC, page: Int):
+    suspend fun pagedSearch(searchFor: String, orderBy: OrderBy = OrderBy.BY_ID_DESC, page: Int):
             ResultWithCloudSongListData
 
     fun search(searchFor: String, orderBy: OrderBy): List<CloudSong>
