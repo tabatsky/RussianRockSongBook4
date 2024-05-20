@@ -45,6 +45,7 @@ internal class CloudRepositoryTestImpl @Inject constructor(
         }
     }
 
+    @Volatile
     private var _list: List<CloudSong>? = null
     private var list: List<CloudSong>
         get() {
