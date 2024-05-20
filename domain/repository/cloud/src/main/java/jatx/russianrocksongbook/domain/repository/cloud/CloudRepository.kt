@@ -14,7 +14,7 @@ interface CloudRepository {
     var isOnline: Boolean
 
     fun sendCrash(appCrash: AppCrash): Single<ResultWithoutData>
-    fun addCloudSong(cloudSong: CloudSong): Single<ResultWithoutData>
+    suspend fun addCloudSong(cloudSong: CloudSong): ResultWithoutData
     fun addCloudSongList(cloudSongs: List<CloudSong>):
             Single<ResultWithAddSongListResultData>
     fun addWarning(warning: Warning): Single<ResultWithoutData>

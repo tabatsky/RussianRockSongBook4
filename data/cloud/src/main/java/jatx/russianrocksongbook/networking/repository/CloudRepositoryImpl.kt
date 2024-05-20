@@ -35,7 +35,7 @@ class CloudRepositoryImpl @Inject constructor(
         return retrofitClient.songBookAPI.sendCrash(params)
     }
 
-    override fun addCloudSong(cloudSong: CloudSong): Single<ResultWithoutData> {
+    override suspend fun addCloudSong(cloudSong: CloudSong): ResultWithoutData {
         val params = mapOf(
             "cloudSongJSON" to Gson().toJson(cloudSong.toCloudSongApiModel())
         )
