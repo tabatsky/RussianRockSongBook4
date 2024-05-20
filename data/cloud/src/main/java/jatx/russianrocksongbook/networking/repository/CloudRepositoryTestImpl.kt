@@ -49,13 +49,16 @@ internal class CloudRepositoryTestImpl @Inject constructor(
     private var _list: List<CloudSong>? = null
     private var list: List<CloudSong>
         get() {
-            if (_list == null) {
-                _list = arrayList
+            return if (_list == null) {
+                val tmpList = arrayList
                     .map {
                         (it asCloudSongWithUserInfo userInfo).copy(variant = 1)
                     }
+                _list = tmpList
+                tmpList
+            } else {
+                _list!!
             }
-            return _list!!
         }
         set(value) {
             _list = value
