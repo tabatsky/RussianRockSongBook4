@@ -215,6 +215,10 @@ open class CommonViewModel @Inject constructor(
                     doNothing()
                 }
 
+                is ScreenVariant.SongList -> {
+                    doNothing()
+                }
+
                 is ScreenVariant.SongText  -> {
                     if (currentArtist != ARTIST_FAVORITE) {
                         selectScreen(

@@ -20,7 +20,7 @@ internal interface SongBookAPI {
 
     @FormUrlEncoded
     @POST("songs/addList")
-    fun addSongList(@FieldMap params: Map<String, String>): Single<ResultWithAddSongListResultData>
+    suspend fun addSongList(@FieldMap params: Map<String, String>): ResultWithAddSongListResultData
 
     @FormUrlEncoded
     @POST("warnings/add")

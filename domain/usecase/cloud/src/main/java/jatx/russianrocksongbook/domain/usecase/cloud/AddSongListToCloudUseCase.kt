@@ -12,7 +12,7 @@ class AddSongListToCloudUseCase @Inject constructor(
     private val cloudRepository: CloudRepository,
     private val userInfo: UserInfo
 ) {
-    fun execute(songs: List<Song>) = cloudRepository
+    suspend fun execute(songs: List<Song>) = cloudRepository
         .addCloudSongList(songs.map {
             it asCloudSongWithUserInfo userInfo
         })
