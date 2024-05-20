@@ -6,9 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_ERROR
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
@@ -59,8 +56,7 @@ open class LocalViewModel @Inject constructor(
     private var showSongsJob: Job? = null
     private var selectSongJob: Job? = null
     private var getArtistsJob: Job? = null
-
-    private var uploadSongDisposable: Disposable? = null
+    private var uploadSongJob: Job? = null
 
     override val currentMusic: Music?
         get() = localStateFlow.value.currentSong
@@ -374,24 +370,27 @@ open class LocalViewModel @Inject constructor(
     private fun uploadCurrentToCloud() {
         localStateFlow.value.currentSong?.let { song ->
             setUploadButtonEnabled(false)
-            uploadSongDisposable?.let {
-                if (!it.isDisposed) it.dispose()
+            uploadSongJob?.let {
+                if (!it.isCancelled) it.cancel()
             }
-            uploadSongDisposable = addSongToCloudUseCase
-                .execute(song)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ result ->
-                    when (result.status) {
-                        STATUS_SUCCESS -> showToast(R.string.toast_upload_to_cloud_success)
-                        STATUS_ERROR -> showToast(result.message ?: "")
+            uploadSongJob = viewModelScope.launch {
+                withContext(Dispatchers.Main) {
+                    try {
+                        val result = withContext(Dispatchers.IO) {
+                            addSongToCloudUseCase.execute(song)
+                        }
+                        when (result.status) {
+                            STATUS_SUCCESS -> showToast(R.string.toast_upload_to_cloud_success)
+                            STATUS_ERROR -> showToast(result.message ?: "")
+                        }
+                        setUploadButtonEnabled(true)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        showToast(R.string.error_in_app)
+                        setUploadButtonEnabled(true)
                     }
-                    setUploadButtonEnabled(true)
-                }, { error ->
-                    error.printStackTrace()
-                    showToast(R.string.error_in_app)
-                    setUploadButtonEnabled(true)
-                })
+                }
+            }
         }
     }
 

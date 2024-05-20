@@ -129,14 +129,17 @@ class CloudUseCaseTest {
 
     @Test
     fun test002_addSongToCloudUseCase_isWorkingCorrect() {
-        every { cloudRepository.addCloudSong(any()) } returns
-                Single.just(resultWithoutData)
+        coEvery { cloudRepository.addCloudSong(any()) } returns
+                resultWithoutData
 
-        val result = addSongToCloudUseCase.execute(song)
+        GlobalScope.launch {
+            val result = addSongToCloudUseCase.execute(song)
+            assertEquals(resultWithoutData, result)
+        }
 
-        assertEquals(resultWithoutData, result.blockingGet())
+        TimeUnit.MILLISECONDS.sleep(500)
 
-        verifySequence {
+        coVerifySequence {
             cloudRepository.addCloudSong(song asCloudSongWithUserInfo userInfo)
         }
     }
