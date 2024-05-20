@@ -1965,6 +1965,8 @@ class UITest {
             .performClick()
         Log.e("test $testNumber click", stringConst.ok)
 
+        composeTestRule.waitForTimeout(timeout)
+
         with (cloudRepository) {
             val list = search("", OrderBy.BY_ID_DESC)
             val cloudSong = list[0]
