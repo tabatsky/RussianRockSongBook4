@@ -87,7 +87,7 @@ internal class CloudRepositoryTestImpl @Inject constructor(
         return ResultWithoutData(STATUS_SUCCESS, null)
     }
 
-    override fun addCloudSongList(cloudSongs: List<CloudSong>): Single<ResultWithAddSongListResultData> {
+    override suspend fun addCloudSongList(cloudSongs: List<CloudSong>): ResultWithAddSongListResultData {
         TODO("Not yet implemented")
     }
 

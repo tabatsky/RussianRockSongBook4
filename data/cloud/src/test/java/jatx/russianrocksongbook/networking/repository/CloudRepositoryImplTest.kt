@@ -107,14 +107,18 @@ class CloudRepositoryImplTest {
 
     @Test
     fun test003_addCloudSongList_isWorkingCorrect() {
-        cloudRepository.addCloudSongList(cloudSongList)
+        GlobalScope.launch {
+            cloudRepository.addCloudSongList(cloudSongList)
+        }
+
+        TimeUnit.MILLISECONDS.sleep(500)
 
         val cloudSongsGson = cloudSongList.map { it.toCloudSongApiModel() }
         val params = mapOf(
             "cloudSongListJSON" to Gson().toJson(cloudSongsGson)
         )
 
-        verifySequence {
+        coVerifySequence {
             songBookAPI.addSongList(params)
         }
     }

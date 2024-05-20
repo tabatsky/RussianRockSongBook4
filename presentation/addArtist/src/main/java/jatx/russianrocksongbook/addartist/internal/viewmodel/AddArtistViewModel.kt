@@ -3,18 +3,20 @@ package jatx.russianrocksongbook.addartist.internal.viewmodel
 import androidx.compose.runtime.Composable
 import androidx.documentfile.provider.DocumentFile
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_ERROR
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.commonviewmodel.R
 import jatx.russianrocksongbook.commonviewmodel.UIAction
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import javax.inject.Inject
 
@@ -36,7 +38,7 @@ internal class AddArtistViewModel @Inject constructor(
     val addArtistStateFlow = addArtistStateHolder
         .addArtistStateFlow.asStateFlow()
 
-    private var uploadListDisposable: Disposable? = null
+    private var uploadListJob: Job? = null
 
     companion object {
         private const val key = "AddArtist"
@@ -82,31 +84,35 @@ internal class AddArtistViewModel @Inject constructor(
     }
 
     private fun uploadListToCloud() {
-        uploadListDisposable?.let {
-            if (!it.isDisposed) it.dispose()
+        uploadListJob?.let {
+            if (!it.isCancelled) it.cancel()
         }
-        uploadListDisposable = addSongListToCloudUseCase
-            .execute(addArtistStateFlow.value.uploadSongList)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ result ->
-                when (result.status) {
-                    STATUS_SUCCESS -> {
-                        result.data?.let {
-                            val toastText = resources.getString(
-                                R.string.toast_upload_songs_result,
-                                it.success, it.duplicate, it.error
-                            )
-                            showToast(toastText)
-                            callbacks.onArtistSelected(addArtistStateFlow.value.newArtist)
-                        }
+        uploadListJob = viewModelScope.launch {
+            withContext(Dispatchers.Main) {
+                try {
+                    val result = withContext(Dispatchers.IO) {
+                        addSongListToCloudUseCase
+                            .execute(addArtistStateFlow.value.uploadSongList)
                     }
-                    STATUS_ERROR -> showToast(result.message ?: "")
+                    when (result.status) {
+                        STATUS_SUCCESS -> {
+                            result.data?.let {
+                                val toastText = resources.getString(
+                                    R.string.toast_upload_songs_result,
+                                    it.success, it.duplicate, it.error
+                                )
+                                showToast(toastText)
+                                callbacks.onArtistSelected(addArtistStateFlow.value.newArtist)
+                            }
+                        }
+                        STATUS_ERROR -> showToast(result.message ?: "")
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    showToast(R.string.error_in_app)
                 }
-            }, { error ->
-                error.printStackTrace()
-                showToast(R.string.error_in_app)
-            })
+            }
+        }
     }
 
     private fun showNewArtist(artist: String) {
