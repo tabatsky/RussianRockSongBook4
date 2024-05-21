@@ -85,7 +85,9 @@ internal class CloudRepositoryTestImpl @Inject constructor(
     }
 
     override suspend fun addCloudSong(cloudSong: CloudSong): ResultWithoutData {
-        list = list + listOf(cloudSong)
+        val oldList = list
+        val newList = oldList + listOf(cloudSong)
+        list = newList
         return ResultWithoutData(STATUS_SUCCESS, null)
     }
 
