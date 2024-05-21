@@ -122,10 +122,6 @@ internal class CloudRepositoryTestImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override fun getUploadsCountForUser(userInfo: UserInfo): Single<ResultWithNumber> {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun pagedSearch(
         searchFor: String,
         orderBy: OrderBy,

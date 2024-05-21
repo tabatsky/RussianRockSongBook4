@@ -41,12 +41,6 @@ internal interface SongBookAPI {
         @Path("variant") variant: Int,
         @Path("voteValue") voteValue: Int
     ): Single<ResultWithNumber>
-    
-    @GET("songs/getUploadsCountForUser/{googleAccount}/{deviceIdHash}")
-    fun getUploadsCountForUser(
-        @Path("googleAccount") googleAccount: String,
-        @Path("deviceIdHash") deviceIdHash: String
-    ): Single<ResultWithNumber>
 
     @GET("songs/delete/{secret1}/{secret2}/{artist}/{title}/{variant}")
     fun delete(
