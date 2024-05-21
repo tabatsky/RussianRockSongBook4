@@ -24,8 +24,6 @@ interface CloudRepository {
             Single<ResultWithNumber>
     fun delete(secret1: String, secret2: String, cloudSong: CloudSong):
             Single<ResultWithNumber>
-    fun getUploadsCountForUser(userInfo: UserInfo):
-            Single<ResultWithNumber>
 
     suspend fun pagedSearch(searchFor: String, orderBy: OrderBy = OrderBy.BY_ID_DESC, page: Int):
             ResultWithCloudSongListData

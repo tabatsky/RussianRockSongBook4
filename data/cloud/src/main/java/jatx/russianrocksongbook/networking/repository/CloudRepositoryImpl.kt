@@ -19,7 +19,6 @@ import jatx.russianrocksongbook.networking.converters.toWarningApiModel
 import jatx.russianrocksongbook.networking.apimodels.toResultWithCloudSongListData
 import jatx.russianrocksongbook.networking.songbookapi.RetrofitClient
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -60,9 +59,9 @@ class CloudRepositoryImpl @Inject constructor(
     }
 
     override suspend fun searchSongs(searchFor: String, orderBy: OrderBy) = retrofitClient
-        .songBookAPI
-        .searchSongs(searchFor, orderBy.orderBy)
-        .let { it.toResultWithCloudSongListData() }
+    .songBookAPI
+    .searchSongs(searchFor, orderBy.orderBy)
+    .toResultWithCloudSongListData()
 
     override fun vote(cloudSong: CloudSong, userInfo: UserInfo, voteValue: Int) = retrofitClient.songBookAPI.vote(
         userInfo.googleAccount,
@@ -86,11 +85,6 @@ class CloudRepositoryImpl @Inject constructor(
             cloudSong.title,
             cloudSong.variant
         )
-
-    override fun getUploadsCountForUser(userInfo: UserInfo) = retrofitClient.songBookAPI.getUploadsCountForUser(
-        userInfo.googleAccount,
-        userInfo.deviceIdHash
-    )
 
     override suspend fun pagedSearch(
         searchFor: String,
