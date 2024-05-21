@@ -13,6 +13,7 @@ import jatx.russianrocksongbook.domain.repository.cloud.CloudRepository
 import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.domain.repository.cloud.result.*
 import jatx.russianrocksongbook.domain.repository.local.LocalRepository
+import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -45,20 +46,20 @@ internal class CloudRepositoryTestImpl @Inject constructor(
         }
     }
 
-    @Volatile
-    private var _list: List<CloudSong>? = null
+    private val _list: AtomicReference<List<CloudSong>?> = AtomicReference(null)
     private var list: List<CloudSong>
         get() {
-            if (_list == null) {
-                _list = arrayList
+            if (_list.get() == null) {
+                val tmpList = arrayList
                     .map {
                         (it asCloudSongWithUserInfo userInfo).copy(variant = 1)
                     }
+                _list.set(tmpList)
             }
-            return _list!!
+            return _list.get()!!
         }
         set(value) {
-            _list = value
+            _list.set(value)
         }
 
     private val orderByLambda: (CloudSong, OrderBy) -> String = { cloudSong, orderBy ->
