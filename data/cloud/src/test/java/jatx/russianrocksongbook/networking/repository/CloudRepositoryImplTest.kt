@@ -127,13 +127,17 @@ class CloudRepositoryImplTest {
     fun test004_addWarning_isWorkingCorrect() {
         val warning = cloudSong.warningWithComment("some comment")
 
-        cloudRepository.addWarning(warning)
+        GlobalScope.launch {
+            cloudRepository.addWarning(warning)
+        }
+
+        TimeUnit.MILLISECONDS.sleep(500)
 
         val params = mapOf(
             "warningJSON" to Gson().toJson(warning.toWarningApiModel())
         )
 
-        verifySequence {
+        coVerifySequence {
             songBookAPI.addWarning(params)
         }
     }

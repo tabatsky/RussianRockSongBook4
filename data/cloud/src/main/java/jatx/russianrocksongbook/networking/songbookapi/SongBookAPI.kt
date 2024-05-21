@@ -24,7 +24,7 @@ internal interface SongBookAPI {
 
     @FormUrlEncoded
     @POST("warnings/add")
-    fun addWarning(@FieldMap params: Map<String, String>): Single<ResultWithoutData>
+    suspend fun addWarning(@FieldMap params: Map<String, String>): ResultWithoutData
 
     @GET("songs/search/{searchFor}/{orderBy}")
     fun searchSongs(
