@@ -7,8 +7,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import jatx.russianrocksongbook.commonviewmodel.contracts.MusicOpener
 import jatx.russianrocksongbook.commonviewmodel.contracts.WarningSender
 import jatx.russianrocksongbook.domain.models.music.Music
@@ -18,6 +16,7 @@ import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import jatx.russianrocksongbook.navigation.AppNavigator
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
@@ -30,6 +29,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 
@@ -91,20 +91,24 @@ open class CommonViewModel @Inject constructor(
 
     private val warningSender: WarningSender = object : WarningSender {
         override fun sendWarningImpl(comment: String) {
-            currentWarnable?.let {
-                addWarningUseCase
-                    .execute(it, comment)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ result ->
-                        when (result.status) {
-                            STATUS_SUCCESS -> showToast(R.string.toast_send_warning_success)
-                            STATUS_ERROR -> showToast(result.message ?: "")
+            currentWarnable?.let { warnable ->
+                viewModelScope.launch {
+                    withContext(Dispatchers.Main) {
+                        try {
+                            val result = withContext(Dispatchers.IO) {
+                                addWarningUseCase
+                                    .execute(warnable, comment)
+                            }
+                            when (result.status) {
+                                STATUS_SUCCESS -> showToast(R.string.toast_send_warning_success)
+                                STATUS_ERROR -> showToast(result.message ?: "")
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            showToast(R.string.error_in_app)
                         }
-                    }, { error ->
-                        error.printStackTrace()
-                        showToast(R.string.error_in_app)
-                    })
+                    }
+                }
             }
         }
     }

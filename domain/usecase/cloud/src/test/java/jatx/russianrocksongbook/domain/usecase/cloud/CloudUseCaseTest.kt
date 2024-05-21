@@ -149,39 +149,45 @@ class CloudUseCaseTest {
 
     @Test
     fun test003_addWarningCloudUseCase_isWorkingCorrect() {
-        every { cloudRepository.addWarning(any()) } returns
-                Single.just(resultWithoutData)
+        coEvery { cloudRepository.addWarning(any()) } returns
+                resultWithoutData
 
-        val result = addWarningUseCase.execute(
-            warnable = song asCloudSongWithUserInfo userInfo,
-            comment = comment
-        )
+        GlobalScope.launch {
+            val result = addWarningUseCase.execute(
+                warnable = song asCloudSongWithUserInfo userInfo,
+                comment = comment
+            )
+            assertEquals(resultWithoutData, result)
+        }
 
-        assertEquals(resultWithoutData, result.blockingGet())
+        TimeUnit.MILLISECONDS.sleep(500)
 
         val warning = (song asCloudSongWithUserInfo userInfo)
             .warningWithComment(comment)
 
-        verifySequence {
+        coVerifySequence {
             cloudRepository.addWarning(warning)
         }
     }
 
     @Test
     fun test004_addWarningLocalUseCase_isWorkingCorrect() {
-        every { cloudRepository.addWarning(any()) } returns
-                Single.just(resultWithoutData)
+        coEvery { cloudRepository.addWarning(any()) } returns
+                resultWithoutData
 
-        val result = addWarningUseCase.execute(
-            warnable = song,
-            comment = comment
-        )
+        GlobalScope.launch {
+            val result = addWarningUseCase.execute(
+                warnable = song,
+                comment = comment
+            )
+            assertEquals(resultWithoutData, result)
+        }
 
-        assertEquals(resultWithoutData, result.blockingGet())
+        TimeUnit.MILLISECONDS.sleep(500)
 
         val warning = song.warningWithComment(comment)
 
-        verifySequence {
+        coVerifySequence {
             cloudRepository.addWarning(warning)
         }
     }

@@ -9,6 +9,6 @@ import javax.inject.Singleton
 class AddWarningUseCase @Inject constructor(
     private val cloudRepository: CloudRepository
 ) {
-    fun execute(warnable: Warnable, comment: String) = cloudRepository
+    suspend fun execute(warnable: Warnable, comment: String) = cloudRepository
         .addWarning(warnable.warningWithComment(comment))
 }

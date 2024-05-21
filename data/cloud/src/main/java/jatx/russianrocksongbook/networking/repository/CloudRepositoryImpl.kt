@@ -50,7 +50,7 @@ class CloudRepositoryImpl @Inject constructor(
         return retrofitClient.songBookAPI.addSongList(params)
     }
 
-    override fun addWarning(warning: Warning): Single<ResultWithoutData> {
+    override suspend fun addWarning(warning: Warning): ResultWithoutData {
         val params = mapOf(
             "warningJSON" to Gson().toJson(warning.toWarningApiModel())
         )
