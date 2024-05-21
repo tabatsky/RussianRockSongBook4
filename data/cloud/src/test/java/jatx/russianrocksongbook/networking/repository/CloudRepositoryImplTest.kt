@@ -8,7 +8,6 @@ import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit4.MockKRule
 import io.mockk.junit5.MockKExtension
 import io.mockk.verifySequence
-import io.reactivex.Single
 import jatx.russianrocksongbook.domain.models.appcrash.AppCrash
 import jatx.russianrocksongbook.domain.models.cloud.UserInfo
 import jatx.russianrocksongbook.domain.models.converters.asCloudSongWithUserInfo
@@ -143,21 +142,20 @@ class CloudRepositoryImplTest {
     }
 
     @Test
-    fun test005_searchSongs_isWorkingCorrect() {
-        every { songBookAPI.searchSongs(any(), any()) } returns
-                Single.just(
-                    ResultWithCloudSongApiModelListData(
-                        status = "success",
-                        message = null,
-                        data = cloudSongList.map { it.toCloudSongApiModel() }
-                    )
+    fun test005_search_isWorkingCorrect() {
+        coEvery { songBookAPI.searchSongs(any(), any()) } returns
+                ResultWithCloudSongApiModelListData(
+                    status = "success",
+                    message = null,
+                    data = cloudSongList.map { it.toCloudSongApiModel() }
                 )
 
-        val result = cloudRepository.searchSongs("Сплин", OrderBy.BY_ARTIST)
+        GlobalScope.launch {
+            val result = cloudRepository.searchSongs("Сплин", OrderBy.BY_ARTIST)
+            assertEquals(cloudSongList, result.data)
+        }
 
-        assertEquals(cloudSongList, result.blockingGet().data)
-
-        verifySequence {
+        coVerifySequence {
             songBookAPI.searchSongs("Сплин", OrderBy.BY_ARTIST.orderBy)
         }
     }
@@ -216,20 +214,21 @@ class CloudRepositoryImplTest {
 
     @Test
     fun test009_search_isWorkingCorrect() {
-        every { songBookAPI.searchSongs(any(), any()) } returns
-                Single.just(
-                    ResultWithCloudSongApiModelListData(
-                        status = "success",
-                        message = null,
-                        data = cloudSongList.map { it.toCloudSongApiModel() }
-                    )
+        coEvery { songBookAPI.searchSongs(any(), any()) } returns
+                ResultWithCloudSongApiModelListData(
+                    status = "success",
+                    message = null,
+                    data = cloudSongList.map { it.toCloudSongApiModel() }
                 )
 
-        val result = cloudRepository.search("Сплин", OrderBy.BY_ARTIST)
+        GlobalScope.launch {
+            val result = cloudRepository.search("Сплин", OrderBy.BY_ARTIST)
+            assertEquals(cloudSongList, result)
+        }
 
-        assertEquals(cloudSongList, result)
+        TimeUnit.MILLISECONDS.sleep(500)
 
-        verifySequence {
+        coVerifySequence {
             songBookAPI.searchSongs("Сплин", OrderBy.BY_ARTIST.orderBy)
         }
     }

@@ -95,10 +95,10 @@ internal class CloudRepositoryTestImpl @Inject constructor(
     override suspend fun addWarning(warning: Warning): ResultWithoutData =
         ResultWithoutData(STATUS_SUCCESS, null)
 
-    override fun searchSongs(
+    override suspend fun searchSongs(
         searchFor: String,
         orderBy: OrderBy
-    ): Single<ResultWithCloudSongListData> {
+    ): ResultWithCloudSongListData {
         TODO("Not yet implemented")
     }
 

@@ -18,8 +18,8 @@ interface CloudRepository {
     suspend fun addCloudSongList(cloudSongs: List<CloudSong>):
             ResultWithAddSongListResultData
     suspend fun addWarning(warning: Warning): ResultWithoutData
-    fun searchSongs(searchFor: String, orderBy: OrderBy = OrderBy.BY_ID_DESC):
-            Single<ResultWithCloudSongListData>
+    suspend fun searchSongs(searchFor: String, orderBy: OrderBy = OrderBy.BY_ID_DESC):
+            ResultWithCloudSongListData
     fun vote(cloudSong: CloudSong, userInfo: UserInfo, voteValue: Int):
             Single<ResultWithNumber>
     fun delete(secret1: String, secret2: String, cloudSong: CloudSong):

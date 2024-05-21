@@ -27,10 +27,10 @@ internal interface SongBookAPI {
     suspend fun addWarning(@FieldMap params: Map<String, String>): ResultWithoutData
 
     @GET("songs/search/{searchFor}/{orderBy}")
-    fun searchSongs(
+    suspend fun searchSongs(
         @Path("searchFor") searchFor: String,
         @Path("orderBy") orderBy: String
-    ): Single<ResultWithCloudSongApiModelListData>
+    ): ResultWithCloudSongApiModelListData
 
     @GET("songs/vote/{googleAccount}/{deviceIdHash}/{artist}/{title}/{variant}/{voteValue}")
     fun vote(
