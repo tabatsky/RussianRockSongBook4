@@ -14,15 +14,12 @@ import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.localsongs.R
-import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 
 @Composable
 internal fun VoiceHelpDialog(
     onConfirm: (Boolean) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val localViewModel = LocalViewModel.getInstance()
-
     val theme = LocalAppTheme.current
 
     val fontSizeTextSp = dimensionResource(id = R.dimen.text_size_16)

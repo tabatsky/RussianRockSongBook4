@@ -513,7 +513,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         TimeUnit.MILLISECONDS.sleep(500L)
 
-        verifyAll {
+        coVerifyAll {
             addWarningUseCase.execute(song, "some comment")
         }
     }

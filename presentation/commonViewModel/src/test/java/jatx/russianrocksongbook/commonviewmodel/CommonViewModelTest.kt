@@ -6,7 +6,6 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit4.MockKRule
 import io.mockk.junit5.MockKExtension
-import io.reactivex.Single
 import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
 import jatx.russianrocksongbook.testutils.TestViewModelScopeRule
 import jatx.russianrocksongbook.commonviewmodel.deps.Callbacks
@@ -112,8 +111,8 @@ open class CommonViewModelTest {
         every { callbacks.onReviewApp() } just runs
         every { callbacks.onShowDevSite() } just runs
 
-        every { addWarningUseCase.execute(any(), anyString()) } returns
-                Single.just(ResultWithoutData(STATUS_SUCCESS, null))
+        coEvery { addWarningUseCase.execute(any(), anyString()) } returns
+                ResultWithoutData(STATUS_SUCCESS, null)
 
         val _commonViewModel = CommonViewModel(appStateHolder, commonViewModelDeps)
         _commonViewModel.launchJobsIfNecessary()
