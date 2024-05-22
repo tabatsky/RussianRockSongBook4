@@ -1,7 +1,6 @@
 package jatx.russianrocksongbook.networking.repository
 
 import dagger.hilt.components.SingletonComponent
-import io.reactivex.Single
 import it.czerwinski.android.hilt.annotations.TestBoundTo
 import jatx.russianrocksongbook.domain.models.appcrash.AppCrash
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
@@ -116,11 +115,11 @@ internal class CloudRepositoryTestImpl @Inject constructor(
     )
 
 
-    override fun delete(
+    override suspend fun delete(
         secret1: String,
         secret2: String,
         cloudSong: CloudSong
-    ): Single<ResultWithNumber> {
+    ): ResultWithNumber {
         TODO("Not yet implemented")
     }
 

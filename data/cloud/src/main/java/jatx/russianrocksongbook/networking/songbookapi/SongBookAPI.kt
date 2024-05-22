@@ -1,6 +1,5 @@
 package jatx.russianrocksongbook.networking.songbookapi
 
-import io.reactivex.Single
 import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithAddSongListResultData
 import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithNumber
 import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithoutData
@@ -43,13 +42,13 @@ internal interface SongBookAPI {
     ): ResultWithNumber
 
     @GET("songs/delete/{secret1}/{secret2}/{artist}/{title}/{variant}")
-    fun delete(
+    suspend fun delete(
         @Path("secret1") secret1: String,
         @Path("secret2") secret2: String,
         @Path("artist") artist: String,
         @Path("title") title: String,
         @Path("variant") variant: Int,
-    ): Single<ResultWithNumber>
+    ): ResultWithNumber
 
     @GET("songs/pagedSearchWithLikes/{searchFor}/{orderBy}/{page}")
     suspend fun pagedSearch(

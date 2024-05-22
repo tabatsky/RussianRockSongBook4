@@ -7,7 +7,6 @@ import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit4.MockKRule
 import io.mockk.junit5.MockKExtension
-import io.mockk.verifySequence
 import jatx.russianrocksongbook.domain.models.appcrash.AppCrash
 import jatx.russianrocksongbook.domain.models.cloud.UserInfo
 import jatx.russianrocksongbook.domain.models.converters.asCloudSongWithUserInfo
@@ -186,9 +185,13 @@ class CloudRepositoryImplTest {
 
     @Test
     fun test007_delete_isWorkingCorrect() {
-        cloudRepository.delete("gh47", "sd93", cloudSong)
+        GlobalScope.launch {
+            cloudRepository.delete("gh47", "sd93", cloudSong)
+        }
 
-        verifySequence {
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        coVerifySequence {
             songBookAPI.delete(
                 "gh47",
                 "sd93",
