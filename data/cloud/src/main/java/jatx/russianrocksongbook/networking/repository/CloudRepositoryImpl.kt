@@ -2,7 +2,6 @@ package jatx.russianrocksongbook.networking.repository
 
 import com.google.gson.Gson
 import dagger.hilt.components.SingletonComponent
-import io.reactivex.Single
 import it.czerwinski.android.hilt.annotations.BoundTo
 import jatx.russianrocksongbook.domain.models.appcrash.AppCrash
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
@@ -72,7 +71,7 @@ class CloudRepositoryImpl @Inject constructor(
         voteValue
     )
 
-    override fun delete(
+    override suspend fun delete(
         secret1: String,
         secret2: String,
         cloudSong: CloudSong

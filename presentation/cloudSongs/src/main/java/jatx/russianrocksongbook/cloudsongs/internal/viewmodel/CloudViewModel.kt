@@ -13,8 +13,6 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.paging.CONFIG
 import jatx.russianrocksongbook.cloudsongs.internal.paging.CloudSongSource
@@ -204,29 +202,33 @@ class CloudViewModel @Inject constructor(
     @SuppressLint("CheckResult")
     private fun deleteCurrentFromCloud(secret1: String, secret2: String) {
         cloudStateFlow.value.currentCloudSong?.let {
-            deleteFromCloudUseCase
-                .execute(secret1, secret2, it)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ result ->
-                    when (result.status) {
-                        STATUS_SUCCESS -> {
-                            val number = result.data ?: 0
-                            showToast(number.toString())
+            viewModelScope.launch {
+                withContext(Dispatchers.Main) {
+                    try {
+                        val result = withContext(Dispatchers.IO) {
+                            deleteFromCloudUseCase
+                                .execute(secret1, secret2, it)
                         }
-                        STATUS_ERROR -> {
-                            showToast(
-                                result
-                                    .message
-                                    ?.replace("уй", "**")
-                                    ?: ""
-                            )
+                        when (result.status) {
+                            STATUS_SUCCESS -> {
+                                val number = result.data ?: 0
+                                showToast(number.toString())
+                            }
+                            STATUS_ERROR -> {
+                                showToast(
+                                    result
+                                        .message
+                                        ?.replace("уй", "**")
+                                        ?: ""
+                                )
+                            }
                         }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        showToast(R.string.error_in_app)
                     }
-                }, { error ->
-                    error.printStackTrace()
-                    showToast(R.string.error_in_app)
-                })
+                }
+            }
         }
     }
 

@@ -2,11 +2,8 @@ package jatx.russianrocksongbook.domain.usecase.cloud
 
 import io.mockk.coEvery
 import io.mockk.coVerifySequence
-import io.mockk.every
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
-import io.mockk.verifySequence
-import io.reactivex.Single
 import jatx.russianrocksongbook.domain.models.appcrash.AppCrash
 import jatx.russianrocksongbook.domain.models.cloud.UserInfo
 import jatx.russianrocksongbook.domain.models.converters.asCloudSongWithUserInfo
@@ -194,18 +191,21 @@ class CloudUseCaseTest {
 
     @Test
     fun test005_addDeleteFromCloudUseCase_isWorkingCorrect() {
-        every { cloudRepository.delete(any(), any(), any()) } returns
-                Single.just(resultWithNumber)
+        coEvery { cloudRepository.delete(any(), any(), any()) } returns
+                resultWithNumber
 
-        val result = deleteFromCloudUseCase.execute(
-            secret1 = "gh56",
-            secret2 = "io89",
-            cloudSong = song asCloudSongWithUserInfo userInfo
-        )
+        GlobalScope.launch {
+            val result = deleteFromCloudUseCase.execute(
+                secret1 = "gh56",
+                secret2 = "io89",
+                cloudSong = song asCloudSongWithUserInfo userInfo
+            )
+            assertEquals(resultWithNumber, result)
+        }
 
-        assertEquals(resultWithNumber, result.blockingGet())
+        TimeUnit.MILLISECONDS.sleep(500)
 
-        verifySequence {
+        coVerifySequence {
             cloudRepository.delete(
                 secret1 = "gh56",
                 secret2 = "io89",

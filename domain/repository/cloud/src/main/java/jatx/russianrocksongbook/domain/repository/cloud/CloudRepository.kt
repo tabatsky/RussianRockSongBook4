@@ -1,6 +1,5 @@
 package jatx.russianrocksongbook.domain.repository.cloud
 
-import io.reactivex.Single
 import jatx.russianrocksongbook.domain.models.appcrash.AppCrash
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithAddSongListResultData
@@ -22,8 +21,8 @@ interface CloudRepository {
             ResultWithCloudSongListData
     suspend fun vote(cloudSong: CloudSong, userInfo: UserInfo, voteValue: Int):
             ResultWithNumber
-    fun delete(secret1: String, secret2: String, cloudSong: CloudSong):
-            Single<ResultWithNumber>
+    suspend fun delete(secret1: String, secret2: String, cloudSong: CloudSong):
+            ResultWithNumber
 
     suspend fun pagedSearch(searchFor: String, orderBy: OrderBy = OrderBy.BY_ID_DESC, page: Int):
             ResultWithCloudSongListData
