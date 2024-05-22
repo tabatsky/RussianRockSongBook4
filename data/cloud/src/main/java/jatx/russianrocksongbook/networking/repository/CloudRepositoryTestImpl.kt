@@ -54,7 +54,7 @@ internal class CloudRepositoryTestImpl @Inject constructor(
                     .map {
                         (it asCloudSongWithUserInfo userInfo).copy(variant = 1)
                     }
-                _list.set(tmpList)
+                _list.compareAndSet(null, tmpList)
             }
             return _list.get()!!
         }
