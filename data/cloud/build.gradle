@@ -47,9 +47,6 @@ dependencies {
     implementation commonDeps.documentFile
     implementation commonDeps.commonsLang
 
-    api rxDeps.rxJava
-    api rxDeps.rxAndroid
-
     api project(':domain:models:appcrash')
     api project(':domain:models:cloud')
     api project(':domain:models:converters')

@@ -44,9 +44,6 @@ dependencies {
 
     api commonDeps.composeUi
 
-    api rxDeps.rxJava
-    api rxDeps.rxAndroid
-
     api commonDeps.coroutines
 
     api project(':core:debug')
