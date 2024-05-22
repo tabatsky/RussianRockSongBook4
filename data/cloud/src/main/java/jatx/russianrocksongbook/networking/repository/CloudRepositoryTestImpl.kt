@@ -80,7 +80,7 @@ internal class CloudRepositoryTestImpl @Inject constructor(
         }
 
 
-    override fun sendCrash(appCrash: AppCrash): Single<ResultWithoutData> {
+    override suspend fun sendCrash(appCrash: AppCrash): ResultWithoutData {
         TODO("Not yet implemented")
     }
 

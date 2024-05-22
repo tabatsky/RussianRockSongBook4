@@ -29,7 +29,7 @@ class CloudRepositoryImpl @Inject constructor(
 ): CloudRepository {
     override var isOnline = true
 
-    override fun sendCrash(appCrash: AppCrash): Single<ResultWithoutData> {
+    override suspend fun sendCrash(appCrash: AppCrash): ResultWithoutData {
         val params = mapOf(
             "appCrashJSON" to Gson().toJson(appCrash.toAppCrashApiModel())
         )

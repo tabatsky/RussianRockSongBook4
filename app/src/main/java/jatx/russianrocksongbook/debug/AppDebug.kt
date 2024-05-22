@@ -8,6 +8,10 @@ import jatx.russianrocksongbook.domain.models.appcrash.AppCrash
 import jatx.russianrocksongbook.domain.usecase.cloud.SendCrashUseCase
 import jatx.russianrocksongbook.domain.models.appcrash.Version
 import jatx.russianrocksongbook.util.debug.exceptionToString
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 object AppDebug {
     fun setAppCrashHandler(
@@ -39,15 +43,16 @@ class AppCrashHandler(
         throwable: Throwable
     ) {
         Log.e("app crash", exceptionToString(throwable))
-        sendCrashUseCase
-            .execute(AppCrash(version, throwable))
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ result ->
-                Log.e("status", result.status)
-            }, { error ->
-                error.printStackTrace()
-            })
+        GlobalScope.launch {
+            withContext(Dispatchers.IO) {
+                try {
+                    val result = sendCrashUseCase.execute(AppCrash(version, throwable))
+                    Log.e("status", result.status)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
         Thread.sleep(3000)
         oldHandler?.uncaughtException(thread, throwable)
     }
