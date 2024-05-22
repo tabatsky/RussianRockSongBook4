@@ -233,14 +233,17 @@ class CloudUseCaseTest {
 
     @Test
     fun test007_sendCrashUseCase_isWorkingCorrect() {
-        every { cloudRepository.sendCrash(any()) } returns
-                Single.just(resultWithoutData)
+        coEvery { cloudRepository.sendCrash(any()) } returns
+                resultWithoutData
 
-        val result = sendCrashUseCase.execute(appCrash)
+        GlobalScope.launch {
+            val result = sendCrashUseCase.execute(appCrash)
+            assertEquals(resultWithoutData, result)
+        }
 
-        assertEquals(resultWithoutData, result.blockingGet())
+        TimeUnit.MILLISECONDS.sleep(500)
 
-        verifySequence {
+        coVerifySequence {
             cloudRepository.sendCrash(appCrash)
         }
     }

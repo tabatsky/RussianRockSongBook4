@@ -12,7 +12,7 @@ const val BASE_URL = "http://tabatsky.ru/SongBook2/api/"
 internal interface SongBookAPI {
     @FormUrlEncoded
     @POST("crashes/add")
-    fun sendCrash(@FieldMap params: Map<String, String>): Single<ResultWithoutData>
+    suspend fun sendCrash(@FieldMap params: Map<String, String>): ResultWithoutData
 
     @FormUrlEncoded
     @POST("songs/add")

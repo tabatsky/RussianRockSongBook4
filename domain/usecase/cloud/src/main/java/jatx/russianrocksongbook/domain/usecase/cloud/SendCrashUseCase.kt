@@ -9,6 +9,6 @@ import javax.inject.Singleton
 class SendCrashUseCase @Inject constructor(
     private val cloudRepository: CloudRepository
 ) {
-    fun execute(appCrash: AppCrash) = cloudRepository
+    suspend fun execute(appCrash: AppCrash) = cloudRepository
         .sendCrash(appCrash)
 }

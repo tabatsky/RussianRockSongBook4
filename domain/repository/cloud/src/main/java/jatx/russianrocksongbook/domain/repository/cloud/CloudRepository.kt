@@ -13,7 +13,7 @@ import jatx.russianrocksongbook.domain.models.warning.Warning
 interface CloudRepository {
     var isOnline: Boolean
 
-    fun sendCrash(appCrash: AppCrash): Single<ResultWithoutData>
+    suspend fun sendCrash(appCrash: AppCrash): ResultWithoutData
     suspend fun addCloudSong(cloudSong: CloudSong): ResultWithoutData
     suspend fun addCloudSongList(cloudSongs: List<CloudSong>):
             ResultWithAddSongListResultData

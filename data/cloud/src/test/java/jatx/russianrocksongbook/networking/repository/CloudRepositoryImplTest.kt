@@ -76,13 +76,17 @@ class CloudRepositoryImplTest {
 
     @Test
     fun test001_sendCrash_isWorkingCorrect() {
-        cloudRepository.sendCrash(appCrash)
+        GlobalScope.launch {
+            cloudRepository.sendCrash(appCrash)
+        }
+
+        TimeUnit.MILLISECONDS.sleep(500)
 
         val params = mapOf(
             "appCrashJSON" to Gson().toJson(appCrash.toAppCrashApiModel())
         )
 
-        verifySequence {
+        coVerifySequence {
             songBookAPI.sendCrash(params)
         }
     }
