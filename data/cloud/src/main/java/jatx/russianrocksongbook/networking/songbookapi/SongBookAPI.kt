@@ -33,14 +33,14 @@ internal interface SongBookAPI {
     ): ResultWithCloudSongApiModelListData
 
     @GET("songs/vote/{googleAccount}/{deviceIdHash}/{artist}/{title}/{variant}/{voteValue}")
-    fun vote(
+    suspend fun vote(
         @Path("googleAccount") googleAccount: String,
         @Path("deviceIdHash") deviceIdHash: String,
         @Path("artist") artist: String,
         @Path("title") title: String,
         @Path("variant") variant: Int,
         @Path("voteValue") voteValue: Int
-    ): Single<ResultWithNumber>
+    ): ResultWithNumber
 
     @GET("songs/delete/{secret1}/{secret2}/{artist}/{title}/{variant}")
     fun delete(
