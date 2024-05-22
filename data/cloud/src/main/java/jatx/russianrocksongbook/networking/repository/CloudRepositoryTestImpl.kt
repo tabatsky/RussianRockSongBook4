@@ -105,17 +105,16 @@ internal class CloudRepositoryTestImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override fun vote(
+    override suspend fun vote(
         cloudSong: CloudSong,
         userInfo: UserInfo,
         voteValue: Int
-    ): Single<ResultWithNumber> = Single.just(
-        ResultWithNumber(
-            status = STATUS_SUCCESS,
-            message = null,
-            data = 1.0f
-        )
+    ): ResultWithNumber = ResultWithNumber(
+        status = STATUS_SUCCESS,
+        message = null,
+        data = 1.0f
     )
+
 
     override fun delete(
         secret1: String,

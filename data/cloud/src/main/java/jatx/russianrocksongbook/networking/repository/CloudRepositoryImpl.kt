@@ -63,7 +63,7 @@ class CloudRepositoryImpl @Inject constructor(
         .searchSongs(searchFor, orderBy.orderBy)
         .toResultWithCloudSongListData()
 
-    override fun vote(cloudSong: CloudSong, userInfo: UserInfo, voteValue: Int) = retrofitClient.songBookAPI.vote(
+    override suspend fun vote(cloudSong: CloudSong, userInfo: UserInfo, voteValue: Int) = retrofitClient.songBookAPI.vote(
         userInfo.googleAccount,
         userInfo.deviceIdHash,
         cloudSong.artist,

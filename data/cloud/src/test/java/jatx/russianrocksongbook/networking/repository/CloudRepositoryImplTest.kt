@@ -162,9 +162,13 @@ class CloudRepositoryImplTest {
 
     @Test
     fun test006_vote_isWorkingCorrect() {
-        cloudRepository.vote(cloudSong, userInfo, 1)
+        GlobalScope.launch {
+            cloudRepository.vote(cloudSong, userInfo, 1)
+        }
 
-        verifySequence {
+        TimeUnit.MILLISECONDS.sleep(500)
+
+        coVerifySequence {
             songBookAPI.vote(
                 userInfo.googleAccount,
                 userInfo.deviceIdHash,

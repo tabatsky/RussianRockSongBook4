@@ -11,6 +11,6 @@ class VoteUseCase @Inject constructor(
     private val cloudRepository: CloudRepository,
     private val userInfo: UserInfo
 ) {
-    fun execute(cloudSong: CloudSong, voteValue: Int) = cloudRepository
+    suspend fun execute(cloudSong: CloudSong, voteValue: Int) = cloudRepository
         .vote(cloudSong, userInfo, voteValue)
 }

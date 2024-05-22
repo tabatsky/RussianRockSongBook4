@@ -247,17 +247,18 @@ class CloudUseCaseTest {
 
     @Test
     fun test008_voteUseCase_isWorkingCorrect() {
-        every { cloudRepository.vote(any(), any(), any()) } returns
-                Single.just(resultWithNumber)
+        coEvery { cloudRepository.vote(any(), any(), any()) } returns
+                resultWithNumber
 
-        val result = voteUseCase.execute(
-            cloudSong = song asCloudSongWithUserInfo userInfo,
-            voteValue = 1
-        )
+        GlobalScope.launch {
+            val result = voteUseCase.execute(
+                cloudSong = song asCloudSongWithUserInfo userInfo,
+                voteValue = 1
+            )
+            assertEquals(resultWithNumber, result)
+        }
 
-        assertEquals(resultWithNumber, result.blockingGet())
-
-        verifySequence {
+        coVerifySequence {
             cloudRepository.vote(
                 cloudSong = song asCloudSongWithUserInfo userInfo,
                 userInfo = userInfo,

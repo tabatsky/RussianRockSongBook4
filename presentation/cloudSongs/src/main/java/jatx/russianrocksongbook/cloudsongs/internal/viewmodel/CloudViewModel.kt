@@ -28,10 +28,13 @@ import jatx.russianrocksongbook.domain.models.music.Music
 import jatx.russianrocksongbook.domain.models.warning.Warnable
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import jatx.spinner.SpinnerState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -237,28 +240,32 @@ class CloudViewModel @Inject constructor(
     @SuppressLint("CheckResult")
     private fun voteForCurrent(voteValue: Int) {
         cloudStateFlow.value.currentCloudSong?.let { cloudSong ->
-            voteUseCase
-                .execute(cloudSong, voteValue)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ result ->
-                    when (result.status) {
-                        STATUS_SUCCESS -> {
-                            if (voteValue == 1) {
-                                allLikes[cloudSong] = cloudSong.likeCount + 1
-                            } else if (voteValue == -1) {
-                                allDislikes[cloudSong] = cloudSong.dislikeCount + 1
+            viewModelScope.launch {
+                withContext(Dispatchers.Main) {
+                    try {
+                        val result = withContext(Dispatchers.IO) {
+                            voteUseCase
+                                .execute(cloudSong, voteValue)
+                        }
+                        when (result.status) {
+                            STATUS_SUCCESS -> {
+                                if (voteValue == 1) {
+                                    allLikes[cloudSong] = cloudSong.likeCount + 1
+                                } else if (voteValue == -1) {
+                                    allDislikes[cloudSong] = cloudSong.dislikeCount + 1
+                                }
+                                showToast(R.string.toast_vote_success)
                             }
-                            showToast(R.string.toast_vote_success)
+                            STATUS_ERROR -> {
+                                showToast(result.message ?: "")
+                            }
                         }
-                        STATUS_ERROR -> {
-                            showToast(result.message ?: "")
-                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        showToast(R.string.error_in_app)
                     }
-                }, { error ->
-                    error.printStackTrace()
-                    showToast(R.string.error_in_app)
-                })
+                }
+            }
         }
     }
 
