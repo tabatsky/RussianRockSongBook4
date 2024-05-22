@@ -2,8 +2,6 @@ package jatx.russianrocksongbook.debug
 
 import android.annotation.SuppressLint
 import android.util.Log
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import jatx.russianrocksongbook.domain.models.appcrash.AppCrash
 import jatx.russianrocksongbook.domain.usecase.cloud.SendCrashUseCase
 import jatx.russianrocksongbook.domain.models.appcrash.Version
