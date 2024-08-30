@@ -67,6 +67,7 @@ dependencies {
     implementation tvDeps.tvMaterial
 
     api project(':ui-library:clickableWordsTextCompose')
+    api project(':ui-library:spinner')
 
     api project(':domain:usecase:cloud')
     api project(':domain:usecase:local')
