@@ -73,10 +73,10 @@ internal fun TextSearchListScreenImpl(randomKey: Int, isBackFromSong: Boolean) {
                     title = stringResource(id = R.string.title_activity_text_search_list),
                     titleTestTag = APP_BAR_TITLE
                 )
-//                CloudSearchBody(
-//                    modifier = Modifier.weight(1.0f),
-//                    isPortrait = true
-//                )
+                TextSearchListBody(
+                    modifier = Modifier.weight(1.0f),
+                    isPortrait = true
+                )
             }
         } else {
             Row(
@@ -88,10 +88,10 @@ internal fun TextSearchListScreenImpl(randomKey: Int, isBackFromSong: Boolean) {
                     title = stringResource(id = R.string.title_activity_text_search_list),
                     titleTestTag = APP_BAR_TITLE
                 )
-//                CloudSearchBody(
-//                    modifier = Modifier.weight(1.0f),
-//                    isPortrait = false
-//                )
+                TextSearchListBody(
+                    modifier = Modifier.weight(1.0f),
+                    isPortrait = false
+                )
             }
         }
     }
