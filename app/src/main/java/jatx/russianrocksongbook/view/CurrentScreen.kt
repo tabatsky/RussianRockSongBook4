@@ -29,6 +29,7 @@ import jatx.russianrocksongbook.navigation.argCloudSearchRandomKey
 import jatx.russianrocksongbook.navigation.argIsBackFromSomeScreen
 import jatx.russianrocksongbook.navigation.argIsBackFromSong
 import jatx.russianrocksongbook.navigation.argPosition
+import jatx.russianrocksongbook.navigation.argTextSearchListRandomKey
 import jatx.russianrocksongbook.navigation.argTitle
 import jatx.russianrocksongbook.navigation.destinationAddArtist
 import jatx.russianrocksongbook.navigation.destinationAddSong
@@ -41,6 +42,8 @@ import jatx.russianrocksongbook.navigation.destinationSongList
 import jatx.russianrocksongbook.navigation.destinationSongText
 import jatx.russianrocksongbook.navigation.destinationSongTextByArtistAndTitle
 import jatx.russianrocksongbook.navigation.destinationStart
+import jatx.russianrocksongbook.navigation.destinationTextSearchList
+import jatx.russianrocksongbook.textsearch.api.view.TextSearchListScreen
 
 @Composable
 fun CurrentScreen() {
@@ -143,6 +146,21 @@ fun CurrentScreen() {
         ) { backStackEntry ->
             CloudSearchScreen(
                 randomKey = backStackEntry.arguments?.getInt(argCloudSearchRandomKey)
+                    ?: throw IllegalArgumentException("No such argument"),
+                isBackFromSong = backStackEntry.arguments?.getBoolean(argIsBackFromSong)
+                    ?: throw IllegalArgumentException("No such argument")
+            )
+        }
+
+        composable(
+            "$destinationTextSearchList/{$argTextSearchListRandomKey}/{$argIsBackFromSong}",
+            arguments = listOf(
+                navArgument(argTextSearchListRandomKey) { type = NavType.IntType },
+                navArgument(argIsBackFromSong) { type = NavType.BoolType }
+            )
+        ) { backStackEntry ->
+            TextSearchListScreen(
+                randomKey = backStackEntry.arguments?.getInt(argTextSearchListRandomKey)
                     ?: throw IllegalArgumentException("No such argument"),
                 isBackFromSong = backStackEntry.arguments?.getBoolean(argIsBackFromSong)
                     ?: throw IllegalArgumentException("No such argument")

@@ -59,6 +59,14 @@ sealed interface ScreenVariant {
             get() = "$destinationCloudSongText/$position"
     }
 
+    data class TextSearchList(
+        val randomKey: Int = rnd.nextInt(),
+        val isBackFromSong: Boolean = false
+    ): ScreenVariant {
+        override val destination: String
+            get() = "$destinationTextSearchList/$randomKey/$isBackFromSong"
+    }
+
     data object AddArtist: ScreenVariant {
         override val destination: String
             get() = destinationAddArtist
@@ -116,6 +124,12 @@ val String.isCloudSearchScreen: Boolean
 
 val NavDestination?.isCloudSearchScreen: Boolean
     get() = this?.route?.isCloudSearchScreen ?: false
+
+val String.isTextSearchListScreen: Boolean
+    get() = this.startsWith(destinationTextSearchList)
+
+val NavDestination?.isTextSearchListScreen: Boolean
+    get() = this?.route?.isTextSearchListScreen ?: false
 
 val String.isCloudSongTextScreen: Boolean
     get() = this.startsWith(destinationCloudSongText)

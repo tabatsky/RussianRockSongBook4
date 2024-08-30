@@ -7,6 +7,7 @@ const val ARTIST_FAVORITE = "Избранное"
 const val ARTIST_ADD_ARTIST = "Добавить исполнителя"
 const val ARTIST_ADD_SONG = "Добавить песню"
 const val ARTIST_CLOUD_SONGS = "Аккорды онлайн"
+const val ARTIST_TEXT_SEARCH = "Поиск по тексту"
 const val ARTIST_DONATION = "Пожертвования"
 
 val predefinedArtistList = listOf(
@@ -14,6 +15,7 @@ val predefinedArtistList = listOf(
     ARTIST_ADD_ARTIST,
     ARTIST_ADD_SONG,
     ARTIST_CLOUD_SONGS,
+    ARTIST_TEXT_SEARCH,
     ARTIST_DONATION
 )
 

@@ -86,6 +86,7 @@ dependencies {
 
     api project(':presentation:localSongs')
     api project(':presentation:cloudSongs')
+    api project(':presentation:textSearch')
     api project(':presentation:addArtist')
     api project(':presentation:addSong')
     api project(':presentation:donation')

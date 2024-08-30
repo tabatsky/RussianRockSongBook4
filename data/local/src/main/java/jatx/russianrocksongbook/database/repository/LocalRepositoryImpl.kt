@@ -16,13 +16,7 @@ import java.lang.StringBuilder
 import javax.inject.Inject
 import javax.inject.Singleton
 
-internal val predefinedList = listOf(
-    ARTIST_FAVORITE,
-    ARTIST_ADD_ARTIST,
-    ARTIST_ADD_SONG,
-    ARTIST_CLOUD_SONGS,
-    ARTIST_DONATION
-)
+internal val predefinedList = predefinedArtistList
 
 private val voiceSearchQuery: String
     get() {
