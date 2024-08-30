@@ -1,7 +1,6 @@
 package jatx.russianrocksongbook.navigation
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
@@ -29,6 +28,7 @@ object AppNavigator {
 
             val wasFavoriteScreen = previousDestination.isFavorite
             val wasCloudSearchScreen = previousDestination.isCloudSearchScreen
+            val wasTextSearchListScreen = previousDestination.isTextSearchListScreen
             val wasDonationScreen = previousDestination.isDonationScreen
             val wasSettingsScreen = previousDestination.isSettingsScreen
             val wasAddArtistScreen = previousDestination.isAddArtistScreen
@@ -57,6 +57,7 @@ object AppNavigator {
             needSubmitBackAction = needSubmitBackAction || (wasSongTextScreen && becomeSongListOrFavoriteScreen)
 
             needSubmitBackAction = needSubmitBackAction || (wasCloudSearchScreen && becomeSongListOrFavoriteScreen)
+            needSubmitBackAction = needSubmitBackAction || (wasTextSearchListScreen && becomeSongListOrFavoriteScreen)
             needSubmitBackAction = needSubmitBackAction || (wasDonationScreen && becomeSongListOrFavoriteScreen)
             needSubmitBackAction = needSubmitBackAction || (wasSettingsScreen && becomeSongListOrFavoriteScreen)
             needSubmitBackAction = needSubmitBackAction || (wasAddArtistScreen && becomeSongListOrFavoriteScreen)

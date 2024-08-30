@@ -119,6 +119,9 @@ open class LocalViewModel @Inject constructor(
             ARTIST_CLOUD_SONGS -> {
                 ScreenVariant.CloudSearch()
             }
+            ARTIST_TEXT_SEARCH -> {
+                ScreenVariant.TextSearchList()
+            }
             ARTIST_DONATION -> {
                 ScreenVariant.Donation
             }
