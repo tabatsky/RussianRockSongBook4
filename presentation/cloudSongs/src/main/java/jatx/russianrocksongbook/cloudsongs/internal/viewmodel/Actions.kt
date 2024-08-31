@@ -2,12 +2,12 @@ package jatx.russianrocksongbook.cloudsongs.internal.viewmodel
 
 import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
-import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
+import jatx.russianrocksongbook.domain.repository.cloud.CloudSearchOrderBy
 
-data class PerformCloudSearch(val searchFor: String, val orderBy: OrderBy): UIAction
+data class PerformCloudSearch(val searchFor: String, val orderBy: CloudSearchOrderBy): UIAction
 data class UpdateSearchState(val searchState: SearchState): UIAction
 data class UpdateSearchFor(val searchFor: String): UIAction
-data class UpdateOrderBy(val orderBy: OrderBy): UIAction
+data class UpdateOrderBy(val orderBy: CloudSearchOrderBy): UIAction
 data class UpdateCurrentCloudSongCount(val count: Int): UIAction
 data class UpdateCurrentCloudSong(val cloudSong: CloudSong?): UIAction
 data class SelectCloudSong(val position: Int): UIAction

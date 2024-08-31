@@ -15,7 +15,7 @@ import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.commonview.stub.CommonSongListStub
 import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
 import jatx.russianrocksongbook.domain.models.local.Song
-import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
+import jatx.russianrocksongbook.domain.repository.local.TextSearchOrderBy
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.testing.TestingConfig
 import jatx.russianrocksongbook.textsearch.R
@@ -54,7 +54,7 @@ internal fun TextSearchListBody(
     }
 
     val orderBy = textSearchState.orderBy
-    val onOrderByValueChange: (OrderBy) -> Unit = {
+    val onOrderByValueChange: (TextSearchOrderBy) -> Unit = {
         if (orderBy != it) {
             textSearchViewModel.submitAction(UpdateOrderBy(it))
             textSearchViewModel.submitAction(PerformTextSearch(searchFor, it))

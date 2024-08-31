@@ -16,7 +16,7 @@ import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateCloudSongLis
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
-import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
+import jatx.russianrocksongbook.domain.repository.cloud.CloudSearchOrderBy
 import jatx.russianrocksongbook.testing.APP_BAR_TITLE
 
 @Composable
@@ -51,7 +51,7 @@ internal fun CloudSearchScreenImpl(randomKey: Int, isBackFromSong: Boolean) {
             savedRandomKey = randomKey
             LaunchedEffect(Unit) {
                 if (!isBackFromSong && !wasOrientationChanged) {
-                    cloudViewModel.submitAction(PerformCloudSearch("", OrderBy.BY_ID_DESC))
+                    cloudViewModel.submitAction(PerformCloudSearch("", CloudSearchOrderBy.BY_ID_DESC))
                 }
             }
         }

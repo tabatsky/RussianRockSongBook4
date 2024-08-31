@@ -69,10 +69,8 @@ dependencies {
     api project(':ui-library:clickableWordsTextCompose')
     api project(':ui-library:spinner')
 
-    api project(':domain:usecase:cloud')
     api project(':domain:usecase:local')
     api project(':data:local')
-    api project(':data:cloud')
     api project(':data:preferences')
     api project(':presentation:commonViewModel')
     api project(':presentation:commonView')

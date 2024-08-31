@@ -2,7 +2,7 @@ package jatx.russianrocksongbook.cloudsongs.internal.viewmodel
 
 import androidx.paging.PagingData
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
-import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
+import jatx.russianrocksongbook.domain.repository.cloud.CloudSearchOrderBy
 import kotlinx.coroutines.flow.Flow
 
 data class CloudState(
@@ -12,7 +12,7 @@ data class CloudState(
     val currentCloudSong: CloudSong?,
     val cloudSongsFlow: Flow<PagingData<CloudSong>>?,
     val searchFor: String,
-    val orderBy: OrderBy,
+    val orderBy: CloudSearchOrderBy,
     val scrollPosition: Int,
     val needScroll: Boolean
 ) {
@@ -24,7 +24,7 @@ data class CloudState(
             currentCloudSong = null,
             cloudSongsFlow = null,
             searchFor = "",
-            orderBy = OrderBy.BY_ID_DESC,
+            orderBy = CloudSearchOrderBy.BY_ID_DESC,
             scrollPosition = 0,
             needScroll = false
         )

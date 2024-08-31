@@ -17,7 +17,7 @@ import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.paging.CONFIG
 import jatx.russianrocksongbook.cloudsongs.internal.paging.CloudSongSource
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
-import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
+import jatx.russianrocksongbook.domain.repository.cloud.CloudSearchOrderBy
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_ERROR
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
@@ -100,7 +100,7 @@ class CloudViewModel @Inject constructor(
         }
     }
 
-    private fun performCloudSearch(searchFor: String, orderBy: OrderBy) {
+    private fun performCloudSearch(searchFor: String, orderBy: CloudSearchOrderBy) {
         Log.e("cloudSearch", "$searchFor $orderBy")
 
         updateSearchState(SearchState.LOADING)
@@ -146,7 +146,7 @@ class CloudViewModel @Inject constructor(
         }
     }
 
-    private fun updateOrderBy(orderBy: OrderBy) {
+    private fun updateOrderBy(orderBy: CloudSearchOrderBy) {
         cloudStateHolder.cloudStateFlow.update {
             it.copy(orderBy = orderBy)
         }

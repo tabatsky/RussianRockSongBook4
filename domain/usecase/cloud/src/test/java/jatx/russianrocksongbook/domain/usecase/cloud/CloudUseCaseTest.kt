@@ -9,7 +9,7 @@ import jatx.russianrocksongbook.domain.models.cloud.UserInfo
 import jatx.russianrocksongbook.domain.models.converters.asCloudSongWithUserInfo
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.cloud.CloudRepository
-import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
+import jatx.russianrocksongbook.domain.repository.cloud.CloudSearchOrderBy
 import jatx.russianrocksongbook.domain.repository.cloud.result.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -220,14 +220,14 @@ class CloudUseCaseTest {
                 resultWithCloudSongListResultData
 
         GlobalScope.launch {
-            val result = pagedSearchUseCase.execute("Кино", OrderBy.BY_ARTIST, 3)
+            val result = pagedSearchUseCase.execute("Кино", CloudSearchOrderBy.BY_ARTIST, 3)
             assertEquals(resultWithCloudSongListResultData, result)
         }
 
         TimeUnit.MILLISECONDS.sleep(500)
 
         coVerifySequence {
-            cloudRepository.pagedSearch("Кино", OrderBy.BY_ARTIST, 3)
+            cloudRepository.pagedSearch("Кино", CloudSearchOrderBy.BY_ARTIST, 3)
         }
     }
 

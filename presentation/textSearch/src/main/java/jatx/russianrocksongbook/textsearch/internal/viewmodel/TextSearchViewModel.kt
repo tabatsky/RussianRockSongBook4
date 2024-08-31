@@ -6,9 +6,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.commonviewmodel.UIAction
+import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.models.music.Music
 import jatx.russianrocksongbook.domain.models.warning.Warnable
-import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
+import jatx.russianrocksongbook.domain.repository.local.TextSearchOrderBy
 import jatx.spinner.SpinnerState
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -22,6 +23,9 @@ class TextSearchViewModel @Inject constructor(
     textSearchStateHolder.appStateHolder,
     textSearchViewModelDeps.commonViewModelDeps
 ) {
+    private val getSongsByTextSearchUseCase =
+        textSearchViewModelDeps.getSongsByTextSearchUseCase
+
     val spinnerStateOrderBy = mutableStateOf(SpinnerState(0, false))
 
     val textSearchStateFlow = textSearchStateHolder.textSearchStateFlow.asStateFlow()
@@ -63,11 +67,14 @@ class TextSearchViewModel @Inject constructor(
         }
     }
 
-    private fun performTextSearch(searchFor: String, orderBy: OrderBy) {
+    private fun performTextSearch(searchFor: String, orderBy: TextSearchOrderBy) {
 //        updateScrollPosition(0)
 //        updateNeedScroll(true)
         updateSearchFor(searchFor)
         updateOrderBy(orderBy)
+        val words = searchFor.trim().split(" ")
+        val songs = getSongsByTextSearchUseCase.execute(words, orderBy)
+        updateSongs(songs)
     }
 
     private fun updateSearchFor(searchFor: String) {
@@ -76,9 +83,15 @@ class TextSearchViewModel @Inject constructor(
         }
     }
 
-    private fun updateOrderBy(orderBy: OrderBy) {
+    private fun updateOrderBy(orderBy: TextSearchOrderBy) {
         textSearchStateHolder.textSearchStateFlow.update {
             it.copy(orderBy = orderBy)
+        }
+    }
+
+    private fun updateSongs(songs: List<Song>) {
+        textSearchStateHolder.textSearchStateFlow.update {
+            it.copy(songs = songs)
         }
     }
 }

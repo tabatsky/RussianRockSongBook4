@@ -1,7 +1,7 @@
 package jatx.russianrocksongbook.textsearch.internal.viewmodel
 
 import jatx.russianrocksongbook.domain.models.local.Song
-import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
+import jatx.russianrocksongbook.domain.repository.local.TextSearchOrderBy
 
 data class TextSearchState(
     val currentSongCount: Int,
@@ -9,7 +9,7 @@ data class TextSearchState(
     val currentSong: Song?,
     val songs: List<Song>,
     val searchFor: String,
-    val orderBy: OrderBy,
+    val orderBy: TextSearchOrderBy,
     val scrollPosition: Int,
     val needScroll: Boolean
 ) {
@@ -20,7 +20,7 @@ data class TextSearchState(
             currentSong = null,
             songs = listOf(),
             searchFor = "",
-            orderBy = OrderBy.BY_ID_DESC,
+            orderBy = TextSearchOrderBy.BY_TITLE,
             scrollPosition = 0,
             needScroll = false
         )

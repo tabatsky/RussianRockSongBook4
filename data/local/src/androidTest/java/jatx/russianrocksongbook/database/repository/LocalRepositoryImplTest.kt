@@ -10,6 +10,7 @@ import jatx.russianrocksongbook.database.dbinit.LocalRepositoryInitializerImpl
 import jatx.russianrocksongbook.database.dbinit.artistMap
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.local.LocalRepository
+import jatx.russianrocksongbook.domain.repository.local.TextSearchOrderBy
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -130,7 +131,7 @@ class LocalRepositoryImplTest {
         fillDB()
 
         val words = "перемен".split(" ")
-        val songs = localRepo.getSongsByTextSearch(words)
+        val songs = localRepo.getSongsByTextSearch(words, TextSearchOrderBy.BY_TITLE)
         songs.forEach {
             Log.e("song", "${it.artist} ${it.title}")
         }
@@ -141,7 +142,7 @@ class LocalRepositoryImplTest {
         fillDB()
 
         val words = "если есть пачка кармане".split(" ")
-        val songs = localRepo.getSongsByTextSearch(words)
+        val songs = localRepo.getSongsByTextSearch(words, TextSearchOrderBy.BY_TITLE)
         songs.forEach {
             Log.e("song", "${it.artist} ${it.title}")
         }

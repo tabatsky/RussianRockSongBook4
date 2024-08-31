@@ -9,7 +9,7 @@ import jatx.russianrocksongbook.domain.models.converters.asCloudSongWithUserInfo
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.models.warning.Warning
 import jatx.russianrocksongbook.domain.repository.cloud.CloudRepository
-import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
+import jatx.russianrocksongbook.domain.repository.cloud.CloudSearchOrderBy
 import jatx.russianrocksongbook.domain.repository.cloud.result.*
 import jatx.russianrocksongbook.domain.repository.local.LocalRepository
 import java.util.concurrent.atomic.AtomicReference
@@ -61,15 +61,15 @@ internal class CloudRepositoryTestImpl @Inject constructor(
             _list.set(value)
         }
 
-    private val orderByLambda: (CloudSong, OrderBy) -> String = { cloudSong, orderBy ->
+    private val orderByLambda: (CloudSong, CloudSearchOrderBy) -> String = { cloudSong, orderBy ->
         when (orderBy) {
-            OrderBy.BY_ARTIST -> cloudSong.artist + cloudSong.title
-            OrderBy.BY_TITLE -> cloudSong.title + cloudSong.artist
-            OrderBy.BY_ID_DESC -> String.format("%04d", list.size - list.indexOf(cloudSong))
+            CloudSearchOrderBy.BY_ARTIST -> cloudSong.artist + cloudSong.title
+            CloudSearchOrderBy.BY_TITLE -> cloudSong.title + cloudSong.artist
+            CloudSearchOrderBy.BY_ID_DESC -> String.format("%04d", list.size - list.indexOf(cloudSong))
         }
     }
 
-    override fun search(searchFor: String, orderBy: OrderBy) = list
+    override fun search(searchFor: String, orderBy: CloudSearchOrderBy) = list
         .filter {
             it.artist.lowercase().contains(searchFor.lowercase())
                 .or(it.title.lowercase().contains(searchFor.lowercase()))
@@ -99,7 +99,7 @@ internal class CloudRepositoryTestImpl @Inject constructor(
 
     override suspend fun searchSongs(
         searchFor: String,
-        orderBy: OrderBy
+        orderBy: CloudSearchOrderBy
     ): ResultWithCloudSongListData {
         TODO("Not yet implemented")
     }
@@ -125,7 +125,7 @@ internal class CloudRepositoryTestImpl @Inject constructor(
 
     override suspend fun pagedSearch(
         searchFor: String,
-        orderBy: OrderBy,
+        orderBy: CloudSearchOrderBy,
         page: Int
     ): ResultWithCloudSongListData {
         Thread.sleep(100)

@@ -17,7 +17,7 @@ import androidx.compose.ui.res.stringResource
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
-import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
+import jatx.russianrocksongbook.domain.repository.local.TextSearchOrderBy
 import jatx.russianrocksongbook.testing.APP_BAR_TITLE
 import jatx.russianrocksongbook.textsearch.R
 import jatx.russianrocksongbook.textsearch.internal.viewmodel.PerformTextSearch
@@ -54,7 +54,7 @@ internal fun TextSearchListScreenImpl(randomKey: Int, isBackFromSong: Boolean) {
             savedRandomKey = randomKey
             LaunchedEffect(Unit) {
                 if (!isBackFromSong && !wasOrientationChanged) {
-                    textSearchViewModel.submitAction(PerformTextSearch("", OrderBy.BY_ID_DESC))
+                    textSearchViewModel.submitAction(PerformTextSearch("", TextSearchOrderBy.BY_TITLE))
                 }
             }
         }

@@ -12,7 +12,7 @@ import jatx.russianrocksongbook.domain.models.cloud.UserInfo
 import jatx.russianrocksongbook.domain.models.converters.asCloudSongWithUserInfo
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.cloud.CloudRepository
-import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
+import jatx.russianrocksongbook.domain.repository.cloud.CloudSearchOrderBy
 import jatx.russianrocksongbook.networking.converters.toAppCrashApiModel
 import jatx.russianrocksongbook.networking.converters.toCloudSongApiModel
 import jatx.russianrocksongbook.networking.converters.toWarningApiModel
@@ -154,12 +154,12 @@ class CloudRepositoryImplTest {
                 )
 
         GlobalScope.launch {
-            val result = cloudRepository.searchSongs("Сплин", OrderBy.BY_ARTIST)
+            val result = cloudRepository.searchSongs("Сплин", CloudSearchOrderBy.BY_ARTIST)
             assertEquals(cloudSongList, result.data)
         }
 
         coVerifySequence {
-            songBookAPI.searchSongs("Сплин", OrderBy.BY_ARTIST.orderBy)
+            songBookAPI.searchSongs("Сплин", CloudSearchOrderBy.BY_ARTIST.orderBy)
         }
     }
 
@@ -212,14 +212,14 @@ class CloudRepositoryImplTest {
                 )
 
         GlobalScope.launch {
-            val result = cloudRepository.pagedSearch("Сплин", OrderBy.BY_ARTIST, 3)
+            val result = cloudRepository.pagedSearch("Сплин", CloudSearchOrderBy.BY_ARTIST, 3)
             assertEquals(cloudSongList, result.data)
         }
 
         TimeUnit.MILLISECONDS.sleep(500)
 
         coVerifySequence {
-            songBookAPI.pagedSearch("Сплин", OrderBy.BY_ARTIST.orderBy, 3)
+            songBookAPI.pagedSearch("Сплин", CloudSearchOrderBy.BY_ARTIST.orderBy, 3)
         }
     }
 
@@ -233,14 +233,14 @@ class CloudRepositoryImplTest {
                 )
 
         GlobalScope.launch {
-            val result = cloudRepository.search("Сплин", OrderBy.BY_ARTIST)
+            val result = cloudRepository.search("Сплин", CloudSearchOrderBy.BY_ARTIST)
             assertEquals(cloudSongList, result)
         }
 
         TimeUnit.MILLISECONDS.sleep(500)
 
         coVerifySequence {
-            songBookAPI.searchSongs("Сплин", OrderBy.BY_ARTIST.orderBy)
+            songBookAPI.searchSongs("Сплин", CloudSearchOrderBy.BY_ARTIST.orderBy)
         }
     }
 }
