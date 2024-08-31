@@ -44,6 +44,7 @@ import jatx.russianrocksongbook.navigation.destinationSongTextByArtistAndTitle
 import jatx.russianrocksongbook.navigation.destinationStart
 import jatx.russianrocksongbook.navigation.destinationTextSearchList
 import jatx.russianrocksongbook.textsearch.api.view.TextSearchListScreen
+import jatx.russianrocksongbook.textsearch.internal.viewmodel.TextSearchViewModel
 
 @Composable
 fun CurrentScreen() {
@@ -57,12 +58,14 @@ fun CurrentScreen() {
     val localViewModel = LocalViewModel.getInstance()
     val voiceCommandViewModel = VoiceCommandViewModel.getInstance()
     val cloudViewModel = CloudViewModel.getInstance()
+    val textSearchViewModel = TextSearchViewModel.getInstance()
 
     if (CommonViewModel.needReset) {
         commonViewModel.resetState()
         localViewModel.resetState()
         voiceCommandViewModel.resetState()
         cloudViewModel.resetState()
+        textSearchViewModel.resetState()
         CommonViewModel.needReset = false
     }
 

@@ -19,7 +19,10 @@ import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.testing.TestingConfig
 import jatx.russianrocksongbook.textsearch.R
+import jatx.russianrocksongbook.textsearch.internal.viewmodel.PerformTextSearch
 import jatx.russianrocksongbook.textsearch.internal.viewmodel.TextSearchViewModel
+import jatx.russianrocksongbook.textsearch.internal.viewmodel.UpdateOrderBy
+import jatx.russianrocksongbook.textsearch.internal.viewmodel.UpdateSearchFor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
@@ -47,19 +50,19 @@ internal fun TextSearchListBody(
 
     val searchFor = textSearchState.searchFor
     val onSearchForValueChange: (String) -> Unit = {
-//        textSearchViewModel.submitAction(UpdateSearchFor(it))
+        textSearchViewModel.submitAction(UpdateSearchFor(it))
     }
 
     val orderBy = textSearchState.orderBy
     val onOrderByValueChange: (OrderBy) -> Unit = {
         if (orderBy != it) {
-//            textSearchViewModel.submitAction(UpdateOrderBy(it))
-//            textSearchViewModel.submitAction(PerformCloudSearch(searchFor, it))
+            textSearchViewModel.submitAction(UpdateOrderBy(it))
+            textSearchViewModel.submitAction(PerformTextSearch(searchFor, it))
         }
     }
 
     val onSearchClick = {
-//        textSearchViewModel.submitAction(PerformCloudSearch(searchFor, orderBy))
+        textSearchViewModel.submitAction(PerformTextSearch(searchFor, orderBy))
     }
 
     val onItemClick: (Int, Song) -> Unit = { index, song ->
