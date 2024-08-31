@@ -17,11 +17,15 @@ import androidx.compose.ui.res.stringResource
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
+import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
 import jatx.russianrocksongbook.testing.APP_BAR_TITLE
 import jatx.russianrocksongbook.textsearch.R
+import jatx.russianrocksongbook.textsearch.internal.viewmodel.PerformTextSearch
+import jatx.russianrocksongbook.textsearch.internal.viewmodel.TextSearchViewModel
 
 @Composable
 internal fun TextSearchListScreenImpl(randomKey: Int, isBackFromSong: Boolean) {
+    val textSearchViewModel = TextSearchViewModel.getInstance()
     val theme = LocalAppTheme.current
 
     var savedRandomKey by rememberSaveable { mutableIntStateOf(0) }
@@ -50,7 +54,7 @@ internal fun TextSearchListScreenImpl(randomKey: Int, isBackFromSong: Boolean) {
             savedRandomKey = randomKey
             LaunchedEffect(Unit) {
                 if (!isBackFromSong && !wasOrientationChanged) {
-//                    cloudViewModel.submitAction(PerformCloudSearch("", OrderBy.BY_ID_DESC))
+                    textSearchViewModel.submitAction(PerformTextSearch("", OrderBy.BY_ID_DESC))
                 }
             }
         }
