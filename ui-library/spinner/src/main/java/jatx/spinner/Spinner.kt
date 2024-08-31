@@ -38,7 +38,7 @@ fun Spinner(
         theState = theState.copy(isExpanded = isExpanded)
     }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(initialPosition) {
         setPosition(initialPosition)
     }
 
