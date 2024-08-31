@@ -56,11 +56,11 @@ class TextSearchViewModel @Inject constructor(
             is PerformTextSearch -> performTextSearch(action.searchFor, action.orderBy)
             is UpdateSearchFor -> updateSearchFor(action.searchFor)
             is UpdateOrderBy -> updateOrderBy(action.orderBy)
-//            is UpdateCurrentSongCount -> updateCurrentCloudSongCount(action.count)
+            is UpdateCurrentSongCount -> updateCurrentSongCount(action.count)
 //            is UpdateCurrentSong -> updateCurrentCloudSong(action.cloudSong)
 //            is SelectSong -> selectCloudSong(action.position)
-//            is UpdateSongListScrollPosition -> updateScrollPosition(action.position)
-//            is UpdateSongListNeedScroll -> updateNeedScroll(action.needScroll)
+            is UpdateSongListScrollPosition -> updateScrollPosition(action.position)
+            is UpdateSongListNeedScroll -> updateNeedScroll(action.needScroll)
 //            is NextSong -> nextCloudSong()
 //            is PrevSong -> prevCloudSong()
             else -> super.handleAction(action)
@@ -68,13 +68,14 @@ class TextSearchViewModel @Inject constructor(
     }
 
     private fun performTextSearch(searchFor: String, orderBy: TextSearchOrderBy) {
-//        updateScrollPosition(0)
-//        updateNeedScroll(true)
+        updateScrollPosition(0)
+        updateNeedScroll(true)
         updateSearchFor(searchFor)
         updateOrderBy(orderBy)
         val words = searchFor.trim().split(" ")
         val songs = getSongsByTextSearchUseCase.execute(words, orderBy)
         updateSongs(songs)
+        updateCurrentSongCount(songs.size)
     }
 
     private fun updateSearchFor(searchFor: String) {
@@ -92,6 +93,24 @@ class TextSearchViewModel @Inject constructor(
     private fun updateSongs(songs: List<Song>) {
         textSearchStateHolder.textSearchStateFlow.update {
             it.copy(songs = songs)
+        }
+    }
+
+    private fun updateCurrentSongCount(count: Int) {
+        textSearchStateHolder.textSearchStateFlow.update {
+            it.copy(currentSongCount = count)
+        }
+    }
+
+    private fun updateScrollPosition(position: Int) {
+        textSearchStateHolder.textSearchStateFlow.update {
+            it.copy(scrollPosition = position)
+        }
+    }
+
+    private fun updateNeedScroll(needScroll: Boolean) {
+        textSearchStateHolder.textSearchStateFlow.update {
+            it.copy(needScroll = needScroll)
         }
     }
 }

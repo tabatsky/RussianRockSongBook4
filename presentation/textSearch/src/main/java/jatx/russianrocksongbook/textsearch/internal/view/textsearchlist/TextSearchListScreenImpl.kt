@@ -22,6 +22,7 @@ import jatx.russianrocksongbook.testing.APP_BAR_TITLE
 import jatx.russianrocksongbook.textsearch.R
 import jatx.russianrocksongbook.textsearch.internal.viewmodel.PerformTextSearch
 import jatx.russianrocksongbook.textsearch.internal.viewmodel.TextSearchViewModel
+import jatx.russianrocksongbook.textsearch.internal.viewmodel.UpdateSongListNeedScroll
 
 @Composable
 internal fun TextSearchListScreenImpl(randomKey: Int, isBackFromSong: Boolean) {
@@ -46,7 +47,7 @@ internal fun TextSearchListScreenImpl(randomKey: Int, isBackFromSong: Boolean) {
         LaunchedEffect(isPortrait) {
             if (wasOrientationChanged) {
                 isLastOrientationPortrait = isPortrait
-//                cloudViewModel.submitAction(UpdateCloudSongListNeedScroll(true))
+                textSearchViewModel.submitAction(UpdateSongListNeedScroll(true))
             }
         }
 
@@ -61,7 +62,7 @@ internal fun TextSearchListScreenImpl(randomKey: Int, isBackFromSong: Boolean) {
 
         LaunchedEffect(Unit) {
             if (isBackFromSong) {
-//                cloudViewModel.submitAction(UpdateCloudSongListNeedScroll(true))
+                textSearchViewModel.submitAction(UpdateSongListNeedScroll(true))
             }
         }
 

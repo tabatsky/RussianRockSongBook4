@@ -23,6 +23,8 @@ import jatx.russianrocksongbook.textsearch.internal.viewmodel.PerformTextSearch
 import jatx.russianrocksongbook.textsearch.internal.viewmodel.TextSearchViewModel
 import jatx.russianrocksongbook.textsearch.internal.viewmodel.UpdateOrderBy
 import jatx.russianrocksongbook.textsearch.internal.viewmodel.UpdateSearchFor
+import jatx.russianrocksongbook.textsearch.internal.viewmodel.UpdateSongListNeedScroll
+import jatx.russianrocksongbook.textsearch.internal.viewmodel.UpdateSongListScrollPosition
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
@@ -125,13 +127,13 @@ internal fun TextSearchListBody(
                         }
                         listState.scrollToItem(scrollPosition)
                         delay(100L)
-//                        textSearchViewModel.submitAction(UpdateCloudSongListNeedScroll(false))
+                        textSearchViewModel.submitAction(UpdateSongListNeedScroll(false))
                     }
                 } else {
                     snapshotFlow {
                         listState.firstVisibleItemIndex
                     }.collectLatest {
-//                        textSearchViewModel.submitAction(UpdateCloudSongListScrollPosition(it))
+                        textSearchViewModel.submitAction(UpdateSongListScrollPosition(it))
                     }
                 }
             }
