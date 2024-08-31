@@ -26,6 +26,8 @@ class TextSearchViewModel @Inject constructor(
     private val getSongsByTextSearchUseCase =
         textSearchViewModelDeps.getSongsByTextSearchUseCase
 
+    val editorText = mutableStateOf("")
+
     val spinnerStateOrderBy = mutableStateOf(SpinnerState(0, false))
 
     val textSearchStateFlow = textSearchStateHolder.textSearchStateFlow.asStateFlow()
