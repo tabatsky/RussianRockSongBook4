@@ -17,20 +17,20 @@ interface CloudRepository {
     suspend fun addCloudSongList(cloudSongs: List<CloudSong>):
             ResultWithAddSongListResultData
     suspend fun addWarning(warning: Warning): ResultWithoutData
-    suspend fun searchSongs(searchFor: String, orderBy: OrderBy = OrderBy.BY_ID_DESC):
+    suspend fun searchSongs(searchFor: String, orderBy: CloudSearchOrderBy = CloudSearchOrderBy.BY_ID_DESC):
             ResultWithCloudSongListData
     suspend fun vote(cloudSong: CloudSong, userInfo: UserInfo, voteValue: Int):
             ResultWithNumber
     suspend fun delete(secret1: String, secret2: String, cloudSong: CloudSong):
             ResultWithNumber
 
-    suspend fun pagedSearch(searchFor: String, orderBy: OrderBy = OrderBy.BY_ID_DESC, page: Int):
+    suspend fun pagedSearch(searchFor: String, orderBy: CloudSearchOrderBy = CloudSearchOrderBy.BY_ID_DESC, page: Int):
             ResultWithCloudSongListData
 
-    fun search(searchFor: String, orderBy: OrderBy): List<CloudSong>
+    fun search(searchFor: String, orderBy: CloudSearchOrderBy): List<CloudSong>
 }
 
-enum class OrderBy(
+enum class CloudSearchOrderBy(
     val orderBy: String,
     val orderByRus: String
 ) {

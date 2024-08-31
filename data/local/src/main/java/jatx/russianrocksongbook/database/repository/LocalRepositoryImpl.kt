@@ -85,7 +85,7 @@ class LocalRepositoryImpl @Inject constructor(
             .map { it.toSong() }
     }
 
-    override fun getSongsByTextSearch(words: List<String>): List<Song> {
+    override fun getSongsByTextSearch(words: List<String>, orderBy: TextSearchOrderBy): List<Song> {
         if (words.isEmpty() || words[0].isEmpty()) return listOf()
         val sb = StringBuilder()
         sb.append("SELECT * FROM songs")
@@ -102,6 +102,12 @@ class LocalRepositoryImpl @Inject constructor(
         return songDao
             .getSongsRawQuery(query)
             .map { it.toSong() }
+            .sortedBy {
+                when (orderBy) {
+                    TextSearchOrderBy.BY_TITLE -> it.title + it.artist
+                    TextSearchOrderBy.BY_ARTIST -> it.artist + it.title
+                }
+            }
     }
 
     override fun getSongByArtistAndPosition(artist: String, position: Int) =

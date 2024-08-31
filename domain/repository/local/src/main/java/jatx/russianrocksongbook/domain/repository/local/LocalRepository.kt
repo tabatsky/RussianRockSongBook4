@@ -36,7 +36,7 @@ interface LocalRepository {
     fun getSongsByArtist(artist: String): Flow<List<Song>>
     fun getSongsByArtistAsList(artist: String): List<Song>
     fun getSongsByVoiceSearch(voiceSearch: String): List<Song>
-    fun getSongsByTextSearch(words: List<String>): List<Song>
+    fun getSongsByTextSearch(words: List<String>, orderBy: TextSearchOrderBy): List<Song>
     fun getSongByArtistAndPosition(artist: String, position: Int): Flow<Song?>
     fun getSongByArtistAndTitle(artist: String, title: String): Song?
     fun setFavorite(favorite: Boolean, artist: String, title: String)
@@ -50,5 +50,13 @@ interface LocalRepository {
     fun deleteWrongSong(artist: String, title: String)
     fun deleteWrongArtist(artist: String)
     fun patchWrongArtist(wrongArtist: String, actualArtist: String)
+}
+
+enum class TextSearchOrderBy(
+    val orderBy: String,
+    val orderByRus: String
+) {
+    BY_TITLE("byTitle", "По названию"),
+    BY_ARTIST("byArtist", "По исполнителю")
 }
 

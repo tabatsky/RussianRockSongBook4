@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
-import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
+import jatx.russianrocksongbook.domain.repository.cloud.CloudSearchOrderBy
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.domain.usecase.cloud.PagedSearchUseCase
 import jatx.russianrocksongbook.util.debug.exceptionToString
@@ -14,7 +14,7 @@ import kotlinx.coroutines.withContext
 internal class CloudSongSource(
     private val pagedSearchUseCase: PagedSearchUseCase,
     private val searchFor: String = "",
-    private val orderBy: OrderBy = OrderBy.BY_ID_DESC,
+    private val orderBy: CloudSearchOrderBy = CloudSearchOrderBy.BY_ID_DESC,
     private val onFetchDataError: () -> Unit = {},
     private val onEmptyList: () -> Unit = {}
 ): PagingSource<Int, CloudSong>() {

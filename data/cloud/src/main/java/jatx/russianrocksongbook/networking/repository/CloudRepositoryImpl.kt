@@ -8,7 +8,7 @@ import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.models.cloud.UserInfo
 import jatx.russianrocksongbook.domain.models.warning.Warning
 import jatx.russianrocksongbook.domain.repository.cloud.CloudRepository
-import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
+import jatx.russianrocksongbook.domain.repository.cloud.CloudSearchOrderBy
 import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithAddSongListResultData
 import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithCloudSongListData
 import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithoutData
@@ -57,7 +57,7 @@ class CloudRepositoryImpl @Inject constructor(
         return retrofitClient.songBookAPI.addWarning(params)
     }
 
-    override suspend fun searchSongs(searchFor: String, orderBy: OrderBy) = retrofitClient
+    override suspend fun searchSongs(searchFor: String, orderBy: CloudSearchOrderBy) = retrofitClient
         .songBookAPI
         .searchSongs(searchFor, orderBy.orderBy)
         .toResultWithCloudSongListData()
@@ -87,14 +87,14 @@ class CloudRepositoryImpl @Inject constructor(
 
     override suspend fun pagedSearch(
         searchFor: String,
-        orderBy: OrderBy,
+        orderBy: CloudSearchOrderBy,
         page: Int
     ): ResultWithCloudSongListData = retrofitClient
         .songBookAPI
         .pagedSearch(searchFor, orderBy.orderBy, page)
         .toResultWithCloudSongListData()
 
-    override fun search(searchFor: String, orderBy: OrderBy) =
+    override fun search(searchFor: String, orderBy: CloudSearchOrderBy) =
         runBlocking {
             searchSongs(searchFor, orderBy)
                 .data

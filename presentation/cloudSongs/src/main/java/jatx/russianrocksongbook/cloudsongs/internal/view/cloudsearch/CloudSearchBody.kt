@@ -29,7 +29,7 @@ import jatx.russianrocksongbook.commonview.stub.ErrorSongListStub
 import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
 import jatx.russianrocksongbook.commonviewmodel.SelectScreen
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
-import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
+import jatx.russianrocksongbook.domain.repository.cloud.CloudSearchOrderBy
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.testing.TestingConfig
 import jatx.russianrocksongbook.navigation.ScreenVariant
@@ -70,7 +70,7 @@ internal fun CloudSearchBody(
     }
 
     val orderBy = cloudState.orderBy
-    val onOrderByValueChange: (OrderBy) -> Unit = {
+    val onOrderByValueChange: (CloudSearchOrderBy) -> Unit = {
         if (orderBy != it) {
             cloudViewModel.submitAction(UpdateOrderBy(it))
             cloudViewModel.submitAction(PerformCloudSearch(searchFor, it))

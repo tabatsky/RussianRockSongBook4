@@ -21,7 +21,7 @@ import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.commonviewmodel.SelectScreen
 import jatx.russianrocksongbook.commonviewmodel.deps.impl.ToastsTestImpl
 import jatx.russianrocksongbook.domain.repository.cloud.CloudRepository
-import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
+import jatx.russianrocksongbook.domain.repository.cloud.CloudSearchOrderBy
 import jatx.russianrocksongbook.domain.repository.local.*
 import jatx.russianrocksongbook.domain.repository.preferences.ARTIST_KINO
 import jatx.russianrocksongbook.domain.repository.preferences.Orientation
@@ -1072,7 +1072,7 @@ class UITest {
         val testNumber = 301
 
         with (cloudRepository) {
-            val list = search("", OrderBy.BY_ID_DESC)
+            val list = search("", CloudSearchOrderBy.BY_ID_DESC)
             val titleList = list.map { "${it.artist} - ${it.title}" }
             Log.e("test $testNumber list", titleList.toString())
 
@@ -1101,18 +1101,18 @@ class UITest {
             Log.e("test $testNumber click", ARTIST_CLOUD_SONGS)
             composeTestRule.waitForCondition {
                 composeTestRule
-                    .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
+                    .onNodeWithText(CloudSearchOrderBy.BY_ID_DESC.orderByRus)
                     .isDisplayed()
             }
             composeTestRule
-                .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
+                .onNodeWithText(CloudSearchOrderBy.BY_ID_DESC.orderByRus)
                 .assertIsDisplayed()
             composeTestRule.waitForCondition {
                 composeTestRule
                     .onNodeWithText(list[2].visibleTitleWithRating)
                     .isDisplayed()
             }
-            Log.e("test $testNumber assert", "${OrderBy.BY_ID_DESC.orderByRus} is displayed")
+            Log.e("test $testNumber assert", "${CloudSearchOrderBy.BY_ID_DESC.orderByRus} is displayed")
             composeTestRule
                 .onNodeWithText(list[2].visibleTitleWithRating)
                 .assertIsDisplayed()
@@ -1183,7 +1183,7 @@ class UITest {
                 .performClick()
             Log.e("test $testNumber click", SEARCH_BUTTON)
 
-            val list = search("Ло", OrderBy.BY_ID_DESC)
+            val list = search("Ло", CloudSearchOrderBy.BY_ID_DESC)
             val titleList = list.map { "${it.artist} - ${it.title}" }
             Log.e("test $testNumber list", titleList.toString())
 
@@ -1212,32 +1212,32 @@ class UITest {
 
         composeTestRule.waitForCondition {
             composeTestRule
-                .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
+                .onNodeWithText(CloudSearchOrderBy.BY_ID_DESC.orderByRus)
                 .isDisplayed()
         }
 
         composeTestRule
-            .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
+            .onNodeWithText(CloudSearchOrderBy.BY_ID_DESC.orderByRus)
             .performClick()
-        Log.e("test $testNumber click", OrderBy.BY_ID_DESC.orderByRus)
+        Log.e("test $testNumber click", CloudSearchOrderBy.BY_ID_DESC.orderByRus)
         composeTestRule.waitForCondition {
             composeTestRule
-                .onAllNodesWithText(OrderBy.BY_ID_DESC.orderByRus)
+                .onAllNodesWithText(CloudSearchOrderBy.BY_ID_DESC.orderByRus)
                 .fetchSemanticsNodes()
                 .count() == 2
         }
         composeTestRule
-            .onAllNodesWithText(OrderBy.BY_ID_DESC.orderByRus)
+            .onAllNodesWithText(CloudSearchOrderBy.BY_ID_DESC.orderByRus)
             .assertCountEquals(2)
-        Log.e("test $testNumber assert", "${OrderBy.BY_ID_DESC.orderByRus} count is 2")
+        Log.e("test $testNumber assert", "${CloudSearchOrderBy.BY_ID_DESC.orderByRus} count is 2")
         composeTestRule
-            .onNodeWithText(OrderBy.BY_ARTIST.orderByRus)
+            .onNodeWithText(CloudSearchOrderBy.BY_ARTIST.orderByRus)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "${OrderBy.BY_ARTIST.orderByRus} is displayed")
+        Log.e("test $testNumber assert", "${CloudSearchOrderBy.BY_ARTIST.orderByRus} is displayed")
         composeTestRule
-            .onNodeWithText(OrderBy.BY_TITLE.orderByRus)
+            .onNodeWithText(CloudSearchOrderBy.BY_TITLE.orderByRus)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "${OrderBy.BY_TITLE.orderByRus} is displayed")
+        Log.e("test $testNumber assert", "${CloudSearchOrderBy.BY_TITLE.orderByRus} is displayed")
     }
 
     @Test
@@ -1267,20 +1267,20 @@ class UITest {
             Log.e("test $testNumber click", SEARCH_BUTTON)
 
             composeTestRule
-                .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
+                .onNodeWithText(CloudSearchOrderBy.BY_ID_DESC.orderByRus)
                 .performClick()
-            Log.e("test $testNumber click", OrderBy.BY_ID_DESC.orderByRus)
+            Log.e("test $testNumber click", CloudSearchOrderBy.BY_ID_DESC.orderByRus)
             composeTestRule.waitForCondition {
                 composeTestRule
-                    .onNodeWithText(OrderBy.BY_TITLE.orderByRus)
+                    .onNodeWithText(CloudSearchOrderBy.BY_TITLE.orderByRus)
                     .isDisplayed()
             }
             composeTestRule
-                .onNodeWithText(OrderBy.BY_TITLE.orderByRus)
+                .onNodeWithText(CloudSearchOrderBy.BY_TITLE.orderByRus)
                 .performClick()
-            Log.e("test $testNumber click", OrderBy.BY_TITLE.orderByRus)
+            Log.e("test $testNumber click", CloudSearchOrderBy.BY_TITLE.orderByRus)
 
-            val list = search("Ло", OrderBy.BY_TITLE)
+            val list = search("Ло", CloudSearchOrderBy.BY_TITLE)
             val titleList = list.map { "${it.artist} - ${it.title}" }
             Log.e("test $testNumber list", titleList.toString())
 
@@ -1322,20 +1322,20 @@ class UITest {
             Log.e("test $testNumber click", SEARCH_BUTTON)
 
             composeTestRule
-                .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
+                .onNodeWithText(CloudSearchOrderBy.BY_ID_DESC.orderByRus)
                 .performClick()
-            Log.e("test $testNumber click", OrderBy.BY_ID_DESC.orderByRus)
+            Log.e("test $testNumber click", CloudSearchOrderBy.BY_ID_DESC.orderByRus)
             composeTestRule.waitForCondition {
                 composeTestRule
-                    .onNodeWithText(OrderBy.BY_ARTIST.orderByRus)
+                    .onNodeWithText(CloudSearchOrderBy.BY_ARTIST.orderByRus)
                     .isDisplayed()
             }
             composeTestRule
-                .onNodeWithText(OrderBy.BY_ARTIST.orderByRus)
+                .onNodeWithText(CloudSearchOrderBy.BY_ARTIST.orderByRus)
                 .performClick()
-            Log.e("test $testNumber click", OrderBy.BY_ARTIST.orderByRus)
+            Log.e("test $testNumber click", CloudSearchOrderBy.BY_ARTIST.orderByRus)
 
-            val list = search("Ло", OrderBy.BY_ARTIST)
+            val list = search("Ло", CloudSearchOrderBy.BY_ARTIST)
             val titleList = list.map { "${it.artist} - ${it.title}" }
             Log.e("test $testNumber list", titleList.toString())
 
@@ -1392,7 +1392,7 @@ class UITest {
         val testNumber = 401
 
         with (cloudRepository) {
-            val list = search("", OrderBy.BY_ID_DESC)
+            val list = search("", CloudSearchOrderBy.BY_ID_DESC)
             val titleList = list.map { "${it.artist} - ${it.title}" }
             Log.e("test $testNumber list", titleList.toString())
 
@@ -1501,7 +1501,7 @@ class UITest {
         val testNumber = 403
 
         with (cloudRepository) {
-            val list = search("", OrderBy.BY_ID_DESC)
+            val list = search("", CloudSearchOrderBy.BY_ID_DESC)
             val titleList = list.map { "${it.artist} - ${it.title}" }
             Log.e("test $testNumber list", titleList.toString())
 
@@ -1668,7 +1668,7 @@ class UITest {
         val testNumber = 405
 
         with (cloudRepository) {
-            val list = search("", OrderBy.BY_ID_DESC)
+            val list = search("", CloudSearchOrderBy.BY_ID_DESC)
             val titleList = list.map { "${it.artist} - ${it.title}" }
             Log.e("test $testNumber list", titleList.toString())
 
@@ -1731,7 +1731,7 @@ class UITest {
         val testNumber = 406
 
         with (cloudRepository) {
-            val list = search("", OrderBy.BY_ID_DESC)
+            val list = search("", CloudSearchOrderBy.BY_ID_DESC)
             val titleList = list.map { "${it.artist} - ${it.title}" }
             Log.e("test $testNumber list", titleList.toString())
 
@@ -1803,7 +1803,7 @@ class UITest {
         val testNumber = 407
 
         with (cloudRepository) {
-            val list = search("", OrderBy.BY_ID_DESC)
+            val list = search("", CloudSearchOrderBy.BY_ID_DESC)
             val titleList = list.map { "${it.artist} - ${it.title}" }
             Log.e("test $testNumber list", titleList.toString())
 
@@ -1969,13 +1969,13 @@ class UITest {
 
         with (cloudRepository) {
             composeTestRule.waitForCondition {
-                val list = search("", OrderBy.BY_ID_DESC)
+                val list = search("", CloudSearchOrderBy.BY_ID_DESC)
                 val cloudSong = list[0]
                 Log.e("cloud song", cloudSong.artist)
                 cloudSong.artist == ARTIST_NEW
             }
 
-            val list = search("", OrderBy.BY_ID_DESC)
+            val list = search("", CloudSearchOrderBy.BY_ID_DESC)
             val cloudSong = list[0]
 
             assert(cloudSong.artist == ARTIST_NEW)
@@ -3501,7 +3501,7 @@ class UITest {
     fun test1103_appIsClosingCorrectlyAfter3CloudSongText_systemBack() {
         val testNumber = 1103
 
-        val list = cloudRepository.search("", OrderBy.BY_ID_DESC)
+        val list = cloudRepository.search("", CloudSearchOrderBy.BY_ID_DESC)
 
         val firstSongIndex = 3
 
@@ -3534,11 +3534,11 @@ class UITest {
         Log.e("test $testNumber click", ARTIST_CLOUD_SONGS)
         composeTestRule.waitForCondition {
             composeTestRule
-                .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
+                .onNodeWithText(CloudSearchOrderBy.BY_ID_DESC.orderByRus)
                 .isDisplayed()
         }
         composeTestRule
-            .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
+            .onNodeWithText(CloudSearchOrderBy.BY_ID_DESC.orderByRus)
             .assertIsDisplayed()
         composeTestRule.waitForCondition {
             composeTestRule
@@ -3673,7 +3673,7 @@ class UITest {
     fun test1104_appIsClosingCorrectlyAfter3CloudSongText_appBack() {
         val testNumber = 1104
 
-        val list = cloudRepository.search("", OrderBy.BY_ID_DESC)
+        val list = cloudRepository.search("", CloudSearchOrderBy.BY_ID_DESC)
 
         val firstSongIndex = 3
 
@@ -3706,11 +3706,11 @@ class UITest {
         Log.e("test $testNumber click", ARTIST_CLOUD_SONGS)
         composeTestRule.waitForCondition {
             composeTestRule
-                .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
+                .onNodeWithText(CloudSearchOrderBy.BY_ID_DESC.orderByRus)
                 .isDisplayed()
         }
         composeTestRule
-            .onNodeWithText(OrderBy.BY_ID_DESC.orderByRus)
+            .onNodeWithText(CloudSearchOrderBy.BY_ID_DESC.orderByRus)
             .assertIsDisplayed()
         composeTestRule.waitForCondition {
             composeTestRule

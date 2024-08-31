@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.CloudViewModel
 import jatx.spinner.Spinner
-import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
+import jatx.russianrocksongbook.domain.repository.cloud.CloudSearchOrderBy
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.testing.SEARCH_BUTTON
 import jatx.russianrocksongbook.testing.TEXT_FIELD_SEARCH_FOR
@@ -22,11 +22,11 @@ import jatx.russianrocksongbook.testing.TEXT_FIELD_SEARCH_FOR
 @Composable
 internal fun CloudSearchPanelLandscape(
     searchFor: String,
-    orderBy: OrderBy,
+    orderBy: CloudSearchOrderBy,
     theme: Theme,
     fontSizeTextSp: TextUnit,
     onSearchForValueChange: (String) -> Unit,
-    onOrderByValueChange: (OrderBy) -> Unit,
+    onOrderByValueChange: (CloudSearchOrderBy) -> Unit,
     onSearchClick: () -> Unit
 ) {
     val cloudViewModel = CloudViewModel.getInstance()
@@ -65,9 +65,9 @@ internal fun CloudSearchPanelLandscape(
             colorBg = theme.colorBg,
             colorCommon = theme.colorCommon,
             fontSize = fontSizeTextSp,
-            valueList = OrderBy.entries.map { it.orderByRus }.toTypedArray(),
+            valueList = CloudSearchOrderBy.entries.map { it.orderByRus }.toTypedArray(),
             initialPosition = orderBy.ordinal,
-            onPositionChanged = { onOrderByValueChange(OrderBy.entries[it]) },
+            onPositionChanged = { onOrderByValueChange(CloudSearchOrderBy.entries[it]) },
             spinnerState = cloudViewModel.spinnerStateOrderBy
         )
         Box (

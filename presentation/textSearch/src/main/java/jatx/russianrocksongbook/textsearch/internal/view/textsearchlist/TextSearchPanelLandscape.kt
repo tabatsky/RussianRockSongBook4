@@ -23,7 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import jatx.russianrocksongbook.domain.repository.cloud.OrderBy
+import jatx.russianrocksongbook.domain.repository.local.TextSearchOrderBy
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.testing.SEARCH_BUTTON
 import jatx.russianrocksongbook.testing.TEXT_FIELD_SEARCH_FOR
@@ -34,11 +34,11 @@ import jatx.spinner.Spinner
 @Composable
 internal fun TextSearchPanelLandscape(
     searchFor: String,
-    orderBy: OrderBy,
+    orderBy: TextSearchOrderBy,
     theme: Theme,
     fontSizeTextSp: TextUnit,
     onSearchForValueChange: (String) -> Unit,
-    onOrderByValueChange: (OrderBy) -> Unit,
+    onOrderByValueChange: (TextSearchOrderBy) -> Unit,
     onSearchClick: () -> Unit
 ) {
     val textSearchViewModel = TextSearchViewModel.getInstance()
@@ -77,9 +77,9 @@ internal fun TextSearchPanelLandscape(
             colorBg = theme.colorBg,
             colorCommon = theme.colorCommon,
             fontSize = fontSizeTextSp,
-            valueList = OrderBy.entries.map { it.orderByRus }.toTypedArray(),
+            valueList = TextSearchOrderBy.entries.map { it.orderByRus }.toTypedArray(),
             initialPosition = orderBy.ordinal,
-            onPositionChanged = { onOrderByValueChange(OrderBy.entries[it]) },
+            onPositionChanged = { onOrderByValueChange(TextSearchOrderBy.entries[it]) },
             spinnerState = textSearchViewModel.spinnerStateOrderBy
         )
         Box (
