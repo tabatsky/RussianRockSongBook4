@@ -38,7 +38,7 @@ import jatx.russianrocksongbook.textsearch.internal.viewmodel.UploadCurrentToClo
 import kotlinx.coroutines.launch
 
 @Composable
-internal fun TextSearchSongTextScreenImpl(artist: String, position: Int) {
+internal fun TextSearchSongTextScreenImpl(position: Int) {
     val textSearchViewModel = TextSearchViewModel.getInstance()
     val theme = LocalAppTheme.current
 
@@ -46,13 +46,13 @@ internal fun TextSearchSongTextScreenImpl(artist: String, position: Int) {
 
     val song = textSearchState.currentSong
 
-    LaunchedEffect(artist to position) {
+    LaunchedEffect(position) {
         textSearchViewModel.submitAction(SelectSong(position))
     }
 
     val skipBody = position != textSearchState.currentSongPosition
 
-    val key = artist to song?.title
+    val key = song?.artist to song?.title
     var lastKey by rememberSaveable { mutableStateOf(key) }
     val keyChanged = key != lastKey
 

@@ -14,9 +14,11 @@ import androidx.compose.ui.res.dimensionResource
 import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.commonview.stub.CommonSongListStub
 import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
+import jatx.russianrocksongbook.commonviewmodel.SelectScreen
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.local.TextSearchOrderBy
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
+import jatx.russianrocksongbook.navigation.ScreenVariant
 import jatx.russianrocksongbook.testing.TestingConfig
 import jatx.russianrocksongbook.textsearch.R
 import jatx.russianrocksongbook.textsearch.internal.viewmodel.PerformTextSearch
@@ -69,7 +71,7 @@ internal fun TextSearchListBody(
 
     val onItemClick: (Int, Song) -> Unit = { index, song ->
         println("selected: ${song.artist} - ${song.title}")
-//        textSearchViewModel.submitAction(SelectScreen(ScreenVariant.CloudSongText(index)))
+        textSearchViewModel.submitAction(SelectScreen(ScreenVariant.TextSearchSongText(index)))
     }
 
     Column(

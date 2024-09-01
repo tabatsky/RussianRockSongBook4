@@ -43,6 +43,9 @@ object AppNavigator {
             val wasCloudSongTextScreen = previousDestination.isCloudSongTextScreen
             val becomeCloudSearchScreen = destination.isCloudSearchScreen
 
+            val wasTextSearchSongTextScreen = previousDestination.isTextSearchSongTextScreen
+            val becomeTextSearchListScreen = destination.isTextSearchListScreen
+
             previousDestination = destination
 
             var needSubmitBackAction = false
@@ -64,6 +67,7 @@ object AppNavigator {
             needSubmitBackAction = needSubmitBackAction || (wasAddSongScreen && becomeSongListOrFavoriteScreen)
 
             needSubmitBackAction = needSubmitBackAction || (wasCloudSongTextScreen && becomeCloudSearchScreen)
+            needSubmitBackAction = needSubmitBackAction || (wasTextSearchSongTextScreen && becomeTextSearchListScreen)
 
             if (needSubmitBackAction) {
                 this@AppNavigator.onSubmitBackAction?.invoke()
