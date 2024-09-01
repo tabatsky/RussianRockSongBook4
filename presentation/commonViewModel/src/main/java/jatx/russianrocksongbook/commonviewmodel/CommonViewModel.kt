@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jatx.russianrocksongbook.commonviewmodel.contracts.MusicOpener
 import jatx.russianrocksongbook.commonviewmodel.contracts.WarningSender
+import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.models.music.Music
 import jatx.russianrocksongbook.domain.models.warning.Warnable
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_ERROR
@@ -48,9 +49,13 @@ open class CommonViewModel @Inject constructor(
         commonViewModelDeps.toasts
     private val addWarningUseCase =
         commonViewModelDeps.addWarningUseCase
+    private val addSongToCloudUseCase =
+        commonViewModelDeps.addSongToCloudUseCase
 
     private var collectActionsJob: Job? = null
     private var collectEffectsJob: Job? = null
+
+    private var uploadSongJob: Job? = null
 
     private val _theme = MutableStateFlow(settings.theme)
     val theme = _theme.asStateFlow()
@@ -377,6 +382,31 @@ open class CommonViewModel @Inject constructor(
     protected fun showToast(toastText: String) = toasts.showToast(toastText)
 
     protected fun showToast(@StringRes resId: Int) = toasts.showToast(resId)
+
+    protected fun uploadSongToCloud(song: Song, setUploadButtonEnabled: (Boolean) -> Unit) {
+        setUploadButtonEnabled(false)
+        uploadSongJob?.let {
+            if (!it.isCancelled) it.cancel()
+        }
+        uploadSongJob = viewModelScope.launch {
+            withContext(Dispatchers.Main) {
+                try {
+                    val result = withContext(Dispatchers.IO) {
+                        addSongToCloudUseCase.execute(song)
+                    }
+                    when (result.status) {
+                        STATUS_SUCCESS -> showToast(R.string.toast_upload_to_cloud_success)
+                        STATUS_ERROR -> showToast(result.message ?: "")
+                    }
+                    setUploadButtonEnabled(true)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    showToast(R.string.error_in_app)
+                    setUploadButtonEnabled(true)
+                }
+            }
+        }
+    }
 
     private fun doNothing() = Unit
 

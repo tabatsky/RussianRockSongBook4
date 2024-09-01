@@ -6,6 +6,7 @@ import jatx.russianrocksongbook.commonviewmodel.deps.Callbacks
 import jatx.russianrocksongbook.commonviewmodel.deps.Resources
 import jatx.russianrocksongbook.commonviewmodel.deps.TVDetector
 import jatx.russianrocksongbook.commonviewmodel.deps.Toasts
+import jatx.russianrocksongbook.domain.usecase.cloud.AddSongToCloudUseCase
 import jatx.russianrocksongbook.domain.usecase.cloud.AddWarningUseCase
 import javax.inject.Inject
 
@@ -16,5 +17,6 @@ class CommonViewModelDeps @Inject constructor(
     val resources: Resources,
     val toasts: Toasts,
     val tvDetector: TVDetector,
-    val addWarningUseCase: AddWarningUseCase
+    val addWarningUseCase: AddWarningUseCase,
+    val addSongToCloudUseCase: AddSongToCloudUseCase
 )

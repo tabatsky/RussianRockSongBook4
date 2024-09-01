@@ -7,8 +7,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jatx.russianrocksongbook.domain.models.local.Song
-import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_ERROR
-import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.domain.repository.local.*
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
@@ -42,8 +40,6 @@ open class LocalViewModel @Inject constructor(
         localViewModelDeps.updateSongUseCase
     private val deleteSongToTrashUseCase =
         localViewModelDeps.deleteSongToTrashUseCase
-    private val addSongToCloudUseCase =
-        localViewModelDeps.addSongToCloudUseCase
     private val getArtistsUseCase =
         localViewModelDeps.getArtistsUseCase
 
@@ -56,7 +52,6 @@ open class LocalViewModel @Inject constructor(
     private var showSongsJob: Job? = null
     private var selectSongJob: Job? = null
     private var getArtistsJob: Job? = null
-    private var uploadSongJob: Job? = null
 
     override val currentMusic: Music?
         get() = localStateFlow.value.currentSong
@@ -372,27 +367,8 @@ open class LocalViewModel @Inject constructor(
 
     private fun uploadCurrentToCloud() {
         localStateFlow.value.currentSong?.let { song ->
-            setUploadButtonEnabled(false)
-            uploadSongJob?.let {
-                if (!it.isCancelled) it.cancel()
-            }
-            uploadSongJob = viewModelScope.launch {
-                withContext(Dispatchers.Main) {
-                    try {
-                        val result = withContext(Dispatchers.IO) {
-                            addSongToCloudUseCase.execute(song)
-                        }
-                        when (result.status) {
-                            STATUS_SUCCESS -> showToast(R.string.toast_upload_to_cloud_success)
-                            STATUS_ERROR -> showToast(result.message ?: "")
-                        }
-                        setUploadButtonEnabled(true)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        showToast(R.string.error_in_app)
-                        setUploadButtonEnabled(true)
-                    }
-                }
+            uploadSongToCloud(song) {
+                setUploadButtonEnabled(it)
             }
         }
     }

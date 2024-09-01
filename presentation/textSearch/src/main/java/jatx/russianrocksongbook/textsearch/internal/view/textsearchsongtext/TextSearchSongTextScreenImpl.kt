@@ -1,5 +1,6 @@
 package jatx.russianrocksongbook.textsearch.internal.view.textsearchsongtext
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -33,7 +34,6 @@ import jatx.russianrocksongbook.textsearch.internal.viewmodel.SelectSong
 import jatx.russianrocksongbook.textsearch.internal.viewmodel.SetAutoPlayMode
 import jatx.russianrocksongbook.textsearch.internal.viewmodel.SetEditorMode
 import jatx.russianrocksongbook.textsearch.internal.viewmodel.TextSearchViewModel
-import jatx.russianrocksongbook.textsearch.internal.viewmodel.UpdateCurrentSong
 import jatx.russianrocksongbook.textsearch.internal.viewmodel.UploadCurrentToCloud
 import kotlinx.coroutines.launch
 
@@ -45,6 +45,7 @@ internal fun TextSearchSongTextScreenImpl(position: Int) {
     val textSearchState by textSearchViewModel.textSearchStateFlow.collectAsState()
 
     val song = textSearchState.currentSong
+    Log.e("outOfTheBox", song?.outOfTheBox.toString())
 
     LaunchedEffect(position) {
         textSearchViewModel.submitAction(SelectSong(position))
@@ -125,7 +126,6 @@ internal fun TextSearchSongTextScreenImpl(position: Int) {
 
     val onSaveClick = {
         song?.copy(text = text)?.let {
-            textSearchViewModel.submitAction(UpdateCurrentSong(it))
             textSearchViewModel.submitAction(SaveSong(it))
         }
         textSearchViewModel.submitAction(SetEditorMode(false))

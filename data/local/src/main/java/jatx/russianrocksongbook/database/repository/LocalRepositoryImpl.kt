@@ -95,6 +95,7 @@ class LocalRepositoryImpl @Inject constructor(
         words.drop(1).forEach {
             sb.append(" AND text LIKE '%' || ? || '%'")
         }
+        sb.append(" AND deleted='0'")
 
         val queryStr = sb.toString()
         val query = SimpleSQLiteQuery(queryStr, words.toTypedArray())
