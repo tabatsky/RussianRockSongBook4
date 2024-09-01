@@ -255,6 +255,14 @@ open class CommonViewModel @Inject constructor(
                         ))
                 }
 
+                is ScreenVariant.TextSearchSongText -> {
+                    selectScreen(
+                        ScreenVariant.TextSearchList(
+                            randomKey = lastRandomKey,
+                            isBackFromSong = true
+                        ))
+                }
+
                 else -> {
                     if (currentArtist != ARTIST_FAVORITE) {
                         selectScreen(
@@ -338,6 +346,12 @@ open class CommonViewModel @Inject constructor(
         val appState = appStateFlow.value
         val previousScreenVariant = appState.currentScreenVariant
         val newState = if (screenVariant is ScreenVariant.CloudSearch) {
+            appState.copy(
+                currentScreenVariant = screenVariant,
+                previousScreenVariant = previousScreenVariant,
+                lastRandomKey = screenVariant.randomKey
+            )
+        } else if (screenVariant is ScreenVariant.TextSearchList) {
             appState.copy(
                 currentScreenVariant = screenVariant,
                 previousScreenVariant = previousScreenVariant,

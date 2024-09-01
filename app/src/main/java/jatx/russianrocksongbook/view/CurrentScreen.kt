@@ -43,7 +43,9 @@ import jatx.russianrocksongbook.navigation.destinationSongText
 import jatx.russianrocksongbook.navigation.destinationSongTextByArtistAndTitle
 import jatx.russianrocksongbook.navigation.destinationStart
 import jatx.russianrocksongbook.navigation.destinationTextSearchList
+import jatx.russianrocksongbook.navigation.destinationTextSearchSongText
 import jatx.russianrocksongbook.textsearch.api.view.TextSearchListScreen
+import jatx.russianrocksongbook.textsearch.api.view.TextSearchSongTextScreen
 import jatx.russianrocksongbook.textsearch.internal.viewmodel.TextSearchViewModel
 
 @Composable
@@ -177,6 +179,18 @@ fun CurrentScreen() {
             )
         ) { backStackEntry ->
             CloudSongTextScreen(
+                position = backStackEntry.arguments?.getInt(argPosition)
+                    ?: throw IllegalArgumentException("No such argument")
+            )
+        }
+
+        composable(
+            "$destinationTextSearchSongText/{$argPosition}",
+            arguments = listOf(
+                navArgument(argPosition) { type = NavType.IntType },
+            )
+        ) { backStackEntry ->
+            TextSearchSongTextScreen(
                 position = backStackEntry.arguments?.getInt(argPosition)
                     ?: throw IllegalArgumentException("No such argument")
             )
