@@ -51,9 +51,6 @@ open class LocalViewModelTest: CommonViewModelTest() {
     @RelaxedMockK
     lateinit var deleteSongToTrashUseCase: DeleteSongToTrashUseCase
 
-    @RelaxedMockK
-    lateinit var addSongToCloudUseCase: AddSongToCloudUseCase
-
     internal lateinit var localViewModelDeps: LocalViewModelDeps
 
     internal lateinit var localStateHolder: LocalStateHolder
@@ -86,7 +83,6 @@ open class LocalViewModelTest: CommonViewModelTest() {
             getSongByArtistAndPositionUseCase = getSongByArtistAndPositionUseCase,
             updateSongUseCase = updateSongUseCase,
             deleteSongToTrashUseCase = deleteSongToTrashUseCase,
-            addSongToCloudUseCase = addSongToCloudUseCase,
             getArtistsUseCase = getArtistsUseCase
         )
 
