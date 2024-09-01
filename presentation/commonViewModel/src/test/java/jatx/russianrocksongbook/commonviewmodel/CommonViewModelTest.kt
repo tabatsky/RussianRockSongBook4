@@ -14,6 +14,7 @@ import jatx.russianrocksongbook.commonviewmodel.deps.TVDetector
 import jatx.russianrocksongbook.commonviewmodel.deps.Toasts
 import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithoutData
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
+import jatx.russianrocksongbook.domain.usecase.cloud.AddSongToCloudUseCase
 import jatx.russianrocksongbook.domain.usecase.cloud.AddWarningUseCase
 import jatx.russianrocksongbook.navigation.AppNavigator
 import jatx.russianrocksongbook.navigation.ScreenVariant
@@ -52,6 +53,9 @@ open class CommonViewModelTest {
 
     @RelaxedMockK
     lateinit var addWarningUseCase: AddWarningUseCase
+
+    @RelaxedMockK
+    lateinit var addSongToCloudUseCase: AddSongToCloudUseCase
 
     @InjectMockKs
     lateinit var commonViewModelDeps: CommonViewModelDeps
