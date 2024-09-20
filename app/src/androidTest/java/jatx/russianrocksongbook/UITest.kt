@@ -3829,6 +3829,49 @@ class UITest {
         assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
         Log.e("test $testNumber assert", "activity is destroyed")
     }
+
+    @Test
+    fun test1201_textSearchIsOpeningFromMenuCorrectly() {
+        val testNumber = 1201
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(DRAWER_BUTTON_MAIN)
+                .isDisplayed()
+        }
+
+        composeTestRule
+            .onNodeWithTag(DRAWER_BUTTON_MAIN)
+            .performClick()
+        Log.e("test $testNumber click", DRAWER_BUTTON_MAIN)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(ARTIST_TEXT_SEARCH)
+                .isDisplayed()
+        }
+        composeTestRule
+            .onNodeWithText(ARTIST_TEXT_SEARCH)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "$ARTIST_CLOUD_SONGS is displayed")
+        composeTestRule
+            .onNodeWithText(ARTIST_TEXT_SEARCH)
+            .performClick()
+        Log.e("test $testNumber click", ARTIST_CLOUD_SONGS)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(TextSearchOrderBy.BY_TITLE.orderByRus)
+                .isDisplayed()
+        }
+        composeTestRule
+            .onNodeWithText(TextSearchOrderBy.BY_TITLE.orderByRus)
+            .assertIsDisplayed()
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(stringConst.listIsEmpty)
+                .isDisplayed()
+        }
+        Log.e("test $testNumber assert", "${stringConst.listIsEmpty} is displayed")
+    }
 }
 
 const val timeout = 1500L
