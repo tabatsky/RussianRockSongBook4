@@ -3831,7 +3831,7 @@ class UITest {
     }
 
     @Test
-    fun test1201_textSearchIsOpeningFromMenuCorrectly() {
+    fun test1201_textSearchListIsOpeningFromMenuCorrectly() {
         val testNumber = 1201
 
         composeTestRule.waitForCondition {
@@ -3871,6 +3871,71 @@ class UITest {
                 .isDisplayed()
         }
         Log.e("test $testNumber assert", "${stringConst.listIsEmpty} is displayed")
+    }
+
+    @Test
+    fun test1202_textSearchListNormalQueryIsWorkingCorrectly() {
+        val testNumber = 1202
+
+        composeTestRule.activityRule.scenario.onActivity {
+            CommonViewModel
+                .getStoredInstance()
+                ?.submitAction(SelectScreen(ScreenVariant.TextSearchList()))
+        }
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
+                .isDisplayed()
+        }
+
+        composeTestRule
+            .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
+            .performTextReplacement("сердца")
+        Log.e("test $testNumber input", "сердца")
+        Espresso.closeSoftKeyboard()
+        composeTestRule.waitForTimeout(timeout)
+        composeTestRule
+            .onNodeWithTag(SEARCH_BUTTON)
+            .performClick()
+        Log.e("test $testNumber click", SEARCH_BUTTON)
+
+        val list = localRepository.getSongsByTextSearch(listOf("сердца"), TextSearchOrderBy.BY_TITLE)
+        val titleList = list.map { "${it.artist} - ${it.title}" }
+        Log.e("test $testNumber list", titleList.toString())
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(list[0].title)
+                .isDisplayed()
+        }
+
+        composeTestRule
+            .onNodeWithText(list[0].title)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${list[0].title} is displayed")
+        composeTestRule
+            .onNodeWithText(list[0].artist)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${list[0].artist} is displayed")
+
+        composeTestRule
+            .onNodeWithText(list[1].title)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${list[1].title} is displayed")
+        composeTestRule
+            .onNodeWithText(list[1].artist)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${list[1].artist} is displayed")
+
+        composeTestRule
+            .onNodeWithText(list[2].title)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${list[2].title} is displayed")
+        composeTestRule
+            .onNodeWithText(list[2].artist)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${list[2].artist} is displayed")
     }
 }
 
