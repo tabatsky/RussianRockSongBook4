@@ -3901,8 +3901,6 @@ class UITest {
         Log.e("test $testNumber click", SEARCH_BUTTON)
 
         val list = localRepository.getSongsByTextSearch(listOf("сердца"), TextSearchOrderBy.BY_TITLE)
-        val titleList = list.map { "${it.artist} - ${it.title}" }
-        Log.e("test $testNumber list", titleList.toString())
 
         composeTestRule.waitForCondition {
             composeTestRule
@@ -3936,6 +3934,71 @@ class UITest {
             .onNodeWithText(list[2].artist)
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "${list[2].artist} is displayed")
+    }
+
+    @Test
+    fun test1203_textSearchListOrderingByArtistIsWorkingCorrectly() {
+        val testNumber = 1203
+
+        composeTestRule.activityRule.scenario.onActivity {
+            CommonViewModel
+                .getStoredInstance()
+                ?.submitAction(SelectScreen(ScreenVariant.TextSearchList()))
+        }
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
+                .isDisplayed()
+        }
+
+        composeTestRule
+            .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
+            .performTextReplacement("сердца")
+        Log.e("test $testNumber input", "сердца")
+        Espresso.closeSoftKeyboard()
+        composeTestRule.waitForTimeout(timeout)
+        composeTestRule
+            .onNodeWithTag(SEARCH_BUTTON)
+            .performClick()
+        Log.e("test $testNumber click", SEARCH_BUTTON)
+
+        composeTestRule
+            .onNodeWithText(TextSearchOrderBy.BY_TITLE.orderByRus)
+            .performClick()
+        Log.e("test $testNumber click", TextSearchOrderBy.BY_TITLE.orderByRus)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(TextSearchOrderBy.BY_ARTIST.orderByRus)
+                .isDisplayed()
+        }
+        composeTestRule
+            .onNodeWithText(TextSearchOrderBy.BY_ARTIST.orderByRus)
+            .performClick()
+        Log.e("test $testNumber click", TextSearchOrderBy.BY_ARTIST.orderByRus)
+
+        val list = localRepository.getSongsByTextSearch(listOf("сердца"), TextSearchOrderBy.BY_ARTIST)
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(list[0].title)
+                .isDisplayed()
+        }
+
+        composeTestRule
+            .onNodeWithText(list[0].title)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${list[0].title} is displayed")
+
+        composeTestRule
+            .onNodeWithText(list[1].title)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${list[1].title} is displayed")
+
+        composeTestRule
+            .onNodeWithText(list[2].title)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${list[2].title} is displayed")
     }
 }
 
