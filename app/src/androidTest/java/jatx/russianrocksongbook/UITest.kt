@@ -3989,16 +3989,31 @@ class UITest {
             .onNodeWithText(list[0].title)
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "${list[0].title} is displayed")
+        composeTestRule
+            .onAllNodesWithText(list[0].artist)
+            .onFirst()
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${list[0].artist} is displayed")
 
         composeTestRule
             .onNodeWithText(list[1].title)
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "${list[1].title} is displayed")
+        composeTestRule
+            .onAllNodesWithText(list[1].artist)
+            .onFirst()
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${list[1].artist} is displayed")
 
         composeTestRule
             .onNodeWithText(list[2].title)
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "${list[2].title} is displayed")
+        composeTestRule
+            .onAllNodesWithText(list[2].artist)
+            .onFirst()
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${list[2].artist} is displayed")
     }
 }
 
