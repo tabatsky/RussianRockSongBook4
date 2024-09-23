@@ -4015,6 +4015,59 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "${list[2].artist} is displayed")
     }
+
+    @Test
+    fun test1204_textSearchListQueryWithEmptyResultIsWorkingCorrectly() {
+        val testNumber = 1204
+
+        composeTestRule.activityRule.scenario.onActivity {
+            CommonViewModel
+                .getStoredInstance()
+                ?.submitAction(SelectScreen(ScreenVariant.TextSearchList()))
+        }
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
+                .isDisplayed()
+        }
+
+        composeTestRule
+            .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
+            .performTextReplacement("сердца")
+        Log.e("test $testNumber input", "сердца")
+        Espresso.closeSoftKeyboard()
+        composeTestRule.waitForTimeout(timeout)
+        composeTestRule
+            .onNodeWithTag(SEARCH_BUTTON)
+            .performClick()
+        Log.e("test $testNumber click", SEARCH_BUTTON)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(stringConst.listIsEmpty)
+                .isNotDisplayed()
+        }
+
+        composeTestRule
+            .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
+            .performTextReplacement("Ппщдылдж")
+        Log.e("test $testNumber input", "Ппщдылдж")
+        Espresso.closeSoftKeyboard()
+        composeTestRule.waitForTimeout(timeout)
+        composeTestRule
+            .onNodeWithTag(SEARCH_BUTTON)
+            .performClick()
+        Log.e("test $testNumber click", SEARCH_BUTTON)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(stringConst.listIsEmpty)
+                .isDisplayed()
+        }
+        composeTestRule
+            .onNodeWithText(stringConst.listIsEmpty)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.listIsEmpty} is displayed")
+    }
 }
 
 const val timeout = 1500L
