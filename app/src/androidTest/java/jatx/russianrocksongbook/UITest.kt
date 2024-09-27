@@ -4109,7 +4109,7 @@ class UITest {
         Log.e("test $testNumber click", list[2].title)
         composeTestRule.waitForCondition {
             composeTestRule
-                .onNodeWithText(list[2].title)
+                .onNodeWithText("${list[2].title} (${list[2].artist})")
                 .isDisplayed()
         }
         composeTestRule
@@ -4120,6 +4120,95 @@ class UITest {
             .onNodeWithText(list[2].text)
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song text is displayed correctly")
+    }
+
+    @Test
+    fun test1302_textSearchSongTextLeftAndRightButtonsAreWorkingCorrectly() {
+        val testNumber = 1302
+
+        composeTestRule.activityRule.scenario.onActivity {
+            CommonViewModel
+                .getStoredInstance()
+                ?.submitAction(SelectScreen(ScreenVariant.TextSearchList()))
+        }
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
+                .isDisplayed()
+        }
+
+        composeTestRule
+            .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
+            .performTextReplacement("сердца")
+        Log.e("test $testNumber input", "сердца")
+        Espresso.closeSoftKeyboard()
+        composeTestRule.waitForTimeout(timeout)
+        composeTestRule
+            .onNodeWithTag(SEARCH_BUTTON)
+            .performClick()
+        Log.e("test $testNumber click", SEARCH_BUTTON)
+
+        val list = localRepository.getSongsByTextSearch(listOf("сердца"), TextSearchOrderBy.BY_TITLE)
+
+        val songIndex1 = 3
+        val song1 = list[songIndex1]
+        val song2 = list[songIndex1 + 1]
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(song1.title)
+                .isDisplayed()
+        }
+        composeTestRule
+            .onNodeWithText(song1.title)
+            .performClick()
+        Log.e("test $testNumber click", song1.title)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText("${song1.title} (${song1.artist})")
+                .isDisplayed()
+        }
+        composeTestRule
+            .onNodeWithText("${song1.title} (${song1.artist})")
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "song1 title with artist is displayed")
+        composeTestRule
+            .onNodeWithText(song1.text)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "song text is displayed correctly")
+
+        composeTestRule
+            .onNodeWithTag(RIGHT_BUTTON)
+            .performClick()
+        Log.e("test $testNumber click", RIGHT_BUTTON)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText("${song2.title} (${song2.artist})")
+                .isDisplayed()
+        }
+        composeTestRule
+            .onNodeWithText("${song2.title} (${song2.artist})")
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "song2 title with artist is displayed")
+        composeTestRule
+            .onNodeWithText(song2.text)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "song text is displayed correctly")
+
+        composeTestRule
+            .onNodeWithTag(LEFT_BUTTON)
+            .performClick()
+        Log.e("test $testNumber click", LEFT_BUTTON)
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText("${song1.title} (${song1.artist})")
+                .isDisplayed()
+        }
+        composeTestRule
+            .onNodeWithText("${song1.title} (${song1.artist})")
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "song1 title with artist is displayed")
     }
 }
 
