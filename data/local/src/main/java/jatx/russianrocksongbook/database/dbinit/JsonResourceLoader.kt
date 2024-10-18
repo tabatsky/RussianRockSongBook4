@@ -46,6 +46,7 @@ internal val artistMap = mapOf(
     "Brainstorm" to R.raw.brainstorm,
     "F.P.G." to R.raw.fpg,
     "Flёur" to R.raw.flyour,
+    "LaScala" to R.raw.lascala,
     "Louna" to R.raw.louna,
     "Lumen" to R.raw.lumen,
     "TequilaJazzz" to R.raw.tequilajazzz,
