@@ -54,8 +54,7 @@ object AppNavigator {
 
             needSubmitBackAction = needSubmitBackAction || (wasSongListScreen && becomeStartScreen)
 
-            needSubmitBackAction = needSubmitBackAction ||
-                    (wasFavoriteScreen && becomeSongListScreen && !dontSubmitBackAction)
+            needSubmitBackAction = needSubmitBackAction || (wasFavoriteScreen && becomeSongListScreen)
 
             needSubmitBackAction = needSubmitBackAction || (wasSongTextScreen && becomeSongListOrFavoriteScreen)
 
@@ -68,6 +67,8 @@ object AppNavigator {
 
             needSubmitBackAction = needSubmitBackAction || (wasCloudSongTextScreen && becomeCloudSearchScreen)
             needSubmitBackAction = needSubmitBackAction || (wasTextSearchSongTextScreen && becomeTextSearchListScreen)
+
+            needSubmitBackAction = needSubmitBackAction && !dontSubmitBackAction
 
             if (needSubmitBackAction) {
                 this@AppNavigator.onSubmitBackAction?.invoke()
