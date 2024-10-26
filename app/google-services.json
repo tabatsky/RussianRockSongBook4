@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1063593000050",
+    "firebase_url": "https://russianrock-e4c49.firebaseio.com",
+    "project_id": "russianrock-e4c49",
+    "storage_bucket": "russianrock-e4c49.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1063593000050:android:567c2746a3b60da1",
+        "android_client_info": {
+          "package_name": "jatx.russianrocksongbook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1063593000050-so73fvosk2ger9jq14n2samfmkg2t1o3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKdUzd9UpoSnpXX1JQd2iCUmnA-tUbltk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1063593000050-so73fvosk2ger9jq14n2samfmkg2t1o3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
