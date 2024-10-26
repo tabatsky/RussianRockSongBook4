@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -98,6 +99,9 @@ dependencies {
     api project(':presentation:helpers:musicHelper')
 
     api project(':core:testing')
+
+    implementation platform('com.google.firebase:firebase-bom:33.5.1')
+    implementation("com.google.firebase:firebase-analytics")
 
     // testing
 
