@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @ActivityScoped
 @BoundTo(supertype = AddSongsFromDirHelper::class, component = ActivityComponent::class)
-internal class AddSongsFromDirHelperImpl @Inject constructor(
+class AddSongsFromDirHelperImpl @Inject constructor(
     private val activity: Activity
 ): AddSongsFromDirHelper {
     private var onPickedDirReturned: (DocumentFile) -> Unit = {}

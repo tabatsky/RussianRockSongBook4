@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
+    id 'com.google.devtools.ksp'
 }
 
 android {
@@ -40,7 +41,7 @@ dependencies {
     implementation diDeps.hiltAndroid
     kapt diDeps.hiltCompiler
     implementation diDeps.hiltExtensions
-    kapt diDeps.hiltExtensionsProcessor
+    ksp diDeps.hiltExtensionsProcessor
     api project(':presentation:commonViewModel')
 
 }

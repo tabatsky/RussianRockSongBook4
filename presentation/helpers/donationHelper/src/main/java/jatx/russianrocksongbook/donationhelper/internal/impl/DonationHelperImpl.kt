@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @ActivityScoped
 @BoundTo(supertype = DonationHelper::class, component = ActivityComponent::class)
-internal class DonationHelperImpl @Inject constructor(
+class DonationHelperImpl @Inject constructor(
     private val activity: Activity
 ): PurchasesUpdatedListener, DonationHelper {
     private val commonViewModel by lazy {

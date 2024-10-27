@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
     id 'org.jetbrains.kotlin.plugin.compose'
+    id 'com.google.devtools.ksp'
 }
 
 android {
@@ -54,7 +55,7 @@ dependencies {
     implementation diDeps.hiltAndroid
     kapt diDeps.hiltCompiler
     implementation diDeps.hiltExtensions
-    kapt diDeps.hiltExtensionsProcessor
+    ksp diDeps.hiltExtensionsProcessor
     implementation diDeps.hiltNavigationCompose
 
     api project(':domain:usecase:cloud')

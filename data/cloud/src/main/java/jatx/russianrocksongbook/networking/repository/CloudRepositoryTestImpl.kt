@@ -20,7 +20,7 @@ const val PAGE_SIZE = 15
 
 @Singleton
 @TestBoundTo(supertype = CloudRepository::class, component = SingletonComponent::class)
-internal class CloudRepositoryTestImpl @Inject constructor(
+class CloudRepositoryTestImpl @Inject constructor(
     private val localRepo: LocalRepository,
     private val userInfo: UserInfo
 ): CloudRepository {
