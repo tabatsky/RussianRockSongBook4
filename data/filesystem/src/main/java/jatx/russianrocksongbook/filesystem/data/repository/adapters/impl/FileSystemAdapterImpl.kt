@@ -15,7 +15,7 @@ import javax.inject.Singleton
 
 @Singleton
 @BoundTo(supertype = FileSystemAdapter::class, component = SingletonComponent::class)
-internal class FileSystemAdapterImpl @Inject constructor(
+class FileSystemAdapterImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ): FileSystemAdapter {
     override fun getSongsFromDir(

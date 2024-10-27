@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @ActivityScoped
 @BoundTo(supertype = MusicHelper::class, component = ActivityComponent::class)
-internal class MusicHelperImpl @Inject constructor(
+class MusicHelperImpl @Inject constructor(
     private val activity: Activity
 ): MusicHelper {
     private val commonViewModel by lazy {

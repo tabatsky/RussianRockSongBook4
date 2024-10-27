@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @ViewModelScoped
 @BoundTo(supertype = Toasts::class, component = ViewModelComponent::class)
-internal class ToastsImpl @Inject constructor(
+class ToastsImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val resources: Resources
 ): Toasts {

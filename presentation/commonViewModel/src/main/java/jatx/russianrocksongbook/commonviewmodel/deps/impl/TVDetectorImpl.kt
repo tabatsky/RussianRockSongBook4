@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @ViewModelScoped
 @BoundTo(supertype = TVDetector::class, component = ViewModelComponent::class)
-internal class TVDetectorImpl @Inject constructor(
+class TVDetectorImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ): TVDetector {
     override val isTV: Boolean

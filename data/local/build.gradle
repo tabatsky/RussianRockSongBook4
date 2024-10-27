@@ -45,7 +45,7 @@ dependencies {
     implementation diDeps.hiltAndroid
     kapt diDeps.hiltCompiler
     implementation diDeps.hiltExtensions
-    kapt diDeps.hiltExtensionsProcessor
+    ksp diDeps.hiltExtensionsProcessor
     implementation commonDeps.gson
     implementation commonDeps.commonsLang
     implementation commonDeps.documentFile

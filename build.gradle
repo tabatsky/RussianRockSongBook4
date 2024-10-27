@@ -70,7 +70,7 @@ buildscript {
                 hiltAndroid: "com.google.dagger:hilt-android:${versions.hilt}",
                 hiltCompiler: "com.google.dagger:hilt-compiler:${versions.hiltCompiler}",
                 hiltExtensions: "it.czerwinski.android.hilt:hilt-extensions:${versions.hiltExtensions}",
-                hiltExtensionsProcessor: "it.czerwinski.android.hilt:hilt-processor:${versions.hiltExtensions}",
+                hiltExtensionsProcessor: "it.czerwinski.android.hilt:hilt-processor-ksp:${versions.hiltExtensions}",
                 hiltNavigationCompose: "androidx.hilt:hilt-navigation-compose:${versions.hiltNavigationCompose}"
         ]
         roomDeps = [

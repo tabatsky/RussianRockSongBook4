@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @ActivityScoped
 @BoundTo(supertype = VoiceCommandHelper::class, component = ActivityComponent::class)
-internal class VoiceCommandHelperImpl @Inject constructor(
+class VoiceCommandHelperImpl @Inject constructor(
     activity: Activity
 ): VoiceCommandHelper {
     private var onVoiceCommand: (String) -> Unit = {}

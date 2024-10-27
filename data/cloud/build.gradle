@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
+    id 'com.google.devtools.ksp'
 }
 
 android {
@@ -42,7 +43,7 @@ dependencies {
     implementation testDeps.hiltAndroidTesting
     kapt diDeps.hiltCompiler
     implementation diDeps.hiltExtensions
-    kapt diDeps.hiltExtensionsProcessor
+    ksp diDeps.hiltExtensionsProcessor
 
     implementation commonDeps.documentFile
     implementation commonDeps.commonsLang
