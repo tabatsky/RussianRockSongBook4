@@ -35,18 +35,18 @@ android {
 
 dependencies {
     implementation libs.coreKtx
-    implementation networkDeps.retrofit
-    implementation networkDeps.retrofitConverterGson
-    implementation networkDeps.retrofitAdapterRxJava
+    implementation libs.retrofit
+    implementation libs.retrofitConverterGson
+    implementation libs.retrofitAdapterRxJava
 
-    implementation diDeps.hiltAndroid
-    implementation testDeps.hiltAndroidTesting
-    kapt diDeps.hiltCompiler
-    implementation diDeps.hiltExtensions
-    ksp diDeps.hiltExtensionsProcessor
+    implementation libs.hiltAndroid
+    implementation libs.hiltAndroidTesting
+    kapt libs.hiltCompiler
+    implementation libs.hiltExtensions
+    ksp libs.hiltExtensionsProcessor
 
-    implementation commonDeps.documentFile
-    implementation commonDeps.commonsLang
+    implementation libs.documentFile
+    implementation libs.commonsLang
 
     api project(':domain:models:appcrash')
     api project(':domain:models:cloud')
@@ -56,9 +56,9 @@ dependencies {
     api project(':domain:repository:cloud')
     api project(':domain:repository:local')
 
-    testImplementation testDeps.junit
-    testImplementation testDeps.mockk
-    testImplementation testDeps.coroutinesTest
-    testImplementation testDeps.androidXCoreTesting
+    testImplementation libs.junit
+    testImplementation libs.mockk
+    testImplementation libs.coroutinesTest
+    testImplementation libs.androidXCoreTesting
 
 }

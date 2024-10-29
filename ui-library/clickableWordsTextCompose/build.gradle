@@ -44,5 +44,5 @@ dependencies {
     implementation libs.composeMaterial
     implementation libs.composeUiTooling
 
-    testImplementation testDeps.junit
+    testImplementation libs.junit
 }

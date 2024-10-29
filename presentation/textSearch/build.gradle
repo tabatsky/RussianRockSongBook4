@@ -59,14 +59,14 @@ dependencies {
     implementation libs.lifecycleRuntime
     implementation libs.lifecycleViewmodel
 
-    implementation diDeps.hiltAndroid
-    kapt diDeps.hiltCompiler
-    implementation diDeps.hiltExtensions
-    ksp diDeps.hiltExtensionsProcessor
-    implementation diDeps.hiltNavigationCompose
+    implementation libs.hiltAndroid
+    kapt libs.hiltCompiler
+    implementation libs.hiltExtensions
+    ksp libs.hiltExtensionsProcessor
+    implementation libs.hiltNavigationCompose
 
-    implementation tvDeps.tvFoundation
-    implementation tvDeps.tvMaterial
+    implementation libs.tvFoundation
+    implementation libs.tvMaterial
 
     api project(':ui-library:clickableWordsTextCompose')
     api project(':ui-library:spinner')
@@ -81,10 +81,10 @@ dependencies {
 
     api project(':core:testing')
 
-    testImplementation testDeps.junit
-    testImplementation testDeps.mockk
-    testImplementation testDeps.coroutinesTest
-    testImplementation testDeps.androidXCoreTesting
+    testImplementation libs.junit
+    testImplementation libs.mockk
+    testImplementation libs.coroutinesTest
+    testImplementation libs.androidXCoreTesting
     testApi project(':presentation:commonViewModel')
 
 }

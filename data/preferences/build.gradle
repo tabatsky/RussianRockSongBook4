@@ -36,12 +36,12 @@ android {
 dependencies {
     implementation libs.coreKtx
 
-    implementation diDeps.hiltAndroid
-    kapt diDeps.hiltCompiler
-    implementation diDeps.hiltExtensions
-    ksp diDeps.hiltExtensionsProcessor
+    implementation libs.hiltAndroid
+    kapt libs.hiltCompiler
+    implementation libs.hiltExtensions
+    ksp libs.hiltExtensionsProcessor
 
-    implementation commonDeps.commonsLang
+    implementation libs.commonsLang
 
     api project(':core:debug')
     api project(':core:hashing')
@@ -49,8 +49,8 @@ dependencies {
     api project(':domain:models:cloud')
     api project(':domain:repository:preferences')
 
-    testImplementation testDeps.junit
-    testImplementation testDeps.mockk
-    testImplementation testDeps.coroutinesTest
-    testImplementation testDeps.androidXCoreTesting
+    testImplementation libs.junit
+    testImplementation libs.mockk
+    testImplementation libs.coroutinesTest
+    testImplementation libs.androidXCoreTesting
 }

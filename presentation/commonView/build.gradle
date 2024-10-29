@@ -49,7 +49,7 @@ dependencies {
     implementation libs.navigationCompose
     implementation libs.lifecycleRuntime
 
-    implementation diDeps.hiltNavigationCompose
+    implementation libs.hiltNavigationCompose
 
     api project(':ui-library:sideAppBar')
     api project(':ui-library:ChordDroidLibrary')

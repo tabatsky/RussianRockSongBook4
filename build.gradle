@@ -1,94 +1,11 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 buildscript {
     ext {
         versions = [
                 composeCompiler : '1.5.15',
-                tv : "1.0.0-alpha10",
-                pagingCompose : '3.3.2',
-                lifecycle : '2.8.6',
-                hilt: '2.50',
-                hiltCompiler : '2.50',
-                hiltAndroidTesting : '2.50',
-                hiltExtensions : '1.4.0',
-                hiltNavigationCompose: '1.2.0',
-                room : '2.6.1',
-                retrofit : '2.9.0',
-                rxjava : '2.2.21',
-                rxandroid : '2.1.1',
-                gson : '2.9.1',
-                commonsLang : '3.12.0',
-                documentFile : '1.0.1',
-                billing : '6.1.0',
-                junit : '4.13.2',
-                mockk : '1.13.5',
-                coroutinesTest : '1.6.1',
-                coreTesting : '2.2.0',
-                androidXTestCore: '1.6.0-alpha05',
-                androidXTestRules: '1.6.0-alpha03',
-                androidXTestTruth: '1.6.0-alpha03',
-                androidXTestRunner: '1.6.0-alpha06',
-                androidXOrchestrator: '1.5.0-alpha02',
-                androidXJUnit: '1.2.0-alpha03',
-                monitor: '1.7.0-alpha04',
-                espresso: '3.6.0-alpha03',
-                hamcrest: '2.2',
-                leakCanary: '2.12'
-        ]
-        commonDeps = [
-                pagingCompose: "androidx.paging:paging-compose:${versions.pagingCompose}",
-                commonsLang: "org.apache.commons:commons-lang3:${versions.commonsLang}",
-                gson: "com.google.code.gson:gson:${versions.gson}",
-                documentFile: "androidx.documentfile:documentfile:${versions.documentFile}"
-        ]
-        diDeps = [
-                hiltAndroid: "com.google.dagger:hilt-android:${versions.hilt}",
-                hiltCompiler: "com.google.dagger:hilt-compiler:${versions.hiltCompiler}",
-                hiltExtensions: "it.czerwinski.android.hilt:hilt-extensions:${versions.hiltExtensions}",
-                hiltExtensionsProcessor: "it.czerwinski.android.hilt:hilt-processor-ksp:${versions.hiltExtensions}",
-                hiltNavigationCompose: "androidx.hilt:hilt-navigation-compose:${versions.hiltNavigationCompose}"
-        ]
-        roomDeps = [
-                roomRuntime: "androidx.room:room-runtime:${versions.room}",
-                roomKtx: "androidx.room:room-ktx:${versions.room}",
-                roomCompiler: "androidx.room:room-compiler:${versions.room}"
-        ]
-        networkDeps = [
-                retrofit: "com.squareup.retrofit2:retrofit:${versions.retrofit}",
-                retrofitConverterGson: "com.squareup.retrofit2:converter-gson:${versions.retrofit}",
-                retrofitAdapterRxJava: "com.squareup.retrofit2:adapter-rxjava2:${versions.retrofit}"
-        ]
-        rxDeps = [
-                rxJava: "io.reactivex.rxjava2:rxjava:${versions.rxjava}",
-                rxAndroid: "io.reactivex.rxjava2:rxandroid:${versions.rxandroid}"
-        ]
-        tvDeps = [
-                tvFoundation: "androidx.tv:tv-foundation:${versions.tv}",
-                tvMaterial: "androidx.tv:tv-material:${versions.tv}"
-        ]
-        billingDeps = [
-                billing: "com.android.billingclient:billing:${versions.billing}",
-                billingKtx: "com.android.billingclient:billing-ktx:${versions.billing}"
-        ]
-        testDeps = [
-                hiltAndroidTesting: "com.google.dagger:hilt-android-testing:${versions.hiltAndroidTesting}",
-                hiltAndroidCompiler: "com.google.dagger:hilt-android-compiler:${versions.hilt}",
-                kotlinReflect: "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin}",
-                junit: "junit:junit:${versions.junit}",
-                mockk: "io.mockk:mockk:${versions.mockk}",
-                mockkAndroid: "io.mockk:mockk-android:${versions.mockk}",
-                coroutinesTest: "org.jetbrains.kotlinx:kotlinx-coroutines-test:${versions.coroutinesTest}",
-                androidXCoreTesting: "androidx.arch.core:core-testing:${versions.coreTesting}",
-                androidXCore: "androidx.test:core:${versions.androidXTestCore}",
-                androidXCoreKtx: "androidx.test:core-ktx:${versions.androidXTestCore}",
-                androidXRules: "androidx.test:rules:${versions.androidXTestRules}",
-                androidXTruth: "androidx.test.ext:truth:${versions.androidXTestTruth}",
-                androidXRunner: "androidx.test:runner:${versions.androidXTestRunner}",
-                androidXJUnit: "androidx.test.ext:junit:${versions.androidXJUnit}",
-                androidXMonitor: "androidx.test:monitor:${versions.monitor}",
-                androidXOrchestrator: "androidx.test:orchestrator:${versions.androidXOrchestrator}",
-                espressoCore: "androidx.test.espresso:espresso-core:${versions.espresso}",
-                espressoContrib: "androidx.test.espresso:espresso-contrib:${versions.espresso}",
-                hamcrest: "org.hamcrest:hamcrest:${versions.hamcrest}",
-                leakCanary: "com.squareup.leakcanary:leakcanary-android-instrumentation:${versions.leakCanary}"
+                androidXTestCore : '1.6.1',
+                androidXJUnit : '1.2.1'
         ]
     }
     repositories {
@@ -102,10 +19,10 @@ buildscript {
         }
     }
     dependencies {
-        classpath libs.gradleAndroid
-        classpath libs.kotlin
-        classpath libs.hiltAndroid
-        classpath libs.googleServices
+        classpath libs.gradleAndroidPlugin
+        classpath libs.kotlinPlugin
+        classpath libs.hiltAndroidPlugin
+        classpath libs.googleServicesPlugin
     }
 }
 
@@ -116,7 +33,7 @@ plugins {
 }
 
 allprojects {
-    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    tasks.withType(KotlinCompile).configureEach {
         kotlinOptions {
             freeCompilerArgs += [
                     "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",

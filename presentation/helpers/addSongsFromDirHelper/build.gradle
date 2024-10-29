@@ -38,11 +38,11 @@ dependencies {
     implementation libs.coreKtx
     implementation libs.appCompat
 
-    implementation diDeps.hiltAndroid
-    kapt diDeps.hiltCompiler
-    implementation diDeps.hiltExtensions
-    ksp diDeps.hiltExtensionsProcessor
+    implementation libs.hiltAndroid
+    kapt libs.hiltCompiler
+    implementation libs.hiltExtensions
+    ksp libs.hiltExtensionsProcessor
 
-    implementation 'com.github.hedzr:android-file-chooser:v1.2.0-final'
-    implementation commonDeps.documentFile
+    implementation libs.androidFileChooser
+    implementation libs.documentFile
 }

@@ -8,4 +8,5 @@ logErrors.txt
 myLogs.txt
 private_key.pepk
 keystore.properties
+.kotlin
 

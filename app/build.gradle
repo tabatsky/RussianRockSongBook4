@@ -82,10 +82,10 @@ dependencies {
     implementation libs.lifecycleRuntime
     implementation libs.lifecycleViewmodel
 
-    implementation diDeps.hiltAndroid
-    kapt diDeps.hiltCompiler
-    implementation diDeps.hiltExtensions
-    ksp diDeps.hiltExtensionsProcessor
+    implementation libs.hiltAndroid
+    kapt libs.hiltCompiler
+    implementation libs.hiltExtensions
+    ksp libs.hiltExtensionsProcessor
 
     api project(':presentation:localSongs')
     api project(':presentation:cloudSongs')
@@ -107,7 +107,7 @@ dependencies {
 
     // testing
 
-    debugImplementation testDeps.mockkAndroid
+    debugImplementation libs.mockkAndroid
 
     debugImplementation("androidx.test:core") {
         version {
@@ -120,10 +120,10 @@ dependencies {
             strictly versions.androidXTestCore
         }
     }
-    testImplementation testDeps.androidXCoreKtx
-    testImplementation testDeps.androidXRunner
-    testImplementation testDeps.androidXTruth
-    testImplementation testDeps.androidXRules
+    testImplementation libs.androidXCoreKtx
+    testImplementation libs.androidXRunner
+    testImplementation libs.androidXTruth
+    testImplementation libs.androidXRules
 
     androidTestImplementation("androidx.test:core") {
         version {
@@ -137,24 +137,24 @@ dependencies {
         }
     }
 
-    androidTestImplementation testDeps.androidXCoreTesting
+    androidTestImplementation libs.androidXCoreTesting
 
-    debugImplementation testDeps.androidXMonitor
+    debugImplementation libs.androidXMonitor
 
-    androidTestImplementation testDeps.espressoCore
-    androidTestImplementation(testDeps.espressoContrib) {
+    androidTestImplementation libs.espressoCore
+    androidTestImplementation(libs.espressoContrib) {
         exclude group: 'org.checkerframework', module: 'checker'
     }
 
-    androidTestImplementation testDeps.hamcrest
+    androidTestImplementation libs.hamcrest
 
-    androidTestImplementation(testDeps.hiltAndroidTesting) {
+    androidTestImplementation(libs.hiltAndroidTesting) {
         exclude group: 'androidx.test', module: 'core'
     }
-    testImplementation(testDeps.hiltAndroidTesting) {
+    testImplementation(libs.hiltAndroidTesting) {
         exclude group: 'androidx.test', module: 'core'
     }
-    kaptAndroidTest testDeps.hiltAndroidCompiler
+    kaptAndroidTest libs.hiltAndroidCompiler
 
     androidTestImplementation libs.composeUiTest
     androidTestImplementation(libs.composeUiTestJunit) {
@@ -165,7 +165,7 @@ dependencies {
 
     debugImplementation libs.kotlinReflect
 
-    androidTestImplementation testDeps.leakCanary
+    androidTestImplementation libs.leakCanary
 
-    androidTestUtil testDeps.androidXOrchestrator
+    androidTestUtil libs.androidXOrchestrator
 }
