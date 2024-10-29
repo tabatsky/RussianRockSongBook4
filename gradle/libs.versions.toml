@@ -28,7 +28,8 @@ room = "2.6.1"
 
 retrofit = "2.9.0"
 
-tv = "1.0.0"
+tvFoundation = "1.0.0-alpha11"
+tvMaterial = "1.0.0"
 
 billing = "6.1.0"
 
@@ -88,8 +89,8 @@ retrofit = { module="com.squareup.retrofit2:retrofit", version.ref="retrofit" }
 retrofitConverterGson = { module="com.squareup.retrofit2:converter-gson", version.ref="retrofit" }
 retrofitAdapterRxJava = { module="com.squareup.retrofit2:adapter-rxjava2", version.ref="retrofit" }
 
-tvFoundation = { module="androidx.tv:tv-foundation", version.ref="tv" }
-tvMaterial = { module="androidx.tv:tv-material", version.ref="tv" }
+tvFoundation = { module="androidx.tv:tv-foundation", version.ref="tvFoundation" }
+tvMaterial = { module="androidx.tv:tv-material", version.ref="tvMaterial" }
 
 billing = { module="com.android.billingclient:billing", version.ref="billing" }
 billingKtx = { module="com.android.billingclient:billing-ktx", version.ref="billing" }
