@@ -47,7 +47,7 @@ dependencies {
 
     api commonDeps.documentFile
 
-    api commonDeps.composeUi
+    api libs.composeUi
 
     api libs.coroutines
 

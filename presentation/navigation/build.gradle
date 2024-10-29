@@ -40,9 +40,9 @@ android {
 dependencies {
     implementation libs.coreKtx
 
-    implementation commonDeps.activityCompose
-    implementation commonDeps.composeUi
-    implementation commonDeps.composeMaterial
-    implementation commonDeps.composeUiTooling
-    implementation commonDeps.navigationCompose
+    implementation libs.activityCompose
+    implementation libs.composeUi
+    implementation libs.composeMaterial
+    implementation libs.composeUiTooling
+    implementation libs.navigationCompose
 }
