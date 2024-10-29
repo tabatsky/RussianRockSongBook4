@@ -1,6 +1,7 @@
 buildscript {
     ext {
         versions = [
+                kotlin: '2.0.21',
                 compose : '1.7.4',
                 composeCompiler : '1.5.15',
                 composeMaterial: '1.7.4',
