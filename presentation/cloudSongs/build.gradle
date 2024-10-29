@@ -53,13 +53,13 @@ dependencies {
     implementation libs.lifecycleRuntime
     implementation libs.lifecycleViewmodel
 
-    implementation commonDeps.pagingCompose
+    implementation libs.pagingCompose
 
-    implementation diDeps.hiltAndroid
-    kapt diDeps.hiltCompiler
-    implementation diDeps.hiltExtensions
-    ksp diDeps.hiltExtensionsProcessor
-    implementation diDeps.hiltNavigationCompose
+    implementation libs.hiltAndroid
+    kapt libs.hiltCompiler
+    implementation libs.hiltExtensions
+    ksp libs.hiltExtensionsProcessor
+    implementation libs.hiltNavigationCompose
 
     api project(':ui-library:clickableWordsTextCompose')
     api project(':ui-library:spinner')

@@ -34,5 +34,5 @@ dependencies {
     implementation libs.appCompat
     implementation libs.coreKtx
 
-    testImplementation testDeps.junit
+    testImplementation libs.junit
 }

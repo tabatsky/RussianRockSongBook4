@@ -38,13 +38,13 @@ dependencies {
     implementation libs.coreKtx
     implementation libs.activityCompose
 
-    implementation diDeps.hiltAndroid
-    kapt diDeps.hiltCompiler
-    implementation diDeps.hiltExtensions
-    ksp diDeps.hiltExtensionsProcessor
+    implementation libs.hiltAndroid
+    kapt libs.hiltCompiler
+    implementation libs.hiltExtensions
+    ksp libs.hiltExtensionsProcessor
 
-    api billingDeps.billing
-    api billingDeps.billingKtx
+    api libs.billing
+    api libs.billingKtx
     api project(':presentation:commonViewModel')
 
 }

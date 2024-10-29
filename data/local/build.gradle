@@ -39,38 +39,38 @@ android {
 
 dependencies {
     implementation libs.coreKtx
-    ksp roomDeps.roomCompiler
-    implementation roomDeps.roomRuntime
-    implementation roomDeps.roomKtx
-    implementation diDeps.hiltAndroid
-    kapt diDeps.hiltCompiler
-    implementation diDeps.hiltExtensions
-    ksp diDeps.hiltExtensionsProcessor
-    implementation commonDeps.gson
-    implementation commonDeps.commonsLang
-    implementation commonDeps.documentFile
+    ksp libs.roomCompiler
+    implementation libs.roomRuntime
+    implementation libs.roomKtx
+    implementation libs.hiltAndroid
+    kapt libs.hiltCompiler
+    implementation libs.hiltExtensions
+    ksp libs.hiltExtensionsProcessor
+    implementation libs.gson
+    implementation libs.commonsLang
+    implementation libs.documentFile
 
     api project(':domain:models:local')
     api project(':domain:repository:local')
 
-    testImplementation testDeps.junit
+    testImplementation libs.junit
 
-    testImplementation testDeps.androidXCore
-    testImplementation testDeps.androidXRunner
-    testImplementation testDeps.androidXTruth
-    testImplementation testDeps.androidXRules
+    testImplementation libs.androidXCore
+    testImplementation libs.androidXRunner
+    testImplementation libs.androidXTruth
+    testImplementation libs.androidXRules
 
-    testImplementation testDeps.androidXJUnit
+    testImplementation libs.androidXJUnit
 
-    testImplementation testDeps.androidXCoreTesting
+    testImplementation libs.androidXCoreTesting
 
-    androidTestImplementation testDeps.androidXCore
-    androidTestImplementation testDeps.androidXRunner
-    androidTestImplementation testDeps.androidXTruth
+    androidTestImplementation libs.androidXCore
+    androidTestImplementation libs.androidXRunner
+    androidTestImplementation libs.androidXTruth
 
-    androidTestImplementation testDeps.androidXJUnit
+    androidTestImplementation libs.androidXJUnit
 
-    androidTestImplementation testDeps.androidXCoreTesting
+    androidTestImplementation libs.androidXCoreTesting
 
-    debugImplementation testDeps.androidXMonitor
+    debugImplementation libs.androidXMonitor
 }

@@ -36,16 +36,16 @@ dependencies {
 
     implementation libs.coreKtx
 
-    implementation diDeps.hiltAndroid
-    implementation(testDeps.hiltAndroidTesting) {
+    implementation libs.hiltAndroid
+    implementation(libs.hiltAndroidTesting) {
         exclude group: 'androidx.test', module: 'core'
     }
-//    testImplementation(testDeps.hiltAndroidTesting) {
+//    testImplementation(libs.hiltAndroidTesting) {
 //        exclude group: 'androidx.test', module: 'core'
 //    }
-    kapt diDeps.hiltCompiler
+    kapt libs.hiltCompiler
 
-    api commonDeps.documentFile
+    api libs.documentFile
 
     api libs.composeUi
 

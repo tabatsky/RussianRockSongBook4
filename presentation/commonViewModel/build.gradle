@@ -47,15 +47,15 @@ dependencies {
     implementation libs.lifecycleRuntime
     implementation libs.lifecycleViewmodel
 
-    implementation diDeps.hiltAndroid
-    kapt diDeps.hiltCompiler
-    implementation diDeps.hiltExtensions
-    ksp diDeps.hiltExtensionsProcessor
-    implementation diDeps.hiltNavigationCompose
-    implementation testDeps.hiltAndroidTesting
+    implementation libs.hiltAndroid
+    kapt libs.hiltCompiler
+    implementation libs.hiltExtensions
+    ksp libs.hiltExtensionsProcessor
+    implementation libs.hiltNavigationCompose
+    implementation libs.hiltAndroidTesting
 
-    implementation commonDeps.documentFile
-    implementation commonDeps.commonsLang
+    implementation libs.documentFile
+    implementation libs.commonsLang
 
     implementation libs.activityCompose
     implementation libs.composeUi
@@ -71,8 +71,8 @@ dependencies {
     api project(':data:preferences')
     api project(':presentation:navigation')
 
-    testImplementation testDeps.junit
-    testImplementation testDeps.mockk
-    testImplementation testDeps.coroutinesTest
-    testImplementation testDeps.androidXCoreTesting
+    testImplementation libs.junit
+    testImplementation libs.mockk
+    testImplementation libs.coroutinesTest
+    testImplementation libs.androidXCoreTesting
 }

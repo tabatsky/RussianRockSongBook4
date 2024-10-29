@@ -14,16 +14,47 @@ compose = "1.7.4"
 activityCompose = "1.9.3"
 composeMaterial = "1.7.4"
 composeMaterial3 = "1.3.0"
-navigationCompose = '2.8.3'
+navigationCompose = "2.8.3"
+pagingCompose = "3.3.2"
+commonsLang = "3.12.0"
+gson = "2.9.1"
+documentFile = "1.0.1"
+androidFileChooser = "v1.2.0-final"
+
+hiltExtensions = "1.4.0"
+hiltNavigationCompose = "1.2.0"
+
+room = "2.6.1"
+
+retrofit = "2.9.0"
+
+tv = "1.0.0"
+
+billing = "6.1.0"
 
 firebaseBom = "33.5.1"
 
+junit = "4.13.2"
+mockk = "1.13.5"
+coroutinesTest = "1.6.1"
+coreTesting = "2.2.0"
+androidXTestCore = "1.6.1"
+androidXTestRules = "1.6.1"
+androidXTestTruth = "1.6.0"
+androidXTestRunner = "1.6.2"
+androidXOrchestrator = "1.5.1"
+androidXJUnit = "1.2.1"
+monitor = "1.7.2"
+espresso = "3.6.1"
+hamcrest = "2.2"
+leakCanary = "2.12"
+
 [libraries]
 
-gradleAndroid = { module = "com.android.tools.build:gradle", version.ref = "gradleAndroid" }
-kotlin = { module="org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
-hiltAndroid = { module="com.google.dagger.hilt.android:com.google.dagger.hilt.android.gradle.plugin", version.ref="hilt" }
-googleServices = { module = "com.google.gms:google-services", version.ref = "googleServices" }
+gradleAndroidPlugin = { module = "com.android.tools.build:gradle", version.ref = "gradleAndroid" }
+kotlinPlugin = { module="org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+hiltAndroidPlugin = { module="com.google.dagger.hilt.android:com.google.dagger.hilt.android.gradle.plugin", version.ref="hilt" }
+googleServicesPlugin = { module = "com.google.gms:google-services", version.ref = "googleServices" }
 
 coreKtx = { module="androidx.core:core-ktx", version.ref="coreKtx" }
 coroutines = { module="org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref="coroutines" }
@@ -37,15 +68,60 @@ activityCompose = { module="androidx.activity:activity-compose", version.ref="ac
 composeMaterial = { module="androidx.compose.material:material", version.ref="composeMaterial" }
 composeMaterial3 = { module="androidx.compose.material3:material3", version.ref="composeMaterial3" }
 navigationCompose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+pagingCompose = { module="androidx.paging:paging-compose", version.ref="pagingCompose" }
+commonsLang = { module="org.apache.commons:commons-lang3", version.ref="commonsLang" }
+gson = { module="com.google.code.gson:gson", version.ref="gson" }
+documentFile = { module="androidx.documentfile:documentfile", version.ref="documentFile" }
+androidFileChooser = { module = "com.github.hedzr:android-file-chooser", version.ref = "androidFileChooser" }
+
+hiltAndroid = { module="com.google.dagger:hilt-android", version.ref="hilt" }
+hiltCompiler = { module="com.google.dagger:hilt-compiler", version.ref="hilt" }
+hiltExtensions = { module="it.czerwinski.android.hilt:hilt-extensions", version.ref="hiltExtensions" }
+hiltExtensionsProcessor = { module="it.czerwinski.android.hilt:hilt-processor-ksp", version.ref="hiltExtensions" }
+hiltNavigationCompose = { module="androidx.hilt:hilt-navigation-compose", version.ref="hiltNavigationCompose" }
+
+roomRuntime = { module="androidx.room:room-runtime", version.ref="room" }
+roomKtx = { module="androidx.room:room-ktx", version.ref="room" }
+roomCompiler = { module="androidx.room:room-compiler", version.ref="room" }
+
+retrofit = { module="com.squareup.retrofit2:retrofit", version.ref="retrofit" }
+retrofitConverterGson = { module="com.squareup.retrofit2:converter-gson", version.ref="retrofit" }
+retrofitAdapterRxJava = { module="com.squareup.retrofit2:adapter-rxjava2", version.ref="retrofit" }
+
+tvFoundation = { module="androidx.tv:tv-foundation", version.ref="tv" }
+tvMaterial = { module="androidx.tv:tv-material", version.ref="tv" }
+
+billing = { module="com.android.billingclient:billing", version.ref="billing" }
+billingKtx = { module="com.android.billingclient:billing-ktx", version.ref="billing" }
 
 firebaseBom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebaseAnalytics = { module = "com.google.firebase:firebase-analytics" }
 
-kotlinReflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 
 composeUiTest = { module="androidx.compose.ui:ui-test", version.ref="compose" }
 composeUiTestJunit = { module="androidx.compose.ui:ui-test-junit4", version.ref="compose" }
 composeUiTestManifest = { module="androidx.compose.ui:ui-test-manifest", version.ref="compose" }
+
+hiltAndroidTesting = { module="com.google.dagger:hilt-android-testing", version.ref="hilt" }
+hiltAndroidCompiler = { module="com.google.dagger:hilt-android-compiler", version.ref="hilt" }
+kotlinReflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+junit = { module="junit:junit", version.ref="junit" }
+mockk = { module="io.mockk:mockk", version.ref="mockk" }
+mockkAndroid = { module="io.mockk:mockk-android", version.ref="mockk" }
+coroutinesTest = { module="org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref="coroutinesTest" }
+androidXCoreTesting = { module="androidx.arch.core:core-testing", version.ref="coreTesting" }
+androidXCore = { module="androidx.test:core", version.ref="androidXTestCore" }
+androidXCoreKtx= { module="androidx.test:core-ktx", version.ref="androidXTestCore" }
+androidXRules = { module="androidx.test:rules", version.ref="androidXTestRules" }
+androidXTruth = { module="androidx.test.ext:truth", version.ref="androidXTestTruth" }
+androidXRunner = { module="androidx.test:runner", version.ref="androidXTestRunner" }
+androidXJUnit = { module="androidx.test.ext:junit", version.ref="androidXJUnit" }
+androidXMonitor = { module="androidx.test:monitor", version.ref="monitor" }
+androidXOrchestrator = { module="androidx.test:orchestrator", version.ref="androidXOrchestrator" }
+espressoCore = { module="androidx.test.espresso:espresso-core", version.ref="espresso" }
+espressoContrib = { module="androidx.test.espresso:espresso-contrib", version.ref="espresso" }
+hamcrest = { module="org.hamcrest:hamcrest", version.ref="hamcrest" }
+leakCanary = { module="com.squareup.leakcanary:leakcanary-android-instrumentation", version.ref="leakCanary" }
 
 [plugins]
 

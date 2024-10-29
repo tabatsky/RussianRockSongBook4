@@ -36,11 +36,11 @@ dependencies {
 
     implementation libs.coreKtx
 
-    implementation diDeps.hiltAndroid
-    implementation testDeps.hiltAndroidTesting
-    kapt diDeps.hiltCompiler
+    implementation libs.hiltAndroid
+    implementation libs.hiltAndroidTesting
+    kapt libs.hiltCompiler
 
-    api commonDeps.documentFile
+    api libs.documentFile
 
     api libs.composeUi
 
@@ -54,8 +54,8 @@ dependencies {
     api project(':domain:repository:local')
     api project(':domain:repository:preferences')
 
-    testImplementation testDeps.junit
-    testImplementation testDeps.mockk
-    testImplementation testDeps.coroutinesTest
-    testImplementation testDeps.androidXCoreTesting
+    testImplementation libs.junit
+    testImplementation libs.mockk
+    testImplementation libs.coroutinesTest
+    testImplementation libs.androidXCoreTesting
 }

@@ -52,11 +52,11 @@ dependencies {
     implementation libs.navigationCompose
     implementation libs.lifecycleRuntime
 
-    implementation diDeps.hiltAndroid
-    kapt diDeps.hiltCompiler
-    implementation diDeps.hiltExtensions
-    ksp diDeps.hiltExtensionsProcessor
-    implementation diDeps.hiltNavigationCompose
+    implementation libs.hiltAndroid
+    kapt libs.hiltCompiler
+    implementation libs.hiltExtensions
+    ksp libs.hiltExtensionsProcessor
+    implementation libs.hiltNavigationCompose
 
     api project(':ui-library:spinner')
 

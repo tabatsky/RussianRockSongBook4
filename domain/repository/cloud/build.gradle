@@ -36,11 +36,11 @@ dependencies {
 
     implementation libs.coreKtx
 
-    implementation diDeps.hiltAndroid
-    implementation testDeps.hiltAndroidTesting
-    kapt diDeps.hiltCompiler
+    implementation libs.hiltAndroid
+    implementation libs.hiltAndroidTesting
+    kapt libs.hiltCompiler
 
-    api commonDeps.documentFile
+    api libs.documentFile
 
     api libs.composeUi
 
