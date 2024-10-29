@@ -8,7 +8,13 @@ googleServices = "4.4.2"
 coreKtx = "1.13.1"
 coroutines = "1.6.4"
 appCompat = "1.7.0"
+lifecycle = "2.8.6"
 material = "1.12.0"
+compose = "1.7.4"
+activityCompose = "1.9.3"
+composeMaterial = "1.7.4"
+composeMaterial3 = "1.3.0"
+navigationCompose = '2.8.3'
 
 firebaseBom = "33.5.1"
 
@@ -22,10 +28,24 @@ googleServices = { module = "com.google.gms:google-services", version.ref = "goo
 coreKtx = { module="androidx.core:core-ktx", version.ref="coreKtx" }
 coroutines = { module="org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref="coroutines" }
 appCompat = { module="androidx.appcompat:appcompat", version.ref="appCompat" }
+lifecycleRuntime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
+lifecycleViewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 material = { module="com.google.android.material:material", version.ref="material" }
+composeUi = { module="androidx.compose.ui:ui", version.ref="compose" }
+composeUiTooling = { module="androidx.compose.ui:ui-tooling", version.ref="compose" }
+activityCompose = { module="androidx.activity:activity-compose", version.ref="activityCompose" }
+composeMaterial = { module="androidx.compose.material:material", version.ref="composeMaterial" }
+composeMaterial3 = { module="androidx.compose.material3:material3", version.ref="composeMaterial3" }
+navigationCompose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 
 firebaseBom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebaseAnalytics = { module = "com.google.firebase:firebase-analytics" }
+
+kotlinReflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+
+composeUiTest = { module="androidx.compose.ui:ui-test", version.ref="compose" }
+composeUiTestJunit = { module="androidx.compose.ui:ui-test-junit4", version.ref="compose" }
+composeUiTestManifest = { module="androidx.compose.ui:ui-test-manifest", version.ref="compose" }
 
 [plugins]
 
