@@ -31,6 +31,6 @@ android {
 }
 
 dependencies {
-    implementation commonDeps.coreKtx
+    implementation libs.coreKtx
     implementation commonDeps.commonsLang
 }

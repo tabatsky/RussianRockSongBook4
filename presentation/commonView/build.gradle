@@ -39,9 +39,9 @@ android {
 
 dependencies {
 
-    implementation commonDeps.coroutines
-    implementation commonDeps.coreKtx
-    implementation commonDeps.material
+    implementation libs.coroutines
+    implementation libs.coreKtx
+    implementation libs.material
     implementation commonDeps.activityCompose
     implementation commonDeps.composeUi
     implementation commonDeps.composeMaterial

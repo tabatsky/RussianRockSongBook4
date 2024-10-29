@@ -42,8 +42,8 @@ android {
 
 dependencies {
 
-    implementation commonDeps.coreKtx
-    implementation commonDeps.coroutines
+    implementation libs.coreKtx
+    implementation libs.coroutines
     implementation commonDeps.lifecycleRuntime
     implementation commonDeps.lifecycleViewmodel
 

@@ -34,9 +34,9 @@ android {
 }
 
 dependencies {
-    implementation commonDeps.coroutines
-    implementation commonDeps.coreKtx
-    implementation commonDeps.appCompat
+    implementation libs.coroutines
+    implementation libs.coreKtx
+    implementation libs.appCompat
 
     implementation diDeps.hiltAndroid
     kapt diDeps.hiltCompiler

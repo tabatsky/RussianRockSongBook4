@@ -34,7 +34,7 @@ android {
 
 dependencies {
 
-    implementation commonDeps.coreKtx
+    implementation libs.coreKtx
 
     implementation diDeps.hiltAndroid
     implementation(testDeps.hiltAndroidTesting) {
@@ -49,7 +49,7 @@ dependencies {
 
     api commonDeps.composeUi
 
-    api commonDeps.coroutines
+    api libs.coroutines
 
     api project(':core:debug')
     api project(':domain:models:local')

@@ -34,7 +34,7 @@ android {
 }
 
 dependencies {
-    implementation commonDeps.coreKtx
+    implementation libs.coreKtx
 
     implementation diDeps.hiltAndroid
     kapt diDeps.hiltCompiler
