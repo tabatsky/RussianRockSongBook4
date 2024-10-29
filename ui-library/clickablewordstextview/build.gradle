@@ -30,9 +30,9 @@ android {
 }
 
 dependencies {
-    implementation commonDeps.coroutines
-    implementation commonDeps.appCompat
-    implementation commonDeps.coreKtx
+    implementation libs.coroutines
+    implementation libs.appCompat
+    implementation libs.coreKtx
 
     testImplementation testDeps.junit
 }

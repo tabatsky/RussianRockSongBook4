@@ -38,7 +38,7 @@ android {
 }
 
 dependencies {
-    implementation commonDeps.coreKtx
+    implementation libs.coreKtx
 
     implementation commonDeps.activityCompose
     implementation commonDeps.composeUi

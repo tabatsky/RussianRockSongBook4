@@ -1,0 +1,31 @@
+[versions]
+
+gradleAndroid = "8.6.1"
+kotlin = "2.0.21"
+hilt = "2.50"
+googleServices = "4.4.2"
+
+coreKtx = "1.13.1"
+coroutines = "1.6.4"
+appCompat = "1.7.0"
+material = "1.12.0"
+
+firebaseBom = "33.5.1"
+
+[libraries]
+
+gradleAndroid = { module = "com.android.tools.build:gradle", version.ref = "gradleAndroid" }
+kotlin = { module="org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+hiltAndroid = { module="com.google.dagger.hilt.android:com.google.dagger.hilt.android.gradle.plugin", version.ref="hilt" }
+googleServices = { module = "com.google.gms:google-services", version.ref = "googleServices" }
+
+coreKtx = { module="androidx.core:core-ktx", version.ref="coreKtx" }
+coroutines = { module="org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref="coroutines" }
+appCompat = { module="androidx.appcompat:appcompat", version.ref="appCompat" }
+material = { module="com.google.android.material:material", version.ref="material" }
+
+firebaseBom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebaseAnalytics = { module = "com.google.firebase:firebase-analytics" }
+
+[plugins]
+

@@ -1,11 +1,6 @@
 buildscript {
     ext {
         versions = [
-                kotlin : '2.0.21',
-                coreKtx : '1.13.1',
-                appCompat : '1.7.0',
-                material : '1.12.0',
-                coroutines : '1.6.4',
                 compose : '1.7.4',
                 composeCompiler : '1.5.15',
                 composeMaterial: '1.7.4',
@@ -15,7 +10,7 @@ buildscript {
                 lifecycle : '2.8.6',
                 navigationCompose : '2.8.3',
                 activityCompose : '1.9.3',
-                hilt : '2.50',
+                hilt: '2.50',
                 hiltCompiler : '2.50',
                 hiltAndroidTesting : '2.50',
                 hiltExtensions : '1.4.0',
@@ -43,16 +38,7 @@ buildscript {
                 hamcrest: '2.2',
                 leakCanary: '2.12'
         ]
-        gradlePlugins = [
-                android: 'com.android.tools.build:gradle:8.1.1',
-                kotlin: "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
-                hiltAndroid: "com.google.dagger.hilt.android:com.google.dagger.hilt.android.gradle.plugin:${versions.hilt}"
-        ]
         commonDeps = [
-                coroutines: "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutines}",
-                coreKtx: "androidx.core:core-ktx:${versions.coreKtx}",
-                appCompat: "androidx.appcompat:appcompat:${versions.appCompat}",
-                material: "com.google.android.material:material:${versions.material}",
                 activityCompose: "androidx.activity:activity-compose:${versions.activityCompose}",
                 composeUi: "androidx.compose.ui:ui:${versions.compose}",
                 composeMaterial: "androidx.compose.material:material:${versions.composeMaterial}",
@@ -132,10 +118,10 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.6.1'
-        classpath gradlePlugins.kotlin
-        classpath gradlePlugins.hiltAndroid
-        classpath 'com.google.gms:google-services:4.4.2'
+        classpath libs.gradleAndroid
+        classpath libs.kotlin
+        classpath libs.hiltAndroid
+        classpath libs.googleServices
     }
 }
 
@@ -143,9 +129,6 @@ plugins {
     id 'com.google.devtools.ksp' version '2.0.21-1.0.26' apply false
     id 'org.jetbrains.kotlin.android' version '1.9.22' apply false
     id 'org.jetbrains.kotlin.plugin.compose' version '2.0.21' apply false
-    //id 'com.android.library' version '8.2.2' apply false
-    //id 'com.android.library' version '8.3.0' apply false
-    //id 'com.android.library' version '8.1.2' apply false
 }
 
 allprojects {
