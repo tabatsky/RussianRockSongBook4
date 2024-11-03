@@ -1,5 +1,6 @@
 package jatx.russianrocksongbook.commonview.dialogs.warning
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -17,6 +18,7 @@ import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.testing.TEXT_FIELD_WARNING_COMMENT
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.commonviewmodel.ShowToastWithResource
+import jatx.russianrocksongbook.domain.repository.preferences.colorBlack
 
 @Composable
 fun WarningDialog(
@@ -34,7 +36,7 @@ fun WarningDialog(
         onDismissRequest = {
             onDismiss()
         },
-        backgroundColor = theme.colorMain,
+        backgroundColor = theme.colorCommon,
         text = {
             Column(
                 modifier = Modifier
@@ -43,7 +45,7 @@ fun WarningDialog(
             ) {
                 Text(
                     text = stringResource(id = R.string.send_warning_text),
-                    color = theme.colorBg,
+                    color = colorBlack,
                     fontSize = fontSizeTextSp
                 )
                 Box(
@@ -67,7 +69,7 @@ fun WarningDialog(
                         },
                         colors = TextFieldDefaults
                             .textFieldColors(
-                                backgroundColor = theme.colorCommon,
+                                backgroundColor = theme.colorMain,
                                 textColor = theme.colorBg
                             ),
                         textStyle = TextStyle(
@@ -81,12 +83,14 @@ fun WarningDialog(
         buttons = {
             Button(
                 modifier = Modifier
+                    .background(theme.colorMain)
+                    .padding(2.dp)
                     .fillMaxWidth()
                     .height(50.dp),
                 colors = ButtonDefaults
                     .buttonColors(
                         backgroundColor = theme.colorCommon,
-                        contentColor = theme.colorMain
+                        contentColor = colorBlack
                     ),
                 onClick = {
                     if (comment.isNotEmpty()) {
@@ -100,28 +104,22 @@ fun WarningDialog(
                 }) {
                 Text(text = stringResource(id = R.string.ok))
             }
-            Divider(
-                color = theme.colorMain,
-                thickness = 2.dp
-            )
             Button(
                 modifier = Modifier
+                    .background(theme.colorMain)
+                    .padding(2.dp)
                     .fillMaxWidth()
                     .height(50.dp),
                 colors = ButtonDefaults
                     .buttonColors(
                         backgroundColor = theme.colorCommon,
-                        contentColor = theme.colorMain
+                        contentColor = colorBlack
                     ),
                 onClick = {
                     onDismiss()
                 }) {
                 Text(text = stringResource(id = R.string.cancel))
             }
-            Divider(
-                color = theme.colorMain,
-                thickness = 2.dp
-            )
         }
     )
 }

@@ -1,9 +1,11 @@
 package jatx.russianrocksongbook.commonview.dialogs.confirm
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -19,6 +21,7 @@ import jatx.russianrocksongbook.commonview.R
 import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
+import jatx.russianrocksongbook.domain.repository.preferences.colorBlack
 
 @Composable
 fun ConfirmDialog(
@@ -34,14 +37,13 @@ fun ConfirmDialog(
     val fontSizeTitleSp = dimensionResource(id = R.dimen.text_size_20)
         .toScaledSp(ScalePow.TEXT)
 
-    val colorBg = if (!invertColors) theme.colorBg else theme.colorMain
     val colorMain = if (!invertColors) theme.colorMain else theme.colorBg
 
     AlertDialog(
         onDismissRequest = {
             onDismiss()
         },
-        backgroundColor = colorMain,
+        backgroundColor = theme.colorCommon,
         text = {
             Column(
                 modifier = Modifier
@@ -52,18 +54,18 @@ fun ConfirmDialog(
                 Text(
                     text = stringResource(id = titleRes),
                     textAlign = TextAlign.Center,
-                    color = colorBg,
+                    color = colorBlack,
                     fontWeight = FontWeight.W700,
                     fontSize = fontSizeTitleSp
                 )
                 Divider(
-                    color = colorMain,
+                    color = theme.colorCommon,
                     thickness = 30.dp
                 )
                 Text(
                     text = stringResource(id = messageRes),
                     textAlign = TextAlign.Center,
-                    color = colorBg,
+                    color = colorBlack,
                     fontWeight = FontWeight.W400,
                     fontSize = fontSizeTitleSp * 0.7f
                 )
@@ -72,12 +74,14 @@ fun ConfirmDialog(
         buttons = {
             Button(
                 modifier = Modifier
+                    .background(colorMain)
+                    .padding(2.dp)
                     .fillMaxWidth()
                     .height(50.dp),
                 colors = ButtonDefaults
                     .buttonColors(
                         backgroundColor = theme.colorCommon,
-                        contentColor = colorMain
+                        contentColor = colorBlack
                     ),
                 onClick = {
                     onDismiss.invoke()
@@ -85,18 +89,16 @@ fun ConfirmDialog(
                 }) {
                 Text(text = stringResource(id = R.string.ok))
             }
-            Divider(
-                color = colorMain,
-                thickness = 2.dp
-            )
             Button(
                 modifier = Modifier
+                    .background(colorMain)
+                    .padding(2.dp)
                     .fillMaxWidth()
                     .height(50.dp),
                 colors = ButtonDefaults
                     .buttonColors(
                         backgroundColor = theme.colorCommon,
-                        contentColor = colorMain
+                        contentColor = colorBlack
                     ),
                 onClick = {
                     onDismiss.invoke()
@@ -104,10 +106,6 @@ fun ConfirmDialog(
                 }) {
                 Text(text = stringResource(id = R.string.cancel))
             }
-            Divider(
-                color = colorMain,
-                thickness = 2.dp
-            )
         }
     )
 }

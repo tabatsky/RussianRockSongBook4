@@ -1,9 +1,11 @@
 package jatx.russianrocksongbook.commonview.dialogs.music
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -18,6 +20,7 @@ import jatx.russianrocksongbook.commonview.R
 import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
+import jatx.russianrocksongbook.domain.repository.preferences.colorBlack
 
 @Composable
 internal fun MusicDialog(
@@ -34,7 +37,7 @@ internal fun MusicDialog(
         onDismissRequest = {
             onDismiss()
         },
-        backgroundColor = theme.colorMain,
+        backgroundColor = theme.colorCommon,
         text = {
             Column(
                 modifier = Modifier
@@ -44,7 +47,7 @@ internal fun MusicDialog(
                 Text(
                     text = stringResource(id = stringRes),
                     textAlign = TextAlign.Center,
-                    color = theme.colorBg,
+                    color = colorBlack,
                     fontWeight = FontWeight.W700,
                     fontSize = fontSizeTitleSp
                 )
@@ -53,12 +56,14 @@ internal fun MusicDialog(
         buttons = {
             Button(
                 modifier = Modifier
+                    .background(theme.colorMain)
+                    .padding(2.dp)
                     .fillMaxWidth()
                     .height(50.dp),
                 colors = ButtonDefaults
                     .buttonColors(
                         backgroundColor = theme.colorCommon,
-                        contentColor = theme.colorMain
+                        contentColor = colorBlack
                     ),
                 onClick = {
                     onDismiss()
@@ -66,18 +71,16 @@ internal fun MusicDialog(
                 }) {
                 Text(text = stringResource(id = R.string.yes))
             }
-            Divider(
-                color = theme.colorMain,
-                thickness = 2.dp
-            )
             Button(
                 modifier = Modifier
+                    .background(theme.colorMain)
+                    .padding(2.dp)
                     .fillMaxWidth()
                     .height(50.dp),
                 colors = ButtonDefaults
                     .buttonColors(
                         backgroundColor = theme.colorCommon,
-                        contentColor = theme.colorMain
+                        contentColor = colorBlack
                     ),
                 onClick = {
                     onDismiss()
@@ -85,28 +88,22 @@ internal fun MusicDialog(
                 }) {
                 Text(text = stringResource(id = R.string.dont_ask_more))
             }
-            Divider(
-                color = theme.colorMain,
-                thickness = 2.dp
-            )
             Button(
                 modifier = Modifier
+                    .background(theme.colorMain)
+                    .padding(2.dp)
                     .fillMaxWidth()
                     .height(50.dp),
                 colors = ButtonDefaults
                     .buttonColors(
                         backgroundColor = theme.colorCommon,
-                        contentColor = theme.colorMain
+                        contentColor = colorBlack
                     ),
                 onClick = {
                     onDismiss()
                 }) {
                 Text(text = stringResource(id = R.string.cancel))
             }
-            Divider(
-                color = theme.colorMain,
-                thickness = 2.dp
-            )
         }
     )
 }

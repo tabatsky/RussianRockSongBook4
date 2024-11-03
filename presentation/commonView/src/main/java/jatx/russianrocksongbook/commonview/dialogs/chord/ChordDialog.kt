@@ -1,5 +1,6 @@
 package jatx.russianrocksongbook.commonview.dialogs.chord
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
@@ -17,6 +18,7 @@ import com.dqt.libs.chorddroid.classes.ChordLibrary
 import com.dqt.libs.chorddroid.components.ChordTextureView
 import jatx.russianrocksongbook.commonview.R
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
+import jatx.russianrocksongbook.domain.repository.preferences.colorBlack
 
 @Composable
 fun ChordDialog(
@@ -34,7 +36,7 @@ fun ChordDialog(
         onDismissRequest = {
             onDismiss()
         },
-        backgroundColor = theme.colorMain,
+        backgroundColor = theme.colorCommon,
         text = {
             Column(
                 modifier = Modifier
@@ -50,7 +52,7 @@ fun ChordDialog(
                         ChordTextureView(context)
                     },
                     update = { view ->
-                        view.setColors(theme.colorBg.toArgb(), theme.colorMain.toArgb())
+                        view.setColors(theme.colorMain.toArgb(), theme.colorBg.toArgb())
                         view.drawChord(actualChord)
                     }
                 )
@@ -59,12 +61,14 @@ fun ChordDialog(
         buttons = {
             Button(
                 modifier = Modifier
+                    .background(theme.colorMain)
+                    .padding(2.dp)
                     .fillMaxWidth()
                     .height(50.dp),
                 colors = ButtonDefaults
                     .buttonColors(
                         backgroundColor = theme.colorCommon,
-                        contentColor = theme.colorMain
+                        contentColor = colorBlack
                     ),
                 onClick = {
                     onDismiss()
