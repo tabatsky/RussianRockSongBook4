@@ -32,7 +32,7 @@ internal fun VoiceHelpDialog(
         onDismissRequest = {
             onDismiss()
         },
-        backgroundColor = theme.colorCommon,
+        backgroundColor = theme.colorMain,
         text = {
             Column(
                 modifier = Modifier
@@ -41,7 +41,7 @@ internal fun VoiceHelpDialog(
             ) {
                 Text(
                     text = stringResource(id = R.string.dialog_voice_help),
-                    color = colorBlack,
+                    color = theme.colorBg,
                     fontSize = fontSizeTextSp
                 )
             }

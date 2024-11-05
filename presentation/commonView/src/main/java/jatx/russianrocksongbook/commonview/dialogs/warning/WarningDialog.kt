@@ -83,7 +83,7 @@ fun WarningDialog(
         buttons = {
             Button(
                 modifier = Modifier
-                    .background(theme.colorMain)
+                    .background(colorBlack)
                     .padding(2.dp)
                     .fillMaxWidth()
                     .height(50.dp),
@@ -106,7 +106,7 @@ fun WarningDialog(
             }
             Button(
                 modifier = Modifier
-                    .background(theme.colorMain)
+                    .background(colorBlack)
                     .padding(2.dp)
                     .fillMaxWidth()
                     .height(50.dp),
