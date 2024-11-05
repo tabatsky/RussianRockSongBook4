@@ -13,6 +13,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
+import jatx.russianrocksongbook.domain.repository.preferences.colorBlack
 import jatx.russianrocksongbook.settings.R
 
 @Composable
@@ -122,7 +123,7 @@ internal fun SettingsBodyLandscape(
             colors = ButtonDefaults
                 .buttonColors(
                     backgroundColor = theme.colorCommon,
-                    contentColor = theme.colorMain
+                    contentColor = colorBlack
                 ),
             onClick = onSaveClick
         ) {

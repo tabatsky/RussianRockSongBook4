@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import jatx.spinner.Spinner
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
+import jatx.russianrocksongbook.domain.repository.preferences.colorBlack
 import jatx.russianrocksongbook.settings.R
 import jatx.russianrocksongbook.settings.internal.viewmodel.SettingsViewModel
 import jatx.russianrocksongbook.testing.ORIENTATION_SPINNER
@@ -46,6 +47,7 @@ internal fun OrientationRow(
             modifier = Modifier
                 .weight(1.0f)
                 .height(60.dp),
+            colorLabel = colorBlack,
             colorMain = theme.colorMain,
             colorBg = theme.colorBg,
             colorCommon = theme.colorCommon,

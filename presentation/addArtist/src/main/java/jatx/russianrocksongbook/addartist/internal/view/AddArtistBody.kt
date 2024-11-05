@@ -17,6 +17,7 @@ import jatx.russianrocksongbook.addartist.internal.viewmodel.AddSongsFromDir
 import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
+import jatx.russianrocksongbook.domain.repository.preferences.colorBlack
 
 @Composable
 internal fun AddArtistBody() {
@@ -52,7 +53,7 @@ internal fun AddArtistBody() {
             colors = ButtonDefaults
                 .buttonColors(
                     backgroundColor = theme.colorCommon,
-                    contentColor = theme.colorMain
+                    contentColor = colorBlack
                 ),
             onClick = {
                 addArtistViewModel.submitAction(AddSongsFromDir)

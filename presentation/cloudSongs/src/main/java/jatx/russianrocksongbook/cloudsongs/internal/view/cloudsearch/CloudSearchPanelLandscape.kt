@@ -16,6 +16,7 @@ import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.CloudViewModel
 import jatx.spinner.Spinner
 import jatx.russianrocksongbook.domain.repository.cloud.CloudSearchOrderBy
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
+import jatx.russianrocksongbook.domain.repository.preferences.colorBlack
 import jatx.russianrocksongbook.testing.SEARCH_BUTTON
 import jatx.russianrocksongbook.testing.TEXT_FIELD_SEARCH_FOR
 
@@ -61,6 +62,7 @@ internal fun CloudSearchPanelLandscape(
                 .weight(0.6f)
                 .fillMaxHeight()
                 .padding(padding),
+            colorLabel = colorBlack,
             colorMain = theme.colorMain,
             colorBg = theme.colorBg,
             colorCommon = theme.colorCommon,
@@ -85,7 +87,7 @@ internal fun CloudSearchPanelLandscape(
                 colors = ButtonDefaults
                     .outlinedButtonColors(
                         backgroundColor = theme.colorCommon,
-                        contentColor = theme.colorMain
+                        contentColor = colorBlack
                     ),
                 onClick = onSearchClick,
             ) {
