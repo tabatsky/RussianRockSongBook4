@@ -20,6 +20,7 @@ import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
 import jatx.russianrocksongbook.commonviewmodel.AppWasUpdated
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
+import jatx.russianrocksongbook.domain.repository.preferences.colorBlack
 import jatx.russianrocksongbook.whatsnewdialog.R
 
 @Composable
@@ -73,12 +74,14 @@ internal fun WhatsNewDialogImpl() {
                     }
                     Button(
                         modifier = Modifier
+                            .background(colorBlack)
+                            .padding(2.dp)
                             .fillMaxWidth()
                             .height(50.dp),
                         colors = ButtonDefaults
                             .buttonColors(
                                 backgroundColor = theme.colorCommon,
-                                contentColor = theme.colorMain
+                                contentColor = colorBlack
                             ),
                         onClick = {
                             onDismiss()

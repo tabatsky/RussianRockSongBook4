@@ -56,7 +56,7 @@ internal fun MusicDialog(
         buttons = {
             Button(
                 modifier = Modifier
-                    .background(theme.colorMain)
+                    .background(colorBlack)
                     .padding(2.dp)
                     .fillMaxWidth()
                     .height(50.dp),
@@ -73,7 +73,7 @@ internal fun MusicDialog(
             }
             Button(
                 modifier = Modifier
-                    .background(theme.colorMain)
+                    .background(colorBlack)
                     .padding(2.dp)
                     .fillMaxWidth()
                     .height(50.dp),
@@ -90,7 +90,7 @@ internal fun MusicDialog(
             }
             Button(
                 modifier = Modifier
-                    .background(theme.colorMain)
+                    .background(colorBlack)
                     .padding(2.dp)
                     .fillMaxWidth()
                     .height(50.dp),

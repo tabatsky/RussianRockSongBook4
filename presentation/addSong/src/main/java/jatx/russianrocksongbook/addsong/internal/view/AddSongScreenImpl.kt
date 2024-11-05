@@ -70,7 +70,6 @@ internal fun AddSongScreenImpl() {
 
         if (showUploadDialog) {
             UploadDialog(
-                invertColors = true,
                 onConfirm = {
                     addSongViewModel.submitAction(UploadNewToCloud)
                 },

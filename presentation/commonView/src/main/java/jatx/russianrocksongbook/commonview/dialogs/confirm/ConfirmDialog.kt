@@ -28,7 +28,6 @@ fun ConfirmDialog(
     commonViewModel: CommonViewModel = CommonViewModel.getInstance(),
     @StringRes titleRes: Int,
     @StringRes messageRes: Int,
-    invertColors: Boolean = false,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
     onDecline: (() -> Unit)? = null
@@ -36,8 +35,6 @@ fun ConfirmDialog(
     val theme = commonViewModel.theme.collectAsState().value
     val fontSizeTitleSp = dimensionResource(id = R.dimen.text_size_20)
         .toScaledSp(ScalePow.TEXT)
-
-    val colorMain = if (!invertColors) theme.colorMain else theme.colorBg
 
     AlertDialog(
         onDismissRequest = {
@@ -74,7 +71,7 @@ fun ConfirmDialog(
         buttons = {
             Button(
                 modifier = Modifier
-                    .background(colorMain)
+                    .background(colorBlack)
                     .padding(2.dp)
                     .fillMaxWidth()
                     .height(50.dp),
@@ -91,7 +88,7 @@ fun ConfirmDialog(
             }
             Button(
                 modifier = Modifier
-                    .background(colorMain)
+                    .background(colorBlack)
                     .padding(2.dp)
                     .fillMaxWidth()
                     .height(50.dp),
