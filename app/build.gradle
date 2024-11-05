@@ -1,11 +1,11 @@
 plugins {
     id 'com.android.application'
-    id 'kotlin-android'
-    id 'kotlin-kapt'
-    id 'com.google.dagger.hilt.android'
+    alias libs.plugins.kotlin.android
+    alias libs.plugins.kapt
+    alias libs.plugins.hilt.android
+    alias libs.plugins.compose
+    alias libs.plugins.ksp
     id 'com.google.gms.google-services'
-    id 'org.jetbrains.kotlin.plugin.compose'
-    id 'com.google.devtools.ksp'
 }
 
 android {
@@ -47,12 +47,7 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
-    buildFeatures {
-        compose true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion versions.composeCompiler
-    }
+
     packagingOptions {
         resources {
             excludes += [
@@ -83,7 +78,7 @@ dependencies {
     implementation libs.lifecycleViewmodel
 
     implementation libs.hiltAndroid
-    kapt libs.hiltCompiler
+    ksp libs.hiltCompiler
     implementation libs.hiltExtensions
     ksp libs.hiltExtensionsProcessor
 
