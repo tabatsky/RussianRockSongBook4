@@ -1,10 +1,10 @@
 plugins {
     id 'com.android.library'
-    id 'kotlin-android'
-    id 'kotlin-kapt'
-    id 'com.google.dagger.hilt.android'
-    id 'org.jetbrains.kotlin.plugin.compose'
-    id 'com.google.devtools.ksp'
+    alias libs.plugins.kotlin.android
+    alias libs.plugins.kapt
+    alias libs.plugins.hilt.android
+    alias libs.plugins.compose
+    alias libs.plugins.ksp
 }
 
 android {
@@ -31,12 +31,7 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
-    buildFeatures {
-        compose true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion versions.composeCompiler
-    }
+
     namespace 'jatx.russianrocksongbook.cloudsongs'
 }
 
@@ -56,7 +51,7 @@ dependencies {
     implementation libs.pagingCompose
 
     implementation libs.hiltAndroid
-    kapt libs.hiltCompiler
+    ksp libs.hiltCompiler
     implementation libs.hiltExtensions
     ksp libs.hiltExtensionsProcessor
     implementation libs.hiltNavigationCompose

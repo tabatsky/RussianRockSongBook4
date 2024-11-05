@@ -1,9 +1,9 @@
 plugins {
     id 'com.android.library'
-    id 'kotlin-android'
-    id 'kotlin-kapt'
-    id 'com.google.dagger.hilt.android'
-    id 'com.google.devtools.ksp'
+    alias libs.plugins.kotlin.android
+    alias libs.plugins.kapt
+    alias libs.plugins.hilt.android
+    alias libs.plugins.ksp
 }
 
 android {
@@ -39,7 +39,7 @@ dependencies {
     implementation libs.activityCompose
 
     implementation libs.hiltAndroid
-    kapt libs.hiltCompiler
+    ksp libs.hiltCompiler
     implementation libs.hiltExtensions
     ksp libs.hiltExtensionsProcessor
 
