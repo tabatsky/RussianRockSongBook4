@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.domain.repository.local.TextSearchOrderBy
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
+import jatx.russianrocksongbook.domain.repository.preferences.colorBlack
 import jatx.russianrocksongbook.testing.SEARCH_BUTTON
 import jatx.russianrocksongbook.testing.TEXT_FIELD_SEARCH_FOR
 import jatx.russianrocksongbook.textsearch.R
@@ -73,6 +74,7 @@ internal fun TextSearchPanelLandscape(
                 .weight(0.6f)
                 .fillMaxHeight()
                 .padding(padding),
+            colorLabel = colorBlack,
             colorMain = theme.colorMain,
             colorBg = theme.colorBg,
             colorCommon = theme.colorCommon,
@@ -97,7 +99,7 @@ internal fun TextSearchPanelLandscape(
                 colors = ButtonDefaults
                     .outlinedButtonColors(
                         backgroundColor = theme.colorCommon,
-                        contentColor = theme.colorMain
+                        contentColor = colorBlack
                     ),
                 onClick = onSearchClick,
             ) {

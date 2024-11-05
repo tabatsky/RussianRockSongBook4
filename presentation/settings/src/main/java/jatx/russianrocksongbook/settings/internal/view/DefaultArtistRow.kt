@@ -19,6 +19,7 @@ import jatx.russianrocksongbook.domain.repository.local.ARTIST_ADD_SONG
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_CLOUD_SONGS
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_DONATION
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
+import jatx.russianrocksongbook.domain.repository.preferences.colorBlack
 import jatx.russianrocksongbook.settings.R
 import jatx.russianrocksongbook.settings.internal.viewmodel.SettingsViewModel
 import jatx.russianrocksongbook.testing.DEFAULT_ARTIST_SPINNER
@@ -61,6 +62,7 @@ internal fun DefaultArtistRow(
             modifier = Modifier
                 .weight(1.0f)
                 .height(60.dp),
+            colorLabel = colorBlack,
             colorMain = theme.colorMain,
             colorBg = theme.colorBg,
             colorCommon = theme.colorCommon,

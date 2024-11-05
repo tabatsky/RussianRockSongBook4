@@ -19,6 +19,7 @@ import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
 import jatx.russianrocksongbook.commonviewmodel.ShowToastWithResource
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
+import jatx.russianrocksongbook.domain.repository.preferences.colorBlack
 import jatx.russianrocksongbook.testing.TEXT_FIELD_ARTIST
 import jatx.russianrocksongbook.testing.TEXT_FIELD_TEXT
 import jatx.russianrocksongbook.testing.TEXT_FIELD_TITLE
@@ -138,7 +139,7 @@ internal fun AddSongBody() {
             colors = ButtonDefaults
                 .buttonColors(
                     backgroundColor = theme.colorCommon,
-                    contentColor = theme.colorMain
+                    contentColor = colorBlack
                 ),
             onClick = {
                 if (

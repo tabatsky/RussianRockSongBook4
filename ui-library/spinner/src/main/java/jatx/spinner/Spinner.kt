@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.TextUnit
 @Composable
 fun Spinner(
     modifier: Modifier,
+    colorLabel: Color,
     colorMain: Color,
     colorBg: Color,
     colorCommon: Color,
@@ -56,7 +57,7 @@ fun Spinner(
             colors = ButtonDefaults
                 .buttonColors(
                     backgroundColor = colorCommon,
-                    contentColor = colorMain
+                    contentColor = colorLabel
                 ),
             onClick = {
                 setExpanded(!theState.isExpanded)
