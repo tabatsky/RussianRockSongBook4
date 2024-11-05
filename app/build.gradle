@@ -149,7 +149,7 @@ dependencies {
     testImplementation(libs.hiltAndroidTesting) {
         exclude group: 'androidx.test', module: 'core'
     }
-    kaptAndroidTest libs.hiltAndroidCompiler
+    kspAndroidTest libs.hiltAndroidCompiler
 
     androidTestImplementation libs.composeUiTest
     androidTestImplementation(libs.composeUiTestJunit) {
