@@ -9,9 +9,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
-import androidx.tv.foundation.lazy.list.TvLazyColumn
-import androidx.tv.foundation.lazy.list.itemsIndexed
-import androidx.tv.foundation.lazy.list.rememberTvLazyListState
 import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
 import jatx.russianrocksongbook.domain.repository.local.predefinedArtistList
@@ -116,33 +113,17 @@ internal fun SongListMenuBody(
         }
     }
 
-    if (localViewModel.isTV) {
-        val menuState = rememberTvLazyListState()
-        TvLazyColumn(
-            modifier = modifier,
-            state = menuState
-        ) {
-            itemsIndexed(predefinedWithGroups) { _, artistOrGroup ->
-                TheItem(artistOrGroup = artistOrGroup)
-            }
+    val menuState = rememberLazyListState()
+    LazyColumn(
+        modifier = modifier,
+        state = menuState
+    ) {
+        itemsIndexed(predefinedWithGroups) { _, artistOrGroup ->
+            TheItem(artistOrGroup = artistOrGroup)
         }
-        ScrollEffect(
-            onPerformScroll = { menuState.scrollToItem(it) },
-            getFirstVisibleItemIndex = { menuState.firstVisibleItemIndex }
-        )
-    } else {
-        val menuState = rememberLazyListState()
-        LazyColumn(
-            modifier = modifier,
-            state = menuState
-        ) {
-            itemsIndexed(predefinedWithGroups) { _, artistOrGroup ->
-                TheItem(artistOrGroup = artistOrGroup)
-            }
-        }
-        ScrollEffect(
-            onPerformScroll = { menuState.scrollToItem(it) },
-            getFirstVisibleItemIndex = { menuState.firstVisibleItemIndex }
-        )
     }
+    ScrollEffect(
+        onPerformScroll = { menuState.scrollToItem(it) },
+        getFirstVisibleItemIndex = { menuState.firstVisibleItemIndex }
+    )
 }
