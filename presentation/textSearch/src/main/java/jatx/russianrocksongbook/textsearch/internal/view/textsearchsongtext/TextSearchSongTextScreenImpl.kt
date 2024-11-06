@@ -9,7 +9,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
-import androidx.tv.foundation.lazy.list.rememberTvLazyListState
 import jatx.clickablewordstextcompose.api.Word
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
@@ -67,17 +66,12 @@ internal fun TextSearchSongTextScreenImpl(position: Int) {
 
     val isAutoPlayMode = textSearchState.isAutoPlayMode
     val listState = rememberLazyListState()
-    val tvListState = rememberTvLazyListState()
     val coroutineScope = rememberCoroutineScope()
     val dY = (10 * textSearchViewModel.settings.scrollSpeed).toInt()
 
     val onSongChanged: () -> Unit = {
         coroutineScope.launch {
             listState.scrollToItem(
-                index = 0,
-                scrollOffset = 0
-            )
-            tvListState.scrollToItem(
                 index = 0,
                 scrollOffset = 0
             )
@@ -156,7 +150,6 @@ internal fun TextSearchSongTextScreenImpl(position: Int) {
                         text = text,
                         isEditorMode = isEditorMode,
                         listState = listState,
-                        tvListState = tvListState,
                         fontSizeTextSp = fontSizeTextSp,
                         fontSizeTitleSp = fontSizeTitleSp,
                         theme = theme,

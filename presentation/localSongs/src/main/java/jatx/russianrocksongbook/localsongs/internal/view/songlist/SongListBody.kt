@@ -14,9 +14,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
-import androidx.tv.foundation.lazy.list.TvLazyColumn
-import androidx.tv.foundation.lazy.list.itemsIndexed
-import androidx.tv.foundation.lazy.list.rememberTvLazyListState
 import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.commonview.stub.CommonSongListStub
 import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
@@ -100,35 +97,20 @@ internal fun SongListBody(
             .focusProperties {
                 left = navigationFocusRequester
             }
-        if (localViewModel.isTV) {
-            val listState = rememberTvLazyListState()
-            TvLazyColumn(
-                modifier = modifier,
-                state = listState
-            ) {
-                itemsIndexed(songList) { index, song ->
-                    TheItem(index, song)
-                }
+
+        val listState = rememberLazyListState()
+        LazyColumn(
+            modifier = modifier,
+            state = listState
+        ) {
+            itemsIndexed(songList) { index, song ->
+                TheItem(index, song)
             }
-            ScrollEffect(
-                onPerformScroll = { listState.scrollToItem(it) },
-                getFirstVisibleItemIndex = { listState.firstVisibleItemIndex }
-            )
-        } else {
-            val listState = rememberLazyListState()
-            LazyColumn(
-                modifier = modifier,
-                state = listState
-            ) {
-                itemsIndexed(songList) { index, song ->
-                    TheItem(index, song)
-                }
-            }
-            ScrollEffect(
-                onPerformScroll = { listState.scrollToItem(it) },
-                getFirstVisibleItemIndex = { listState.firstVisibleItemIndex }
-            )
         }
+        ScrollEffect(
+            onPerformScroll = { listState.scrollToItem(it) },
+            getFirstVisibleItemIndex = { listState.firstVisibleItemIndex }
+        )
     } else {
         CommonSongListStub(fontSizeSp, theme)
     }

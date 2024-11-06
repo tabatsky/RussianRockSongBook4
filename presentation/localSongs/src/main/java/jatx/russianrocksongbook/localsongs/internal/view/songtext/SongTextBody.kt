@@ -15,8 +15,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.tv.foundation.lazy.list.TvLazyColumn
-import androidx.tv.foundation.lazy.list.TvLazyListState
 import jatx.clickablewordstextcompose.api.Word
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
@@ -34,7 +32,6 @@ internal fun SongTextBody(
     text: String,
     isEditorMode: Boolean,
     listState: LazyListState,
-    tvListState: TvLazyListState,
     fontSizeTextSp: TextUnit,
     fontSizeTitleSp: TextUnit,
     theme: Theme,
@@ -44,8 +41,6 @@ internal fun SongTextBody(
     onTextChange: (String) -> Unit,
     onWordClick: (Word) -> Unit
 ) {
-    val localViewModel = LocalViewModel.getInstance()
-
     val paddingStart = if (W > H) 20.dp else 8.dp
 
     Column(
@@ -116,43 +111,6 @@ internal fun SongTextBody(
             }
         }
 
-        @Composable
-        fun SongTextTvLazyColumn() {
-            TvLazyColumn(
-                state = tvListState,
-                modifier = modifier
-            ) {
-                if (isEditorMode) {
-                    item {
-                        TheEditor()
-                    }
-                } else {
-                    item {
-                        TheViewer()
-
-                        tailrec suspend fun autoScroll(listState: TvLazyListState) {
-                            listState.scroll(MutatePriority.PreventUserInput) {
-                                scrollBy(dY.toFloat())
-                            }
-
-                            delay(AUTO_SCROLL_INTERVAL)
-                            autoScroll(listState)
-                        }
-
-                        if (isAutoPlayMode) {
-                            LaunchedEffect(Unit) {
-                                autoScroll(tvListState)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        if (localViewModel.isTV) {
-            SongTextTvLazyColumn()
-        } else {
-            SongTextLazyColumn()
-        }
+        SongTextLazyColumn()
     }
 }
