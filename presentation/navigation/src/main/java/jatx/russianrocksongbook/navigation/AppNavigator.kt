@@ -17,12 +17,6 @@ object AppNavigator {
 
     private var destinationChangedListener =
         NavController.OnDestinationChangedListener { controller, destination, arguments ->
-
-            //Log.e("was", previousDestination?.route ?: "null")
-            //Log.e("become", destination.route ?: "null")
-            //Log.e("args", arguments.toString())
-            //Log.e("skip submit", skipSubmitBackAction.toString())
-
             val wasSongListScreen = previousDestination.isSongListScreen
             val becomeStartScreen = destination.isStartScreen
 
@@ -101,7 +95,7 @@ object AppNavigator {
     }
 
     fun navigate(screenVariant: ScreenVariant) {
-        navController?.navigate(screenVariant.destination) {
+        navController?.navigate(screenVariant.route) {
             launchSingleTop = true
         }
     }

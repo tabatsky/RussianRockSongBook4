@@ -5,6 +5,7 @@ plugins {
     alias libs.plugins.hilt.android
     alias libs.plugins.compose
     alias libs.plugins.ksp
+    alias libs.plugins.kotlin.serialization
     id 'com.google.gms.google-services'
 }
 
@@ -76,6 +77,7 @@ dependencies {
     implementation libs.navigationCompose
     implementation libs.lifecycleRuntime
     implementation libs.lifecycleViewmodel
+    implementation libs.ktxSerializationCore
 
     implementation libs.hiltAndroid
     ksp libs.hiltCompiler
