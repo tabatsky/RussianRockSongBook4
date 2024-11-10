@@ -344,7 +344,7 @@ open class CommonViewModel @Inject constructor(
         changeCurrentScreenVariant(newScreenVariant)
         AppNavigator.navigate(newScreenVariant)
 
-        Log.e("navigated", newScreenVariant.destination)
+        Log.e("navigated", newScreenVariant.route.toString())
     }
 
     fun changeCurrentScreenVariant(screenVariant: ScreenVariant) {

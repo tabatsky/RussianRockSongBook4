@@ -3,11 +3,10 @@ package jatx.russianrocksongbook.view
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import androidx.navigation.toRoute
 import jatx.russianrocksongbook.addartist.api.view.AddArtistScreen
 import jatx.russianrocksongbook.addsong.api.view.AddSongScreen
 import jatx.russianrocksongbook.cloudsongs.api.view.CloudSearchScreen
@@ -21,29 +20,22 @@ import jatx.russianrocksongbook.localsongs.api.view.SongListScreen
 import jatx.russianrocksongbook.localsongs.api.view.SongTextScreen
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.VoiceCommandViewModel
+import jatx.russianrocksongbook.navigation.AddArtistRoute
+import jatx.russianrocksongbook.navigation.AddSongRoute
 import jatx.russianrocksongbook.settings.api.view.SettingsScreen
 import jatx.russianrocksongbook.start.api.view.StartScreen
 import jatx.russianrocksongbook.navigation.AppNavigator
-import jatx.russianrocksongbook.navigation.argArtist
-import jatx.russianrocksongbook.navigation.argCloudSearchRandomKey
-import jatx.russianrocksongbook.navigation.argIsBackFromSomeScreen
-import jatx.russianrocksongbook.navigation.argIsBackFromSong
-import jatx.russianrocksongbook.navigation.argPosition
-import jatx.russianrocksongbook.navigation.argTextSearchListRandomKey
-import jatx.russianrocksongbook.navigation.argTitle
-import jatx.russianrocksongbook.navigation.destinationAddArtist
-import jatx.russianrocksongbook.navigation.destinationAddSong
-import jatx.russianrocksongbook.navigation.destinationCloudSearch
-import jatx.russianrocksongbook.navigation.destinationCloudSongText
-import jatx.russianrocksongbook.navigation.destinationDonation
-import jatx.russianrocksongbook.navigation.destinationFavorite
-import jatx.russianrocksongbook.navigation.destinationSettings
-import jatx.russianrocksongbook.navigation.destinationSongList
-import jatx.russianrocksongbook.navigation.destinationSongText
-import jatx.russianrocksongbook.navigation.destinationSongTextByArtistAndTitle
-import jatx.russianrocksongbook.navigation.destinationStart
-import jatx.russianrocksongbook.navigation.destinationTextSearchList
-import jatx.russianrocksongbook.navigation.destinationTextSearchSongText
+import jatx.russianrocksongbook.navigation.CloudSearchRoute
+import jatx.russianrocksongbook.navigation.CloudSongTextRoute
+import jatx.russianrocksongbook.navigation.DonationRoute
+import jatx.russianrocksongbook.navigation.FavoriteRoute
+import jatx.russianrocksongbook.navigation.SettingsRoute
+import jatx.russianrocksongbook.navigation.SongListRoute
+import jatx.russianrocksongbook.navigation.SongTextByArtistAndTitleRoute
+import jatx.russianrocksongbook.navigation.SongTextRoute
+import jatx.russianrocksongbook.navigation.StartRoute
+import jatx.russianrocksongbook.navigation.TextSearchListRoute
+import jatx.russianrocksongbook.navigation.TextSearchSongTextRoute
 import jatx.russianrocksongbook.textsearch.api.view.TextSearchListScreen
 import jatx.russianrocksongbook.textsearch.api.view.TextSearchSongTextScreen
 import jatx.russianrocksongbook.textsearch.internal.viewmodel.TextSearchViewModel
@@ -73,142 +65,92 @@ fun CurrentScreen() {
 
     NavHost(
         navController,
-        startDestination = destinationStart,
+        startDestination = StartRoute,
         enterTransition = { EnterTransition.None },
         popEnterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None },
         popExitTransition = { ExitTransition.None }
     ) {
 
-        composable(destinationStart) {
+        composable<StartRoute> {
             StartScreen()
         }
 
-        composable(
-            "$destinationSongList/{$argArtist}/{$argIsBackFromSomeScreen}",
-            arguments = listOf(
-                navArgument(argArtist) { type = NavType.StringType },
-                navArgument(argIsBackFromSomeScreen) { type = NavType.BoolType }
-            )
-        ) { backStackEntry ->
+        composable<SongListRoute> { backStackEntry ->
+            val route: SongListRoute = backStackEntry.toRoute()
             SongListScreen(
-                artist = backStackEntry.arguments?.getString(argArtist)
-                    ?: throw IllegalArgumentException("No such argument"),
-                isBackFromSomeScreen = backStackEntry.arguments?.getBoolean(argIsBackFromSomeScreen)
-                    ?: throw IllegalArgumentException("No such argument")
+                artist = route.artist,
+                isBackFromSomeScreen = route.isBackFromSomeScreen
             )
         }
 
-        composable(
-            "$destinationFavorite/{$argIsBackFromSomeScreen}",
-            arguments = listOf(
-                navArgument(argIsBackFromSomeScreen) { type = NavType.BoolType },
-            )
-        ) { backStackEntry ->
+        composable<FavoriteRoute> { backStackEntry ->
+            val route: FavoriteRoute = backStackEntry.toRoute()
             SongListScreen(
                 artist = ARTIST_FAVORITE,
-                isBackFromSomeScreen = backStackEntry.arguments?.getBoolean(argIsBackFromSomeScreen)
-                    ?: throw IllegalArgumentException("No such argument")
+                isBackFromSomeScreen = route.isBackFromSomeScreen
             )
         }
 
-        composable(
-            "$destinationSongText/{$argArtist}/{$argPosition}",
-            arguments = listOf(
-                navArgument(argArtist) { type = NavType.StringType },
-                navArgument(argPosition) { type = NavType.IntType },
-            )
-        ) { backStackEntry ->
+        composable<SongTextRoute> { backStackEntry ->
+            val route: SongTextRoute = backStackEntry.toRoute()
             SongTextScreen(
-                artist = backStackEntry.arguments?.getString(argArtist)
-                    ?: throw IllegalArgumentException("No such argument"),
-                position = backStackEntry.arguments?.getInt(argPosition)
-                    ?: throw IllegalArgumentException("No such argument")
+                artist = route.artist,
+                position = route.position
             )
         }
 
-        composable(
-            "$destinationSongTextByArtistAndTitle/{$argArtist}/{$argTitle}",
-            arguments = listOf(
-                navArgument(argArtist) { type = NavType.StringType },
-                navArgument(argTitle) { type = NavType.StringType },
-            )
-        ) { backStackEntry ->
+        composable<SongTextByArtistAndTitleRoute> { backStackEntry ->
+            val route: SongTextByArtistAndTitleRoute = backStackEntry.toRoute()
             SongListScreen(
-                artist = backStackEntry.arguments?.getString(argArtist)
-                    ?: throw IllegalArgumentException("No such argument"),
-                songTitleToPass = backStackEntry.arguments?.getString(argTitle)
-                    ?: throw IllegalArgumentException("No such argument")
+                artist = route.artist,
+                songTitleToPass = route.title
             )
         }
 
-        composable(
-            "$destinationCloudSearch/{$argCloudSearchRandomKey}/{$argIsBackFromSong}",
-            arguments = listOf(
-                navArgument(argCloudSearchRandomKey) { type = NavType.IntType },
-                navArgument(argIsBackFromSong) { type = NavType.BoolType }
-            )
-        ) { backStackEntry ->
+        composable<CloudSearchRoute> { backStackEntry ->
+            val route: CloudSearchRoute = backStackEntry.toRoute()
             CloudSearchScreen(
-                randomKey = backStackEntry.arguments?.getInt(argCloudSearchRandomKey)
-                    ?: throw IllegalArgumentException("No such argument"),
-                isBackFromSong = backStackEntry.arguments?.getBoolean(argIsBackFromSong)
-                    ?: throw IllegalArgumentException("No such argument")
+                randomKey = route.randomKey,
+                isBackFromSong = route.isBackFromSong
             )
         }
 
-        composable(
-            "$destinationTextSearchList/{$argTextSearchListRandomKey}/{$argIsBackFromSong}",
-            arguments = listOf(
-                navArgument(argTextSearchListRandomKey) { type = NavType.IntType },
-                navArgument(argIsBackFromSong) { type = NavType.BoolType }
-            )
-        ) { backStackEntry ->
+        composable<TextSearchListRoute> { backStackEntry ->
+            val route: TextSearchListRoute = backStackEntry.toRoute()
             TextSearchListScreen(
-                randomKey = backStackEntry.arguments?.getInt(argTextSearchListRandomKey)
-                    ?: throw IllegalArgumentException("No such argument"),
-                isBackFromSong = backStackEntry.arguments?.getBoolean(argIsBackFromSong)
-                    ?: throw IllegalArgumentException("No such argument")
+                randomKey = route.randomKey,
+                isBackFromSong = route.isBackFromSong
             )
         }
 
-        composable(
-            "$destinationCloudSongText/{$argPosition}",
-            arguments = listOf(
-                navArgument(argPosition) { type = NavType.IntType },
-            )
-        ) { backStackEntry ->
+        composable<CloudSongTextRoute> { backStackEntry ->
+            val route: CloudSongTextRoute = backStackEntry.toRoute()
             CloudSongTextScreen(
-                position = backStackEntry.arguments?.getInt(argPosition)
-                    ?: throw IllegalArgumentException("No such argument")
+                position = route.position
             )
         }
 
-        composable(
-            "$destinationTextSearchSongText/{$argPosition}",
-            arguments = listOf(
-                navArgument(argPosition) { type = NavType.IntType },
-            )
-        ) { backStackEntry ->
+        composable<TextSearchSongTextRoute> { backStackEntry ->
+            val route: TextSearchSongTextRoute = backStackEntry.toRoute()
             TextSearchSongTextScreen(
-                position = backStackEntry.arguments?.getInt(argPosition)
-                    ?: throw IllegalArgumentException("No such argument")
+                position = route.position
             )
         }
 
-        composable(destinationAddArtist) {
+        composable<AddArtistRoute> {
             AddArtistScreen()
         }
 
-        composable(destinationAddSong) {
+        composable<AddSongRoute> {
             AddSongScreen()
         }
 
-        composable(destinationDonation) {
+        composable<DonationRoute> {
             DonationScreen()
         }
 
-        composable(destinationSettings) {
+        composable<SettingsRoute> {
             SettingsScreen()
         }
     }

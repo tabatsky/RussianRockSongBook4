@@ -8,7 +8,6 @@ import jatx.russianrocksongbook.domain.repository.local.ARTIST_ADD_ARTIST
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_ADD_SONG
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_CLOUD_SONGS
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_DONATION
-import jatx.russianrocksongbook.domain.usecase.cloud.AddSongToCloudUseCase
 import jatx.russianrocksongbook.domain.usecase.local.*
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModelTest
@@ -217,12 +216,10 @@ open class LocalViewModelTest: CommonViewModelTest() {
         localViewModel.submitAction(SelectArtist(ARTIST_CLOUD_SONGS))
 
         assertTrue(localViewModel.appStateFlow.value.currentScreenVariant is ScreenVariant.CloudSearch)
-
-        val destination = localViewModel.appStateFlow.value.currentScreenVariant.destination
     }
 
     @Test
-    fun test106_selectArtist_Donation_isWorkingCorrect() {
+    fun test106_selectArt_Donaisttion_isWorkingCorrect() {
         localViewModel.submitAction(SelectArtist(ARTIST_DONATION))
 
         assertEquals(ScreenVariant.Donation, localViewModel.appStateFlow.value.currentScreenVariant)

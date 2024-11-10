@@ -5,91 +5,91 @@ import kotlin.random.Random
 val rnd = Random(42)
 
 sealed interface ScreenVariant {
-    val destination: String
+    val route: Any
 
     data object Start: ScreenVariant {
-        override val destination: String
-            get() = destinationStart
+        override val route: Any
+            get() = StartRoute
     }
 
     data class SongList(
         val artist: String,
         val isBackFromSomeScreen: Boolean = false
     ): ScreenVariant {
-        override val destination: String
-            get() = "$destinationSongList/$artist/$isBackFromSomeScreen"
+        override val route: Any
+            get() = SongListRoute(artist, isBackFromSomeScreen)
     }
 
     data class Favorite(
         val isBackFromSomeScreen: Boolean = false
     ): ScreenVariant {
-        override val destination: String
-            get() = "$destinationFavorite/$isBackFromSomeScreen"
+        override val route: Any
+            get() = FavoriteRoute(isBackFromSomeScreen)
     }
 
     data class SongText(
         val artist: String,
         val position: Int
         ): ScreenVariant {
-        override val destination: String
-            get() = "$destinationSongText/$artist/$position"
+        override val route: Any
+            get() = SongTextRoute(artist, position)
     }
 
     data class SongTextByArtistAndTitle(
         val artist: String,
         val title: String
         ): ScreenVariant {
-        override val destination: String
-            get() = "$destinationSongTextByArtistAndTitle/$artist/$title"
+        override val route: Any
+            get() = SongTextByArtistAndTitleRoute(artist, title)
     }
 
     data class CloudSearch(
         val randomKey: Int = rnd.nextInt(),
         val isBackFromSong: Boolean = false
     ): ScreenVariant {
-        override val destination: String
-            get() = "$destinationCloudSearch/$randomKey/$isBackFromSong"
+        override val route: Any
+            get() = CloudSearchRoute(randomKey, isBackFromSong)
     }
 
     data class CloudSongText(
         val position: Int
     ): ScreenVariant {
-        override val destination: String
-            get() = "$destinationCloudSongText/$position"
+        override val route: Any
+            get() = CloudSongTextRoute(position)
     }
 
     data class TextSearchList(
         val randomKey: Int = rnd.nextInt(),
         val isBackFromSong: Boolean = false
     ): ScreenVariant {
-        override val destination: String
-            get() = "$destinationTextSearchList/$randomKey/$isBackFromSong"
+        override val route: Any
+            get() = TextSearchListRoute(randomKey, isBackFromSong)
     }
 
     data class TextSearchSongText(
         val position: Int
     ): ScreenVariant {
-        override val destination: String
-            get() = "$destinationTextSearchSongText/$position"
+        override val route: Any
+            get() = TextSearchSongTextRoute(position)
     }
 
     data object AddArtist: ScreenVariant {
-        override val destination: String
-            get() = destinationAddArtist
+        override val route: Any
+            get() = AddArtistRoute
     }
 
     data object AddSong: ScreenVariant {
-        override val destination: String
-            get() = destinationAddSong
+        override val route: Any
+            get() = AddSongRoute
     }
 
     data object Donation: ScreenVariant {
-        override val destination: String
-            get() = destinationDonation
+        override val route: Any
+            get() = DonationRoute
     }
 
     data object Settings: ScreenVariant {
-        override val destination: String
-            get() = destinationSettings
+        override val route: Any
+            get() = SettingsRoute
     }
 }
