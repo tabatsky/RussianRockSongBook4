@@ -2,16 +2,15 @@ package jatx.russianrocksongbook.commonview.dialogs.music
 
 import androidx.compose.runtime.Composable
 import jatx.russianrocksongbook.commonview.R
-import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.commonviewmodel.OpenYoutubeMusic
+import jatx.russianrocksongbook.commonviewmodel.UIAction
 
 @Composable
 fun YoutubeMusicDialog(
-    commonViewModel: CommonViewModel,
+    submitAction: (UIAction) -> Unit,
     onDismiss: () -> Unit
 ) = MusicDialog(
-    commonViewModel = commonViewModel,
     stringRes = R.string.question_search_at_youtube_music,
-    onConfirm = { commonViewModel.submitAction(OpenYoutubeMusic(it)) },
+    onConfirm = { submitAction(OpenYoutubeMusic(it)) },
     onDismiss = onDismiss
 )

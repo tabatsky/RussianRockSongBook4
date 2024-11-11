@@ -2,16 +2,15 @@ package jatx.russianrocksongbook.commonview.dialogs.music
 
 import androidx.compose.runtime.Composable
 import jatx.russianrocksongbook.commonview.R
-import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.commonviewmodel.OpenVkMusic
+import jatx.russianrocksongbook.commonviewmodel.UIAction
 
 @Composable
 fun VkMusicDialog(
-    commonViewModel: CommonViewModel,
+    submitAction: (UIAction) -> Unit,
     onDismiss: () -> Unit
 ) = MusicDialog(
-    commonViewModel = commonViewModel,
     stringRes = R.string.question_search_at_vk_music,
-    onConfirm = { commonViewModel.submitAction(OpenVkMusic(it)) },
+    onConfirm = { submitAction(OpenVkMusic(it)) },
     onDismiss = onDismiss
 )

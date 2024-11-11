@@ -1,7 +1,7 @@
 package jatx.russianrocksongbook.localsongs.internal.view.songtext
 
 import androidx.compose.runtime.*
-import jatx.russianrocksongbook.commonview.songtext.CommonSongTextScreenImpl
+import jatx.russianrocksongbook.commonview.songtext.CommonSongTextScreenImplContent
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 
 @Composable
@@ -12,7 +12,11 @@ internal fun SongTextScreenImpl(artist: String, position: Int) {
 
     val song = localState.currentSong
 
-    CommonSongTextScreenImpl(
+    val vkMusicDontAsk by localViewModel.settings.vkMusicDontAskState.collectAsState()
+    val yandexMusicDontAsk by localViewModel.settings.yandexMusicDontAskState.collectAsState()
+    val youtubeMusicDontAsk by localViewModel.settings.youtubeMusicDontAskState.collectAsState()
+
+    CommonSongTextScreenImplContent(
         artist = artist,
         position = position,
         song = song,
@@ -21,7 +25,11 @@ internal fun SongTextScreenImpl(artist: String, position: Int) {
         isEditorMode = localState.isEditorMode,
         isUploadButtonEnabled = localState.isUploadButtonEnabled,
         editorText = localViewModel.editorText,
-        commonViewModel = localViewModel,
+        scrollSpeed = localViewModel.settings.scrollSpeed,
+        listenToMusicVariant = localViewModel.settings.listenToMusicVariant,
+        vkMusicDontAsk = vkMusicDontAsk,
+        yandexMusicDontAsk = yandexMusicDontAsk,
+        youtubeMusicDontAsk = youtubeMusicDontAsk,
         submitAction = localViewModel::submitAction,
         submitEffect = localViewModel::submitEffect
     )
