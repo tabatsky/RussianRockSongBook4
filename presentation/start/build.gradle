@@ -60,5 +60,5 @@ dependencies {
     api project(':data:local')
     api project(':data:preferences')
     api project(':presentation:commonViewModel')
-    api project(':presentation:commonView')
+    api project(':presentation:components')
 }

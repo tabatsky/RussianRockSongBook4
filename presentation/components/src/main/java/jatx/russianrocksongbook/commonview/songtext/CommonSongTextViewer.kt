@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.localsongs.internal.view.songtext
+package jatx.russianrocksongbook.commonview.songtext
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -12,7 +12,7 @@ import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.testing.SONG_TEXT_VIEWER
 
 @Composable
-internal fun SongTextViewer(
+internal fun CommonSongTextViewer(
     song: Song,
     theme: Theme,
     fontSizeTextSp: TextUnit,

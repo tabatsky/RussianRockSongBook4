@@ -1,7 +1,13 @@
-package jatx.russianrocksongbook.textsearch.internal.view.textsearchsongtext
+package jatx.russianrocksongbook.commonview.songtext
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
@@ -9,7 +15,7 @@ import jatx.russianrocksongbook.domain.repository.preferences.ListenToMusicVaria
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 
 @Composable
-internal fun TextSearchSongTextPanel(
+internal fun CommonSongTextPanel(
     W: Dp,
     H: Dp,
     theme: Theme,
@@ -28,7 +34,7 @@ internal fun TextSearchSongTextPanel(
 
     @Composable
     fun TheContent() {
-        SongTextPanelContent(
+        CommonSongTextPanelContent(
             W = W,
             H = H,
             theme = theme,
