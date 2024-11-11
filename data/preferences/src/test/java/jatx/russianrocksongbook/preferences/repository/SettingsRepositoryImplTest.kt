@@ -199,6 +199,7 @@ class SettingsRepositoryImplTest {
             sp.edit()
             editor.putBoolean(KEY_YOUTUBE_MUSIC_DONT_ASK, true)
             editor.commit()
+            sp.getBoolean(KEY_YOUTUBE_MUSIC_DONT_ASK, false)
         }
     }
 
@@ -223,6 +224,7 @@ class SettingsRepositoryImplTest {
             sp.edit()
             editor.putBoolean(KEY_VK_MUSIC_DONT_ASK, true)
             editor.commit()
+            sp.getBoolean(KEY_VK_MUSIC_DONT_ASK, false)
         }
     }
 
@@ -247,6 +249,7 @@ class SettingsRepositoryImplTest {
             sp.edit()
             editor.putBoolean(KEY_YANDEX_MUSIC_DONT_ASK, true)
             editor.commit()
+            sp.getBoolean(KEY_YANDEX_MUSIC_DONT_ASK, false)
         }
     }
 
