@@ -32,29 +32,26 @@ import jatx.russianrocksongbook.commonview.dialogs.music.YoutubeMusicDialog
 import jatx.russianrocksongbook.commonview.dialogs.warning.WarningDialog
 import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
-import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
-import jatx.russianrocksongbook.commonviewmodel.NextSong
 import jatx.russianrocksongbook.commonviewmodel.OpenVkMusic
 import jatx.russianrocksongbook.commonviewmodel.OpenYandexMusic
 import jatx.russianrocksongbook.commonviewmodel.OpenYoutubeMusic
-import jatx.russianrocksongbook.commonviewmodel.PrevSong
 import jatx.russianrocksongbook.commonviewmodel.SaveSong
 import jatx.russianrocksongbook.commonviewmodel.SelectSong
 import jatx.russianrocksongbook.commonviewmodel.SendWarning
 import jatx.russianrocksongbook.commonviewmodel.SetAutoPlayMode
 import jatx.russianrocksongbook.commonviewmodel.SetEditorMode
-import jatx.russianrocksongbook.commonviewmodel.SetFavorite
 import jatx.russianrocksongbook.commonviewmodel.ShowToastWithResource
 import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.commonviewmodel.UIEffect
 import jatx.russianrocksongbook.commonviewmodel.UpdateCurrentSong
 import jatx.russianrocksongbook.commonviewmodel.UploadCurrentToCloud
 import jatx.russianrocksongbook.domain.models.local.Song
+import jatx.russianrocksongbook.domain.repository.preferences.ListenToMusicVariant
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import kotlinx.coroutines.launch
 
 @Composable
-fun CommonSongTextScreenImpl(
+fun CommonSongTextScreenImplContent(
     artist: String,
     position: Int,
     song: Song?,
@@ -63,7 +60,11 @@ fun CommonSongTextScreenImpl(
     isEditorMode: Boolean,
     isUploadButtonEnabled: Boolean,
     editorText: MutableState<String>,
-    commonViewModel: CommonViewModel,
+    scrollSpeed: Float,
+    listenToMusicVariant: ListenToMusicVariant,
+    vkMusicDontAsk: Boolean,
+    yandexMusicDontAsk: Boolean,
+    youtubeMusicDontAsk: Boolean,
     submitAction: (UIAction) -> Unit,
     submitEffect: (UIEffect) -> Unit
 ) {
@@ -89,7 +90,7 @@ fun CommonSongTextScreenImpl(
 
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
-    val dY = (10 * commonViewModel.settings.scrollSpeed).toInt()
+    val dY = (10 * scrollSpeed).toInt()
 
     val onSongChanged: () -> Unit = {
         coroutineScope.launch {
@@ -102,7 +103,7 @@ fun CommonSongTextScreenImpl(
 
     var showYandexDialog by rememberSaveable { mutableStateOf(false) }
     var showVkDialog by rememberSaveable { mutableStateOf(false) }
-    var showYoutubeMusicDialog by rememberSaveable { mutableStateOf(false) }
+    var showYoutubeDialog by rememberSaveable { mutableStateOf(false) }
 
     var showUploadDialog by rememberSaveable { mutableStateOf(false) }
     var showDeleteToTrashDialog by rememberSaveable { mutableStateOf(false) }
@@ -117,7 +118,7 @@ fun CommonSongTextScreenImpl(
 
     val onYandexMusicClick = { showYandexDialog = true }
     val onVkMusicClick = { showVkDialog = true }
-    val onYoutubeMusicClick = { showYoutubeMusicDialog = true }
+    val onYoutubeMusicClick = { showYoutubeDialog = true }
 
     val onUploadClick = {
         if (isUploadButtonEnabled) {
@@ -189,9 +190,7 @@ fun CommonSongTextScreenImpl(
                     H = H,
                     theme = theme,
                     isEditorMode = isEditorMode,
-                    listenToMusicVariant = commonViewModel
-                        .settings
-                        .listenToMusicVariant,
+                    listenToMusicVariant = listenToMusicVariant,
                     onYandexMusicClick = onYandexMusicClick,
                     onVkMusicClick = onVkMusicClick,
                     onYoutubeMusicClick = onYoutubeMusicClick,
@@ -210,10 +209,7 @@ fun CommonSongTextScreenImpl(
                     onSongChanged = onSongChanged,
                     isAutoPlayMode = isAutoPlayMode,
                     isEditorMode = isEditorMode,
-                    setAutoPlayMode = { submitAction(SetAutoPlayMode(it)) },
-                    setFavorite = { submitAction(SetFavorite(it)) },
-                    nextSong = { submitAction(NextSong) },
-                    prevSong = { submitAction(PrevSong) }
+                    submitAction = submitAction
                 )
             }
 
@@ -265,39 +261,39 @@ fun CommonSongTextScreenImpl(
             }
 
             if (showYandexDialog) {
-                if (commonViewModel.settings.yandexMusicDontAsk) {
+                if (yandexMusicDontAsk) {
                     showYandexDialog = false
                     submitAction(OpenYandexMusic(true))
                 } else {
                     YandexMusicDialog(
-                        commonViewModel = commonViewModel,
-                    ) {
-                        showYandexDialog = false
-                    }
+                        submitAction = submitAction,
+                        onDismiss = {
+                            showYandexDialog = false
+                        })
                 }
             }
             if (showVkDialog) {
-                if (commonViewModel.settings.vkMusicDontAsk) {
+                if (vkMusicDontAsk) {
                     showVkDialog = false
-                    commonViewModel.submitAction(OpenVkMusic(true))
+                    submitAction(OpenVkMusic(true))
                 } else {
                     VkMusicDialog(
-                        commonViewModel = commonViewModel,
-                    ) {
-                        showVkDialog = false
-                    }
+                        submitAction = submitAction,
+                        onDismiss = {
+                            showVkDialog = false
+                        })
                 }
             }
-            if (showYoutubeMusicDialog) {
-                if (commonViewModel.settings.youtubeMusicDontAsk) {
-                    showYoutubeMusicDialog = false
-                    commonViewModel.submitAction(OpenYoutubeMusic(true))
+            if (showYoutubeDialog) {
+                if (youtubeMusicDontAsk) {
+                    showYoutubeDialog = false
+                    submitAction(OpenYoutubeMusic(true))
                 } else {
                     YoutubeMusicDialog(
-                        commonViewModel = commonViewModel,
-                    ) {
-                        showYoutubeMusicDialog = false
-                    }
+                        submitAction = submitAction,
+                        onDismiss = {
+                            showYoutubeDialog = false
+                        })
                 }
             }
             if (showUploadDialog) {

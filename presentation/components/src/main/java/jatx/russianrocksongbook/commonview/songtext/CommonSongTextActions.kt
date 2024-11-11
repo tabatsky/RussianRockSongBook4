@@ -3,6 +3,11 @@ package jatx.russianrocksongbook.commonview.songtext
 import androidx.compose.runtime.Composable
 import jatx.russianrocksongbook.commonview.R
 import jatx.russianrocksongbook.commonview.buttons.CommonIconButton
+import jatx.russianrocksongbook.commonviewmodel.NextSong
+import jatx.russianrocksongbook.commonviewmodel.PrevSong
+import jatx.russianrocksongbook.commonviewmodel.SetAutoPlayMode
+import jatx.russianrocksongbook.commonviewmodel.SetFavorite
+import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.testing.ADD_TO_FAVORITE_BUTTON
 import jatx.russianrocksongbook.testing.DELETE_FROM_FAVORITE_BUTTON
 import jatx.russianrocksongbook.testing.LEFT_BUTTON
@@ -14,14 +19,11 @@ internal fun CommonSongTextActions(
     onSongChanged: () -> Unit,
     isAutoPlayMode: Boolean,
     isEditorMode: Boolean,
-    setAutoPlayMode: (Boolean) -> Unit,
-    setFavorite: (Boolean) -> Unit,
-    nextSong: () -> Unit,
-    prevSong: () -> Unit
+    submitAction: (UIAction) -> Unit
 ) {
     if (isAutoPlayMode) {
         val onPauseClick = {
-            setAutoPlayMode(false)
+            submitAction(SetAutoPlayMode(false))
         }
         CommonIconButton(
             resId = R.drawable.ic_pause,
@@ -30,7 +32,7 @@ internal fun CommonSongTextActions(
     } else {
         val onPlayClick = {
             if (!isEditorMode) {
-                setAutoPlayMode(true)
+                submitAction(SetAutoPlayMode(true))
             }
         }
         CommonIconButton(
@@ -39,7 +41,7 @@ internal fun CommonSongTextActions(
         )
     }
     val onLeftClick =  {
-        prevSong()
+        submitAction(PrevSong)
         onSongChanged()
     }
     CommonIconButton(
@@ -49,7 +51,7 @@ internal fun CommonSongTextActions(
     )
     if (isFavorite) {
         val onDeleteClick = {
-            setFavorite(false)
+            submitAction(SetFavorite(false))
         }
         CommonIconButton(
             resId = R.drawable.ic_delete,
@@ -58,7 +60,7 @@ internal fun CommonSongTextActions(
         )
     } else {
         val onStarClick = {
-            setFavorite(true)
+            submitAction(SetFavorite(true))
         }
         CommonIconButton(
             resId = R.drawable.ic_star,
@@ -67,7 +69,7 @@ internal fun CommonSongTextActions(
         )
     }
     val onRightClick = {
-        nextSong()
+        submitAction(NextSong)
         onSongChanged()
     }
     CommonIconButton(

@@ -1,6 +1,7 @@
 package jatx.russianrocksongbook.domain.repository.preferences
 
 import androidx.compose.ui.graphics.Color
+import kotlinx.coroutines.flow.StateFlow
 
 const val ARTIST_KINO = "Кино"
 
@@ -21,6 +22,10 @@ interface SettingsRepository {
 
     fun confirmAppUpdate()
     fun getSpecificFontScale(scalePow: ScalePow): Float
+
+    val youtubeMusicDontAskState: StateFlow<Boolean>
+    val vkMusicDontAskState: StateFlow<Boolean>
+    val yandexMusicDontAskState: StateFlow<Boolean>
 }
 
 val colorLightYellow = Color(0xFFFFFFBB)

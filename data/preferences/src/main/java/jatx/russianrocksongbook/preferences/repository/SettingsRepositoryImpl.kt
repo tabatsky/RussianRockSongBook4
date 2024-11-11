@@ -4,6 +4,7 @@ import dagger.hilt.components.SingletonComponent
 import it.czerwinski.android.hilt.annotations.BoundTo
 import jatx.russianrocksongbook.domain.repository.preferences.*
 import jatx.russianrocksongbook.preferences.storage.SettingsStorage
+import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.pow
@@ -54,18 +55,21 @@ class SettingsRepositoryImpl @Inject constructor(
         get() = settingsStorage.youtubeMusicDontAsk
         set(value) {
             settingsStorage.youtubeMusicDontAsk = value
+            _youtubeMusicDontAskState.value = value
         }
 
     override var vkMusicDontAsk: Boolean
         get() = settingsStorage.vkMusicDontAsk
         set(value) {
             settingsStorage.vkMusicDontAsk = value
+            _vkMusicDontAskState.value = value
         }
 
     override var yandexMusicDontAsk: Boolean
         get() = settingsStorage.yandexMusicDontAsk
         set(value) {
             settingsStorage.yandexMusicDontAsk = value
+            _yandexMusicDontAskState.value = value
         }
 
     override var voiceHelpDontAsk: Boolean
@@ -90,6 +94,14 @@ class SettingsRepositoryImpl @Inject constructor(
         get() = FontScalerImpl(commonFontScale)
 
     override fun getSpecificFontScale(scalePow: ScalePow) = commonFontScale.pow(scalePow.pow)
+
+    val _youtubeMusicDontAskState = MutableStateFlow(youtubeMusicDontAsk)
+    val _vkMusicDontAskState = MutableStateFlow(vkMusicDontAsk)
+    val _yandexMusicDontAskState = MutableStateFlow(yandexMusicDontAsk)
+
+    override val youtubeMusicDontAskState = _youtubeMusicDontAskState
+    override val vkMusicDontAskState = _vkMusicDontAskState
+    override val yandexMusicDontAskState = _yandexMusicDontAskState
 }
 
 class FontScalerImpl(private val commonFontScale: Float): FontScaler {

@@ -81,7 +81,7 @@ internal fun CloudSongTextScreenImpl(position: Int) {
 
     var showYandexDialog by rememberSaveable { mutableStateOf(false) }
     var showVkDialog by rememberSaveable { mutableStateOf(false) }
-    var showYoutubeMusicDialog by rememberSaveable { mutableStateOf(false) }
+    var showYoutubeDialog by rememberSaveable { mutableStateOf(false) }
 
     var showWarningDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -94,7 +94,7 @@ internal fun CloudSongTextScreenImpl(position: Int) {
 
     val onYandexMusicClick = { showYandexDialog = true }
     val onVkMusicClick = { showVkDialog = true }
-    val onYoutubeMusicClick = { showYoutubeMusicDialog = true }
+    val onYoutubeMusicClick = { showYoutubeDialog = true }
     val onWarningClick = { showWarningDialog = true }
     val onDownloadClick = { cloudViewModel.submitAction(DownloadCurrent) }
     val onLikeClick = { cloudViewModel.submitAction(VoteForCurrent(1)) }
@@ -206,16 +206,18 @@ internal fun CloudSongTextScreenImpl(position: Int) {
                     ThePanel()
                 }
             }
+
+            val submitAction = cloudViewModel::submitAction
             if (showYandexDialog) {
                 if (cloudViewModel.settings.yandexMusicDontAsk) {
                     showYandexDialog = false
                     cloudViewModel.submitAction(OpenYandexMusic(true))
                 } else {
                     YandexMusicDialog(
-                        commonViewModel = cloudViewModel
-                    ) {
-                        showYandexDialog = false
-                    }
+                        submitAction = submitAction,
+                        onDismiss = {
+                            showYandexDialog = false
+                        })
                 }
             }
             if (showVkDialog) {
@@ -224,22 +226,22 @@ internal fun CloudSongTextScreenImpl(position: Int) {
                     cloudViewModel.submitAction(OpenVkMusic(true))
                 } else {
                     VkMusicDialog(
-                        commonViewModel = cloudViewModel
-                    ) {
-                        showVkDialog = false
-                    }
+                        submitAction = submitAction,
+                        onDismiss = {
+                            showVkDialog = false
+                        })
                 }
             }
-            if (showYoutubeMusicDialog) {
+            if (showYoutubeDialog) {
                 if (cloudViewModel.settings.youtubeMusicDontAsk) {
-                    showYoutubeMusicDialog = false
+                    showYoutubeDialog = false
                     cloudViewModel.submitAction(OpenYoutubeMusic(true))
                 } else {
                     YoutubeMusicDialog(
-                        commonViewModel = cloudViewModel
-                    ) {
-                        showYoutubeMusicDialog = false
-                    }
+                        submitAction = submitAction,
+                        onDismiss = {
+                            showYoutubeDialog = false
+                        })
                 }
             }
             if (showWarningDialog) {
