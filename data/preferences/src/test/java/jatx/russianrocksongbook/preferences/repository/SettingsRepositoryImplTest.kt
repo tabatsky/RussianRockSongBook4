@@ -64,7 +64,7 @@ class SettingsRepositoryImplTest {
 
         val theme = settingsRepository.theme
 
-        assertEquals(Theme.values()[0], theme)
+        assertEquals(Theme.entries[0], theme)
 
         verifySequence {
             sp.getInt(KEY_THEME, 0)
@@ -88,7 +88,7 @@ class SettingsRepositoryImplTest {
 
         val orientation = settingsRepository.orientation
 
-        assertEquals(Orientation.values()[0], orientation)
+        assertEquals(Orientation.entries[0], orientation)
 
         verifySequence {
             sp.getInt(KEY_ORIENTATION, 0)
@@ -112,7 +112,7 @@ class SettingsRepositoryImplTest {
 
         val listenToMusicVariant = settingsRepository.listenToMusicVariant
 
-        assertEquals(ListenToMusicVariant.values()[0], listenToMusicVariant)
+        assertEquals(ListenToMusicVariant.entries[0], listenToMusicVariant)
 
         verifySequence {
             sp.getInt(KEY_LISTEN_TO_MUSIC_VARIANT, 1)
