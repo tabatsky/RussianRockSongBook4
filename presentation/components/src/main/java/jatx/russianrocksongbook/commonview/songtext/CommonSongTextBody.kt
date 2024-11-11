@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.textsearch.internal.view.textsearchsongtext
+package jatx.russianrocksongbook.commonview.songtext
 
 import androidx.compose.foundation.MutatePriority
 import androidx.compose.foundation.layout.Column
@@ -16,16 +16,15 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import jatx.clickablewordstextcompose.api.Word
+import jatx.russianrocksongbook.commonview.R
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
-import jatx.russianrocksongbook.textsearch.R
-import jatx.russianrocksongbook.textsearch.internal.viewmodel.TextSearchViewModel
 import kotlinx.coroutines.delay
 
 const val AUTO_SCROLL_INTERVAL = 250L
 
 @Composable
-internal fun TextSearchSongTextBody(
+internal fun CommonSongTextBody(
     W: Dp,
     H: Dp,
     song: Song,
@@ -60,7 +59,7 @@ internal fun TextSearchSongTextBody(
 
         @Composable
         fun TheEditor() {
-            TextSearchSongTextEditor(
+            CommonSongTextEditor(
                 text = text,
                 fontSizeTextSp = fontSizeTextSp,
                 theme = theme,
@@ -70,7 +69,7 @@ internal fun TextSearchSongTextBody(
 
         @Composable
         fun TheViewer() {
-            TextSearchSongTextViewer(
+            CommonSongTextViewer(
                 song = song,
                 theme = theme,
                 fontSizeTextSp = fontSizeTextSp,

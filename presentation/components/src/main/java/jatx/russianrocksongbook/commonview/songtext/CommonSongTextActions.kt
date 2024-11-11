@@ -1,42 +1,36 @@
-package jatx.russianrocksongbook.textsearch.internal.view.textsearchsongtext
+package jatx.russianrocksongbook.commonview.songtext
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import jatx.russianrocksongbook.commonview.R
 import jatx.russianrocksongbook.commonview.buttons.CommonIconButton
 import jatx.russianrocksongbook.testing.ADD_TO_FAVORITE_BUTTON
 import jatx.russianrocksongbook.testing.DELETE_FROM_FAVORITE_BUTTON
 import jatx.russianrocksongbook.testing.LEFT_BUTTON
 import jatx.russianrocksongbook.testing.RIGHT_BUTTON
-import jatx.russianrocksongbook.textsearch.R
-import jatx.russianrocksongbook.textsearch.internal.viewmodel.NextSong
-import jatx.russianrocksongbook.textsearch.internal.viewmodel.PrevSong
-import jatx.russianrocksongbook.textsearch.internal.viewmodel.SetAutoPlayMode
-import jatx.russianrocksongbook.textsearch.internal.viewmodel.SetFavorite
-import jatx.russianrocksongbook.textsearch.internal.viewmodel.TextSearchViewModel
 
 @Composable
-internal fun TextSearchSongTextActions(
+internal fun CommonSongTextActions(
     isFavorite: Boolean,
-    onSongChanged: () -> Unit
+    onSongChanged: () -> Unit,
+    isAutoPlayMode: Boolean,
+    isEditorMode: Boolean,
+    setAutoPlayMode: (Boolean) -> Unit,
+    setFavorite: (Boolean) -> Unit,
+    nextSong: () -> Unit,
+    prevSong: () -> Unit
 ) {
-    val textSearchViewModel = TextSearchViewModel.getInstance()
-
-    val textSearchState by textSearchViewModel.textSearchStateFlow.collectAsState()
-
-    if (textSearchState.isAutoPlayMode) {
+    if (isAutoPlayMode) {
         val onPauseClick = {
-            textSearchViewModel.submitAction(SetAutoPlayMode(false))
+            setAutoPlayMode(false)
         }
         CommonIconButton(
             resId = R.drawable.ic_pause,
             onClick = onPauseClick
         )
     } else {
-        val isEditorMode = textSearchState.isEditorMode
         val onPlayClick = {
             if (!isEditorMode) {
-                textSearchViewModel.submitAction(SetAutoPlayMode(true))
+                setAutoPlayMode(true)
             }
         }
         CommonIconButton(
@@ -45,7 +39,7 @@ internal fun TextSearchSongTextActions(
         )
     }
     val onLeftClick =  {
-        textSearchViewModel.submitAction(PrevSong)
+        prevSong()
         onSongChanged()
     }
     CommonIconButton(
@@ -55,7 +49,7 @@ internal fun TextSearchSongTextActions(
     )
     if (isFavorite) {
         val onDeleteClick = {
-            textSearchViewModel.submitAction(SetFavorite(false))
+            setFavorite(false)
         }
         CommonIconButton(
             resId = R.drawable.ic_delete,
@@ -64,7 +58,7 @@ internal fun TextSearchSongTextActions(
         )
     } else {
         val onStarClick = {
-            textSearchViewModel.submitAction(SetFavorite(true))
+            setFavorite(true)
         }
         CommonIconButton(
             resId = R.drawable.ic_star,
@@ -73,7 +67,7 @@ internal fun TextSearchSongTextActions(
         )
     }
     val onRightClick = {
-        textSearchViewModel.submitAction(NextSong)
+        nextSong()
         onSongChanged()
     }
     CommonIconButton(

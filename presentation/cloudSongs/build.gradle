@@ -65,7 +65,7 @@ dependencies {
     api project(':data:cloud')
     api project(':data:preferences')
     api project(':presentation:commonViewModel')
-    api project(':presentation:commonView')
+    api project(':presentation:components')
 
     api project(':core:testing')
 }

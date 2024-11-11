@@ -6,7 +6,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
+import jatx.russianrocksongbook.commonviewmodel.DeleteCurrentToTrash
+import jatx.russianrocksongbook.commonviewmodel.NextSong
+import jatx.russianrocksongbook.commonviewmodel.PrevSong
+import jatx.russianrocksongbook.commonviewmodel.SaveSong
+import jatx.russianrocksongbook.commonviewmodel.SelectSong
+import jatx.russianrocksongbook.commonviewmodel.SetAutoPlayMode
+import jatx.russianrocksongbook.commonviewmodel.SetEditorMode
+import jatx.russianrocksongbook.commonviewmodel.SetFavorite
 import jatx.russianrocksongbook.commonviewmodel.UIAction
+import jatx.russianrocksongbook.commonviewmodel.UpdateCurrentSong
+import jatx.russianrocksongbook.commonviewmodel.UploadCurrentToCloud
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.models.music.Music
 import jatx.russianrocksongbook.domain.models.warning.Warnable

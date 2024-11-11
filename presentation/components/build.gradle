@@ -48,6 +48,7 @@ dependencies {
 
     api project(':ui-library:sideAppBar')
     api project(':ui-library:ChordDroidLibrary')
+    api project(':ui-library:clickableWordsTextCompose')
 
     api project(':presentation:commonViewModel')
 

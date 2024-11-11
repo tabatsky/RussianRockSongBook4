@@ -1,13 +1,20 @@
-package jatx.russianrocksongbook.textsearch.internal.view.textsearchsongtext
+package jatx.russianrocksongbook.commonview.songtext
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.Dp
-import jatx.russianrocksongbook.commonview.buttons.*
+import jatx.russianrocksongbook.commonview.buttons.EditButton
+import jatx.russianrocksongbook.commonview.buttons.SaveButton
+import jatx.russianrocksongbook.commonview.buttons.TrashButton
+import jatx.russianrocksongbook.commonview.buttons.UploadButton
+import jatx.russianrocksongbook.commonview.buttons.VkMusicButton
+import jatx.russianrocksongbook.commonview.buttons.WarningButton
+import jatx.russianrocksongbook.commonview.buttons.YandexMusicButton
+import jatx.russianrocksongbook.commonview.buttons.YoutubeMusicButton
 import jatx.russianrocksongbook.domain.repository.preferences.ListenToMusicVariant
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 
 @Composable
-internal fun SongTextPanelContent(
+internal fun CommonSongTextPanelContent(
     W: Dp,
     H: Dp,
     theme: Theme,
