@@ -1,32 +1,31 @@
-package jatx.russianrocksongbook.commonview.songtext
+package jatx.russianrocksongbook.cloudsongs.internal.view.cloudsongtext
 
+import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import jatx.clickablewordstextcompose.api.Word
-import jatx.russianrocksongbook.commonview.R
+import jatx.russianrocksongbook.cloudsongs.R
+import jatx.russianrocksongbook.cloudsongs.internal.paging.ItemsAdapter
+import jatx.russianrocksongbook.cloudsongs.internal.view.dialogs.DeleteCloudSongDialog
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.DeleteCurrentFromCloud
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.DownloadCurrent
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.SelectCloudSong
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateCurrentCloudSong
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateCurrentCloudSongCount
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.VoteForCurrent
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.dialogs.chord.ChordDialog
-import jatx.russianrocksongbook.commonview.dialogs.confirm.UploadDialog
-import jatx.russianrocksongbook.commonview.dialogs.delete.DeleteToTrashDialog
 import jatx.russianrocksongbook.commonview.dialogs.music.VkMusicDialog
 import jatx.russianrocksongbook.commonview.dialogs.music.YandexMusicDialog
 import jatx.russianrocksongbook.commonview.dialogs.music.YoutubeMusicDialog
@@ -36,80 +35,56 @@ import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
 import jatx.russianrocksongbook.commonviewmodel.OpenVkMusic
 import jatx.russianrocksongbook.commonviewmodel.OpenYandexMusic
 import jatx.russianrocksongbook.commonviewmodel.OpenYoutubeMusic
-import jatx.russianrocksongbook.commonviewmodel.SaveSong
-import jatx.russianrocksongbook.commonviewmodel.SelectSong
 import jatx.russianrocksongbook.commonviewmodel.SendWarning
-import jatx.russianrocksongbook.commonviewmodel.SetAutoPlayMode
-import jatx.russianrocksongbook.commonviewmodel.SetEditorMode
-import jatx.russianrocksongbook.commonviewmodel.ShowToastWithResource
 import jatx.russianrocksongbook.commonviewmodel.UIAction
-import jatx.russianrocksongbook.commonviewmodel.UIEffect
-import jatx.russianrocksongbook.commonviewmodel.UpdateCurrentSong
-import jatx.russianrocksongbook.commonviewmodel.UploadCurrentToCloud
-import jatx.russianrocksongbook.domain.models.local.Song
+import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.repository.preferences.ListenToMusicVariant
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
+
+private val CLOUD_SONG_TEXT_APP_BAR_WIDTH = 96.dp
 
 @Preview
 @Composable
-fun CommonSongTextScreenImplPreview() {
-    val artist = "Исполнитель"
-    val position = 3
-    val song = Song(
-        artist = artist,
-        title = "Название",
-        text = "Текст текст\nТекст\nAm Em\nТекст\n"
-    )
-    val editorText = rememberSaveable { mutableStateOf(song.text) }
+fun CloudSongTextScreenImplPreview() {
+    val cloudSongs = (1..30)
+        .map {
+            CloudSong(
+                artist = "Исполнитель $it",
+                title = "Название $it",
+                text = "Текст текст\nТекст\nAm Em\nТекст\n",
+                variant = 1,
+                likeCount = 2,
+                dislikeCount = 1
+            )
+        }
 
-    CommonSongTextScreenImplContent(
-        artist = artist,
-        position = position,
-        song = song,
-        currentSongPosition = position,
-        isAutoPlayMode = false,
-        isEditorMode = false,
-        isUploadButtonEnabled = true,
-        editorText = editorText,
-        scrollSpeed = 1.0f,
-        listenToMusicVariant = ListenToMusicVariant.YANDEX_AND_YOUTUBE,
+    val cloudSongItems = flowOf(PagingData.from(cloudSongs)).collectAsLazyPagingItems()
+
+    CloudSongTextScreenImplContent(
+        position = 3,
+        cloudSongItems = cloudSongItems,
+        listenToMusicVariant = ListenToMusicVariant.YANDEX_AND_VK,
         vkMusicDontAsk = false,
         yandexMusicDontAsk = false,
         youtubeMusicDontAsk = false,
-        submitAction = {},
-        submitEffect = {}
+        submitAction = {}
     )
 }
 
 
 @Composable
-fun CommonSongTextScreenImplContent(
-    artist: String,
+internal fun CloudSongTextScreenImplContent(
     position: Int,
-    song: Song?,
-    currentSongPosition: Int,
-    isAutoPlayMode: Boolean,
-    isEditorMode: Boolean,
-    isUploadButtonEnabled: Boolean,
-    editorText: MutableState<String>,
-    scrollSpeed: Float,
+    cloudSongItems: LazyPagingItems<CloudSong>?,
     listenToMusicVariant: ListenToMusicVariant,
     vkMusicDontAsk: Boolean,
     yandexMusicDontAsk: Boolean,
     youtubeMusicDontAsk: Boolean,
-    submitAction: (UIAction) -> Unit,
-    submitEffect: (UIEffect) -> Unit
+    submitAction: (UIAction) -> Unit
 ) {
-    val theme = LocalAppTheme.current
-
-    LaunchedEffect(artist to position) {
-        submitAction(SelectSong(position))
-    }
-
-    val skipBody = position != currentSongPosition
-
-    val key = artist to song?.title
+    val key = position
     var lastKey by rememberSaveable { mutableStateOf(key) }
     val keyChanged = key != lastKey
 
@@ -117,15 +92,21 @@ fun CommonSongTextScreenImplContent(
         lastKey = key
     }
 
-    var text by editorText
+    submitAction(SelectCloudSong(position))
 
-    val onTextChange: (String) -> Unit = { text = it }
+    val itemsAdapter = ItemsAdapter(cloudSongItems)
+
+    val cloudSong = itemsAdapter.getItem(position)
+
+    submitAction(UpdateCurrentCloudSong(cloudSong))
+
+    val count = itemsAdapter.size
+    submitAction(UpdateCurrentCloudSongCount(count))
 
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
-    val dY = (10 * scrollSpeed).toInt()
 
-    val onSongChanged: () -> Unit = {
+    val onCloudSongChanged: () -> Unit = {
         coroutineScope.launch {
             listState.scrollToItem(
                 index = 0,
@@ -138,8 +119,6 @@ fun CommonSongTextScreenImplContent(
     var showVkDialog by rememberSaveable { mutableStateOf(false) }
     var showYoutubeDialog by rememberSaveable { mutableStateOf(false) }
 
-    var showUploadDialog by rememberSaveable { mutableStateOf(false) }
-    var showDeleteToTrashDialog by rememberSaveable { mutableStateOf(false) }
     var showWarningDialog by rememberSaveable { mutableStateOf(false) }
 
     var showChordDialog by rememberSaveable { mutableStateOf(false) }
@@ -152,97 +131,69 @@ fun CommonSongTextScreenImplContent(
     val onYandexMusicClick = { showYandexDialog = true }
     val onVkMusicClick = { showVkDialog = true }
     val onYoutubeMusicClick = { showYoutubeDialog = true }
-
-    val onUploadClick = {
-        if (isUploadButtonEnabled) {
-            if (song!!.outOfTheBox) {
-                submitEffect(
-                    ShowToastWithResource(R.string.toast_song_is_out_of_the_box)
-                )
-            } else {
-                showUploadDialog = true
-            }
-        }
-    }
-
-    val onTrashClick = { showDeleteToTrashDialog = true }
     val onWarningClick = { showWarningDialog = true }
+    val onDownloadClick = { submitAction(DownloadCurrent) }
+    val onLikeClick = { submitAction(VoteForCurrent(1)) }
+    val onDislikeClick = { submitAction(VoteForCurrent(-1)) }
 
-    val onEditClick =  {
-        submitAction(SetAutoPlayMode(false))
-        submitAction(SetEditorMode(true))
+    var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
+    val onDislikeLongClick = {
+        Log.e("dislike", "long click")
+        showDeleteDialog = true
     }
 
-    val onSaveClick = {
-        song?.copy(text = text)?.let {
-            submitAction(UpdateCurrentSong(it))
-            submitAction(SaveSong(it))
-        }
-        submitAction(SetEditorMode(false))
-    }
+    val theme = LocalAppTheme.current
 
     val fontSizeTitleSp = dimensionResource(id = R.dimen.text_size_20)
         .toScaledSp(ScalePow.TEXT)
     val fontSizeTextSp = dimensionResource(id = R.dimen.text_size_16)
         .toScaledSp(ScalePow.TEXT)
 
-    song?.let { _song ->
+    if (cloudSong == null) {
+        CloudSongTextProgress(theme)
+    }
+
+    cloudSong?.let { _cloudSong ->
         BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
         ) {
             val W = this.maxWidth
-            val H = this.maxHeight
+            val H = this.minHeight
 
             @Composable
             fun TheBody(modifier: Modifier) {
                 if (!keyChanged) {
-                    CommonSongTextBody(
+                    CloudSongTextBody(
                         W = W,
                         H = H,
-                        song = _song,
-                        text = text,
-                        isEditorMode = isEditorMode,
+                        cloudSong = _cloudSong,
                         listState = listState,
                         fontSizeTextSp = fontSizeTextSp,
                         fontSizeTitleSp = fontSizeTitleSp,
                         theme = theme,
                         modifier = modifier,
-                        isAutoPlayMode = isAutoPlayMode,
-                        dY = dY,
-                        onTextChange = onTextChange,
                         onWordClick = onWordClick
                     )
                 }
             }
 
+
             @Composable
             fun ThePanel() {
-                CommonSongTextPanel(
+                CloudSongTextPanel(
                     W = W,
                     H = H,
                     theme = theme,
-                    isEditorMode = isEditorMode,
                     listenToMusicVariant = listenToMusicVariant,
                     onYandexMusicClick = onYandexMusicClick,
                     onVkMusicClick = onVkMusicClick,
                     onYoutubeMusicClick = onYoutubeMusicClick,
-                    onUploadClick = onUploadClick,
+                    onDownloadClick = onDownloadClick,
                     onWarningClick = onWarningClick,
-                    onTrashClick = onTrashClick,
-                    onEditClick = onEditClick,
-                    onSaveClick = onSaveClick
-                )
-            }
-
-            @Composable
-            fun TheActions() {
-                CommonSongTextActions(
-                    isFavorite = _song.favorite,
-                    onSongChanged = onSongChanged,
-                    isAutoPlayMode = isAutoPlayMode,
-                    isEditorMode = isEditorMode,
-                    submitAction = submitAction
+                    onLikeClick = onLikeClick,
+                    onDislikeClick = onDislikeClick,
+                    onDislikeLongClick = onDislikeLongClick
                 )
             }
 
@@ -254,19 +205,17 @@ fun CommonSongTextScreenImplContent(
                         .padding(bottom = 4.dp)
                 ) {
                     CommonTopAppBar(
-                        actions = { TheActions() }
+                        actions = {
+                            CloudSongTextActions(
+                                position = position,
+                                count = count,
+                                onCloudSongChanged = onCloudSongChanged,
+                                submitAction = submitAction
+                            )
+                        }
                     )
 
-                    if (skipBody) {
-                        Box(
-                            modifier = Modifier
-                                .weight(1.0f)
-                                .background(theme.colorBg)
-                        )
-                    } else {
-                        TheBody(Modifier.weight(1.0f))
-                    }
-
+                    TheBody(Modifier.weight(1.0f))
                     ThePanel()
                 }
             } else {
@@ -277,18 +226,18 @@ fun CommonSongTextScreenImplContent(
                         .padding(end = 4.dp)
                 ) {
                     CommonSideAppBar(
-                        actions = { TheActions() }
+                        actions = {
+                            CloudSongTextActions(
+                                position = position,
+                                count = count,
+                                onCloudSongChanged = onCloudSongChanged,
+                                submitAction = submitAction
+                            )
+                        },
+                        appBarWidth = CLOUD_SONG_TEXT_APP_BAR_WIDTH
                     )
 
-                    if (skipBody) {
-                        Box(
-                            modifier = Modifier
-                                .weight(1.0f)
-                                .background(theme.colorBg)
-                        )
-                    } else {
-                        TheBody(Modifier.weight(1.0f))
-                    }
+                    TheBody(Modifier.weight(1.0f))
                     ThePanel()
                 }
             }
@@ -329,24 +278,6 @@ fun CommonSongTextScreenImplContent(
                         })
                 }
             }
-            if (showUploadDialog) {
-                UploadDialog(
-                    onConfirm = {
-                        submitAction(UploadCurrentToCloud)
-                    },
-                    onDismiss = {
-                        showUploadDialog = false
-                    }
-                )
-            }
-            if (showDeleteToTrashDialog) {
-                DeleteToTrashDialog(
-                    onDismiss = {
-                        showDeleteToTrashDialog = false
-                    },
-                    submitAction = submitAction
-                )
-            }
             if (showWarningDialog) {
                 WarningDialog(
                     onConfirm = { comment ->
@@ -354,6 +285,18 @@ fun CommonSongTextScreenImplContent(
                     },
                     onDismiss = {
                         showWarningDialog = false
+                    }
+                )
+            }
+            if (showDeleteDialog) {
+                DeleteCloudSongDialog(
+                    onConfirm = { secret1, secret2 ->
+                        submitAction(
+                            DeleteCurrentFromCloud(secret1, secret2)
+                        )
+                    },
+                    onDismiss = {
+                        showDeleteDialog = false
                     }
                 )
             }
