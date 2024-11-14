@@ -25,17 +25,19 @@ import jatx.russianrocksongbook.whatsnewdialog.R
 
 @Composable
 internal fun WhatsNewDialogImpl() {
-    val commonViewModel = CommonViewModel.getInstance()
-
     val theme = LocalAppTheme.current
 
     val fontSizeTitleSp = dimensionResource(id = R.dimen.text_size_20)
         .toScaledSp(ScalePow.TEXT)
 
-    val appState by commonViewModel.appStateFlow.collectAsState()
-    val appWasUpdated = appState.appWasUpdated
+    val appWasUpdated = CommonViewModel.getStoredInstance()?.let {
+        val appState by it.appStateFlow.collectAsState()
+        appState.appWasUpdated
+    } ?: false
+
     val onDismiss = {
-        commonViewModel.submitAction(AppWasUpdated(false))
+        CommonViewModel.getStoredInstance()
+            ?.submitAction(AppWasUpdated(false))
     }
 
     if (appWasUpdated) {

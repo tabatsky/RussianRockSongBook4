@@ -274,6 +274,7 @@ class SettingsRepositoryImplTest {
             sp.edit()
             editor.putBoolean(KEY_VOICE_HELP_DONT_ASK, true)
             editor.commit()
+            sp.getBoolean(KEY_VOICE_HELP_DONT_ASK, false)
         }
     }
 

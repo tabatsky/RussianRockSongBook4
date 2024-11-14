@@ -11,11 +11,11 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
+import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.domain.repository.local.predefinedArtistList
 import jatx.russianrocksongbook.domain.repository.local.predefinedArtistsWithGroups
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.localsongs.R
-import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.SelectArtist
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateMenuExpandedArtistGroup
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateMenuScrollPosition
@@ -27,15 +27,13 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 internal fun SongListMenuBody(
     navigationFocusRequester: FocusRequester,
-    onCloseDrawer: () -> Unit
+    onCloseDrawer: () -> Unit,
+    artistList: List<String>,
+    menuExpandedArtistGroup: String,
+    menuScrollPosition: Int,
+    submitAction: (UIAction) -> Unit
 ) {
-    val localViewModel = LocalViewModel.getInstance()
-
     val theme = LocalAppTheme.current
-
-    val localState by localViewModel.localStateFlow.collectAsState()
-    val appState by localViewModel.appStateFlow.collectAsState()
-    val artistList = appState.artistList
 
     val predefinedWithGroups = artistList.predefinedArtistsWithGroups()
 
@@ -48,7 +46,7 @@ internal fun SongListMenuBody(
             left = navigationFocusRequester
         }
 
-    val expandedArtistGroup = localState.menuExpandedArtistGroup
+    val expandedArtistGroup = menuExpandedArtistGroup
     fun getExpandedList(group: String) = if (expandedArtistGroup == group) {
         artistList.filter { it !in predefinedArtistList && it.uppercase().startsWith(group) }
     } else {
@@ -65,7 +63,7 @@ internal fun SongListMenuBody(
                 theme = theme,
                 onClick = {
                     onCloseDrawer()
-                    localViewModel.submitAction(SelectArtist(artistOrGroup))
+                    submitAction(SelectArtist(artistOrGroup))
                 }
             )
         } else {
@@ -75,11 +73,11 @@ internal fun SongListMenuBody(
                 fontSizeSp = fontSizeSp,
                 theme = theme,
                 onGroupClick = {
-                    localViewModel.submitAction(UpdateMenuExpandedArtistGroup(artistOrGroup))
+                    submitAction(UpdateMenuExpandedArtistGroup(artistOrGroup))
                 },
                 onArtistClick = {
                     onCloseDrawer()
-                    localViewModel.submitAction(SelectArtist(it))
+                    submitAction(SelectArtist(it))
                 }
             )
         }
@@ -89,7 +87,7 @@ internal fun SongListMenuBody(
         mutableStateOf(true)
     }
 
-    val scrollPosition = localState.menuScrollPosition
+    val scrollPosition = menuScrollPosition
 
     @Composable
     fun ScrollEffect(
@@ -107,7 +105,7 @@ internal fun SongListMenuBody(
                 snapshotFlow {
                     getFirstVisibleItemIndex()
                 }.collectLatest {
-                    localViewModel.submitAction(UpdateMenuScrollPosition(it))
+                    submitAction(UpdateMenuScrollPosition(it))
                 }
             }
         }

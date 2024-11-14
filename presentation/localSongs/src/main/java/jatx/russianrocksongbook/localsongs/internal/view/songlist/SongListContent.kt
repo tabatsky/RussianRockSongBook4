@@ -13,8 +13,9 @@ import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.ext.crop
 import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
+import jatx.russianrocksongbook.commonviewmodel.UIAction
+import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.localsongs.internal.view.dialogs.VoiceHelpDialog
-import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.SpeechRecognize
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateSongListNeedScroll
 import jatx.russianrocksongbook.testing.APP_BAR_TITLE
@@ -25,15 +26,15 @@ private const val MAX_ARTIST_LENGTH_PORTRAIT = 15
 
 @Composable
 internal fun SongListContent(
-    openDrawer: () -> Unit
+    openDrawer: () -> Unit,
+    currentArtist: String,
+    songList: List<Song>,
+    scrollPosition: Int,
+    needScroll: Boolean,
+    voiceHelpDontAsk: Boolean,
+    submitAction: (UIAction) -> Unit
 ) {
-    val localViewModel = LocalViewModel.getInstance()
-
     val theme = LocalAppTheme.current
-
-    val appState by localViewModel.appStateFlow.collectAsState()
-
-    val artist = appState.currentArtist
 
     BoxWithConstraints(
         modifier = Modifier
@@ -50,14 +51,14 @@ internal fun SongListContent(
         LaunchedEffect(isPortrait) {
             if (wasOrientationChanged) {
                 isLastOrientationPortrait = isPortrait
-                localViewModel.submitAction(UpdateSongListNeedScroll(true))
+                submitAction(UpdateSongListNeedScroll(true))
             }
         }
 
         if (wasOrientationChanged) return@BoxWithConstraints
 
         if (W < H) {
-            val visibleArtist = artist.crop(MAX_ARTIST_LENGTH_PORTRAIT)
+            val visibleArtist = currentArtist.crop(MAX_ARTIST_LENGTH_PORTRAIT)
 
             Column(
                 modifier = Modifier
@@ -75,16 +76,23 @@ internal fun SongListContent(
                         )
                     },
                     actions = {
-                        SongListActions()
+                        SongListActions(submitAction)
                     }
                 )
 
-                SongListBody(navigationFocusRequester)
+                SongListBody(
+                    navigationFocusRequester,
+                    currentArtist,
+                    songList,
+                    scrollPosition,
+                    needScroll,
+                    submitAction
+                )
 
                 WhatsNewDialog()
             }
         } else {
-            val visibleArtist = artist.crop(MAX_ARTIST_LENGTH_LANDSCAPE)
+            val visibleArtist = currentArtist.crop(MAX_ARTIST_LENGTH_LANDSCAPE)
 
             Row(
                 modifier = Modifier
@@ -102,11 +110,18 @@ internal fun SongListContent(
                         )
                     },
                     actions = {
-                        SongListActions()
+                        SongListActions(submitAction)
                     }
                 )
 
-                SongListBody(navigationFocusRequester)
+                SongListBody(
+                    navigationFocusRequester,
+                    currentArtist,
+                    songList,
+                    scrollPosition,
+                    needScroll,
+                    submitAction
+                )
 
                 WhatsNewDialog()
             }
@@ -127,12 +142,12 @@ internal fun SongListContent(
         )
 
         if (showVoiceHelpDialog) {
-            if (localViewModel.settings.voiceHelpDontAsk) {
+            if (voiceHelpDontAsk) {
                 showVoiceHelpDialog = false
-                localViewModel.submitAction(SpeechRecognize(true))
+                submitAction(SpeechRecognize(true))
             } else {
                 VoiceHelpDialog(
-                    onConfirm = { localViewModel.submitAction(SpeechRecognize(it)) },
+                    onConfirm = { submitAction(SpeechRecognize(it)) },
                     onDismiss = {
                         showVoiceHelpDialog = false
                     }
