@@ -10,23 +10,23 @@ import androidx.compose.ui.res.stringResource
 import jatx.russianrocksongbook.commonview.buttons.CommonIconButton
 import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
 import jatx.russianrocksongbook.commonviewmodel.SelectScreen
+import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.localsongs.R
-import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.ReviewApp
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.ShowDevSite
 import jatx.russianrocksongbook.testing.SETTINGS_BUTTON
 import jatx.russianrocksongbook.navigation.ScreenVariant
 
 @Composable
-internal fun SongListActions() {
-    val localViewModel = LocalViewModel.getInstance()
-
+internal fun SongListActions(
+    submitAction: (UIAction) -> Unit
+) {
     val theme = LocalAppTheme.current
     var expanded by remember { mutableStateOf(false) }
 
     val onSettingsClick = {
         println("selected: settings")
-        localViewModel.submitAction(SelectScreen(ScreenVariant.Settings))
+        submitAction(SelectScreen(ScreenVariant.Settings))
     }
     CommonIconButton(
         testTag = SETTINGS_BUTTON,
@@ -52,7 +52,7 @@ internal fun SongListActions() {
     ) {
         DropdownMenuItem(onClick = {
             println("selected: review app")
-            localViewModel.submitAction(ReviewApp)
+            submitAction(ReviewApp)
         }) {
             Text(
                 text = stringResource(id = R.string.item_review_app),
@@ -61,7 +61,7 @@ internal fun SongListActions() {
         }
         DropdownMenuItem(onClick = {
             println("selected: dev site")
-            localViewModel.submitAction(ShowDevSite)
+            submitAction(ShowDevSite)
         }) {
             Text(
                 text = stringResource(id = R.string.item_dev_site),

@@ -11,12 +11,17 @@ import androidx.compose.ui.res.stringResource
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
+import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.localsongs.R
 
 @Composable
 internal fun SongListAppDrawer(
     isPortrait: Boolean,
-    onCloseDrawer: () -> Unit
+    onCloseDrawer: () -> Unit,
+    artistList: List<String>,
+    menuExpandedArtistGroup: String,
+    menuScrollPosition: Int,
+    submitAction: (UIAction) -> Unit
 ) {
     val theme = LocalAppTheme.current
 
@@ -38,7 +43,11 @@ internal fun SongListAppDrawer(
             )
             SongListMenuBody(
                 navigationFocusRequester = navigationFocusRequester,
-                onCloseDrawer = onCloseDrawer
+                onCloseDrawer = onCloseDrawer,
+                artistList = artistList,
+                menuExpandedArtistGroup = menuExpandedArtistGroup,
+                menuScrollPosition = menuScrollPosition,
+                submitAction = submitAction
             )
         }
     } else {
@@ -59,7 +68,11 @@ internal fun SongListAppDrawer(
             )
             SongListMenuBody(
                 navigationFocusRequester = navigationFocusRequester,
-                onCloseDrawer = onCloseDrawer
+                onCloseDrawer = onCloseDrawer,
+                artistList = artistList,
+                menuExpandedArtistGroup = menuExpandedArtistGroup,
+                menuScrollPosition = menuScrollPosition,
+                submitAction = submitAction
             )
         }
     }

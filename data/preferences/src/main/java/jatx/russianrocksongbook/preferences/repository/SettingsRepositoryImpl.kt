@@ -77,6 +77,7 @@ class SettingsRepositoryImpl @Inject constructor(
         get() = settingsStorage.voiceHelpDontAsk
         set(value) {
             settingsStorage.voiceHelpDontAsk = value
+            _voiceHelpDontAskState.value = value
         }
 
 
@@ -102,17 +103,21 @@ class SettingsRepositoryImpl @Inject constructor(
         get() = _vkMusicDontAskState
     override val yandexMusicDontAskState: StateFlow<Boolean>
         get() = _yandexMusicDontAskState
+    override val voiceHelpDontAskState: StateFlow<Boolean>
+        get() = _voiceHelpDontAskState
 
-    val _youtubeMusicDontAskState by lazy {
+    private val _youtubeMusicDontAskState by lazy {
         MutableStateFlow(youtubeMusicDontAsk)
     }
-    val _vkMusicDontAskState by lazy {
+    private val _vkMusicDontAskState by lazy {
         MutableStateFlow(vkMusicDontAsk)
     }
-    val _yandexMusicDontAskState by lazy {
+    private val _yandexMusicDontAskState by lazy {
         MutableStateFlow(yandexMusicDontAsk)
     }
-
+    private val _voiceHelpDontAskState by lazy {
+        MutableStateFlow(voiceHelpDontAsk)
+    }
 }
 
 class FontScalerImpl(private val commonFontScale: Float): FontScaler {

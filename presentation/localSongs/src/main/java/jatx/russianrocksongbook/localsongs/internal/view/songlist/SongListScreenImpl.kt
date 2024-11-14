@@ -1,21 +1,10 @@
 package jatx.russianrocksongbook.localsongs.internal.view.songlist
 
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.DrawerValue
-import androidx.compose.material.ModalDrawer
-import androidx.compose.material.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
-import jatx.russianrocksongbook.commonviewmodel.ShowSongs
-import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
-import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateArtists
-import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateSongListNeedScroll
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.VoiceCommandViewModel
-import kotlinx.coroutines.launch
 
 @Composable
 internal fun SongListScreenImpl(
@@ -26,61 +15,37 @@ internal fun SongListScreenImpl(
     val localViewModel = LocalViewModel.getInstance()
     InitVoiceCommandViewModel()
 
-    val drawerState = rememberDrawerState(DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
+    val localState by localViewModel.localStateFlow.collectAsState()
+    val appState by localViewModel.appStateFlow.collectAsState()
 
-    LaunchedEffect(Unit) {
-        if (!isBackFromSomeScreen || artist == ARTIST_FAVORITE) {
-            localViewModel.submitAction(UpdateArtists)
-        }
-    }
+    val artistList = appState.artistList
+    val currentArtist = appState.currentArtist
 
-    LaunchedEffect(Unit) {
-        if (isBackFromSomeScreen) {
-            localViewModel.submitAction(UpdateSongListNeedScroll(true))
-        }
-    }
+    val songList = localState.currentSongList
+    val songListScrollPosition = localState.songListScrollPosition
+    val songListNeedScroll = localState.songListNeedScroll
 
-    LaunchedEffect(Unit) {
-        drawerState.snapTo(DrawerValue.Closed)
-    }
+    val menuExpandedArtistGroup = localState.menuExpandedArtistGroup
+    val menuScrollPosition = localState.menuScrollPosition
 
-    LaunchedEffect(artist to songTitleToPass) {
-        localViewModel.submitAction(ShowSongs(artist, songTitleToPass))
-    }
+    val voiceHelpDontAsk by localViewModel.settings.voiceHelpDontAskState.collectAsState()
 
-    BoxWithConstraints(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        val W = this.maxWidth
-        val H = this.maxHeight
+    val submitAction = localViewModel::submitAction
 
-        val isPortrait = W < H
-
-        ModalDrawer(
-            drawerState = drawerState,
-            drawerContent = {
-                SongListAppDrawer(
-                    isPortrait = isPortrait,
-                    onCloseDrawer = {
-                        scope.launch {
-                            drawerState.close()
-                        }
-                    }
-                )
-            },
-            content = {
-                SongListContent(
-                    openDrawer = {
-                        scope.launch {
-                            drawerState.open()
-                        }
-                    }
-                )
-            }
-        )
-    }
+    SongListScreenImplContent(
+        artist = artist,
+        isBackFromSomeScreen = isBackFromSomeScreen,
+        songTitleToPass = songTitleToPass,
+        artistList = artistList,
+        currentArtist = currentArtist,
+        songList = songList,
+        songListScrollPosition = songListScrollPosition,
+        songListNeedScroll = songListNeedScroll,
+        menuExpandedArtistGroup = menuExpandedArtistGroup,
+        menuScrollPosition = menuScrollPosition,
+        voiceHelpDontAsk = voiceHelpDontAsk,
+        submitAction = submitAction
+    )
 }
 
 @Composable

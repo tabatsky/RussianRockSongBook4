@@ -26,6 +26,7 @@ interface SettingsRepository {
     val youtubeMusicDontAskState: StateFlow<Boolean>
     val vkMusicDontAskState: StateFlow<Boolean>
     val yandexMusicDontAskState: StateFlow<Boolean>
+    val voiceHelpDontAskState: StateFlow<Boolean>
 }
 
 val colorLightYellow = Color(0xFFFFFFBB)
