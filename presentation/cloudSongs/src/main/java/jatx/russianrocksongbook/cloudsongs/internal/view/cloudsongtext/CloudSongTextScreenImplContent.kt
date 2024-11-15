@@ -8,11 +8,8 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import jatx.clickablewordstextcompose.api.Word
 import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.paging.ItemsAdapter
@@ -40,39 +37,9 @@ import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.repository.preferences.ListenToMusicVariant
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 private val CLOUD_SONG_TEXT_APP_BAR_WIDTH = 96.dp
-
-@Preview
-@Composable
-fun CloudSongTextScreenImplPreview() {
-    val cloudSongs = (1..30)
-        .map {
-            CloudSong(
-                artist = "Исполнитель $it",
-                title = "Название $it",
-                text = "Текст текст\nТекст\nAm Em\nТекст\n",
-                variant = 1,
-                likeCount = 2,
-                dislikeCount = 1
-            )
-        }
-
-    val cloudSongItems = flowOf(PagingData.from(cloudSongs)).collectAsLazyPagingItems()
-
-    CloudSongTextScreenImplContent(
-        position = 3,
-        cloudSongItems = cloudSongItems,
-        listenToMusicVariant = ListenToMusicVariant.YANDEX_AND_VK,
-        vkMusicDontAsk = false,
-        yandexMusicDontAsk = false,
-        youtubeMusicDontAsk = false,
-        submitAction = {}
-    )
-}
-
 
 @Composable
 internal fun CloudSongTextScreenImplContent(

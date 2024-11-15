@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import jatx.russianrocksongbook.commonviewmodel.ShowSongs
 import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.domain.models.local.Song
@@ -17,35 +16,6 @@ import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateArtists
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateSongListNeedScroll
 import kotlinx.coroutines.launch
-
-@Preview
-@Composable
-fun SongListScreenImplPreview() {
-    val artistList = (1..30)
-        .map { "Исполнитель $it" }
-    val songList = (1..30)
-        .map {
-            Song(
-                artist = "Исполнитель 1",
-                title = "Название $it"
-            )
-        }
-
-    SongListScreenImplContent(
-        artist = "Исполнитель 1",
-        isBackFromSomeScreen = false,
-        songTitleToPass = null,
-        artistList = artistList,
-        currentArtist = "Исполнитель 1",
-        songList = songList,
-        songListScrollPosition = 0,
-        songListNeedScroll = false,
-        menuExpandedArtistGroup = "",
-        menuScrollPosition = 0,
-        voiceHelpDontAsk = false,
-        submitAction = {}
-    )
-}
 
 @Composable
 internal fun SongListScreenImplContent(
