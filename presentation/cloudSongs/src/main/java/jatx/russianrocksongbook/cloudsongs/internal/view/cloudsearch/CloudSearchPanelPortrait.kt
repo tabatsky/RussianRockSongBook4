@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
@@ -19,6 +20,7 @@ import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.domain.repository.preferences.colorBlack
 import jatx.russianrocksongbook.testing.SEARCH_BUTTON
 import jatx.russianrocksongbook.testing.TEXT_FIELD_SEARCH_FOR
+import jatx.spinner.SpinnerState
 
 @Composable
 internal fun CloudSearchPanelPortrait(
@@ -28,10 +30,9 @@ internal fun CloudSearchPanelPortrait(
     fontSizeTextSp: TextUnit,
     onSearchForValueChange: (String) -> Unit,
     onOrderByValueChange: (CloudSearchOrderBy) -> Unit,
-    onSearchClick: () -> Unit
+    onSearchClick: () -> Unit,
+    spinnerStateOrderBy: MutableState<SpinnerState>
 ) {
-    val cloudViewModel = CloudViewModel.getInstance()
-
     val size1 = dimensionResource(id = R.dimen.search_button_size) * 0.5f
     val size2 = dimensionResource(id = R.dimen.search_button_size) * 0.75f
     val size3 = dimensionResource(id = R.dimen.search_button_size) * 1.25f
@@ -77,7 +78,7 @@ internal fun CloudSearchPanelPortrait(
                 valueList = CloudSearchOrderBy.entries.map { it.orderByRus }.toTypedArray(),
                 initialPosition = orderBy.ordinal,
                 onPositionChanged = { onOrderByValueChange(CloudSearchOrderBy.entries[it]) },
-                spinnerState = cloudViewModel.spinnerStateOrderBy
+                spinnerState = spinnerStateOrderBy
             )
         }
         Box (
