@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
@@ -16,18 +17,18 @@ import jatx.spinner.Spinner
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.domain.repository.preferences.colorBlack
 import jatx.russianrocksongbook.settings.R
-import jatx.russianrocksongbook.settings.internal.viewmodel.SettingsViewModel
 import jatx.russianrocksongbook.testing.THEME_SPINNER
+import jatx.spinner.SpinnerState
 
 @Composable
 internal fun ThemeRow(
     modifier: Modifier,
     theme: Theme,
     fontSize: TextUnit,
+    valueTheme: MutableState<Theme>,
+    spinnerStateTheme: MutableState<SpinnerState>,
     onPositionChanged: (Int) -> Unit
 ) {
-    val settingsViewModel = SettingsViewModel.getInstance()
-
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
@@ -54,9 +55,9 @@ internal fun ThemeRow(
             testTag = THEME_SPINNER,
             fontSize = fontSize,
             valueList = valueList,
-            initialPosition = settingsViewModel.valueTheme.value.ordinal,
+            initialPosition = valueTheme.value.ordinal,
             onPositionChanged = onPositionChanged,
-            spinnerState = settingsViewModel.spinnerStateTheme
+            spinnerState = spinnerStateTheme
         )
     }
 }

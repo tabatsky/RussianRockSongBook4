@@ -6,20 +6,37 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import jatx.russianrocksongbook.domain.repository.preferences.FontScale
+import jatx.russianrocksongbook.domain.repository.preferences.ListenToMusicVariant
+import jatx.russianrocksongbook.domain.repository.preferences.Orientation
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.domain.repository.preferences.colorBlack
 import jatx.russianrocksongbook.settings.R
+import jatx.spinner.SpinnerState
 
 @Composable
 internal fun SettingsBodyPortrait(
     theme: Theme,
     fontSizeLabelSp: TextUnit,
     fontSizeButtonSp: TextUnit,
+    artistList: List<String>,
+    valueTheme: MutableState<Theme>,
+    spinnerStateTheme: MutableState<SpinnerState>,
+    valueFontScale: MutableState<FontScale>,
+    spinnerStateFontScale: MutableState<SpinnerState>,
+    valueDefaultArtist: MutableState<String>,
+    spinnerStateDefaultArtist: MutableState<SpinnerState>,
+    valueOrientation: MutableState<Orientation>,
+    spinnerStateOrientation: MutableState<SpinnerState>,
+    valueListenToMusicVariant: MutableState<ListenToMusicVariant>,
+    spinnerStateListenToMusicVariant: MutableState<SpinnerState>,
+    stringScrollSpeed: MutableState<String>,
     onThemePositionChanged: (Int) -> Unit,
     onFontScalePositionChanged: (Int) -> Unit,
     onDefaultArtistValueChanged: (String) -> Unit,
@@ -38,6 +55,8 @@ internal fun SettingsBodyPortrait(
                 .fillMaxWidth()
                 .wrapContentHeight(),
             fontSize = fontSizeLabelSp,
+            valueTheme = valueTheme,
+            spinnerStateTheme = spinnerStateTheme,
             onPositionChanged = onThemePositionChanged
         )
         Divider(
@@ -50,6 +69,8 @@ internal fun SettingsBodyPortrait(
                 .fillMaxWidth()
                 .wrapContentHeight(),
             fontSize = fontSizeLabelSp,
+            valueFontScale = valueFontScale,
+            spinnerStateFontScale = spinnerStateFontScale,
             onPositionChanged = onFontScalePositionChanged
         )
         Divider(
@@ -62,6 +83,9 @@ internal fun SettingsBodyPortrait(
                 .fillMaxWidth()
                 .wrapContentHeight(),
             fontSize = fontSizeLabelSp,
+            artistList = artistList,
+            valueDefaultArtist = valueDefaultArtist,
+            spinnerStateDefaultArtist = spinnerStateDefaultArtist,
             onValueChanged = onDefaultArtistValueChanged
         )
         Divider(
@@ -74,6 +98,8 @@ internal fun SettingsBodyPortrait(
                 .fillMaxWidth()
                 .wrapContentHeight(),
             fontSize = fontSizeLabelSp,
+            valueOrientation = valueOrientation,
+            spinnerStateOrientation = spinnerStateOrientation,
             onPositionChanged = onOrientationPositionChanged
         )
         Divider(
@@ -86,6 +112,8 @@ internal fun SettingsBodyPortrait(
                 .fillMaxWidth()
                 .wrapContentHeight(),
             fontSize = fontSizeLabelSp,
+            valueListenToMusicVariant = valueListenToMusicVariant,
+            spinnerStateListenToMusicVariant = spinnerStateListenToMusicVariant,
             onPositionChanged = onListenToMusicVariantPositionChanged
         )
         Divider(
@@ -98,6 +126,7 @@ internal fun SettingsBodyPortrait(
                 .fillMaxWidth()
                 .wrapContentHeight(),
             fontSize = fontSizeLabelSp,
+            stringScrollSpeed = stringScrollSpeed,
             onValueChanged = onScrollSpeedValueChanged
         )
         Divider(

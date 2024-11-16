@@ -2,7 +2,7 @@ package jatx.russianrocksongbook.commonview.songtext
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.preferences.ListenToMusicVariant
@@ -17,7 +17,7 @@ fun CommonSongTextScreenImplPreview() {
         title = "Название",
         text = "Текст текст\nТекст\nAm Em\nТекст\n"
     )
-    val editorText = rememberSaveable { mutableStateOf(song.text) }
+    val editorText = remember { mutableStateOf(song.text) }
 
     CommonSongTextScreenImplContent(
         artist = artist,
