@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.settings.R
-import jatx.russianrocksongbook.settings.internal.viewmodel.SettingsViewModel
 import jatx.russianrocksongbook.testing.TEXT_FIELD_SCROLL_SPEED
 
 @Composable
@@ -27,15 +26,14 @@ internal fun ScrollSpeedRow(
     modifier: Modifier,
     theme: Theme,
     fontSize: TextUnit,
+    stringScrollSpeed: MutableState<String>,
     onValueChanged: (Float) -> Unit
 ) {
-    val settingsViewModel = SettingsViewModel.getInstance()
-
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        var text by settingsViewModel.stringScrollSpeed
+        var text by stringScrollSpeed
         Text(
             text = stringResource(id = R.string.scroll_speed),
             modifier = Modifier

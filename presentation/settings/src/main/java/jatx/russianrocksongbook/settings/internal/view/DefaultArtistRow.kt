@@ -5,8 +5,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -21,27 +20,26 @@ import jatx.russianrocksongbook.domain.repository.local.ARTIST_DONATION
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.domain.repository.preferences.colorBlack
 import jatx.russianrocksongbook.settings.R
-import jatx.russianrocksongbook.settings.internal.viewmodel.SettingsViewModel
 import jatx.russianrocksongbook.testing.DEFAULT_ARTIST_SPINNER
+import jatx.spinner.SpinnerState
 
 @Composable
 internal fun DefaultArtistRow(
     modifier: Modifier,
     theme: Theme,
     fontSize: TextUnit,
+    artistList: List<String>,
+    valueDefaultArtist: MutableState<String>,
+    spinnerStateDefaultArtist: MutableState<SpinnerState>,
     onValueChanged: (String) -> Unit
 ) {
-    val settingsViewModel = SettingsViewModel.getInstance()
-
-    val appState by settingsViewModel.appStateFlow.collectAsState()
-    val artistList = appState.artistList
     val artists = ArrayList(artistList).apply {
         remove(ARTIST_CLOUD_SONGS)
         remove(ARTIST_ADD_SONG)
         remove(ARTIST_ADD_ARTIST)
         remove(ARTIST_DONATION)
     }
-    val initialPosition = artists.indexOf(settingsViewModel.valueDefaultArtist.value)
+    val initialPosition = artists.indexOf(valueDefaultArtist.value)
 
     Row(
         modifier = modifier,
@@ -73,7 +71,7 @@ internal fun DefaultArtistRow(
             onPositionChanged = {
                 onValueChanged(artists[it])
             },
-            spinnerState = settingsViewModel.spinnerStateDefaultArtist
+            spinnerState = spinnerStateDefaultArtist
         )
     }
 }
