@@ -3,6 +3,7 @@ package jatx.russianrocksongbook.addsong.internal.view
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -18,6 +19,8 @@ import jatx.russianrocksongbook.addsong.internal.viewmodel.AddSongViewModel
 import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
 import jatx.russianrocksongbook.commonviewmodel.ShowToastWithResource
+import jatx.russianrocksongbook.commonviewmodel.UIAction
+import jatx.russianrocksongbook.commonviewmodel.UIEffect
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.domain.repository.preferences.colorBlack
 import jatx.russianrocksongbook.testing.TEXT_FIELD_ARTIST
@@ -25,12 +28,16 @@ import jatx.russianrocksongbook.testing.TEXT_FIELD_TEXT
 import jatx.russianrocksongbook.testing.TEXT_FIELD_TITLE
 
 @Composable
-internal fun AddSongBody() {
-    val addSongViewModel = AddSongViewModel.getInstance()
-
-    var artist by addSongViewModel.artist
-    var title by addSongViewModel.title
-    var text by addSongViewModel.text
+internal fun AddSongBody(
+    artistState: MutableState<String>,
+    titleState: MutableState<String>,
+    textState: MutableState<String>,
+    submitAction: (UIAction) -> Unit,
+    submitEffect: (UIEffect) -> Unit
+) {
+    var artist by artistState
+    var title by titleState
+    var text by textState
 
     val theme = LocalAppTheme.current
 
@@ -147,11 +154,11 @@ internal fun AddSongBody() {
                     title.trim().isEmpty() ||
                     text.trim().isEmpty()
                 ) {
-                    addSongViewModel.submitEffect(
+                    submitEffect(
                         ShowToastWithResource(R.string.toast_fill_all_fields)
                     )
                 } else {
-                    addSongViewModel.submitAction(
+                    submitAction(
                         AddSongToRepo(
                             artist.trim(), title.trim(), text
                         ))
