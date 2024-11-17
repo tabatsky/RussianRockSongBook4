@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -30,9 +32,13 @@ internal fun DefaultArtistRow(
     fontSize: TextUnit,
     artistList: List<String>,
     valueDefaultArtist: MutableState<String>,
-    spinnerStateDefaultArtist: MutableState<SpinnerState>,
-    onValueChanged: (String) -> Unit
+    spinnerStateDefaultArtist: MutableState<SpinnerState>
 ) {
+    var defaultArtistToSave by valueDefaultArtist
+    val onDefaultArtistValueChanged: (String) -> Unit = {
+        defaultArtistToSave = it
+    }
+
     val artists = ArrayList(artistList).apply {
         remove(ARTIST_CLOUD_SONGS)
         remove(ARTIST_ADD_SONG)
@@ -69,7 +75,7 @@ internal fun DefaultArtistRow(
             valueList = valueList,
             initialPosition = initialPosition,
             onPositionChanged = {
-                onValueChanged(artists[it])
+                onDefaultArtistValueChanged(artists[it])
             },
             spinnerState = spinnerStateDefaultArtist
         )

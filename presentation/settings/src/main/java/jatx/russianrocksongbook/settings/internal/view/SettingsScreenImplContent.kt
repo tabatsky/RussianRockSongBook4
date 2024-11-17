@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableFloatState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -48,36 +47,12 @@ fun SettingsScreenImplContent(
 ) {
     val theme = LocalAppTheme.current
 
-    var themeToSave by valueTheme
-    val onThemePositionChanged: (Int) -> Unit = {
-        themeToSave = Theme.entries[it]
-    }
-
-    var fontScaleToSave by valueFontScale
-    val onFontScalePositionChanged: (Int) -> Unit = {
-        fontScaleToSave = FontScale.entries[it]
-    }
-
-    var defaultArtistToSave by valueDefaultArtist
-    val onDefaultArtistValueChanged: (String) -> Unit = {
-        defaultArtistToSave = it
-    }
-
-    var orientationToSave by valueOrientation
-    val onOrientationPositionChanged: (Int) -> Unit = {
-        orientationToSave = Orientation.entries[it]
-    }
-
-    var listenToMusicVariantToSave by valueListenToMusicVariant
-    val onListenToMusicVariantPositionChanged: (Int) -> Unit = {
-        listenToMusicVariantToSave =
-            ListenToMusicVariant.entries[it]
-    }
-
-    var scrollSpeedToSave by valueScrollSpeed
-    val onScrollSpeedValueChanged: (Float) -> Unit = {
-        scrollSpeedToSave = it
-    }
+    val themeToSave by valueTheme
+    val fontScaleToSave by valueFontScale
+    val defaultArtistToSave by valueDefaultArtist
+    val orientationToSave by valueOrientation
+    val listenToMusicVariantToSave by valueListenToMusicVariant
+    val scrollSpeedToSave by valueScrollSpeed
 
     val onSaveClick: () -> Unit = {
         submitAction(
@@ -130,13 +105,8 @@ fun SettingsScreenImplContent(
                     spinnerStateOrientation = spinnerStateOrientation,
                     valueListenToMusicVariant = valueListenToMusicVariant,
                     spinnerStateListenToMusicVariant = spinnerStateListenToMusicVariant,
+                    valueScrollSpeed = valueScrollSpeed,
                     stringScrollSpeed = stringScrollSpeed,
-                    onThemePositionChanged = onThemePositionChanged,
-                    onFontScalePositionChanged = onFontScalePositionChanged,
-                    onDefaultArtistValueChanged = onDefaultArtistValueChanged,
-                    onOrientationPositionChanged = onOrientationPositionChanged,
-                    onListenToMusicVariantPositionChanged = onListenToMusicVariantPositionChanged,
-                    onScrollSpeedValueChanged = onScrollSpeedValueChanged,
                     onSaveClick = onSaveClick
                 )
             }
@@ -165,13 +135,8 @@ fun SettingsScreenImplContent(
                     spinnerStateOrientation = spinnerStateOrientation,
                     valueListenToMusicVariant = valueListenToMusicVariant,
                     spinnerStateListenToMusicVariant = spinnerStateListenToMusicVariant,
+                    valueScrollSpeed = valueScrollSpeed,
                     stringScrollSpeed = stringScrollSpeed,
-                    onThemePositionChanged = onThemePositionChanged,
-                    onFontScalePositionChanged = onFontScalePositionChanged,
-                    onDefaultArtistValueChanged = onDefaultArtistValueChanged,
-                    onOrientationPositionChanged = onOrientationPositionChanged,
-                    onListenToMusicVariantPositionChanged = onListenToMusicVariantPositionChanged,
-                    onScrollSpeedValueChanged = onScrollSpeedValueChanged,
                     onSaveClick = onSaveClick
                 )
             }

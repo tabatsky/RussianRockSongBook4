@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
@@ -27,9 +29,12 @@ internal fun FontScaleRow(
     theme: Theme,
     fontSize: TextUnit,
     valueFontScale: MutableState<FontScale>,
-    spinnerStateFontScale: MutableState<SpinnerState>,
-    onPositionChanged: (Int) -> Unit
+    spinnerStateFontScale: MutableState<SpinnerState>
 ) {
+    var fontScaleToSave by valueFontScale
+    val onFontScalePositionChanged: (Int) -> Unit = {
+        fontScaleToSave = FontScale.entries[it]
+    }
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
@@ -57,7 +62,7 @@ internal fun FontScaleRow(
             fontSize = fontSize,
             valueList = valueList,
             initialPosition = valueFontScale.value.ordinal,
-            onPositionChanged = onPositionChanged,
+            onPositionChanged = onFontScalePositionChanged,
             spinnerState = spinnerStateFontScale
         )
     }

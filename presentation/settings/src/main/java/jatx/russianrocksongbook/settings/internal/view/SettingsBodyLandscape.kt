@@ -6,6 +6,7 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableFloatState
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,13 +38,8 @@ internal fun SettingsBodyLandscape(
     spinnerStateOrientation: MutableState<SpinnerState>,
     valueListenToMusicVariant: MutableState<ListenToMusicVariant>,
     spinnerStateListenToMusicVariant: MutableState<SpinnerState>,
+    valueScrollSpeed: MutableFloatState,
     stringScrollSpeed: MutableState<String>,
-    onThemePositionChanged: (Int) -> Unit,
-    onFontScalePositionChanged: (Int) -> Unit,
-    onDefaultArtistValueChanged: (String) -> Unit,
-    onOrientationPositionChanged: (Int) -> Unit,
-    onListenToMusicVariantPositionChanged: (Int) -> Unit,
-    onScrollSpeedValueChanged: (Float) -> Unit,
     onSaveClick: () -> Unit
 ) {
     Column(
@@ -63,8 +59,7 @@ internal fun SettingsBodyLandscape(
                     .wrapContentHeight(),
                 fontSize = fontSizeLabelSp,
                 valueTheme = valueTheme,
-                spinnerStateTheme = spinnerStateTheme,
-                onPositionChanged = onThemePositionChanged
+                spinnerStateTheme = spinnerStateTheme
             )
             FontScaleRow(
                 theme = theme,
@@ -73,8 +68,7 @@ internal fun SettingsBodyLandscape(
                     .wrapContentHeight(),
                 fontSize = fontSizeLabelSp,
                 valueFontScale = valueFontScale,
-                spinnerStateFontScale = spinnerStateFontScale,
-                onPositionChanged = onFontScalePositionChanged
+                spinnerStateFontScale = spinnerStateFontScale
             )
         }
         Divider(
@@ -95,8 +89,7 @@ internal fun SettingsBodyLandscape(
                 fontSize = fontSizeLabelSp,
                 artistList = artistList,
                 valueDefaultArtist = valueDefaultArtist,
-                spinnerStateDefaultArtist = spinnerStateDefaultArtist,
-                onValueChanged = onDefaultArtistValueChanged
+                spinnerStateDefaultArtist = spinnerStateDefaultArtist
             )
             OrientationRow(
                 theme = theme,
@@ -105,8 +98,7 @@ internal fun SettingsBodyLandscape(
                     .wrapContentHeight(),
                 fontSize = fontSizeLabelSp,
                 valueOrientation = valueOrientation,
-                spinnerStateOrientation = spinnerStateOrientation,
-                onPositionChanged = onOrientationPositionChanged
+                spinnerStateOrientation = spinnerStateOrientation
             )
         }
         Divider(
@@ -126,8 +118,7 @@ internal fun SettingsBodyLandscape(
                     .wrapContentHeight(),
                 fontSize = fontSizeLabelSp,
                 valueListenToMusicVariant = valueListenToMusicVariant,
-                spinnerStateListenToMusicVariant = spinnerStateListenToMusicVariant,
-                onPositionChanged = onListenToMusicVariantPositionChanged
+                spinnerStateListenToMusicVariant = spinnerStateListenToMusicVariant
             )
             ScrollSpeedRow(
                 theme = theme,
@@ -135,8 +126,8 @@ internal fun SettingsBodyLandscape(
                     .weight(1.0f)
                     .wrapContentHeight(),
                 fontSize = fontSizeLabelSp,
-                stringScrollSpeed = stringScrollSpeed,
-                onValueChanged = onScrollSpeedValueChanged
+                valueScrollSpeed = valueScrollSpeed,
+                stringScrollSpeed = stringScrollSpeed
             )
         }
         Divider(
