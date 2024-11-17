@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -19,20 +18,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.commonview.R
 import jatx.russianrocksongbook.commonview.font.toScaledSp
+import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
-import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.domain.repository.preferences.colorBlack
 
 @Composable
 fun ConfirmDialog(
-    commonViewModel: CommonViewModel = CommonViewModel.getInstance(),
     @StringRes titleRes: Int,
     @StringRes messageRes: Int,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
     onDecline: (() -> Unit)? = null
 ) {
-    val theme = commonViewModel.theme.collectAsState().value
+    val theme = LocalAppTheme.current
+
     val fontSizeTitleSp = dimensionResource(id = R.dimen.text_size_20)
         .toScaledSp(ScalePow.TEXT)
 

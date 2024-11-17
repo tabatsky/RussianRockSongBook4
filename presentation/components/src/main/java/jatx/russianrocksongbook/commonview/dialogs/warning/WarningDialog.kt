@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.commonview.R
 import jatx.russianrocksongbook.commonview.font.toScaledSp
+import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.testing.TEXT_FIELD_WARNING_COMMENT
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
@@ -26,7 +27,8 @@ fun WarningDialog(
     onConfirm: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val theme = commonViewModel.theme.collectAsState().value
+    val theme = LocalAppTheme.current
+
     val fontSizeTextSp = dimensionResource(id = R.dimen.text_size_12)
         .toScaledSp(ScalePow.TEXT)
 
