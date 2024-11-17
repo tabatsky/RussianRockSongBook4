@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
@@ -26,9 +28,13 @@ internal fun ThemeRow(
     theme: Theme,
     fontSize: TextUnit,
     valueTheme: MutableState<Theme>,
-    spinnerStateTheme: MutableState<SpinnerState>,
-    onPositionChanged: (Int) -> Unit
+    spinnerStateTheme: MutableState<SpinnerState>
 ) {
+    var themeToSave by valueTheme
+    val onThemePositionChanged: (Int) -> Unit = {
+        themeToSave = Theme.entries[it]
+    }
+
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
@@ -56,7 +62,7 @@ internal fun ThemeRow(
             fontSize = fontSize,
             valueList = valueList,
             initialPosition = valueTheme.value.ordinal,
-            onPositionChanged = onPositionChanged,
+            onPositionChanged = onThemePositionChanged,
             spinnerState = spinnerStateTheme
         )
     }

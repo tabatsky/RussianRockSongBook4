@@ -26,9 +26,14 @@ internal fun ScrollSpeedRow(
     modifier: Modifier,
     theme: Theme,
     fontSize: TextUnit,
-    stringScrollSpeed: MutableState<String>,
-    onValueChanged: (Float) -> Unit
+    valueScrollSpeed: MutableFloatState,
+    stringScrollSpeed: MutableState<String>
 ) {
+    var scrollSpeedToSave by valueScrollSpeed
+    val onScrollSpeedValueChanged: (Float) -> Unit = {
+        scrollSpeedToSave = it
+    }
+
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
@@ -64,10 +69,10 @@ internal fun ScrollSpeedRow(
             onValueChange = {
                 try {
                     text = if (it.isNotEmpty()) {
-                        onValueChanged(it.toFloat())
+                        onScrollSpeedValueChanged(it.toFloat())
                         it
                     } else {
-                        onValueChanged(0f)
+                        onScrollSpeedValueChanged(0f)
                         ""
                     }
                 } catch (_: NumberFormatException) { }
