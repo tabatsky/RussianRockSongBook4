@@ -8,9 +8,9 @@ import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.repository.preferences.ListenToMusicVariant
 import kotlinx.coroutines.flow.flowOf
 
-@Preview
+@Preview(widthDp = 640, heightDp = 360)
 @Composable
-fun CloudSongTextScreenImplPreview() {
+fun CloudSongTextScreenImplPreviewLandscape() {
     val cloudSongs = (1..30)
         .map {
             CloudSong(

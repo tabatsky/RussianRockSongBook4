@@ -8,7 +8,7 @@ import jatx.russianrocksongbook.addartist.internal.viewmodel.AddArtistState
 
 @Preview
 @Composable
-fun AddArtistScreenImplPreview() {
+fun AddArtistScreenImplPreviewPortrait() {
     val addArtistStateState = remember { mutableStateOf(AddArtistState.initial()) }
 
     AddArtistScreenImplContent(

@@ -9,7 +9,7 @@ import jatx.russianrocksongbook.domain.repository.preferences.ListenToMusicVaria
 
 @Preview
 @Composable
-fun CommonSongTextScreenImplPreview() {
+fun CommonSongTextScreenImplPreviewPortrait() {
     val artist = "Исполнитель"
     val position = 3
     val song = Song(
