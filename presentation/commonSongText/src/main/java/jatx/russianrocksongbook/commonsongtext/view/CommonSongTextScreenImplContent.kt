@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.commonview.songtext
+package jatx.russianrocksongbook.commonsongtext.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import jatx.clickablewordstextcompose.api.Word
-import jatx.russianrocksongbook.commonview.R
+import jatx.russianrocksongbook.commonsongtext.R
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.dialogs.chord.ChordDialog

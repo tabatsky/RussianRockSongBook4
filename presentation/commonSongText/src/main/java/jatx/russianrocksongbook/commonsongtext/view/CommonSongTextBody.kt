@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.commonview.songtext
+package jatx.russianrocksongbook.commonsongtext.view
 
 import androidx.compose.foundation.MutatePriority
 import androidx.compose.foundation.layout.Column
@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import jatx.clickablewordstextcompose.api.Word
-import jatx.russianrocksongbook.commonview.R
+import jatx.russianrocksongbook.commonsongtext.R
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import kotlinx.coroutines.delay

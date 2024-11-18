@@ -1,10 +1,7 @@
 plugins {
     id 'com.android.library'
     alias libs.plugins.kotlin.android
-    alias libs.plugins.kapt
-    alias libs.plugins.hilt.android
     alias libs.plugins.compose
-    alias libs.plugins.ksp
 }
 
 android {
@@ -32,18 +29,7 @@ android {
         jvmTarget = '17'
     }
 
-    namespace 'jatx.russianrocksongbook.localsongs'
-
-    sourceSets {
-        test {
-            java.srcDir project(":presentation:commonViewModel").file("src/test/java")
-        }
-    }
-
-    testOptions {
-        unitTests.includeAndroidResources  = true
-        unitTests.returnDefaultValues = true
-    }
+    namespace 'jatx.russianrocksongbook.commonsongtext'
 }
 
 dependencies {
@@ -57,36 +43,15 @@ dependencies {
     implementation libs.composeUiTooling
     implementation libs.navigationCompose
     implementation libs.lifecycleRuntime
-    implementation libs.lifecycleViewmodel
 
-    implementation libs.hiltAndroid
-    ksp libs.hiltCompiler
-    implementation libs.hiltExtensions
-    ksp libs.hiltExtensionsProcessor
     implementation libs.hiltNavigationCompose
 
-    implementation libs.tvFoundation
-    implementation libs.tvMaterial
-
+    api project(':ui-library:sideAppBar')
+    api project(':ui-library:ChordDroidLibrary')
     api project(':ui-library:clickableWordsTextCompose')
 
-    api project(':domain:usecase:cloud')
-    api project(':domain:usecase:local')
-    api project(':data:local')
-    api project(':data:cloud')
-    api project(':data:preferences')
     api project(':presentation:commonViewModel')
-    api project(':presentation:commonSongText')
     api project(':presentation:components')
-    api project(':presentation:whatsNewDialog')
-    api project(':presentation:helpers:voiceCommands')
 
     api project(':core:testing')
-
-    testImplementation libs.junit
-    testImplementation libs.mockk
-    testImplementation libs.coroutinesTest
-    testImplementation libs.androidXCoreTesting
-    testApi project(':presentation:commonViewModel')
-
 }

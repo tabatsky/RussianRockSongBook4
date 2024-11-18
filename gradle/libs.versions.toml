@@ -136,3 +136,4 @@ kapt = { id="org.jetbrains.kotlin.kapt", version.ref="kotlin" }
 ksp = { id="com.google.devtools.ksp", version.ref="ksp" }
 hilt-android = { id="com.google.dagger.hilt.android", version.ref="hilt" }
 kotlin-serialization = { id="org.jetbrains.kotlin.plugin.serialization", version.ref="kotlin" }
+android-library = { id = "com.android.library", version.ref = "gradleAndroid" }
