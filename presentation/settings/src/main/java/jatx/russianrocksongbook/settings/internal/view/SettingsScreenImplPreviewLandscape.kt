@@ -11,9 +11,9 @@ import jatx.russianrocksongbook.domain.repository.preferences.Orientation
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.spinner.SpinnerState
 
-@Preview
+@Preview(widthDp = 640, heightDp = 360)
 @Composable
-fun SettingsScreenImplPreview() {
+fun SettingsScreenImplPreviewLandscape() {
     val artistList = (1..30)
         .map { "Исполнитель 1" }
 

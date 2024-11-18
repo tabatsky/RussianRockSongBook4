@@ -10,7 +10,7 @@ import jatx.spinner.SpinnerState
 
 @Preview
 @Composable
-fun TextSearchListScreenImplPreview() {
+fun TextSearchListScreenImplPreviewPortrait() {
     val needScroll = false
     val scrollPosition = 0
 

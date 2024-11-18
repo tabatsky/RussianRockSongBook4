@@ -12,9 +12,9 @@ import jatx.russianrocksongbook.domain.repository.cloud.CloudSearchOrderBy
 import jatx.spinner.SpinnerState
 import kotlinx.coroutines.flow.flowOf
 
-@Preview
+@Preview(widthDp = 640, heightDp = 360)
 @Composable
-internal fun CloudSearchScreenImplPreview() {
+internal fun CloudSearchScreenImplPreviewLandscape() {
     val searchState = SearchState.LOADED
 
     val needScroll = false

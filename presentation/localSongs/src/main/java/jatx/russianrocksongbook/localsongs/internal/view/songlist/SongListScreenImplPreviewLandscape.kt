@@ -4,9 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import jatx.russianrocksongbook.domain.models.local.Song
 
-@Preview
+@Preview(widthDp = 640, heightDp = 360)
 @Composable
-fun SongListScreenImplPreview() {
+fun SongListScreenImplPreviewLandscape() {
     val artistList = (1..30)
         .map { "Исполнитель $it" }
     val songList = (1..30)
