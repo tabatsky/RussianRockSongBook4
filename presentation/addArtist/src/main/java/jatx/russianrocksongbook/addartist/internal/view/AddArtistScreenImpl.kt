@@ -1,70 +1,18 @@
 package jatx.russianrocksongbook.addartist.internal.view
 
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import jatx.russianrocksongbook.addartist.R
 import jatx.russianrocksongbook.addartist.internal.viewmodel.AddArtistViewModel
-import jatx.russianrocksongbook.addartist.internal.viewmodel.HideUploadOfferForDir
-import jatx.russianrocksongbook.addartist.internal.viewmodel.ShowNewArtist
-import jatx.russianrocksongbook.addartist.internal.viewmodel.UploadListToCloud
-import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
-import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
-import jatx.russianrocksongbook.commonview.dialogs.confirm.UploadDialog
-import jatx.russianrocksongbook.testing.APP_BAR_TITLE
 
 @Composable
 internal fun AddArtistScreenImpl() {
     val addArtistViewModel = AddArtistViewModel.getInstance()
 
-    val addArtistState by addArtistViewModel.addArtistStateFlow.collectAsState()
+    val submitAction = addArtistViewModel::submitAction
+    val addArtistStateState = addArtistViewModel.addArtistStateFlow.collectAsState()
 
-    val showUploadDialog = addArtistState.showUploadDialogForDir
-    val newArtist = addArtistState.newArtist
-
-    BoxWithConstraints(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        val W = this.maxWidth
-        val H = this.maxHeight
-
-        if (W < H) {
-            Column {
-                CommonTopAppBar(
-                    title = stringResource(id = R.string.title_add_artist),
-                    titleTestTag = APP_BAR_TITLE
-                )
-                AddArtistBody()
-            }
-        } else {
-            Row {
-                CommonSideAppBar(
-                    title = stringResource(id = R.string.title_add_artist),
-                    titleTestTag = APP_BAR_TITLE
-                )
-                AddArtistBody()
-            }
-        }
-
-        if (showUploadDialog) {
-            UploadDialog(
-                onConfirm = {
-                    addArtistViewModel.submitAction(UploadListToCloud)
-                },
-                onDecline = {
-                    addArtistViewModel.submitAction(ShowNewArtist(newArtist))
-                },
-                onDismiss = {
-                    addArtistViewModel.submitAction(HideUploadOfferForDir)
-                }
-            )
-        }
-    }
+    AddArtistScreenImplContent(
+        addArtistStateState = addArtistStateState,
+        submitAction = submitAction
+    )
 }
