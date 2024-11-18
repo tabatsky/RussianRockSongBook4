@@ -1,7 +1,7 @@
-package jatx.russianrocksongbook.commonview.songtext
+package jatx.russianrocksongbook.commonsongtext.view
 
 import androidx.compose.runtime.Composable
-import jatx.russianrocksongbook.commonview.R
+import jatx.russianrocksongbook.commonsongtext.R
 import jatx.russianrocksongbook.commonview.buttons.CommonIconButton
 import jatx.russianrocksongbook.commonviewmodel.NextSong
 import jatx.russianrocksongbook.commonviewmodel.PrevSong

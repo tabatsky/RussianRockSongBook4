@@ -1,7 +1,7 @@
 package jatx.russianrocksongbook.textsearch.internal.view.textsearchsongtext
 
 import androidx.compose.runtime.*
-import jatx.russianrocksongbook.commonview.songtext.CommonSongTextScreenImplContent
+import jatx.russianrocksongbook.commonsongtext.view.CommonSongTextScreenImplContent
 import jatx.russianrocksongbook.textsearch.internal.viewmodel.TextSearchViewModel
 
 @Composable

@@ -1,4 +1,4 @@
-package jatx.russianrocksongbook.commonview.songtext
+package jatx.russianrocksongbook.commonsongtext.view
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.Dp

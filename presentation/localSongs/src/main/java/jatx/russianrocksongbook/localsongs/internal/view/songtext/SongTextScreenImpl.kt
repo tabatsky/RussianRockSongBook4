@@ -1,7 +1,7 @@
 package jatx.russianrocksongbook.localsongs.internal.view.songtext
 
 import androidx.compose.runtime.*
-import jatx.russianrocksongbook.commonview.songtext.CommonSongTextScreenImplContent
+import jatx.russianrocksongbook.commonsongtext.view.CommonSongTextScreenImplContent
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 
 @Composable

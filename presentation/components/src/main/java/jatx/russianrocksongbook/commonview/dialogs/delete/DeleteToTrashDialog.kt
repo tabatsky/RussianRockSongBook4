@@ -7,7 +7,7 @@ import jatx.russianrocksongbook.commonviewmodel.DeleteCurrentToTrash
 import jatx.russianrocksongbook.commonviewmodel.UIAction
 
 @Composable
-internal fun DeleteToTrashDialog(
+fun DeleteToTrashDialog(
     onDismiss: () -> Unit,
     submitAction: (UIAction) -> Unit
 ) {
