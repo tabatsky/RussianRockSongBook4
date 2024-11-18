@@ -12,17 +12,17 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.addartist.R
-import jatx.russianrocksongbook.addartist.internal.viewmodel.AddArtistViewModel
 import jatx.russianrocksongbook.addartist.internal.viewmodel.AddSongsFromDir
 import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
+import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.domain.repository.preferences.colorBlack
 
 @Composable
-internal fun AddArtistBody() {
-    val addArtistViewModel = AddArtistViewModel.getInstance()
-
+internal fun AddArtistBody(
+    submitAction: (UIAction) -> Unit
+) {
     val theme = LocalAppTheme.current
 
     val fontSizeTextSp = dimensionResource(id = R.dimen.text_size_16)
@@ -56,7 +56,7 @@ internal fun AddArtistBody() {
                     contentColor = colorBlack
                 ),
             onClick = {
-                addArtistViewModel.submitAction(AddSongsFromDir)
+                submitAction(AddSongsFromDir)
             }) {
             Text(text = stringResource(id = R.string.choose))
         }
