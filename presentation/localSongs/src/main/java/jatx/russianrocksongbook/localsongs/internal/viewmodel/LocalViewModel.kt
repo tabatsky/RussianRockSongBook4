@@ -234,18 +234,16 @@ open class LocalViewModel @Inject constructor(
                     getSongByArtistAndPositionUseCase
                         .execute(currentArtist, position)
                         .collect { song ->
-                            withContext(Dispatchers.Main) {
-                                updateCurrentSong(song, position)
+                            updateCurrentSong(song, position)
 
-                                val newArtist = song?.artist
-                                val newTitle = song?.title
+                            val newArtist = song?.artist
+                            val newTitle = song?.title
 
-                                if (newArtist != oldArtist || newTitle != oldTitle) {
-                                    setAutoPlayMode(false)
-                                    setEditorMode(false)
-                                    song?.let {
-                                        updateEditorText(it.text)
-                                    }
+                            if (newArtist != oldArtist || newTitle != oldTitle) {
+                                setAutoPlayMode(false)
+                                setEditorMode(false)
+                                song?.let {
+                                    updateEditorText(it.text)
                                 }
                             }
                         }
