@@ -7,14 +7,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.SearchState
+import jatx.russianrocksongbook.commonview.theme.DarkTheme
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.repository.cloud.CloudSearchOrderBy
 import jatx.spinner.SpinnerState
 import kotlinx.coroutines.flow.flowOf
 
-@Preview(widthDp = 640, heightDp = 360)
+@Preview
 @Composable
-internal fun CloudSearchScreenImplPreviewLandscape() {
+internal fun CloudSearchScreenImplPreviewPortraitDark() {
     val searchState = SearchState.LOADED
 
     val needScroll = false
@@ -34,23 +35,25 @@ internal fun CloudSearchScreenImplPreviewLandscape() {
 
     val cloudSongItems = flowOf(PagingData.from(cloudSongs)).collectAsLazyPagingItems()
 
-    val searchFor = ""
+    val searchFor = "abc"
     val orderBy = CloudSearchOrderBy.BY_ID_DESC
 
     val spinnerStateOrderBy = remember {
         mutableStateOf(SpinnerState(0, false))
     }
 
-    CloudSearchScreenImplContent(
-        randomKey = 1237,
-        isBackFromSong = false,
-        searchState = searchState,
-        needScroll = needScroll,
-        scrollPosition = scrollPosition,
-        cloudSongItems = cloudSongItems,
-        searchFor = searchFor,
-        orderBy = orderBy,
-        spinnerStateOrderBy = spinnerStateOrderBy,
-        submitAction = {}
-    )
+    DarkTheme {
+        CloudSearchScreenImplContent(
+            randomKey = 1237,
+            isBackFromSong = false,
+            searchState = searchState,
+            needScroll = needScroll,
+            scrollPosition = scrollPosition,
+            cloudSongItems = cloudSongItems,
+            searchFor = searchFor,
+            orderBy = orderBy,
+            spinnerStateOrderBy = spinnerStateOrderBy,
+            submitAction = {}
+        )
+    }
 }
