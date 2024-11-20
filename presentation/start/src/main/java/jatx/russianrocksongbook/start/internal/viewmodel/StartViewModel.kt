@@ -65,7 +65,7 @@ internal class StartViewModel @Inject constructor(
                 withContext(Dispatchers.IO) {
                     if (settings.appWasUpdated) {
                         localRepoInitializer.fillDbFromJSONResources().collect {
-                            updateStubProgress(it.first, it.second)
+                            updateProgress(it.first, it.second)
                         }
                         localRepoInitializer.deleteWrongSongs()
                         localRepoInitializer.deleteWrongArtists()
@@ -82,9 +82,9 @@ internal class StartViewModel @Inject constructor(
         }
     }
 
-    private fun updateStubProgress(current: Int, total: Int) {
+    private fun updateProgress(current: Int, total: Int) {
         startStateHolder.startStateFlow.update {
-            it.copy(stubCurrentProgress = current, stubTotalProgress = total)
+            it.copy(currentProgress = current, totalProgress = total)
         }
     }
 }
