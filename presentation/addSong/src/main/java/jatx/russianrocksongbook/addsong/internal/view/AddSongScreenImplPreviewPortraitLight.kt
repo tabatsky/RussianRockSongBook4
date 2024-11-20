@@ -5,21 +5,24 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
 import jatx.russianrocksongbook.addsong.internal.viewmodel.AddSongState
+import jatx.russianrocksongbook.commonview.theme.LightTheme
 
-@Preview(widthDp = 640, heightDp = 360)
+@Preview
 @Composable
-internal fun AddSongScreenImplPreviewLandscape() {
+internal fun AddSongScreenImplPreviewPortraitLight() {
     val artistState = remember { mutableStateOf("") }
     val titleState = remember { mutableStateOf("") }
     val textState = remember { mutableStateOf("") }
     val addSongStateState = remember { mutableStateOf(AddSongState.initial()) }
 
-    AddSongScreenImplContent(
-        artistState = artistState,
-        titleState = titleState,
-        textState = textState,
-        addSongStateState = addSongStateState,
-        submitAction = {},
-        submitEffect = {}
-    )
+    LightTheme {
+        AddSongScreenImplContent(
+            artistState = artistState,
+            titleState = titleState,
+            textState = textState,
+            addSongStateState = addSongStateState,
+            submitAction = {},
+            submitEffect = {}
+        )
+    }
 }
