@@ -4,13 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
+import jatx.russianrocksongbook.commonview.theme.DarkTheme
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.repository.preferences.ListenToMusicVariant
 import kotlinx.coroutines.flow.flowOf
 
 @Preview(widthDp = 640, heightDp = 360)
 @Composable
-fun CloudSongTextScreenImplPreviewLandscape() {
+fun CloudSongTextScreenImplPreviewLandscapeDark() {
     val cloudSongs = (1..30)
         .map {
             CloudSong(
@@ -25,13 +26,15 @@ fun CloudSongTextScreenImplPreviewLandscape() {
 
     val cloudSongItems = flowOf(PagingData.from(cloudSongs)).collectAsLazyPagingItems()
 
-    CloudSongTextScreenImplContent(
-        position = 3,
-        cloudSongItems = cloudSongItems,
-        listenToMusicVariant = ListenToMusicVariant.YANDEX_AND_VK,
-        vkMusicDontAsk = false,
-        yandexMusicDontAsk = false,
-        youtubeMusicDontAsk = false,
-        submitAction = {}
-    )
+    DarkTheme {
+        CloudSongTextScreenImplContent(
+            position = 3,
+            cloudSongItems = cloudSongItems,
+            listenToMusicVariant = ListenToMusicVariant.YANDEX_AND_VK,
+            vkMusicDontAsk = false,
+            yandexMusicDontAsk = false,
+            youtubeMusicDontAsk = false,
+            submitAction = {}
+        )
+    }
 }

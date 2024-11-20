@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
+import jatx.russianrocksongbook.commonview.theme.DarkTheme
 import jatx.russianrocksongbook.domain.repository.preferences.FontScale
 import jatx.russianrocksongbook.domain.repository.preferences.ListenToMusicVariant
 import jatx.russianrocksongbook.domain.repository.preferences.Orientation
@@ -13,9 +14,9 @@ import jatx.spinner.SpinnerState
 
 @Preview(widthDp = 640, heightDp = 360)
 @Composable
-fun SettingsScreenImplPreviewLandscape() {
+fun SettingsScreenImplPreviewLandscapeDark() {
     val artistList = (1..30)
-        .map { "Исполнитель 1" }
+        .map { "Исполнитель $it" }
 
     val valueTheme = remember { mutableStateOf(Theme.entries[0]) }
     val spinnerStateTheme = remember { mutableStateOf(SpinnerState(0, false)) }
@@ -30,20 +31,22 @@ fun SettingsScreenImplPreviewLandscape() {
     val stringScrollSpeed = remember { mutableStateOf("1.0") }
     val valueScrollSpeed = remember { mutableFloatStateOf(1.0f) }
 
-    SettingsScreenImplContent(
-        artistList = artistList,
-        valueTheme = valueTheme,
-        spinnerStateTheme = spinnerStateTheme,
-        valueFontScale = valueFontScale,
-        spinnerStateFontScale = spinnerStateFontScale,
-        valueDefaultArtist = valueDefaultArtist,
-        spinnerStateDefaultArtist = spinnerStateDefaultArtist,
-        valueOrientation = valueOrientation,
-        spinnerStateOrientation = spinnerStateOrientation,
-        valueListenToMusicVariant = valueListenToMusicVariant,
-        spinnerStateListenToMusicVariant = spinnerStateListenToMusicVariant,
-        stringScrollSpeed = stringScrollSpeed,
-        valueScrollSpeed = valueScrollSpeed,
-        submitAction = {}
-    )
+    DarkTheme {
+        SettingsScreenImplContent(
+            artistList = artistList,
+            valueTheme = valueTheme,
+            spinnerStateTheme = spinnerStateTheme,
+            valueFontScale = valueFontScale,
+            spinnerStateFontScale = spinnerStateFontScale,
+            valueDefaultArtist = valueDefaultArtist,
+            spinnerStateDefaultArtist = spinnerStateDefaultArtist,
+            valueOrientation = valueOrientation,
+            spinnerStateOrientation = spinnerStateOrientation,
+            valueListenToMusicVariant = valueListenToMusicVariant,
+            spinnerStateListenToMusicVariant = spinnerStateListenToMusicVariant,
+            stringScrollSpeed = stringScrollSpeed,
+            valueScrollSpeed = valueScrollSpeed,
+            submitAction = {}
+        )
+    }
 }
