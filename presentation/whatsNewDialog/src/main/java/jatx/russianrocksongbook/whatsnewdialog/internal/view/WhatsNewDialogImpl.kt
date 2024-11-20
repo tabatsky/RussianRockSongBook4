@@ -24,7 +24,9 @@ import jatx.russianrocksongbook.domain.repository.preferences.colorBlack
 import jatx.russianrocksongbook.whatsnewdialog.R
 
 @Composable
-internal fun WhatsNewDialogImpl() {
+internal fun WhatsNewDialogImpl(
+    appWasUpdatedWhenNoViewModel: Boolean = false
+) {
     val theme = LocalAppTheme.current
 
     val fontSizeTitleSp = dimensionResource(id = R.dimen.text_size_20)
@@ -33,7 +35,7 @@ internal fun WhatsNewDialogImpl() {
     val appWasUpdated = CommonViewModel.getStoredInstance()?.let {
         val appState by it.appStateFlow.collectAsState()
         appState.appWasUpdated
-    } ?: false
+    } ?: appWasUpdatedWhenNoViewModel
 
     val onDismiss = {
         CommonViewModel.getStoredInstance()
