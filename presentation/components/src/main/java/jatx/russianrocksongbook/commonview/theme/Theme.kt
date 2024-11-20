@@ -30,3 +30,27 @@ fun AppTheme(content: @Composable () -> Unit) {
         content()
     }
 }
+
+@Composable
+fun DarkTheme(content: @Composable () -> Unit) {
+    val theme = Theme.DARK
+    val fontScaler = FontScalerImpl(FontScale.M.scale)
+    CompositionLocalProvider(
+        LocalAppTheme provides theme,
+        LocalFontScaler provides fontScaler
+    ) {
+        content()
+    }
+}
+
+@Composable
+fun LightTheme(content: @Composable () -> Unit) {
+    val theme = Theme.LIGHT
+    val fontScaler = FontScalerImpl(FontScale.M.scale)
+    CompositionLocalProvider(
+        LocalAppTheme provides theme,
+        LocalFontScaler provides fontScaler
+    ) {
+        content()
+    }
+}
