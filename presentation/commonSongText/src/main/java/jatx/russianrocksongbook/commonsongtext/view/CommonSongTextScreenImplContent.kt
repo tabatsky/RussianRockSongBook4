@@ -1,10 +1,10 @@
 package jatx.russianrocksongbook.commonsongtext.view
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -74,11 +74,13 @@ fun CommonSongTextScreenImplContent(
         submitAction(SelectSong(position))
     }
 
-    val skipBody = position != currentSongPosition
+    val positionChanged = position != currentSongPosition
 
     val key = artist to song?.title
     var lastKey by rememberSaveable { mutableStateOf(key) }
     val keyChanged = key != lastKey
+
+    val skipBody = positionChanged || keyChanged
 
     if (keyChanged) {
         lastKey = key
@@ -163,24 +165,22 @@ fun CommonSongTextScreenImplContent(
 
             @Composable
             fun TheBody(modifier: Modifier) {
-                if (!keyChanged) {
-                    CommonSongTextBody(
-                        W = W,
-                        H = H,
-                        song = _song,
-                        text = text,
-                        isEditorMode = isEditorMode,
-                        listState = listState,
-                        fontSizeTextSp = fontSizeTextSp,
-                        fontSizeTitleSp = fontSizeTitleSp,
-                        theme = theme,
-                        modifier = modifier,
-                        isAutoPlayMode = isAutoPlayMode,
-                        dY = dY,
-                        onTextChange = onTextChange,
-                        onWordClick = onWordClick
-                    )
-                }
+                CommonSongTextBody(
+                    W = W,
+                    H = H,
+                    song = _song,
+                    text = text,
+                    isEditorMode = isEditorMode,
+                    listState = listState,
+                    fontSizeTextSp = fontSizeTextSp,
+                    fontSizeTitleSp = fontSizeTitleSp,
+                    theme = theme,
+                    modifier = modifier,
+                    isAutoPlayMode = isAutoPlayMode,
+                    dY = dY,
+                    onTextChange = onTextChange,
+                    onWordClick = onWordClick
+                )
             }
 
             @Composable
@@ -225,7 +225,7 @@ fun CommonSongTextScreenImplContent(
                     )
 
                     if (skipBody) {
-                        Box(
+                        Spacer(
                             modifier = Modifier
                                 .weight(1.0f)
                                 .background(theme.colorBg)
@@ -248,7 +248,7 @@ fun CommonSongTextScreenImplContent(
                     )
 
                     if (skipBody) {
-                        Box(
+                        Spacer(
                             modifier = Modifier
                                 .weight(1.0f)
                                 .background(theme.colorBg)
