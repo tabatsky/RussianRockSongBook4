@@ -80,11 +80,11 @@ fun CommonSongTextScreenImplContent(
     var lastKey by rememberSaveable { mutableStateOf(key) }
     val keyChanged = key != lastKey
 
-    val skipBody = positionChanged || keyChanged
-
     if (keyChanged) {
         lastKey = key
     }
+
+    val skipBody = positionChanged || keyChanged
 
     var text by editorText
 
