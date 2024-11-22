@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -110,7 +111,8 @@ fun SideAppBar(
                                                 .testTag(testTag)
                                         } ?: Modifier.width(TextMaxWidth),
                                         softWrap = false,
-                                        textAlign = TextAlign.End
+                                        textAlign = TextAlign.End,
+                                        fontWeight = FontWeight.W700
                                     )
                                 }
                             }
