@@ -6,6 +6,7 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.font.FontWeight
 import jatx.russianrocksongbook.commonview.buttons.CommonBackButton
 import jatx.russianrocksongbook.domain.repository.preferences.colorDarkYellow
 
@@ -21,6 +22,7 @@ fun CommonTopAppBar(
             title?.let {
                 Text(
                     text = it,
+                    fontWeight = FontWeight.W700,
                     softWrap = false,
                     modifier = titleTestTag?.let { testTag ->
                         Modifier.testTag(testTag)
