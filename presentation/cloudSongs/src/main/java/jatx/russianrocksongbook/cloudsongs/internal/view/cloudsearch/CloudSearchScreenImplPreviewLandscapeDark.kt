@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.flowOf
 @Preview(widthDp = 640, heightDp = 360)
 @Composable
 internal fun CloudSearchScreenImplPreviewLandscapeDark() {
-    val searchState = SearchState.LOADED
+    val searchState = SearchState.PAGE_LOADING_SUCCESS
 
     val needScroll = false
     val scrollPosition = 0

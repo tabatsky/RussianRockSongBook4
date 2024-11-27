@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.flowOf
 @Preview
 @Composable
 internal fun CloudSearchScreenImplPreviewPortraitLight() {
-    val searchState = SearchState.LOADED
+    val searchState = SearchState.PAGE_LOADING_SUCCESS
 
     val needScroll = false
     val scrollPosition = 0

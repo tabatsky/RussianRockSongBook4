@@ -2,9 +2,11 @@ package jatx.russianrocksongbook.cloudsongs.internal.view.cloudsearch
 
 import android.util.Log
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -32,6 +34,7 @@ import jatx.russianrocksongbook.domain.repository.cloud.CloudSearchOrderBy
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.testing.TestingConfig
 import jatx.russianrocksongbook.navigation.ScreenVariant
+import jatx.russianrocksongbook.networking.repository.PAGE_SIZE
 import jatx.spinner.SpinnerState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -113,11 +116,12 @@ internal fun CloudSearchBody(
         when (searchState) {
             SearchState.EMPTY -> CommonSongListStub(fontSizeSongTitleSp, theme)
             SearchState.ERROR -> ErrorSongListStub(fontSizeSongTitleSp, theme)
-            SearchState.LOADING -> CloudSearchProgress(theme)
-            SearchState.LOADED, SearchState.LOADING_NEXT_PAGE -> {
+            SearchState.LOADING_FIRST_PAGE -> CloudSearchProgress(theme)
+            SearchState.PAGE_LOADING_SUCCESS, SearchState.LOADING_NEXT_PAGE, SearchState.NO_MORE_PAGES -> {
                 LazyColumn(
                     modifier = Modifier
-                        .fillMaxSize(),
+                        .fillMaxWidth()
+                        .weight(1f),
                     state = listState
                 ) {
                     items(itemsAdapter.size) { index ->
@@ -153,17 +157,38 @@ internal fun CloudSearchBody(
             }
         }
 
-        when {
-            searchState == SearchState.ERROR -> {}
-            scrollPosition < itemsAdapter.size -> {
-                submitAction(UpdateSearchState(SearchState.LOADED))
-            }
-            itemsAdapter.size > 0 -> {
-                submitAction(UpdateSearchState(SearchState.LOADING_NEXT_PAGE))
-                itemsAdapter.getItem(itemsAdapter.size - 1)
-            }
-            itemsAdapter.size == 0 && searchState != SearchState.EMPTY -> {
-                submitAction(UpdateSearchState(SearchState.LOADING))
+        if (searchState == SearchState.LOADING_NEXT_PAGE) {
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(dimensionResource(id = R.dimen.loading_next_page_progress_height)),
+                color = theme.colorMain,
+                backgroundColor = theme.colorCommon
+            )
+        }
+
+        LaunchedEffect(Triple(searchState, scrollPosition, itemsAdapter.size)) {
+            when {
+                searchState in listOf(
+                    SearchState.ERROR,
+                    SearchState.NO_MORE_PAGES,
+                    SearchState.EMPTY
+                ) -> {}
+
+                itemsAdapter.size > 0 && searchState == SearchState.LOADING_FIRST_PAGE -> {
+                    submitAction(UpdateSearchState(SearchState.PAGE_LOADING_SUCCESS))
+                }
+
+                scrollPosition < itemsAdapter.size - PAGE_SIZE &&
+                    searchState == SearchState.LOADING_NEXT_PAGE -> {
+                    submitAction(UpdateSearchState(SearchState.PAGE_LOADING_SUCCESS))
+                }
+
+                scrollPosition > 0 && scrollPosition >= itemsAdapter.size - PAGE_SIZE &&
+                        searchState == SearchState.PAGE_LOADING_SUCCESS -> {
+                    submitAction(UpdateSearchState(SearchState.LOADING_NEXT_PAGE))
+                    itemsAdapter.getItem(itemsAdapter.size - 1)
+                }
             }
         }
     }

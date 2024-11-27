@@ -1,9 +1,10 @@
 package jatx.russianrocksongbook.cloudsongs.internal.viewmodel
 
 enum class SearchState {
-    LOADING,
+    LOADING_FIRST_PAGE,
     LOADING_NEXT_PAGE,
-    LOADED,
+    PAGE_LOADING_SUCCESS,
+    NO_MORE_PAGES,
     EMPTY,
     ERROR
 }
