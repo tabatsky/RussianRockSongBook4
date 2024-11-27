@@ -103,7 +103,7 @@ class CloudViewModel @Inject constructor(
     private fun performCloudSearch(searchFor: String, orderBy: CloudSearchOrderBy) {
         Log.e("cloudSearch", "$searchFor $orderBy")
 
-        updateSearchState(SearchState.LOADING)
+        updateSearchState(SearchState.LOADING_FIRST_PAGE)
         updateScrollPosition(0)
         updateNeedScroll(true)
         updateSearchFor(searchFor)
@@ -117,7 +117,8 @@ class CloudViewModel @Inject constructor(
                     searchFor = searchFor,
                     orderBy = orderBy,
                     onFetchDataError = { updateSearchState(SearchState.ERROR) },
-                    onEmptyList = { updateSearchState(SearchState.EMPTY) }
+                    onEmptyList = { updateSearchState(SearchState.EMPTY) },
+                    onNoMorePages = { updateSearchState(SearchState.NO_MORE_PAGES) }
                 )
             }.flow
                 .cachedIn(viewModelScope)

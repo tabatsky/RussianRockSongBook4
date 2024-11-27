@@ -18,7 +18,7 @@ data class CloudState(
 ) {
     companion object {
         fun initial() = CloudState(
-            searchState = SearchState.LOADING,
+            searchState = SearchState.LOADING_FIRST_PAGE,
             currentCloudSongCount = 0,
             cloudSongPosition = 0,
             currentCloudSong = null,
