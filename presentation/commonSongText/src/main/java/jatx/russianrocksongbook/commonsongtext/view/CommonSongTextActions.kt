@@ -2,11 +2,11 @@ package jatx.russianrocksongbook.commonsongtext.view
 
 import androidx.compose.runtime.Composable
 import jatx.russianrocksongbook.commonsongtext.R
+import jatx.russianrocksongbook.commonsongtext.viewmodel.NextSong
+import jatx.russianrocksongbook.commonsongtext.viewmodel.PrevSong
+import jatx.russianrocksongbook.commonsongtext.viewmodel.SetAutoPlayMode
+import jatx.russianrocksongbook.commonsongtext.viewmodel.SetFavorite
 import jatx.russianrocksongbook.commonview.buttons.CommonIconButton
-import jatx.russianrocksongbook.commonviewmodel.NextSong
-import jatx.russianrocksongbook.commonviewmodel.PrevSong
-import jatx.russianrocksongbook.commonviewmodel.SetAutoPlayMode
-import jatx.russianrocksongbook.commonviewmodel.SetFavorite
 import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.testing.ADD_TO_FAVORITE_BUTTON
 import jatx.russianrocksongbook.testing.DELETE_FROM_FAVORITE_BUTTON
