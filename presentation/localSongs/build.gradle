@@ -88,5 +88,6 @@ dependencies {
     testImplementation libs.coroutinesTest
     testImplementation libs.androidXCoreTesting
     testApi project(':presentation:commonViewModel')
-
+    testApi project(':presentation:components')
+    testApi project(':presentation:commonSongText')
 }

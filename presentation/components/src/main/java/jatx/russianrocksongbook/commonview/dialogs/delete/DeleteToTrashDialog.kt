@@ -3,7 +3,7 @@ package jatx.russianrocksongbook.commonview.dialogs.delete
 import androidx.compose.runtime.Composable
 import jatx.russianrocksongbook.commonview.R
 import jatx.russianrocksongbook.commonview.dialogs.confirm.ConfirmDialog
-import jatx.russianrocksongbook.commonviewmodel.DeleteCurrentToTrash
+import jatx.russianrocksongbook.commonview.viewmodel.DeleteCurrentToTrash
 import jatx.russianrocksongbook.commonviewmodel.UIAction
 
 @Composable

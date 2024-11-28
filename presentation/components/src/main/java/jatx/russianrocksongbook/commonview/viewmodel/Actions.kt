@@ -1,0 +1,5 @@
+package jatx.russianrocksongbook.commonview.viewmodel
+
+import jatx.russianrocksongbook.commonviewmodel.UIAction
+
+object DeleteCurrentToTrash: UIAction
