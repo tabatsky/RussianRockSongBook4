@@ -8,9 +8,16 @@ import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import dagger.hilt.android.AndroidEntryPoint
 import jatx.russianrocksongbook.addartist.api.methods.copySongsFromDirToRepoWithPath
 import jatx.russianrocksongbook.addartist.api.methods.copySongsFromDirToRepoWithPickedDir
@@ -30,6 +37,7 @@ import jatx.russianrocksongbook.localsongs.api.methods.selectSongByArtistAndTitl
 import jatx.russianrocksongbook.navigation.AppNavigator
 import jatx.russianrocksongbook.view.CurrentScreen
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
+import jatx.russianrocksongbook.domain.repository.preferences.colorDarkYellow
 import jatx.russianrocksongbook.voicecommands.api.VoiceCommandHelper
 import javax.inject.Inject
 
@@ -55,6 +63,17 @@ class MainActivity : ComponentActivity() {
 
         applyOrientation()
 
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.auto(
+                colorDarkYellow.toArgb(),
+                colorDarkYellow.toArgb()
+            ),
+            navigationBarStyle = SystemBarStyle.auto(
+                colorDarkYellow.toArgb(),
+                colorDarkYellow.toArgb()
+            )
+        )
+
         setContent {
             AppTheme {
                 ActionsInjector()
@@ -62,7 +81,13 @@ class MainActivity : ComponentActivity() {
                     Log.e("activity", "back")
                     back()
                 }
-                CurrentScreen()
+                Box(
+                    modifier = Modifier
+                        .background(colorDarkYellow)
+                        .safeDrawingPadding()
+                ) {
+                    CurrentScreen()
+                }
             }
         }
 
