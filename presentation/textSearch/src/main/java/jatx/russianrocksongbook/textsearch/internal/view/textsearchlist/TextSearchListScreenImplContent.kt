@@ -15,6 +15,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import jatx.russianrocksongbook.commonsongtext.viewmodel.UpdateSongListNeedScroll
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
@@ -24,7 +25,6 @@ import jatx.russianrocksongbook.domain.repository.local.TextSearchOrderBy
 import jatx.russianrocksongbook.testing.APP_BAR_TITLE
 import jatx.russianrocksongbook.textsearch.R
 import jatx.russianrocksongbook.textsearch.internal.viewmodel.PerformTextSearch
-import jatx.russianrocksongbook.textsearch.internal.viewmodel.UpdateSongListNeedScroll
 import jatx.spinner.SpinnerState
 
 @Composable

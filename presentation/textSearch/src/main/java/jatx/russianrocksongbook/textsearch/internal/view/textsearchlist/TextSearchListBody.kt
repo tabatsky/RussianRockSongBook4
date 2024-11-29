@@ -10,6 +10,8 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import jatx.russianrocksongbook.commonsongtext.viewmodel.UpdateSongListNeedScroll
+import jatx.russianrocksongbook.commonsongtext.viewmodel.UpdateSongListScrollPosition
 import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.commonview.stub.CommonSongListStub
 import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
@@ -24,8 +26,6 @@ import jatx.russianrocksongbook.textsearch.R
 import jatx.russianrocksongbook.textsearch.internal.viewmodel.PerformTextSearch
 import jatx.russianrocksongbook.textsearch.internal.viewmodel.UpdateOrderBy
 import jatx.russianrocksongbook.textsearch.internal.viewmodel.UpdateSearchFor
-import jatx.russianrocksongbook.textsearch.internal.viewmodel.UpdateSongListNeedScroll
-import jatx.russianrocksongbook.textsearch.internal.viewmodel.UpdateSongListScrollPosition
 import jatx.spinner.SpinnerState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest

@@ -8,9 +8,9 @@ import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 internal fun SongTextScreenImpl(artist: String, position: Int) {
     val localViewModel = LocalViewModel.getInstance()
 
-    val localState by localViewModel.localStateFlow.collectAsState()
+    val commonSongTextState by localViewModel.commonSongTextStateFlow.collectAsState()
 
-    val song = localState.currentSong
+    val song = commonSongTextState.currentSong
 
     val vkMusicDontAsk by localViewModel.settings.vkMusicDontAskState.collectAsState()
     val yandexMusicDontAsk by localViewModel.settings.yandexMusicDontAskState.collectAsState()
@@ -20,10 +20,10 @@ internal fun SongTextScreenImpl(artist: String, position: Int) {
         artist = artist,
         position = position,
         song = song,
-        currentSongPosition = localState.currentSongPosition,
-        isAutoPlayMode = localState.isAutoPlayMode,
-        isEditorMode = localState.isEditorMode,
-        isUploadButtonEnabled = localState.isUploadButtonEnabled,
+        currentSongPosition = commonSongTextState.currentSongPosition,
+        isAutoPlayMode = commonSongTextState.isAutoPlayMode,
+        isEditorMode = commonSongTextState.isEditorMode,
+        isUploadButtonEnabled = commonSongTextState.isUploadButtonEnabled,
         editorText = localViewModel.editorText,
         scrollSpeed = localViewModel.settings.scrollSpeed,
         listenToMusicVariant = localViewModel.settings.listenToMusicVariant,
