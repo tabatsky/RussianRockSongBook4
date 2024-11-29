@@ -14,3 +14,14 @@ data class SetFavorite(val favorite: Boolean): UIAction
 object UploadCurrentToCloud: UIAction
 data class UpdateSongListScrollPosition(val position: Int): UIAction
 data class UpdateSongListNeedScroll(val need: Boolean): UIAction
+
+data class UpdateShowYandexDialog(val needShow: Boolean): UIAction
+data class UpdateShowVkDialog(val needShow: Boolean): UIAction
+data class UpdateShowYoutubeDialog(val needShow: Boolean): UIAction
+data class UpdateShowUploadDialog(val needShow: Boolean): UIAction
+data class UpdateShowDeleteToTrashDialog(val needShow: Boolean): UIAction
+data class UpdateShowWarningDialog(val needShow: Boolean): UIAction
+data class UpdateShowChordDialog(
+    val needShow: Boolean,
+    val selectedChord: String = ""
+): UIAction

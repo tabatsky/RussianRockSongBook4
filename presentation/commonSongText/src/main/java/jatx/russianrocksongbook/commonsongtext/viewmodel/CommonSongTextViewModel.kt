@@ -51,23 +51,30 @@ abstract class CommonSongTextViewModel(
             is SetAutoPlayMode -> setAutoPlayMode(action.isAutoPlay)
             is UpdateSongListScrollPosition -> updateSongListScrollPosition(action.position)
             is UpdateSongListNeedScroll -> updateSongListNeedScroll(action.need)
+            is UpdateShowVkDialog -> updateShowVkDialog(action.needShow)
+            is UpdateShowYandexDialog -> updateShowYandexDialog(action.needShow)
+            is UpdateShowYoutubeDialog -> updateShowYoutubeDialog(action.needShow)
+            is UpdateShowUploadDialog -> updateShowUploadDialog(action.needShow)
+            is UpdateShowDeleteToTrashDialog -> updateShowDeleteToTrashDialog(action.needShow)
+            is UpdateShowWarningDialog -> updateShowWarningDialog(action.needShow)
+            is UpdateShowChordDialog -> updateShowChordDialog(action.needShow, action.selectedChord)
             else -> super.handleAction(action)
         }
     }
 
-    abstract fun selectSong(position: Int)
+    protected abstract fun selectSong(position: Int)
 
-    abstract fun getSongTextScreenVariant(position: Int): ScreenVariant
+    protected abstract fun getSongTextScreenVariant(position: Int): ScreenVariant
 
-    abstract fun setFavorite(favorite: Boolean)
+    protected abstract fun setFavorite(favorite: Boolean)
 
-    abstract fun deleteCurrentToTrash()
+    protected abstract fun deleteCurrentToTrash()
 
-    abstract fun saveSong(song: Song)
+    protected abstract fun saveSong(song: Song)
 
     protected fun updateCurrentSongCount(count: Int) {
-        val localState = commonSongTextStateFlow.value
-        val newState = localState.copy(currentSongCount = count)
+        val commonSongTextState = commonSongTextStateFlow.value
+        val newState = commonSongTextState.copy(currentSongCount = count)
         changeCommonSongTextState(newState)
     }
 
@@ -83,16 +90,16 @@ abstract class CommonSongTextViewModel(
     }
 
     protected fun updateCurrentSong(song: Song?) {
-        val localState = commonSongTextStateFlow.value
-        val newState = localState.copy(
+        val commonSongTextState = commonSongTextStateFlow.value
+        val newState = commonSongTextState.copy(
             currentSong = song
         )
         changeCommonSongTextState(newState)
     }
 
     protected fun updateCurrentSongPosition(position: Int) {
-        val localState = commonSongTextStateFlow.value
-        val newState = localState.copy(
+        val commonSongTextState = commonSongTextStateFlow.value
+        val newState = commonSongTextState.copy(
             currentSongPosition = position,
             songListScrollPosition = position,
             songListNeedScroll = true
@@ -101,26 +108,26 @@ abstract class CommonSongTextViewModel(
     }
 
     protected fun setEditorMode(editorMode: Boolean) {
-        val localState = commonSongTextStateFlow.value
-        val newState = localState.copy(isEditorMode = editorMode)
+        val commonSongTextState = commonSongTextStateFlow.value
+        val newState = commonSongTextState.copy(isEditorMode = editorMode)
         changeCommonSongTextState(newState)
     }
 
     protected fun setAutoPlayMode(autoPlayMode: Boolean) {
-        val localState = commonSongTextStateFlow.value
-        val newState = localState.copy(isAutoPlayMode = autoPlayMode)
+        val commonSongTextState = commonSongTextStateFlow.value
+        val newState = commonSongTextState.copy(isAutoPlayMode = autoPlayMode)
         changeCommonSongTextState(newState)
     }
 
     protected fun updateSongListScrollPosition(position: Int) {
-        val localState = commonSongTextStateFlow.value
-        val newState = localState.copy(songListScrollPosition = position)
+        val commonSongTextState = commonSongTextStateFlow.value
+        val newState = commonSongTextState.copy(songListScrollPosition = position)
         changeCommonSongTextState(newState)
     }
 
     protected fun updateSongListNeedScroll(needScroll: Boolean) {
-        val localState = commonSongTextStateFlow.value
-        val newState = localState.copy(songListNeedScroll = needScroll)
+        val commonSongTextState = commonSongTextStateFlow.value
+        val newState = commonSongTextState.copy(songListNeedScroll = needScroll)
         changeCommonSongTextState(newState)
     }
 
@@ -161,11 +168,56 @@ abstract class CommonSongTextViewModel(
     }
 
     private fun setUploadButtonEnabled(enabled: Boolean) {
-        val localState = commonSongTextStateFlow.value
-        val newState = localState.copy(isUploadButtonEnabled = enabled)
+        val commonSongTextState = commonSongTextStateFlow.value
+        val newState = commonSongTextState.copy(isUploadButtonEnabled = enabled)
         changeCommonSongTextState(newState)
     }
 
-    private fun changeCommonSongTextState(localState: CommonSongTextState) =
-        commonSongTextStateHolder.changeCommonSongTextState(localState)
+    private fun updateShowVkDialog(needShow: Boolean) {
+        val commonSongTextState = commonSongTextStateFlow.value
+        val newState = commonSongTextState.copy(showVkDialog = needShow)
+        changeCommonSongTextState(newState)
+    }
+
+    private fun updateShowYandexDialog(needShow: Boolean) {
+        val commonSongTextState = commonSongTextStateFlow.value
+        val newState = commonSongTextState.copy(showYandexDialog = needShow)
+        changeCommonSongTextState(newState)
+    }
+
+    private fun updateShowYoutubeDialog(needShow: Boolean) {
+        val commonSongTextState = commonSongTextStateFlow.value
+        val newState = commonSongTextState.copy(showYoutubeDialog = needShow)
+        changeCommonSongTextState(newState)
+    }
+
+    private fun updateShowUploadDialog(needShow: Boolean) {
+        val commonSongTextState = commonSongTextStateFlow.value
+        val newState = commonSongTextState.copy(showUploadDialog = needShow)
+        changeCommonSongTextState(newState)
+    }
+
+    private fun updateShowDeleteToTrashDialog(needShow: Boolean) {
+        val commonSongTextState = commonSongTextStateFlow.value
+        val newState = commonSongTextState.copy(showDeleteToTrashDialog = needShow)
+        changeCommonSongTextState(newState)
+    }
+
+    private fun updateShowWarningDialog(needShow: Boolean) {
+        val commonSongTextState = commonSongTextStateFlow.value
+        val newState = commonSongTextState.copy(showWarningDialog = needShow)
+        changeCommonSongTextState(newState)
+    }
+
+    private fun updateShowChordDialog(needShow: Boolean, chord: String) {
+        val commonSongTextState = commonSongTextStateFlow.value
+        val newState = commonSongTextState.copy(
+            showChordDialog = needShow,
+            selectedChord = chord
+        )
+        changeCommonSongTextState(newState)
+    }
+
+    private fun changeCommonSongTextState(commonSongTextState: CommonSongTextState) =
+        commonSongTextStateHolder.changeCommonSongTextState(commonSongTextState)
 }

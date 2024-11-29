@@ -10,7 +10,15 @@ data class CommonSongTextState(
     val isAutoPlayMode: Boolean,
     val isUploadButtonEnabled: Boolean,
     val songListScrollPosition: Int,
-    val songListNeedScroll: Boolean
+    val songListNeedScroll: Boolean,
+    val showVkDialog: Boolean,
+    val showYandexDialog: Boolean,
+    val showYoutubeDialog: Boolean,
+    val showUploadDialog: Boolean,
+    val showDeleteToTrashDialog: Boolean,
+    val showWarningDialog: Boolean,
+    val showChordDialog: Boolean,
+    val selectedChord: String
 ) {
 
     companion object {
@@ -22,7 +30,15 @@ data class CommonSongTextState(
             isAutoPlayMode = false,
             isUploadButtonEnabled = true,
             songListScrollPosition = 0,
-            songListNeedScroll = false
+            songListNeedScroll = false,
+            showVkDialog = false,
+            showYandexDialog = false,
+            showYoutubeDialog = false,
+            showUploadDialog = false,
+            showDeleteToTrashDialog = false,
+            showWarningDialog = false,
+            showChordDialog = false,
+            selectedChord = ""
         )
     }
 }
