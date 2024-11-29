@@ -26,6 +26,13 @@ import jatx.russianrocksongbook.commonsongtext.viewmodel.SelectSong
 import jatx.russianrocksongbook.commonsongtext.viewmodel.SetAutoPlayMode
 import jatx.russianrocksongbook.commonsongtext.viewmodel.SetEditorMode
 import jatx.russianrocksongbook.commonsongtext.viewmodel.UpdateCurrentSong
+import jatx.russianrocksongbook.commonsongtext.viewmodel.UpdateShowChordDialog
+import jatx.russianrocksongbook.commonsongtext.viewmodel.UpdateShowDeleteToTrashDialog
+import jatx.russianrocksongbook.commonsongtext.viewmodel.UpdateShowUploadDialog
+import jatx.russianrocksongbook.commonsongtext.viewmodel.UpdateShowVkDialog
+import jatx.russianrocksongbook.commonsongtext.viewmodel.UpdateShowWarningDialog
+import jatx.russianrocksongbook.commonsongtext.viewmodel.UpdateShowYandexDialog
+import jatx.russianrocksongbook.commonsongtext.viewmodel.UpdateShowYoutubeDialog
 import jatx.russianrocksongbook.commonsongtext.viewmodel.UploadCurrentToCloud
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
@@ -56,15 +63,23 @@ fun CommonSongTextScreenImplContent(
     position: Int,
     song: Song?,
     currentSongPosition: Int,
-    isAutoPlayMode: Boolean,
-    isEditorMode: Boolean,
-    isUploadButtonEnabled: Boolean,
+    isAutoPlayMode: Boolean = false,
+    isEditorMode: Boolean = false,
+    isUploadButtonEnabled: Boolean = true,
+    scrollSpeed: Float = 1.0f,
+    listenToMusicVariant: ListenToMusicVariant = ListenToMusicVariant.YANDEX_AND_YOUTUBE,
+    showVkDialog: Boolean = false,
+    showYandexDialog: Boolean = false,
+    showYoutubeDialog: Boolean = false,
+    showUploadDialog: Boolean = false,
+    showDeleteToTrashDialog: Boolean = false,
+    showWarningDialog: Boolean = false,
+    showChordDialog: Boolean = false,
+    selectedChord: String = "",
+    vkMusicDontAsk: Boolean = false,
+    yandexMusicDontAsk: Boolean = false,
+    youtubeMusicDontAsk: Boolean = false,
     editorText: MutableState<String>,
-    scrollSpeed: Float,
-    listenToMusicVariant: ListenToMusicVariant,
-    vkMusicDontAsk: Boolean,
-    yandexMusicDontAsk: Boolean,
-    youtubeMusicDontAsk: Boolean,
     submitAction: (UIAction) -> Unit,
     submitEffect: (UIEffect) -> Unit
 ) {
@@ -103,24 +118,18 @@ fun CommonSongTextScreenImplContent(
         }
     }
 
-    var showYandexDialog by rememberSaveable { mutableStateOf(false) }
-    var showVkDialog by rememberSaveable { mutableStateOf(false) }
-    var showYoutubeDialog by rememberSaveable { mutableStateOf(false) }
-
-    var showUploadDialog by rememberSaveable { mutableStateOf(false) }
-    var showDeleteToTrashDialog by rememberSaveable { mutableStateOf(false) }
-    var showWarningDialog by rememberSaveable { mutableStateOf(false) }
-
-    var showChordDialog by rememberSaveable { mutableStateOf(false) }
-    var selectedChord by rememberSaveable { mutableStateOf("") }
     val onWordClick: (Word) -> Unit = {
-        selectedChord = it.text
-        showChordDialog = true
+        submitAction(
+            UpdateShowChordDialog(
+                needShow = true,
+                selectedChord = it.text
+            )
+        )
     }
 
-    val onYandexMusicClick = { showYandexDialog = true }
-    val onVkMusicClick = { showVkDialog = true }
-    val onYoutubeMusicClick = { showYoutubeDialog = true }
+    val onYandexMusicClick = { submitAction(UpdateShowYandexDialog(true)) }
+    val onVkMusicClick = { submitAction(UpdateShowVkDialog(true)) }
+    val onYoutubeMusicClick = { submitAction(UpdateShowYoutubeDialog(true)) }
 
     val onUploadClick = {
         if (isUploadButtonEnabled) {
@@ -129,13 +138,13 @@ fun CommonSongTextScreenImplContent(
                     ShowToastWithResource(R.string.toast_song_is_out_of_the_box)
                 )
             } else {
-                showUploadDialog = true
+                submitAction(UpdateShowUploadDialog(true))
             }
         }
     }
 
-    val onTrashClick = { showDeleteToTrashDialog = true }
-    val onWarningClick = { showWarningDialog = true }
+    val onTrashClick = { submitAction(UpdateShowDeleteToTrashDialog(true)) }
+    val onWarningClick = { submitAction(UpdateShowWarningDialog(true)) }
 
     val onEditClick =  {
         submitAction(SetAutoPlayMode(false))
@@ -260,39 +269,39 @@ fun CommonSongTextScreenImplContent(
                 }
             }
 
-            if (showYandexDialog) {
-                if (yandexMusicDontAsk) {
-                    showYandexDialog = false
-                    submitAction(OpenYandexMusic(true))
-                } else {
-                    YandexMusicDialog(
-                        submitAction = submitAction,
-                        onDismiss = {
-                            showYandexDialog = false
-                        })
-                }
-            }
             if (showVkDialog) {
                 if (vkMusicDontAsk) {
-                    showVkDialog = false
+                    submitAction(UpdateShowVkDialog(false))
                     submitAction(OpenVkMusic(true))
                 } else {
                     VkMusicDialog(
                         submitAction = submitAction,
                         onDismiss = {
-                            showVkDialog = false
+                            submitAction(UpdateShowVkDialog(false))
+                        })
+                }
+            }
+            if (showYandexDialog) {
+                if (yandexMusicDontAsk) {
+                    submitAction(UpdateShowYandexDialog(false))
+                    submitAction(OpenYandexMusic(true))
+                } else {
+                    YandexMusicDialog(
+                        submitAction = submitAction,
+                        onDismiss = {
+                            submitAction(UpdateShowYandexDialog(false))
                         })
                 }
             }
             if (showYoutubeDialog) {
                 if (youtubeMusicDontAsk) {
-                    showYoutubeDialog = false
+                    submitAction(UpdateShowYoutubeDialog(false))
                     submitAction(OpenYoutubeMusic(true))
                 } else {
                     YoutubeMusicDialog(
                         submitAction = submitAction,
                         onDismiss = {
-                            showYoutubeDialog = false
+                            submitAction(UpdateShowYoutubeDialog(false))
                         })
                 }
             }
@@ -302,14 +311,14 @@ fun CommonSongTextScreenImplContent(
                         submitAction(UploadCurrentToCloud)
                     },
                     onDismiss = {
-                        showUploadDialog = false
+                        submitAction(UpdateShowUploadDialog(false))
                     }
                 )
             }
             if (showDeleteToTrashDialog) {
                 DeleteToTrashDialog(
                     onDismiss = {
-                        showDeleteToTrashDialog = false
+                        submitAction(UpdateShowDeleteToTrashDialog(false))
                     },
                     submitAction = submitAction
                 )
@@ -320,13 +329,13 @@ fun CommonSongTextScreenImplContent(
                         submitAction(SendWarning(comment))
                     },
                     onDismiss = {
-                        showWarningDialog = false
+                        submitAction(UpdateShowWarningDialog(false))
                     }
                 )
             }
             if (showChordDialog) {
                 ChordDialog(chord = selectedChord) {
-                    showChordDialog = false
+                    submitAction(UpdateShowChordDialog(needShow = false))
                 }
             }
         }
