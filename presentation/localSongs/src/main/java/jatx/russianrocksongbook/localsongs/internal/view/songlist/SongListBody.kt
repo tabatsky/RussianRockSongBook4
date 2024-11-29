@@ -12,6 +12,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
+import jatx.russianrocksongbook.commonsongtext.viewmodel.UpdateSongListNeedScroll
+import jatx.russianrocksongbook.commonsongtext.viewmodel.UpdateSongListScrollPosition
 import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.commonview.stub.CommonSongListStub
 import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
@@ -20,8 +22,6 @@ import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.localsongs.R
-import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateSongListNeedScroll
-import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateSongListScrollPosition
 import jatx.russianrocksongbook.testing.SONG_LIST_LAZY_COLUMN
 import jatx.russianrocksongbook.testing.TestingConfig
 import jatx.russianrocksongbook.navigation.ScreenVariant

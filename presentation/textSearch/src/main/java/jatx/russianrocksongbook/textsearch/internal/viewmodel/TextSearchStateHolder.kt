@@ -1,15 +1,15 @@
 package jatx.russianrocksongbook.textsearch.internal.viewmodel
 
-import jatx.russianrocksongbook.commonviewmodel.AppStateHolder
+import dagger.hilt.android.scopes.ViewModelScoped
+import jatx.russianrocksongbook.commonsongtext.viewmodel.CommonSongTextStateHolder
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@ViewModelScoped
 class TextSearchStateHolder @Inject constructor(
-    val appStateHolder: AppStateHolder
+    val commonSongTextStateHolder: CommonSongTextStateHolder
 ) {
     private val _textSearchStateFlow = MutableStateFlow(TextSearchState.initial())
     val textSearchStateFlow = _textSearchStateFlow.asStateFlow()
@@ -19,6 +19,7 @@ class TextSearchStateHolder @Inject constructor(
     }
 
     fun reset() {
+        commonSongTextStateHolder.reset()
         _textSearchStateFlow.update { TextSearchState.initial() }
     }
 }

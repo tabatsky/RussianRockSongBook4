@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.unit.dp
+import jatx.russianrocksongbook.commonsongtext.viewmodel.UpdateSongListNeedScroll
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.ext.crop
@@ -17,7 +18,6 @@ import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.localsongs.internal.view.dialogs.VoiceHelpDialog
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.SpeechRecognize
-import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateSongListNeedScroll
 import jatx.russianrocksongbook.testing.APP_BAR_TITLE
 import jatx.russianrocksongbook.whatsnewdialog.api.view.WhatsNewDialog
 

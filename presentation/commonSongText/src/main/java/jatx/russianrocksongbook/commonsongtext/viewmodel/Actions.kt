@@ -12,3 +12,5 @@ data class SetAutoPlayMode(val isAutoPlay: Boolean): UIAction
 data class SaveSong(val song: Song): UIAction
 data class SetFavorite(val favorite: Boolean): UIAction
 object UploadCurrentToCloud: UIAction
+data class UpdateSongListScrollPosition(val position: Int): UIAction
+data class UpdateSongListNeedScroll(val need: Boolean): UIAction

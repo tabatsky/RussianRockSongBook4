@@ -1,22 +1,14 @@
 package jatx.russianrocksongbook.localsongs.internal.viewmodel
 
-import jatx.russianrocksongbook.commonviewmodel.AppStateHolder
-import kotlinx.coroutines.CoroutineScope
+import dagger.hilt.android.scopes.ViewModelScoped
+import jatx.russianrocksongbook.commonsongtext.viewmodel.CommonSongTextStateHolder
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
-import javax.inject.Singleton
-import kotlin.properties.Delegates
 
-const val localKey = "local"
-
-@Singleton
+@ViewModelScoped
 class LocalStateHolder @Inject constructor(
-    val appStateHolder: AppStateHolder
+    val commonSongTextStateHolder: CommonSongTextStateHolder
 ) {
 
     private val _localStateFlow = MutableStateFlow(LocalState.initial())
@@ -27,6 +19,7 @@ class LocalStateHolder @Inject constructor(
     }
 
     fun reset() {
+        commonSongTextStateHolder.reset()
         val localState = LocalState.initial()
         changeLocalState(localState)
     }

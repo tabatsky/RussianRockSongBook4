@@ -16,14 +16,16 @@ internal fun SongListScreenImpl(
     InitVoiceCommandViewModel()
 
     val localState by localViewModel.localStateFlow.collectAsState()
+    val commonSongTextState by localViewModel.commonSongTextStateFlow.collectAsState()
     val appState by localViewModel.appStateFlow.collectAsState()
 
     val artistList = appState.artistList
     val currentArtist = appState.currentArtist
 
     val songList = localState.currentSongList
-    val songListScrollPosition = localState.songListScrollPosition
-    val songListNeedScroll = localState.songListNeedScroll
+
+    val songListScrollPosition = commonSongTextState.songListScrollPosition
+    val songListNeedScroll = commonSongTextState.songListNeedScroll
 
     val menuExpandedArtistGroup = localState.menuExpandedArtistGroup
     val menuScrollPosition = localState.menuScrollPosition

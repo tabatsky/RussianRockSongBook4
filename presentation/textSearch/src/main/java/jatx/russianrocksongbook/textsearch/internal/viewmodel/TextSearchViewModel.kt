@@ -5,21 +5,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jatx.russianrocksongbook.commonsongtext.viewmodel.NextSong
-import jatx.russianrocksongbook.commonsongtext.viewmodel.PrevSong
-import jatx.russianrocksongbook.commonsongtext.viewmodel.SaveSong
-import jatx.russianrocksongbook.commonsongtext.viewmodel.SelectSong
-import jatx.russianrocksongbook.commonsongtext.viewmodel.SetAutoPlayMode
-import jatx.russianrocksongbook.commonsongtext.viewmodel.SetEditorMode
-import jatx.russianrocksongbook.commonsongtext.viewmodel.SetFavorite
-import jatx.russianrocksongbook.commonsongtext.viewmodel.UpdateCurrentSong
-import jatx.russianrocksongbook.commonsongtext.viewmodel.UploadCurrentToCloud
+import jatx.russianrocksongbook.commonsongtext.viewmodel.CommonSongTextViewModel
 import jatx.russianrocksongbook.commonview.viewmodel.DeleteCurrentToTrash
-import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.domain.models.local.Song
-import jatx.russianrocksongbook.domain.models.music.Music
-import jatx.russianrocksongbook.domain.models.warning.Warnable
 import jatx.russianrocksongbook.domain.repository.local.TextSearchOrderBy
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import jatx.russianrocksongbook.textsearch.R
@@ -29,29 +18,17 @@ import javax.inject.Inject
 @HiltViewModel
 class TextSearchViewModel @Inject constructor(
     private val textSearchStateHolder: TextSearchStateHolder,
-    textSearchViewModelDeps: CloudViewModelDeps
-): CommonViewModel(
-    textSearchStateHolder.appStateHolder,
-    textSearchViewModelDeps.commonViewModelDeps
+    textSearchViewModelDeps: TextSearchViewModelDeps
+): CommonSongTextViewModel(
+    textSearchStateHolder.commonSongTextStateHolder,
+    textSearchViewModelDeps.commonSongTextViewModelDeps
 ) {
     private val getSongsByTextSearchUseCase =
         textSearchViewModelDeps.getSongsByTextSearchUseCase
-    private val updateSongUseCase =
-        textSearchViewModelDeps.updateSongUseCase
-    private val deleteSongToTrashUseCase =
-        textSearchViewModelDeps.deleteSongToTrashUseCase
-
-    val editorText = mutableStateOf("")
 
     val spinnerStateOrderBy = mutableStateOf(SpinnerState(0, false))
 
     val textSearchStateFlow = textSearchStateHolder.textSearchStateFlow
-
-    override val currentMusic: Music?
-        get() = textSearchStateFlow.value.currentSong
-
-    override val currentWarnable: Warnable?
-        get() = textSearchStateFlow.value.currentSong
 
     companion object {
         private const val key = "TextSearch"
@@ -74,25 +51,82 @@ class TextSearchViewModel @Inject constructor(
             is UpdateSearchFor -> updateSearchFor(action.searchFor)
             is UpdateOrderBy -> updateOrderBy(action.orderBy)
             is UpdateCurrentSongCount -> updateCurrentSongCount(action.count)
-            is UpdateCurrentSong -> updateCurrentSong(action.song)
-            is SelectSong -> selectSong(action.position)
-            is UpdateSongListScrollPosition -> updateScrollPosition(action.position)
-            is UpdateSongListNeedScroll -> updateNeedScroll(action.needScroll)
-            is NextSong -> nextSong()
-            is PrevSong -> prevSong()
-            is SetEditorMode -> setEditorMode(action.isEditor)
-            is SetAutoPlayMode -> setAutoPlayMode(action.isAutoPlay)
-            is SaveSong -> saveSong(action.song)
-            is SetFavorite -> setFavorite(action.favorite)
-            is UploadCurrentToCloud -> uploadCurrentToCloud()
             is DeleteCurrentToTrash -> deleteCurrentToTrash()
             else -> super.handleAction(action)
         }
     }
 
+    override fun getSongTextScreenVariant(position: Int) = ScreenVariant
+        .TextSearchSongText(position = position)
+
+    override fun selectSong(position: Int) {
+        val oldArtist = commonSongTextStateFlow.value.currentSong?.artist
+        val oldTitle = commonSongTextStateFlow.value.currentSong?.title
+
+        val songs = textSearchStateFlow.value.songs
+        val song = songs.getOrNull(position) ?: return
+
+        updateCurrentSong(song)
+        updateCurrentSongPosition(position)
+
+        val newArtist = song.artist
+        val newTitle = song.title
+
+        if (newArtist != oldArtist || newTitle != oldTitle) {
+            setAutoPlayMode(false)
+            setEditorMode(false)
+            updateEditorText(song.text)
+        }
+    }
+
+    override fun setFavorite(favorite: Boolean) {
+        Log.e("set favorite", favorite.toString())
+        with(commonSongTextStateFlow.value) {
+            currentSong?.copy(favorite = favorite)?.let {
+                saveSong(it)
+                if (favorite) {
+                    showToast(R.string.toast_added_to_favorite)
+                } else {
+                    showToast(R.string.toast_removed_from_favorite)
+                }
+            }
+        }
+    }
+
+    override fun deleteCurrentToTrash() {
+        commonSongTextStateFlow.value.currentSong?.let {
+            deleteSongToTrashUseCase.execute(it)
+        }
+        refreshSongs()
+        with(commonSongTextStateFlow.value) {
+            val newSongCount = textSearchStateFlow.value.songs.size
+            updateCurrentSongCount(newSongCount)
+            if (newSongCount > 0) {
+                if (currentSongPosition >= newSongCount) {
+                    selectScreen(getSongTextScreenVariant(
+                        position = currentSongPosition - 1))
+                } else {
+                    selectScreen(getSongTextScreenVariant(
+                        position = currentSongPosition
+                    ))
+                    refreshCurrentSong()
+                }
+            } else {
+                back()
+            }
+        }
+        showToast(R.string.toast_deleted_to_trash)
+    }
+
+    override fun saveSong(song: Song) {
+        updateSongUseCase.execute(song)
+        refreshSongs()
+        refreshCurrentSong()
+    }
+
     private fun performTextSearch(searchFor: String, orderBy: TextSearchOrderBy) {
-        updateScrollPosition(0)
-        updateNeedScroll(true)
+        updateSongListScrollPosition(0)
+        updateSongListNeedScroll(true)
         updateSearchFor(searchFor)
         updateOrderBy(orderBy)
         val words = searchFor.trim().split(" ")
@@ -113,136 +147,6 @@ class TextSearchViewModel @Inject constructor(
         }
     }
 
-    private fun updateSongs(songs: List<Song>) {
-        textSearchStateHolder.textSearchStateFlow.value.let {
-            changeTextSearchState(it.copy(songs = songs))
-        }
-    }
-
-    private fun updateCurrentSongCount(count: Int) {
-        textSearchStateHolder.textSearchStateFlow.value.let {
-            changeTextSearchState(it.copy(currentSongCount = count))
-        }
-    }
-
-    private fun updateScrollPosition(position: Int) {
-        textSearchStateHolder.textSearchStateFlow.value.let {
-            changeTextSearchState(it.copy(scrollPosition = position))
-        }
-    }
-
-    private fun updateNeedScroll(needScroll: Boolean) {
-        textSearchStateHolder.textSearchStateFlow.value.let {
-            changeTextSearchState(it.copy(needScroll = needScroll))
-        }
-    }
-
-    private fun updateCurrentSong(song: Song?) {
-        val localState = textSearchStateFlow.value
-        val newState = localState.copy(
-            currentSong = song
-        )
-        changeTextSearchState(newState)
-    }
-
-    private fun updateCurrentSongPosition(position: Int) {
-        val localState = textSearchStateFlow.value
-        val newState = localState.copy(
-            currentSongPosition = position,
-            scrollPosition = position,
-            needScroll = true
-        )
-        changeTextSearchState(newState)
-    }
-
-    private fun selectSong(position: Int) {
-        val oldArtist = textSearchStateFlow.value.currentSong?.artist
-        val oldTitle = textSearchStateFlow.value.currentSong?.title
-
-        val songs = textSearchStateFlow.value.songs
-        val song = songs[position]
-
-        updateCurrentSong(song)
-        updateCurrentSongPosition(position)
-
-        val newArtist = song.artist
-        val newTitle = song.title
-
-        if (newArtist != oldArtist || newTitle != oldTitle) {
-            setAutoPlayMode(false)
-            setEditorMode(false)
-            updateEditorText(song.text)
-        }
-    }
-
-    private fun nextSong() {
-        with(textSearchStateFlow.value) {
-            if (currentSongCount > 0) {
-                selectScreen(
-                    ScreenVariant
-                        .TextSearchSongText(
-                            position = (currentSongPosition + 1) % currentSongCount
-                        )
-                )
-            }
-        }
-    }
-
-    private fun prevSong() {
-        with(textSearchStateFlow.value) {
-            if (currentSongCount > 0) {
-                if (currentSongPosition > 0) {
-                    selectScreen(
-                        ScreenVariant
-                            .TextSearchSongText(
-                                position = (currentSongPosition - 1) % currentSongCount
-                            )
-                    )
-                } else {
-                    selectScreen(
-                        ScreenVariant
-                            .TextSearchSongText(
-                                position = currentSongCount - 1
-                            )
-                    )
-                }
-            }
-        }
-    }
-
-    private fun setEditorMode(editorMode: Boolean) {
-        val localState = textSearchStateFlow.value
-        val newState = localState.copy(isEditorMode = editorMode)
-        changeTextSearchState(newState)
-    }
-
-    private fun setAutoPlayMode(autoPlayMode: Boolean) {
-        val localState = textSearchStateFlow.value
-        val newState = localState.copy(isAutoPlayMode = autoPlayMode)
-        changeTextSearchState(newState)
-    }
-
-    private fun setFavorite(favorite: Boolean) {
-        Log.e("set favorite", favorite.toString())
-        with(textSearchStateFlow.value) {
-            currentSong?.copy(favorite = favorite)?.let {
-                updateCurrentSong(it)
-                saveSong(it)
-                if (favorite) {
-                    showToast(R.string.toast_added_to_favorite)
-                } else {
-                    showToast(R.string.toast_removed_from_favorite)
-                }
-            }
-        }
-    }
-
-    private fun saveSong(song: Song) {
-        updateSongUseCase.execute(song)
-        refreshSongs()
-        refreshCurrentSong()
-    }
-
     private fun refreshSongs() {
         with(textSearchStateFlow.value) {
             val words = searchFor.trim().split(" ")
@@ -251,63 +155,18 @@ class TextSearchViewModel @Inject constructor(
         }
     }
 
+    private fun updateSongs(songs: List<Song>) {
+        textSearchStateHolder.textSearchStateFlow.value.let {
+            changeTextSearchState(it.copy(songs = songs))
+        }
+    }
+
     private fun refreshCurrentSong() {
-        with(textSearchStateFlow.value) {
-            val updatedSong = songs[currentSongPosition]
-            updateCurrentSong(updatedSong)
-        }
-    }
-
-    private fun uploadCurrentToCloud() {
-        textSearchStateFlow.value.currentSong?.let { song ->
-            uploadSongToCloud(song) {
-                setUploadButtonEnabled(it)
-            }
-        }
-    }
-
-    private fun setUploadButtonEnabled(enabled: Boolean) {
-        val localState = textSearchStateFlow.value
-        val newState = localState.copy(isUploadButtonEnabled = enabled)
-        changeTextSearchState(newState)
-    }
-
-    private fun deleteCurrentToTrash() {
-        textSearchStateFlow.value.currentSong?.let {
-            deleteSongToTrashUseCase.execute(it)
-        }
-        refreshSongs()
-        with(textSearchStateFlow.value) {
-            val newSongCount = songs.size
-            updateCurrentSongCount(newSongCount)
-            if (newSongCount > 0) {
-                if (currentSongPosition >= newSongCount) {
-                    selectScreen(
-                        ScreenVariant
-                            .TextSearchSongText(
-                                position = currentSongPosition - 1
-                            )
-                    )
-                } else {
-                    selectScreen(
-                        ScreenVariant
-                            .TextSearchSongText(
-                                position = currentSongPosition
-                            )
-                    )
-                    refreshCurrentSong()
-                }
-            } else {
-                back()
-            }
-        }
-        showToast(R.string.toast_deleted_to_trash)
+        val updatedSong = textSearchStateFlow.value.songs[
+            commonSongTextStateFlow.value.currentSongPosition]
+        updateCurrentSong(updatedSong)
     }
 
     private fun changeTextSearchState(newState: TextSearchState) =
         textSearchStateHolder.changeTextSearchState(newState)
-
-    private fun updateEditorText(text: String) {
-        editorText.value = text
-    }
 }

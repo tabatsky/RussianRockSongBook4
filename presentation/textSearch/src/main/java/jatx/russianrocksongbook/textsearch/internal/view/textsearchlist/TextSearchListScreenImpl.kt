@@ -10,9 +10,10 @@ internal fun TextSearchListScreenImpl(randomKey: Int, isBackFromSong: Boolean) {
     val textSearchViewModel = TextSearchViewModel.getInstance()
 
     val textSearchState by textSearchViewModel.textSearchStateFlow.collectAsState()
+    val commonSongTextState by textSearchViewModel.commonSongTextStateFlow.collectAsState()
 
-    val needScroll = textSearchState.needScroll
-    val scrollPosition = textSearchState.scrollPosition
+    val needScroll = commonSongTextState.songListNeedScroll
+    val scrollPosition = commonSongTextState.songListScrollPosition
 
     val songs = textSearchState.songs
 

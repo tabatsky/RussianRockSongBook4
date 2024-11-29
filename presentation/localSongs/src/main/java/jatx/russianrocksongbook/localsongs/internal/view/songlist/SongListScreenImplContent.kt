@@ -9,12 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import jatx.russianrocksongbook.commonsongtext.viewmodel.UpdateSongListNeedScroll
 import jatx.russianrocksongbook.commonviewmodel.ShowSongs
 import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateArtists
-import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateSongListNeedScroll
 import kotlinx.coroutines.launch
 
 @Composable

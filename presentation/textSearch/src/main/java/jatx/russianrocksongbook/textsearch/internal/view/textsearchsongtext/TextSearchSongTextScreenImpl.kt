@@ -7,9 +7,9 @@ import jatx.russianrocksongbook.textsearch.internal.viewmodel.TextSearchViewMode
 @Composable
 internal fun TextSearchSongTextScreenImpl(position: Int) {
     val textSearchViewModel = TextSearchViewModel.getInstance()
-    val textSearchState by textSearchViewModel.textSearchStateFlow.collectAsState()
+    val commonSongTextState by textSearchViewModel.commonSongTextStateFlow.collectAsState()
 
-    val song = textSearchState.currentSong
+    val song = commonSongTextState.currentSong
 
     val vkMusicDontAsk by textSearchViewModel.settings.vkMusicDontAskState.collectAsState()
     val yandexMusicDontAsk by textSearchViewModel.settings.yandexMusicDontAskState.collectAsState()
@@ -19,10 +19,10 @@ internal fun TextSearchSongTextScreenImpl(position: Int) {
         artist = song?.artist ?: "",
         position = position,
         song = song,
-        currentSongPosition = textSearchState.currentSongPosition,
-        isAutoPlayMode = textSearchState.isAutoPlayMode,
-        isEditorMode = textSearchState.isEditorMode,
-        isUploadButtonEnabled = textSearchState.isUploadButtonEnabled,
+        currentSongPosition = commonSongTextState.currentSongPosition,
+        isAutoPlayMode = commonSongTextState.isAutoPlayMode,
+        isEditorMode = commonSongTextState.isEditorMode,
+        isUploadButtonEnabled = commonSongTextState.isUploadButtonEnabled,
         editorText = textSearchViewModel.editorText,
         scrollSpeed = textSearchViewModel.settings.scrollSpeed,
         listenToMusicVariant = textSearchViewModel.settings.listenToMusicVariant,

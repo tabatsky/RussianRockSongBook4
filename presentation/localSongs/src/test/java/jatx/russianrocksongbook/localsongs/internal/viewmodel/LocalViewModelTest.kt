@@ -3,6 +3,8 @@ package jatx.russianrocksongbook.localsongs.internal.viewmodel
 import io.mockk.*
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
+import jatx.russianrocksongbook.commonsongtext.viewmodel.CommonSongTextStateHolder
+import jatx.russianrocksongbook.commonsongtext.viewmodel.CommonSongTextViewModelDeps
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_ADD_ARTIST
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_ADD_SONG
@@ -25,6 +27,8 @@ import jatx.russianrocksongbook.commonsongtext.viewmodel.SetAutoPlayMode
 import jatx.russianrocksongbook.commonsongtext.viewmodel.SetEditorMode
 import jatx.russianrocksongbook.commonsongtext.viewmodel.SetFavorite
 import jatx.russianrocksongbook.commonsongtext.viewmodel.UpdateCurrentSong
+import jatx.russianrocksongbook.commonsongtext.viewmodel.UpdateSongListNeedScroll
+import jatx.russianrocksongbook.commonsongtext.viewmodel.UpdateSongListScrollPosition
 import jatx.russianrocksongbook.commonview.viewmodel.DeleteCurrentToTrash
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import jatx.russianrocksongbook.navigation.ScreenVariant
@@ -58,7 +62,11 @@ open class LocalViewModelTest: CommonViewModelTest() {
     @RelaxedMockK
     lateinit var deleteSongToTrashUseCase: DeleteSongToTrashUseCase
 
+    internal lateinit var commonSongTextViewModelDeps: CommonSongTextViewModelDeps
+
     internal lateinit var localViewModelDeps: LocalViewModelDeps
+
+    internal lateinit var commonSongTextStateHolder: CommonSongTextStateHolder
 
     internal lateinit var localStateHolder: LocalStateHolder
 
@@ -82,14 +90,18 @@ open class LocalViewModelTest: CommonViewModelTest() {
     fun initLocal() {
         initCommon()
 
-        localStateHolder = LocalStateHolder(appStateHolder)
-        localViewModelDeps = LocalViewModelDeps(
+        commonSongTextStateHolder = CommonSongTextStateHolder(appStateHolder)
+        localStateHolder = LocalStateHolder(commonSongTextStateHolder)
+        commonSongTextViewModelDeps = CommonSongTextViewModelDeps(
             commonViewModelDeps = commonViewModelDeps,
-            getSongsByArtistUseCase = getSongsByArtistUseCase,
             getCountByArtistUseCase = getCountByArtistUseCase,
             getSongByArtistAndPositionUseCase = getSongByArtistAndPositionUseCase,
             updateSongUseCase = updateSongUseCase,
-            deleteSongToTrashUseCase = deleteSongToTrashUseCase,
+            deleteSongToTrashUseCase = deleteSongToTrashUseCase
+        )
+        localViewModelDeps = LocalViewModelDeps(
+            commonSongTextViewModelDeps = commonSongTextViewModelDeps,
+            getSongsByArtistUseCase = getSongsByArtistUseCase,
             getArtistsUseCase = getArtistsUseCase
         )
 
@@ -161,7 +173,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
         }
 
         assertEquals(songList, localViewModel.localStateFlow.value.currentSongList)
-        assertEquals(songList.size, localViewModel.localStateFlow.value.currentSongCount)
+        assertEquals(songList.size, localViewModel.commonSongTextStateFlow.value.currentSongCount)
     }
 
     @Test
@@ -247,32 +259,32 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         TimeUnit.MILLISECONDS.sleep(500)
 
-        assertEquals(13, localViewModel.localStateFlow.value.songListScrollPosition)
-        assertEquals(true, localViewModel.localStateFlow.value.songListNeedScroll)
-        assertEquals(songList[0], localViewModel.localStateFlow.value.currentSong)
-        assertEquals(13, localViewModel.localStateFlow.value.currentSongPosition)
+        assertEquals(13, localViewModel.commonSongTextStateFlow.value.songListScrollPosition)
+        assertEquals(true, localViewModel.commonSongTextStateFlow.value.songListNeedScroll)
+        assertEquals(songList[0], localViewModel.commonSongTextStateFlow.value.currentSong)
+        assertEquals(13, localViewModel.commonSongTextStateFlow.value.currentSongPosition)
     }
 
     @Test
     fun test108A_setFavorite_isWorkingCorrect() {
         localViewModel.submitAction(SelectSong(13))
         waitForCondition {
-            localViewModel.localStateFlow.value.currentSongPosition == 13
+            localViewModel.commonSongTextStateFlow.value.currentSongPosition == 13
         }
 
         localViewModel.submitAction(SetFavorite(true))
         waitForCondition {
-            localViewModel.localStateFlow.value.currentSong?.favorite == true
+            localViewModel.commonSongTextStateFlow.value.currentSong?.favorite == true
         }
-        assertEquals(true, localViewModel.localStateFlow.value.currentSong?.favorite)
-        val song1 = localViewModel.localStateFlow.value.currentSong ?: throw IllegalStateException()
+        assertEquals(true, localViewModel.commonSongTextStateFlow.value.currentSong?.favorite)
+        val song1 = localViewModel.commonSongTextStateFlow.value.currentSong ?: throw IllegalStateException()
 
         localViewModel.submitAction(SetFavorite(false))
         waitForCondition {
-            localViewModel.localStateFlow.value.currentSong?.favorite == false
+            localViewModel.commonSongTextStateFlow.value.currentSong?.favorite == false
         }
-        assertEquals(false, localViewModel.localStateFlow.value.currentSong?.favorite)
-        val song2 = localViewModel.localStateFlow.value.currentSong ?: throw IllegalStateException()
+        assertEquals(false, localViewModel.commonSongTextStateFlow.value.currentSong?.favorite)
+        val song2 = localViewModel.commonSongTextStateFlow.value.currentSong ?: throw IllegalStateException()
 
         verifyAll {
             toasts.showToast(R.string.toast_added_to_favorite)
@@ -303,9 +315,9 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         TimeUnit.MILLISECONDS.sleep(500)
 
-        println(localStateHolder.localStateFlow.value.toString())
+        println(localViewModel.commonSongTextStateFlow.value.toString())
 
-        assertEquals(false, localStateHolder.localStateFlow.value.currentSong?.favorite)
+        assertEquals(false, localViewModel.commonSongTextStateFlow.value.currentSong?.favorite)
         assertEquals(ScreenVariant.Favorite(isBackFromSomeScreen = true), appStateHolder.appStateFlow.value.currentScreenVariant)
 
         verifyAll {
@@ -338,9 +350,9 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         TimeUnit.MILLISECONDS.sleep(500)
 
-        println(localStateHolder.localStateFlow.value.toString())
+        println(localViewModel.commonSongTextStateFlow.value.toString())
 
-        assertEquals(false, localStateHolder.localStateFlow.value.currentSong?.favorite)
+        assertEquals(false, localViewModel.commonSongTextStateFlow.value.currentSong?.favorite)
         assertEquals(ScreenVariant.SongText(ARTIST_FAVORITE, 1), appStateHolder.appStateFlow.value.currentScreenVariant)
 
         verifyAll {
@@ -373,9 +385,9 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         TimeUnit.MILLISECONDS.sleep(500)
 
-        println(localStateHolder.localStateFlow.value.toString())
+        println(localViewModel.commonSongTextStateFlow.value.toString())
 
-        assertEquals(false, localStateHolder.localStateFlow.value.currentSong?.favorite)
+        assertEquals(false, localViewModel.commonSongTextStateFlow.value.currentSong?.favorite)
         assertEquals(ScreenVariant.SongText(ARTIST_FAVORITE, 1), appStateHolder.appStateFlow.value.currentScreenVariant)
 
         verifyAll {
@@ -391,9 +403,9 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         localViewModel.submitAction(SelectSong(13))
         waitForCondition {
-            localViewModel.localStateFlow.value.currentSongPosition == 13
+            localViewModel.commonSongTextStateFlow.value.currentSongPosition == 13
         }
-        val song = localViewModel.localStateFlow.value.currentSong ?: throw IllegalStateException()
+        val song = localViewModel.commonSongTextStateFlow.value.currentSong ?: throw IllegalStateException()
 
         localViewModel.submitAction(DeleteCurrentToTrash)
 
@@ -414,9 +426,9 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         localViewModel.submitAction(SelectSong(2))
         waitForCondition {
-            localViewModel.localStateFlow.value.currentSongPosition == 2
+            localViewModel.commonSongTextStateFlow.value.currentSongPosition == 2
         }
-        val song = localViewModel.localStateFlow.value.currentSong ?: throw IllegalStateException()
+        val song = localViewModel.commonSongTextStateFlow.value.currentSong ?: throw IllegalStateException()
 
         localViewModel.submitAction(DeleteCurrentToTrash)
 
@@ -437,9 +449,9 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         localViewModel.submitAction(SelectSong(songsFlow.value.size))
         waitForCondition {
-            localViewModel.localStateFlow.value.currentSongPosition == songsFlow.value.size
+            localViewModel.commonSongTextStateFlow.value.currentSongPosition == songsFlow.value.size
         }
-        val song = localViewModel.localStateFlow.value.currentSong ?: throw IllegalStateException()
+        val song = localViewModel.commonSongTextStateFlow.value.currentSong ?: throw IllegalStateException()
 
         localViewModel.submitAction(DeleteCurrentToTrash)
 
@@ -455,9 +467,9 @@ open class LocalViewModelTest: CommonViewModelTest() {
         localViewModel.submitAction(SelectSong(2))
 
         waitForCondition {
-            localViewModel.localStateFlow.value.currentSongPosition == 2
+            localViewModel.commonSongTextStateFlow.value.currentSongPosition == 2
         }
-        val song = localViewModel.localStateFlow.value.currentSong ?: throw IllegalStateException()
+        val song = localViewModel.commonSongTextStateFlow.value.currentSong ?: throw IllegalStateException()
         val searchFor = song.searchFor
 
         localViewModel.submitAction(OpenYandexMusic(true))
@@ -472,9 +484,9 @@ open class LocalViewModelTest: CommonViewModelTest() {
         localViewModel.submitAction(SelectSong(2))
 
         waitForCondition {
-            localViewModel.localStateFlow.value.currentSongPosition == 2
+            localViewModel.commonSongTextStateFlow.value.currentSongPosition == 2
         }
-        val song = localViewModel.localStateFlow.value.currentSong ?: throw IllegalStateException()
+        val song = localViewModel.commonSongTextStateFlow.value.currentSong ?: throw IllegalStateException()
         val searchFor = song.searchFor
 
         localViewModel.submitAction(OpenYoutubeMusic(true))
@@ -489,9 +501,9 @@ open class LocalViewModelTest: CommonViewModelTest() {
         localViewModel.submitAction(SelectSong(2))
 
         waitForCondition {
-            localViewModel.localStateFlow.value.currentSongPosition == 2
+            localViewModel.commonSongTextStateFlow.value.currentSongPosition == 2
         }
-        val song = localViewModel.localStateFlow.value.currentSong ?: throw IllegalStateException()
+        val song = localViewModel.commonSongTextStateFlow.value.currentSong ?: throw IllegalStateException()
         val searchFor = song.searchFor
 
         localViewModel.submitAction(OpenVkMusic(true))
@@ -506,9 +518,9 @@ open class LocalViewModelTest: CommonViewModelTest() {
         localViewModel.submitAction(SelectSong(2))
 
         waitForCondition {
-            localViewModel.localStateFlow.value.currentSongPosition == 2
+            localViewModel.commonSongTextStateFlow.value.currentSongPosition == 2
         }
-        val song = localViewModel.localStateFlow.value.currentSong ?: throw IllegalStateException()
+        val song = localViewModel.commonSongTextStateFlow.value.currentSong ?: throw IllegalStateException()
 
         localViewModel.submitAction(SendWarning("some comment"))
 
@@ -619,7 +631,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         TimeUnit.MILLISECONDS.sleep(500)
 
-        assertEquals(song, localViewModel.localStateFlow.value.currentSong)
+        assertEquals(song, localViewModel.commonSongTextStateFlow.value.currentSong)
     }
 
     @Test
@@ -646,7 +658,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         TimeUnit.MILLISECONDS.sleep(500)
 
-        assertEquals(5, localViewModel.localStateFlow.value.songListScrollPosition)
+        assertEquals(5, localViewModel.commonSongTextStateFlow.value.songListScrollPosition)
     }
 
     @Test
@@ -655,7 +667,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         TimeUnit.MILLISECONDS.sleep(500)
 
-        assertEquals(true, localViewModel.localStateFlow.value.songListNeedScroll)
+        assertEquals(true, localViewModel.commonSongTextStateFlow.value.songListNeedScroll)
     }
 
     @Test
@@ -664,7 +676,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         TimeUnit.MILLISECONDS.sleep(500)
 
-        assertEquals(true, localViewModel.localStateFlow.value.isEditorMode)
+        assertEquals(true, localViewModel.commonSongTextStateFlow.value.isEditorMode)
     }
 
     @Test
@@ -673,7 +685,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         TimeUnit.MILLISECONDS.sleep(500)
 
-        assertEquals(true, localViewModel.localStateFlow.value.isAutoPlayMode)
+        assertEquals(true, localViewModel.commonSongTextStateFlow.value.isAutoPlayMode)
     }
 
     @Test
