@@ -6,7 +6,6 @@ import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import jatx.russianrocksongbook.commonview.theme.LightTheme
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
-import jatx.russianrocksongbook.domain.repository.preferences.ListenToMusicVariant
 import kotlinx.coroutines.flow.flowOf
 
 @Preview(widthDp = 640, heightDp = 360)
@@ -30,10 +29,6 @@ fun CloudSongTextScreenImplPreviewLandscapeLight() {
         CloudSongTextScreenImplContent(
             position = 3,
             cloudSongItems = cloudSongItems,
-            listenToMusicVariant = ListenToMusicVariant.YANDEX_AND_VK,
-            vkMusicDontAsk = false,
-            yandexMusicDontAsk = false,
-            youtubeMusicDontAsk = false,
             submitAction = {}
         )
     }

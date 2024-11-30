@@ -28,9 +28,7 @@ import jatx.russianrocksongbook.navigation.ScreenVariant
 import jatx.spinner.SpinnerState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -57,7 +55,7 @@ class CloudViewModel @Inject constructor(
     private val allLikes = mutableStateMapOf<CloudSong, Int>()
     private val allDislikes = mutableStateMapOf<CloudSong, Int>()
 
-    val cloudStateFlow = cloudStateHolder.cloudStateFlow.asStateFlow()
+    val cloudStateFlow = cloudStateHolder.cloudStateFlow
 
     override val currentMusic: Music?
         get() = cloudStateFlow.value.currentCloudSong
@@ -96,6 +94,13 @@ class CloudViewModel @Inject constructor(
             is DeleteCurrentFromCloud -> deleteCurrentFromCloud(action.secret1, action.secret2)
             is DownloadCurrent -> downloadCurrent()
             is VoteForCurrent -> voteForCurrent(action.voteValue)
+            is UpdateShowVkDialog -> updateShowVkDialog(action.needShow)
+            is UpdateShowYandexDialog -> updateShowYandexDialog(action.needShow)
+            is UpdateShowYoutubeDialog -> updateShowYoutubeDialog(action.needShow)
+            is UpdateShowWarningDialog -> updateShowWarningDialog(action.needShow)
+            is UpdateShowDeleteDialog -> updateShowDeleteDialog(action.needShow)
+            is UpdateShowChordDialog -> updateShowChordDialog(action.needShow, action.selectedChord)
+
             else -> super.handleAction(action)
         }
     }
@@ -136,51 +141,53 @@ class CloudViewModel @Inject constructor(
     }
 
     private fun updateSearchState(searchState: SearchState) {
-        cloudStateHolder.cloudStateFlow.update {
-            it.copy(searchState = searchState)
-        }
+        val cloudState = cloudStateFlow.value
+        val newState = cloudState.copy(searchState = searchState)
+        changeCloudState(newState)
     }
 
     private fun updateSearchFor(searchFor: String) {
-        cloudStateHolder.cloudStateFlow.update {
-            it.copy(searchFor = searchFor)
-        }
+        val cloudState = cloudStateFlow.value
+        val newState = cloudState.copy(searchFor = searchFor)
+        changeCloudState(newState)
     }
 
     private fun updateOrderBy(orderBy: CloudSearchOrderBy) {
-        cloudStateHolder.cloudStateFlow.update {
-            it.copy(orderBy = orderBy)
-        }
+        val cloudState = cloudStateFlow.value
+        val newState = cloudState.copy(orderBy = orderBy)
+        changeCloudState(newState)
     }
 
     private fun updateCurrentCloudSongCount(count: Int) {
-        cloudStateHolder.cloudStateFlow.update {
-            it.copy(currentCloudSongCount = count)
-        }
+        val cloudState = cloudStateFlow.value
+        val newState = cloudState.copy(currentCloudSongCount = count)
+        changeCloudState(newState)
     }
 
     private fun updateCurrentCloudSong(cloudSong: CloudSong?) {
-        cloudStateHolder.cloudStateFlow.update {
-            it.copy(currentCloudSong = cloudSong)
-        }
+        val cloudState = cloudStateFlow.value
+        val newState = cloudState.copy(currentCloudSong = cloudSong)
+        changeCloudState(newState)
     }
 
     private fun selectCloudSong(position: Int) {
-        cloudStateHolder.cloudStateFlow.update {
-            it.copy(cloudSongPosition = position, scrollPosition = position, needScroll = true)
-        }
+        val cloudState = cloudStateFlow.value
+        val newState = cloudState.copy(
+            cloudSongPosition = position, scrollPosition = position, needScroll = true
+        )
+        changeCloudState(newState)
     }
 
     private fun updateScrollPosition(position: Int) {
-        cloudStateHolder.cloudStateFlow.update {
-            it.copy(scrollPosition = position)
-        }
+        val cloudState = cloudStateFlow.value
+        val newState = cloudState.copy(scrollPosition = position)
+        changeCloudState(newState)
     }
 
     private fun updateNeedScroll(needScroll: Boolean) {
-        cloudStateHolder.cloudStateFlow.update {
-            it.copy(needScroll = needScroll)
-        }
+        val cloudState = cloudStateFlow.value
+        val newState = cloudState.copy(needScroll = needScroll)
+        changeCloudState(newState)
     }
 
     private fun nextCloudSong() {
@@ -273,8 +280,51 @@ class CloudViewModel @Inject constructor(
     }
 
     private fun updateCloudSongsFlow(flow: Flow<PagingData<CloudSong>>?) {
-        cloudStateHolder.cloudStateFlow.update {
-            it.copy(cloudSongsFlow = flow)
-        }
+        val cloudState = cloudStateFlow.value
+        val newState = cloudState.copy(cloudSongsFlow = flow)
+        changeCloudState(newState)
+    }
+
+    private fun updateShowVkDialog(needShow: Boolean) {
+        val cloudState = cloudStateFlow.value
+        val newState = cloudState.copy(showVkDialog = needShow)
+        changeCloudState(newState)
+    }
+
+    private fun updateShowYandexDialog(needShow: Boolean) {
+        val cloudState = cloudStateFlow.value
+        val newState = cloudState.copy(showYandexDialog = needShow)
+        changeCloudState(newState)
+    }
+
+    private fun updateShowYoutubeDialog(needShow: Boolean) {
+        val cloudState = cloudStateFlow.value
+        val newState = cloudState.copy(showYoutubeDialog = needShow)
+        changeCloudState(newState)
+    }
+
+    private fun updateShowWarningDialog(needShow: Boolean) {
+        val cloudState = cloudStateFlow.value
+        val newState = cloudState.copy(showWarningDialog = needShow)
+        changeCloudState(newState)
+    }
+
+    private fun updateShowDeleteDialog(needShow: Boolean) {
+        val cloudState = cloudStateFlow.value
+        val newState = cloudState.copy(showDeleteDialog = needShow)
+        changeCloudState(newState)
+    }
+
+    private fun updateShowChordDialog(needShow: Boolean, chord: String) {
+        val cloudState = cloudStateFlow.value
+        val newState = cloudState.copy(
+            showChordDialog = needShow,
+            selectedChord = chord
+        )
+        changeCloudState(newState)
+    }
+
+    private fun changeCloudState(cloudState: CloudState) {
+        cloudStateHolder.changeCloudState(cloudState)
     }
 }

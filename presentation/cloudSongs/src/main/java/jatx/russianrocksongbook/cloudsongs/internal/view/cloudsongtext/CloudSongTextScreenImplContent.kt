@@ -19,6 +19,12 @@ import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.DownloadCurrent
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.SelectCloudSong
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateCurrentCloudSong
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateCurrentCloudSongCount
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateShowChordDialog
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateShowDeleteDialog
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateShowVkDialog
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateShowWarningDialog
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateShowYandexDialog
+import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.UpdateShowYoutubeDialog
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.VoteForCurrent
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
@@ -45,10 +51,17 @@ private val CLOUD_SONG_TEXT_APP_BAR_WIDTH = 96.dp
 internal fun CloudSongTextScreenImplContent(
     position: Int,
     cloudSongItems: LazyPagingItems<CloudSong>?,
-    listenToMusicVariant: ListenToMusicVariant,
-    vkMusicDontAsk: Boolean,
-    yandexMusicDontAsk: Boolean,
-    youtubeMusicDontAsk: Boolean,
+    listenToMusicVariant: ListenToMusicVariant = ListenToMusicVariant.YANDEX_AND_YOUTUBE,
+    showVkDialog: Boolean = false,
+    showYandexDialog: Boolean = false,
+    showYoutubeDialog: Boolean = false,
+    showWarningDialog: Boolean = false,
+    showDeleteDialog: Boolean = false,
+    showChordDialog: Boolean = false,
+    selectedChord: String = "",
+    vkMusicDontAsk: Boolean = false,
+    yandexMusicDontAsk: Boolean = false,
+    youtubeMusicDontAsk: Boolean = false,
     submitAction: (UIAction) -> Unit
 ) {
     val key = position
@@ -82,31 +95,26 @@ internal fun CloudSongTextScreenImplContent(
         }
     }
 
-    var showYandexDialog by rememberSaveable { mutableStateOf(false) }
-    var showVkDialog by rememberSaveable { mutableStateOf(false) }
-    var showYoutubeDialog by rememberSaveable { mutableStateOf(false) }
-
-    var showWarningDialog by rememberSaveable { mutableStateOf(false) }
-
-    var showChordDialog by rememberSaveable { mutableStateOf(false) }
-    var selectedChord by rememberSaveable { mutableStateOf("") }
     val onWordClick: (Word) -> Unit = {
-        selectedChord = it.text
-        showChordDialog = true
+        submitAction(
+            UpdateShowChordDialog(
+                needShow = true,
+                selectedChord = it.text
+            )
+        )
     }
 
-    val onYandexMusicClick = { showYandexDialog = true }
-    val onVkMusicClick = { showVkDialog = true }
-    val onYoutubeMusicClick = { showYoutubeDialog = true }
-    val onWarningClick = { showWarningDialog = true }
+    val onYandexMusicClick = { submitAction(UpdateShowYandexDialog(true)) }
+    val onVkMusicClick = { submitAction(UpdateShowVkDialog(true)) }
+    val onYoutubeMusicClick = { submitAction(UpdateShowYoutubeDialog(true)) }
+    val onWarningClick = { submitAction(UpdateShowWarningDialog(true)) }
     val onDownloadClick = { submitAction(DownloadCurrent) }
     val onLikeClick = { submitAction(VoteForCurrent(1)) }
     val onDislikeClick = { submitAction(VoteForCurrent(-1)) }
 
-    var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
     val onDislikeLongClick = {
         Log.e("dislike", "long click")
-        showDeleteDialog = true
+        submitAction(UpdateShowDeleteDialog(true))
     }
 
     val theme = LocalAppTheme.current
@@ -209,39 +217,39 @@ internal fun CloudSongTextScreenImplContent(
                 }
             }
 
-            if (showYandexDialog) {
-                if (yandexMusicDontAsk) {
-                    showYandexDialog = false
-                    submitAction(OpenYandexMusic(true))
-                } else {
-                    YandexMusicDialog(
-                        submitAction = submitAction,
-                        onDismiss = {
-                            showYandexDialog = false
-                        })
-                }
-            }
             if (showVkDialog) {
                 if (vkMusicDontAsk) {
-                    showVkDialog = false
+                    submitAction(UpdateShowVkDialog(false))
                     submitAction(OpenVkMusic(true))
                 } else {
                     VkMusicDialog(
                         submitAction = submitAction,
                         onDismiss = {
-                            showVkDialog = false
+                            submitAction(UpdateShowVkDialog(false))
+                        })
+                }
+            }
+            if (showYandexDialog) {
+                if (yandexMusicDontAsk) {
+                    submitAction(UpdateShowYandexDialog(false))
+                    submitAction(OpenYandexMusic(true))
+                } else {
+                    YandexMusicDialog(
+                        submitAction = submitAction,
+                        onDismiss = {
+                            submitAction(UpdateShowYandexDialog(false))
                         })
                 }
             }
             if (showYoutubeDialog) {
                 if (youtubeMusicDontAsk) {
-                    showYoutubeDialog = false
+                    submitAction(UpdateShowYoutubeDialog(false))
                     submitAction(OpenYoutubeMusic(true))
                 } else {
                     YoutubeMusicDialog(
                         submitAction = submitAction,
                         onDismiss = {
-                            showYoutubeDialog = false
+                            submitAction(UpdateShowYoutubeDialog(false))
                         })
                 }
             }
@@ -251,7 +259,7 @@ internal fun CloudSongTextScreenImplContent(
                         submitAction(SendWarning(comment))
                     },
                     onDismiss = {
-                        showWarningDialog = false
+                        submitAction(UpdateShowWarningDialog(false))
                     }
                 )
             }
@@ -263,13 +271,13 @@ internal fun CloudSongTextScreenImplContent(
                         )
                     },
                     onDismiss = {
-                        showDeleteDialog = false
+                        submitAction(UpdateShowDeleteDialog(false))
                     }
                 )
             }
             if (showChordDialog) {
                 ChordDialog(chord = selectedChord) {
-                    showChordDialog = false
+                    submitAction(UpdateShowChordDialog(needShow = false))
                 }
             }
         }
