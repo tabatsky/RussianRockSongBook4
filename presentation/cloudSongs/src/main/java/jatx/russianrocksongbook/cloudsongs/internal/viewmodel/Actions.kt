@@ -18,3 +18,13 @@ object PrevCloudSong: UIAction
 data class DeleteCurrentFromCloud(val secret1: String, val secret2: String): UIAction
 object DownloadCurrent: UIAction
 data class VoteForCurrent(val voteValue: Int): UIAction
+
+data class UpdateShowYandexDialog(val needShow: Boolean): UIAction
+data class UpdateShowVkDialog(val needShow: Boolean): UIAction
+data class UpdateShowYoutubeDialog(val needShow: Boolean): UIAction
+data class UpdateShowWarningDialog(val needShow: Boolean): UIAction
+data class UpdateShowDeleteDialog(val needShow: Boolean): UIAction
+data class UpdateShowChordDialog(
+    val needShow: Boolean,
+    val selectedChord: String = ""
+): UIAction

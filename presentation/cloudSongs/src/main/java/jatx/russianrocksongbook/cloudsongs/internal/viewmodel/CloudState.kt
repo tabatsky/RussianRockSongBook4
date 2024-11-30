@@ -14,7 +14,14 @@ data class CloudState(
     val searchFor: String,
     val orderBy: CloudSearchOrderBy,
     val scrollPosition: Int,
-    val needScroll: Boolean
+    val needScroll: Boolean,
+    val showVkDialog: Boolean,
+    val showYandexDialog: Boolean,
+    val showYoutubeDialog: Boolean,
+    val showWarningDialog: Boolean,
+    val showDeleteDialog: Boolean,
+    val showChordDialog: Boolean,
+    val selectedChord: String
 ) {
     companion object {
         fun initial() = CloudState(
@@ -26,7 +33,14 @@ data class CloudState(
             searchFor = "",
             orderBy = CloudSearchOrderBy.BY_ID_DESC,
             scrollPosition = 0,
-            needScroll = false
+            needScroll = false,
+            showVkDialog = false,
+            showYandexDialog = false,
+            showYoutubeDialog = false,
+            showWarningDialog = false,
+            showDeleteDialog = false,
+            showChordDialog = false,
+            selectedChord = ""
         )
     }
 }
