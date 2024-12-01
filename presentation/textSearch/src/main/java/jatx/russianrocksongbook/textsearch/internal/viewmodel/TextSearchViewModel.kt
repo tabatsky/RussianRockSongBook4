@@ -23,13 +23,6 @@ class TextSearchViewModel @Inject constructor(
     textSearchStateHolder.commonSongTextStateHolder,
     textSearchViewModelDeps.commonSongTextViewModelDeps
 ) {
-    private val getSongsByTextSearchUseCase =
-        textSearchViewModelDeps.getSongsByTextSearchUseCase
-
-    val spinnerStateOrderBy = mutableStateOf(SpinnerState(0, false))
-
-    val textSearchStateFlow = textSearchStateHolder.textSearchStateFlow
-
     companion object {
         private const val key = "TextSearch"
 
@@ -42,6 +35,13 @@ class TextSearchViewModel @Inject constructor(
             return storage[key] as TextSearchViewModel
         }
     }
+
+    private val getSongsByTextSearchUseCase =
+        textSearchViewModelDeps.getSongsByTextSearchUseCase
+
+    val spinnerStateOrderBy = mutableStateOf(SpinnerState(0, false))
+
+    val textSearchStateFlow = textSearchStateHolder.textSearchStateFlow
 
     override fun resetState() = textSearchStateHolder.reset()
 

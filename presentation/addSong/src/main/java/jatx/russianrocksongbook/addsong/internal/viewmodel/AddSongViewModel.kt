@@ -28,6 +28,17 @@ internal class AddSongViewModel @Inject constructor(
     addSongStateHolder.appStateHolder,
     addSongViewModelDeps.commonViewModelDeps
 ) {
+    companion object {
+        private const val key = "AddSong"
+
+        @Composable
+        fun getInstance(): AddSongViewModel {
+            storage[key] = hiltViewModel<AddSongViewModel>()
+            storage[key]?.launchJobsIfNecessary()
+            return storage[key] as AddSongViewModel
+        }
+    }
+
     private val insertReplaceUserSongUseCase =
         addSongViewModelDeps.insertReplaceUserSongUseCase
     private val addSongToCloudUseCase =
@@ -40,17 +51,6 @@ internal class AddSongViewModel @Inject constructor(
     val text = mutableStateOf("")
 
     val addSongStateFlow = addSongStateHolder.addSongStateFlow.asStateFlow()
-
-    companion object {
-        private const val key = "AddSong"
-
-        @Composable
-        fun getInstance(): AddSongViewModel {
-            storage[key] = hiltViewModel<AddSongViewModel>()
-            storage[key]?.launchJobsIfNecessary()
-            return storage[key] as AddSongViewModel
-        }
-    }
 
     override fun handleAction(action: UIAction) {
         when (action) {

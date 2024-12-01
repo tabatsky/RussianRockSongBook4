@@ -27,20 +27,6 @@ open class LocalViewModel @Inject constructor(
     localStateHolder.commonSongTextStateHolder,
     localViewModelDeps.commonSongTextViewModelDeps
 ) {
-    private val getSongsByArtistUseCase =
-        localViewModelDeps.getSongsByArtistUseCase
-    private val getArtistsUseCase =
-        localViewModelDeps.getArtistsUseCase
-
-    val localStateFlow by lazy {
-        localStateHolder.localStateFlow
-    }
-
-    private var showSongsJob: Job? = null
-    private var getArtistsJob: Job? = null
-
-    private var selectSongJob: Job? = null
-
     companion object {
         private const val key = "Local"
 
@@ -55,6 +41,20 @@ open class LocalViewModel @Inject constructor(
 
         fun getStoredInstance() = storage[key] as? LocalViewModel
     }
+
+    private val getSongsByArtistUseCase =
+        localViewModelDeps.getSongsByArtistUseCase
+    private val getArtistsUseCase =
+        localViewModelDeps.getArtistsUseCase
+
+    val localStateFlow by lazy {
+        localStateHolder.localStateFlow
+    }
+
+    private var showSongsJob: Job? = null
+    private var getArtistsJob: Job? = null
+
+    private var selectSongJob: Job? = null
 
     override fun resetState() = localStateHolder.reset()
 

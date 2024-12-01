@@ -23,6 +23,17 @@ internal class SettingsViewModel @Inject constructor(
     appStateHolder,
     commonViewModelDeps
 ) {
+    companion object {
+        private const val key = "Settings"
+
+        @Composable
+        fun getInstance(): SettingsViewModel {
+            storage[key] = hiltViewModel<SettingsViewModel>()
+            storage[key]?.launchJobsIfNecessary()
+            return storage[key] as SettingsViewModel
+        }
+    }
+
     val spinnerStateDefaultArtist = mutableStateOf(SpinnerState(0, false))
     val valueDefaultArtist = mutableStateOf(settings.defaultArtist)
     val spinnerStateFontScale = mutableStateOf(SpinnerState(0, false))
@@ -36,17 +47,6 @@ internal class SettingsViewModel @Inject constructor(
 
     val stringScrollSpeed = mutableStateOf(settings.scrollSpeed.toString())
     val valueScrollSpeed = mutableFloatStateOf(settings.scrollSpeed)
-
-    companion object {
-        private const val key = "Settings"
-
-        @Composable
-        fun getInstance(): SettingsViewModel {
-            storage[key] = hiltViewModel<SettingsViewModel>()
-            storage[key]?.launchJobsIfNecessary()
-            return storage[key] as SettingsViewModel
-        }
-    }
 
     override fun handleAction(action: UIAction) {
         when (action) {
