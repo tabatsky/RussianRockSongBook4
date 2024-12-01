@@ -41,6 +41,19 @@ class CloudViewModel @Inject constructor(
     cloudStateHolder.appStateHolder,
     cloudViewModelDeps.commonViewModelDeps
 ) {
+    companion object {
+        private const val key = "Cloud"
+
+        @Composable
+        fun getInstance(): CloudViewModel {
+            if (!storage.containsKey(key)){
+                storage[key] = hiltViewModel<CloudViewModel>()
+            }
+            storage[key]?.launchJobsIfNecessary()
+            return storage[key] as CloudViewModel
+        }
+    }
+
     private val addSongFromCloudUseCase =
         cloudViewModelDeps.addSongFromCloudUseCase
     private val pagedSearchUseCase =
@@ -62,19 +75,6 @@ class CloudViewModel @Inject constructor(
 
     override val currentWarnable: Warnable?
         get() = cloudStateFlow.value.currentCloudSong
-
-    companion object {
-        private const val key = "Cloud"
-
-        @Composable
-        fun getInstance(): CloudViewModel {
-            if (!storage.containsKey(key)){
-                storage[key] = hiltViewModel<CloudViewModel>()
-            }
-            storage[key]?.launchJobsIfNecessary()
-            return storage[key] as CloudViewModel
-        }
-    }
 
     override fun resetState() = cloudStateHolder.reset()
 

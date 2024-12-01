@@ -23,18 +23,6 @@ internal class StartViewModel @Inject constructor(
     startStateHolder.appStateHolder,
     startViewModelDeps.commonViewModelDeps
 ) {
-    private val localRepoInitializer =
-        startViewModelDeps.localRepoInitializer
-
-    val startStateFlow = startStateHolder
-        .startStateFlow.asStateFlow()
-
-    val needShowStartScreen = settings.appWasUpdated
-
-    private var skipAsyncInit = false
-
-    private var asyncInitJob: Job? = null
-
     companion object {
         private const val key = "Start"
 
@@ -47,6 +35,18 @@ internal class StartViewModel @Inject constructor(
             return storage[key] as StartViewModel
         }
     }
+
+    private val localRepoInitializer =
+        startViewModelDeps.localRepoInitializer
+
+    val startStateFlow = startStateHolder
+        .startStateFlow.asStateFlow()
+
+    val needShowStartScreen = settings.appWasUpdated
+
+    private var skipAsyncInit = false
+
+    private var asyncInitJob: Job? = null
 
     override fun handleAction(action: UIAction) {
         when (action) {

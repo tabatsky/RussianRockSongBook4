@@ -39,6 +39,27 @@ open class CommonViewModel @Inject constructor(
     private val appStateHolder: AppStateHolder,
     commonViewModelDeps: CommonViewModelDeps
 ): ViewModel() {
+    companion object {
+        var needReset = false
+
+        private const val key = "Common"
+
+        val storage = ConcurrentHashMap<String, CommonViewModel>()
+
+        @Composable
+        fun getInstance(): CommonViewModel {
+            if (!storage.containsKey(key)) {
+                storage[key] = hiltViewModel()
+            }
+            storage[key]?.launchJobsIfNecessary()
+            return storage[key] as CommonViewModel
+        }
+
+        fun getStoredInstance() = storage[key]
+
+        fun clearStorage() = storage.clear()
+    }
+
     val settings =
         commonViewModelDeps.settingsRepository
     val callbacks =
@@ -128,56 +149,7 @@ open class CommonViewModel @Inject constructor(
     private val _effects = Channel<UIEffect>()
     private val effects = _effects.receiveAsFlow()
 
-    companion object {
-        var needReset = false
-
-        private const val key = "Common"
-
-        val storage = ConcurrentHashMap<String, CommonViewModel>()
-
-        @Composable
-        fun getInstance(): CommonViewModel {
-            if (!storage.containsKey(key)) {
-                storage[key] = hiltViewModel()
-            }
-            storage[key]?.launchJobsIfNecessary()
-            return storage[key] as CommonViewModel
-        }
-
-        fun getStoredInstance() = storage[key]
-
-        fun clearStorage() = storage.clear()
-    }
-
     open fun resetState() = appStateHolder.reset()
-
-    fun reloadSettings() {
-        storage.values.forEach { viewModel ->
-            viewModel._theme.update { settings.theme }
-            viewModel._fontScaler.update { settings.fontScaler }
-        }
-    }
-
-    fun launchJobsIfNecessary() {
-        if (collectActionsJob?.isActive != true) {
-            collectActionsJob = collectActions()
-        }
-        if (collectEffectsJob?.isActive != true) {
-            collectEffectsJob = collectEffects()
-        }
-    }
-
-    private fun collectActions() = viewModelScope.launch {
-        actions
-            .onEach(::handleAction)
-            .collect()
-    }
-
-    private fun collectEffects() = viewModelScope.launch {
-        effects
-            .onEach(::handleEffect)
-            .collect()
-    }
 
     fun submitAction(action: UIAction) {
         _actions.tryEmit(action)
@@ -203,6 +175,34 @@ open class CommonViewModel @Inject constructor(
         when (effect) {
             is ShowToastWithText -> showToast(effect.text)
             is ShowToastWithResource -> showToast(effect.resId)
+        }
+    }
+
+    fun launchJobsIfNecessary() {
+        if (collectActionsJob?.isActive != true) {
+            collectActionsJob = collectActions()
+        }
+        if (collectEffectsJob?.isActive != true) {
+            collectEffectsJob = collectEffects()
+        }
+    }
+
+    private fun collectActions() = viewModelScope.launch {
+        actions
+            .onEach(::handleAction)
+            .collect()
+    }
+
+    private fun collectEffects() = viewModelScope.launch {
+        effects
+            .onEach(::handleEffect)
+            .collect()
+    }
+
+    fun reloadSettings() {
+        storage.values.forEach { viewModel ->
+            viewModel._theme.update { settings.theme }
+            viewModel._fontScaler.update { settings.fontScaler }
         }
     }
 

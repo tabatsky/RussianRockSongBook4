@@ -28,18 +28,6 @@ internal class AddArtistViewModel @Inject constructor(
     addArtistStateHolder.appStateHolder,
     addArtistViewModelDeps.commonViewModelDeps
 ) {
-    private val insertReplaceUserSongsUseCase =
-        addArtistViewModelDeps.insertReplaceUserSongsUseCase
-    private val addSongListToCloudUseCase =
-        addArtistViewModelDeps.addSongListToCloudUseCase
-    private val fileSystemAdapter =
-        addArtistViewModelDeps.fileSystemRepository
-
-    val addArtistStateFlow = addArtistStateHolder
-        .addArtistStateFlow.asStateFlow()
-
-    private var uploadListJob: Job? = null
-
     companion object {
         private const val key = "AddArtist"
 
@@ -52,6 +40,18 @@ internal class AddArtistViewModel @Inject constructor(
 
         fun getStoredInstance() = storage[key] as? AddArtistViewModel
     }
+
+    private val insertReplaceUserSongsUseCase =
+        addArtistViewModelDeps.insertReplaceUserSongsUseCase
+    private val addSongListToCloudUseCase =
+        addArtistViewModelDeps.addSongListToCloudUseCase
+    private val fileSystemAdapter =
+        addArtistViewModelDeps.fileSystemRepository
+
+    val addArtistStateFlow = addArtistStateHolder
+        .addArtistStateFlow.asStateFlow()
+
+    private var uploadListJob: Job? = null
 
     override fun handleAction(action: UIAction) {
         when (action) {
