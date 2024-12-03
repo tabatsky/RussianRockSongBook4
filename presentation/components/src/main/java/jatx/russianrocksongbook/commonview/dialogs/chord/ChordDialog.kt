@@ -16,7 +16,9 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.dqt.libs.chorddroid.classes.ChordLibrary
 import com.dqt.libs.chorddroid.components.ChordTextureView
 import jatx.russianrocksongbook.commonview.R
+import jatx.russianrocksongbook.commonview.font.toScaledSp
 import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
+import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.domain.repository.preferences.colorBlack
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -26,6 +28,9 @@ fun ChordDialog(
     onDismiss: () -> Unit
 ) {
     val theme = LocalAppTheme.current
+
+    val fontSizeButtonSp = dimensionResource(R.dimen.text_size_16)
+        .toScaledSp(ScalePow.BUTTON)
 
     var actualChord = chord
     for (key in ChordLibrary.chordMappings.keys) {
@@ -73,6 +78,7 @@ fun ChordDialog(
                         },
                     color = colorBlack,
                     fontWeight = FontWeight.W500,
+                    fontSize = fontSizeButtonSp,
                     text = stringResource(id = R.string.close)
                 )
             }

@@ -49,6 +49,8 @@ internal fun WarningDialogContent(
 
     val fontSizeTextSp = dimensionResource(id = R.dimen.text_size_12)
         .toScaledSp(ScalePow.TEXT)
+    val fontSizeButtonSp = dimensionResource(R.dimen.text_size_16)
+        .toScaledSp(ScalePow.BUTTON)
 
     var comment by rememberSaveable { mutableStateOf(initialComment) }
 
@@ -122,6 +124,7 @@ internal fun WarningDialogContent(
                         },
                     color = colorBlack,
                     fontWeight = FontWeight.W500,
+                    fontSize = fontSizeButtonSp,
                     text = stringResource(id = R.string.ok)
                 )
                 Text(
@@ -133,6 +136,7 @@ internal fun WarningDialogContent(
                         },
                     color = colorBlack,
                     fontWeight = FontWeight.W500,
+                    fontSize = fontSizeButtonSp,
                     text = stringResource(id = R.string.cancel)
                 )
             }

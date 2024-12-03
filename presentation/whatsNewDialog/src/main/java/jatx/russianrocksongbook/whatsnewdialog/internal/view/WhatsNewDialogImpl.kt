@@ -30,6 +30,9 @@ internal fun WhatsNewDialogImpl(
 
     val fontSizeTitleSp = dimensionResource(id = R.dimen.text_size_20)
         .toScaledSp(ScalePow.TEXT)
+    val fontSizeMessageSp = fontSizeTitleSp * 0.7f
+    val fontSizeButtonSp = dimensionResource(R.dimen.text_size_16)
+        .toScaledSp(ScalePow.BUTTON)
 
     val appWasUpdated = CommonViewModel.getStoredInstance()?.let {
         val appState by it.appStateFlow.collectAsState()
@@ -71,7 +74,7 @@ internal fun WhatsNewDialogImpl(
                                     .padding(10.dp),
                                 color = theme.colorBg,
                                 fontWeight = FontWeight.W400,
-                                fontSize = fontSizeTitleSp * 0.7f
+                                fontSize = fontSizeMessageSp
                             )
                         }
                     }
@@ -91,6 +94,7 @@ internal fun WhatsNewDialogImpl(
                                 },
                             color = colorBlack,
                             fontWeight = FontWeight.W500,
+                            fontSize = fontSizeButtonSp,
                             text = stringResource(id = R.string.ok)
                         )
                     }
