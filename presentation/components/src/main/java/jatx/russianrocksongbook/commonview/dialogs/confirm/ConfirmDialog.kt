@@ -38,6 +38,9 @@ fun ConfirmDialog(
 
     val fontSizeTitleSp = dimensionResource(id = R.dimen.text_size_20)
         .toScaledSp(ScalePow.TEXT)
+    val fontSizeMessageSp = fontSizeTitleSp * 0.7f
+    val fontSizeButtonSp = dimensionResource(R.dimen.text_size_16)
+        .toScaledSp(ScalePow.BUTTON)
 
     AlertDialog(
         onDismissRequest = {
@@ -67,7 +70,7 @@ fun ConfirmDialog(
                     textAlign = TextAlign.Center,
                     color = colorBlack,
                     fontWeight = FontWeight.W400,
-                    fontSize = fontSizeTitleSp * 0.7f
+                    fontSize = fontSizeMessageSp
                 )
             }
         },
@@ -87,6 +90,7 @@ fun ConfirmDialog(
                         },
                     color = colorBlack,
                     fontWeight = FontWeight.W500,
+                    fontSize = fontSizeButtonSp,
                     text = stringResource(id = R.string.ok)
                 )
                 Text(
@@ -99,6 +103,7 @@ fun ConfirmDialog(
                         },
                     color = colorBlack,
                     fontWeight = FontWeight.W500,
+                    fontSize = fontSizeButtonSp,
                     text = stringResource(id = R.string.cancel)
                 )
             }

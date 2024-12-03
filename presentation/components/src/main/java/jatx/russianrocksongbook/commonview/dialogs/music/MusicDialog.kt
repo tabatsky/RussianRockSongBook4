@@ -33,6 +33,8 @@ internal fun MusicDialog(
     val theme = LocalAppTheme.current
     val fontSizeTitleSp = dimensionResource(id = R.dimen.text_size_20)
         .toScaledSp(ScalePow.TEXT)
+    val fontSizeButtonSp = dimensionResource(R.dimen.text_size_16)
+        .toScaledSp(ScalePow.BUTTON)
 
     AlertDialog(
         onDismissRequest = {
@@ -70,6 +72,7 @@ internal fun MusicDialog(
                         },
                     color = colorBlack,
                     fontWeight = FontWeight.W500,
+                    fontSize = fontSizeButtonSp,
                     text = stringResource(id = R.string.yes)
                 )
                 Text(
@@ -81,6 +84,7 @@ internal fun MusicDialog(
                         },
                     color = colorBlack,
                     fontWeight = FontWeight.W500,
+                    fontSize = fontSizeButtonSp,
                     text = stringResource(id = R.string.cancel)
                 )
                 Text(
@@ -93,6 +97,7 @@ internal fun MusicDialog(
                         },
                     color = colorBlack,
                     fontWeight = FontWeight.W500,
+                    fontSize = fontSizeButtonSp,
                     text = stringResource(id = R.string.dont_ask_more)
                 )
             }

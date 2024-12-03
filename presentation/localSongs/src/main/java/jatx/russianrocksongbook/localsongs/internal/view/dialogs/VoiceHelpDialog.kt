@@ -32,6 +32,8 @@ internal fun VoiceHelpDialog(
 
     val fontSizeTextSp = dimensionResource(id = R.dimen.text_size_16)
         .toScaledSp(ScalePow.TEXT)
+    val fontSizeButtonSp = dimensionResource(R.dimen.text_size_16)
+        .toScaledSp(ScalePow.BUTTON)
 
     AlertDialog(
         onDismissRequest = {
@@ -69,6 +71,7 @@ internal fun VoiceHelpDialog(
                         },
                     color = colorBlack,
                     fontWeight = FontWeight.W500,
+                    fontSize = fontSizeButtonSp,
                     text = stringResource(id = R.string.accept)
                 )
                 Text(
@@ -80,6 +83,7 @@ internal fun VoiceHelpDialog(
                         },
                     color = colorBlack,
                     fontWeight = FontWeight.W500,
+                    fontSize = fontSizeButtonSp,
                     text = stringResource(id = R.string.cancel)
                 )
                 Text(
@@ -92,6 +96,7 @@ internal fun VoiceHelpDialog(
                         },
                     color = colorBlack,
                     fontWeight = FontWeight.W500,
+                    fontSize = fontSizeButtonSp,
                     text = stringResource(id = R.string.dont_ask_more)
                 )
             }
