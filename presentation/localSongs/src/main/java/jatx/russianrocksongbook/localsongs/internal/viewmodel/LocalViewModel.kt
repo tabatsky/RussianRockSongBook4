@@ -225,6 +225,7 @@ open class LocalViewModel @Inject constructor(
         Log.e("show songs", artist)
         updateCurrentArtist(artist)
         updateCurrentSongCount(getCountByArtistUseCase.execute(artist))
+        if (artist == ARTIST_FAVORITE) updateCurrentSongList(listOf())
         showSongsJob?.let {
             if (!it.isCancelled) it.cancel()
         }
@@ -236,17 +237,14 @@ open class LocalViewModel @Inject constructor(
                         .collect { songs ->
                             withContext(Dispatchers.Main) {
                                 val oldArtist = localStateFlow.value.currentSongList.getOrNull(0)?.artist
-                                    ?: "null"
-                                val newArtist = songs.getOrNull(0)?.artist ?: "null"
-                                if (newArtist == artist || newArtist == "null" || artist == ARTIST_FAVORITE) {
+                                val newArtist = songs.getOrNull(0)?.artist
+                                if (newArtist == artist || newArtist == null || artist == ARTIST_FAVORITE) {
                                     updateCurrentSongList(songs)
                                     songTitleToPass?.let {
                                         passToSongWithTitle(songs, artist, it)
                                     } ?: run {
                                         Log.e("first song artist", "was: $oldArtist; become: $newArtist")
-                                        if ((oldArtist != newArtist || artist == ARTIST_FAVORITE)
-                                            && newArtist != "null") {
-
+                                        if (oldArtist != newArtist && newArtist != null) {
                                             selectSong(0)
                                         }
                                     }

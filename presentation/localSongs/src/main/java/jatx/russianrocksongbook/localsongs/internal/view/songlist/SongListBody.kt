@@ -25,9 +25,12 @@ import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.testing.SONG_LIST_LAZY_COLUMN
 import jatx.russianrocksongbook.testing.TestingConfig
 import jatx.russianrocksongbook.navigation.ScreenVariant
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 
+@OptIn(FlowPreview::class)
 @Composable
 internal fun SongListBody(
     navigationFocusRequester: FocusRequester,
@@ -41,7 +44,6 @@ internal fun SongListBody(
 
     val fontSizeSp = dimensionResource(id = R.dimen.text_size_20)
         .toScaledSp(ScalePow.TEXT)
-
 
     @Composable
     fun TheItem(index: Int, song: Song) {
@@ -76,7 +78,7 @@ internal fun SongListBody(
             } else {
                 snapshotFlow {
                     getFirstVisibleItemIndex()
-                }.collectLatest {
+                }.debounce(200L).collectLatest {
                     submitAction(UpdateSongListScrollPosition(it))
                 }
             }
