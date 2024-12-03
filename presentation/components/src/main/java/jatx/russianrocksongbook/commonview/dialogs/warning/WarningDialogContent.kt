@@ -1,15 +1,17 @@
 package jatx.russianrocksongbook.commonview.dialogs.warning
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.AlertDialog
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -24,6 +26,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.commonview.R
 import jatx.russianrocksongbook.commonview.font.toScaledSp
@@ -34,6 +37,7 @@ import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.domain.repository.preferences.colorBlack
 import jatx.russianrocksongbook.testing.TEXT_FIELD_WARNING_COMMENT
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun WarningDialogContent(
     onConfirm: (String) -> Unit,
@@ -97,44 +101,40 @@ internal fun WarningDialogContent(
             }
         },
         buttons = {
-            Button(
+            FlowRow(
                 modifier = Modifier
-                    .background(colorBlack)
-                    .padding(2.dp)
-                    .fillMaxWidth()
-                    .height(50.dp),
-                colors = ButtonDefaults
-                    .buttonColors(
-                        backgroundColor = theme.colorCommon,
-                        contentColor = colorBlack
-                    ),
-                onClick = {
-                    if (comment.isNotEmpty()) {
-                        onDismiss()
-                        onConfirm(comment)
-                    } else {
-                        submitEffect(
-                            ShowToastWithResource(R.string.toast_comment_cannot_be_empty)
-                        )
-                    }
-                }) {
-                Text(text = stringResource(id = R.string.ok))
-            }
-            Button(
-                modifier = Modifier
-                    .background(colorBlack)
-                    .padding(2.dp)
-                    .fillMaxWidth()
-                    .height(50.dp),
-                colors = ButtonDefaults
-                    .buttonColors(
-                        backgroundColor = theme.colorCommon,
-                        contentColor = colorBlack
-                    ),
-                onClick = {
-                    onDismiss()
-                }) {
-                Text(text = stringResource(id = R.string.cancel))
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                Text(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .padding(dimensionResource(R.dimen.padding_20))
+                        .clickable {
+                            if (comment.isNotEmpty()) {
+                                onDismiss()
+                                onConfirm(comment)
+                            } else {
+                                submitEffect(
+                                    ShowToastWithResource(R.string.toast_comment_cannot_be_empty)
+                                )
+                            }
+                        },
+                    color = colorBlack,
+                    fontWeight = FontWeight.W500,
+                    text = stringResource(id = R.string.ok)
+                )
+                Text(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .padding(dimensionResource(R.dimen.padding_20))
+                        .clickable {
+                            onDismiss()
+                        },
+                    color = colorBlack,
+                    fontWeight = FontWeight.W500,
+                    text = stringResource(id = R.string.cancel)
+                )
             }
         }
     )

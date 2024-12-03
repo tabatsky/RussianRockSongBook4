@@ -1,10 +1,9 @@
 package jatx.russianrocksongbook.whatsnewdialog.internal.view
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -76,21 +75,24 @@ internal fun WhatsNewDialogImpl(
                             )
                         }
                     }
-                    Button(
+                    Row(
                         modifier = Modifier
-                            .background(colorBlack)
-                            .padding(2.dp)
+                            .background(theme.colorCommon)
                             .fillMaxWidth()
-                            .height(50.dp),
-                        colors = ButtonDefaults
-                            .buttonColors(
-                                backgroundColor = theme.colorCommon,
-                                contentColor = colorBlack
-                            ),
-                        onClick = {
-                            onDismiss()
-                        }) {
-                        Text(text = stringResource(id = R.string.ok))
+                            .wrapContentHeight(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .wrapContentSize()
+                                .padding(dimensionResource(R.dimen.padding_20))
+                                .clickable {
+                                    onDismiss()
+                                },
+                            color = colorBlack,
+                            fontWeight = FontWeight.W500,
+                            text = stringResource(id = R.string.ok)
+                        )
                     }
                 }
             }

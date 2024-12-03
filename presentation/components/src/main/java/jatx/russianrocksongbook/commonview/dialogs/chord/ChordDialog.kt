@@ -1,16 +1,16 @@
 package jatx.russianrocksongbook.commonview.dialogs.chord
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.AlertDialog
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.dqt.libs.chorddroid.classes.ChordLibrary
@@ -19,6 +19,7 @@ import jatx.russianrocksongbook.commonview.R
 import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
 import jatx.russianrocksongbook.domain.repository.preferences.colorBlack
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ChordDialog(
     chord: String,
@@ -58,21 +59,22 @@ fun ChordDialog(
             }
         },
         buttons = {
-            Button(
+            FlowRow(
                 modifier = Modifier
-                    .background(colorBlack)
-                    .padding(2.dp)
-                    .fillMaxWidth()
-                    .height(50.dp),
-                colors = ButtonDefaults
-                    .buttonColors(
-                        backgroundColor = theme.colorCommon,
-                        contentColor = colorBlack
-                    ),
-                onClick = {
-                    onDismiss()
-                }) {
-                Text(text = stringResource(id = R.string.close))
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                Text(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .padding(dimensionResource(R.dimen.padding_20))
+                        .clickable {
+                            onDismiss()
+                        },
+                    color = colorBlack,
+                    fontWeight = FontWeight.W500,
+                    text = stringResource(id = R.string.close)
+                )
             }
         }
     )

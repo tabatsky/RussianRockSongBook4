@@ -1,12 +1,15 @@
 package jatx.russianrocksongbook.commonview.dialogs.confirm
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,6 +25,7 @@ import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.domain.repository.preferences.colorBlack
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ConfirmDialog(
     @StringRes titleRes: Int,
@@ -68,39 +72,35 @@ fun ConfirmDialog(
             }
         },
         buttons = {
-            Button(
+            FlowRow(
                 modifier = Modifier
-                    .background(colorBlack)
-                    .padding(2.dp)
-                    .fillMaxWidth()
-                    .height(50.dp),
-                colors = ButtonDefaults
-                    .buttonColors(
-                        backgroundColor = theme.colorCommon,
-                        contentColor = colorBlack
-                    ),
-                onClick = {
-                    onDismiss.invoke()
-                    onConfirm.invoke()
-                }) {
-                Text(text = stringResource(id = R.string.ok))
-            }
-            Button(
-                modifier = Modifier
-                    .background(colorBlack)
-                    .padding(2.dp)
-                    .fillMaxWidth()
-                    .height(50.dp),
-                colors = ButtonDefaults
-                    .buttonColors(
-                        backgroundColor = theme.colorCommon,
-                        contentColor = colorBlack
-                    ),
-                onClick = {
-                    onDismiss.invoke()
-                    onDecline?.invoke()
-                }) {
-                Text(text = stringResource(id = R.string.cancel))
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                Text(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .padding(dimensionResource(R.dimen.padding_20))
+                        .clickable {
+                            onDismiss.invoke()
+                            onConfirm.invoke()
+                        },
+                    color = colorBlack,
+                    fontWeight = FontWeight.W500,
+                    text = stringResource(id = R.string.ok)
+                )
+                Text(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .padding(dimensionResource(R.dimen.padding_20))
+                        .clickable {
+                            onDismiss.invoke()
+                            onDecline?.invoke()
+                        },
+                    color = colorBlack,
+                    fontWeight = FontWeight.W500,
+                    text = stringResource(id = R.string.cancel)
+                )
             }
         }
     )
