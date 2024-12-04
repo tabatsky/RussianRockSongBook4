@@ -223,9 +223,9 @@ open class LocalViewModel @Inject constructor(
         songTitleToPass: String? = null
     ) {
         Log.e("show songs", artist)
+        if (artist != appStateFlow.value.currentArtist) updateCurrentSongList(listOf())
         updateCurrentArtist(artist)
         updateCurrentSongCount(getCountByArtistUseCase.execute(artist))
-        if (artist == ARTIST_FAVORITE) updateCurrentSongList(listOf())
         showSongsJob?.let {
             if (!it.isCancelled) it.cancel()
         }
@@ -244,7 +244,7 @@ open class LocalViewModel @Inject constructor(
                                         passToSongWithTitle(songs, artist, it)
                                     } ?: run {
                                         Log.e("first song artist", "was: $oldArtist; become: $newArtist")
-                                        if (oldArtist != newArtist && newArtist != null) {
+                                        if (oldArtist == null && newArtist != null) {
                                             selectSong(0)
                                         }
                                     }
