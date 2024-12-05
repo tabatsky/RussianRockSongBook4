@@ -20,6 +20,7 @@ import io.mockk.core.ValueClassSupport.boxedValue
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.commonviewmodel.SelectScreen
 import jatx.russianrocksongbook.commonviewmodel.deps.impl.ToastsTestImpl
+import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.cloud.CloudRepository
 import jatx.russianrocksongbook.domain.repository.cloud.CloudSearchOrderBy
 import jatx.russianrocksongbook.domain.repository.local.*
@@ -4560,6 +4561,91 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song1 title with artist is displayed")
     }
+
+    @Test
+    fun test1401_favoriteSongTextIsWorkingCorrectly() {
+        val testNumber = 1401
+
+        val favoriteSongs = localRepository.getSongsByArtistAsList(ARTIST_FAVORITE)
+        favoriteSongs.forEach {
+            localRepository.setFavorite(false, it.artist, it.title)
+        }
+
+        val songs = localRepository.getSongsByArtistAsList(ARTIST_1)
+        val actualSongs = (3..7).map {
+            songs[it]
+        }
+
+        actualSongs.forEach {
+            localRepository.setFavorite(true, it.artist, it.title)
+        }
+
+        composeTestRule.activityRule.scenario.onActivity {
+            CommonViewModel
+                .getStoredInstance()
+                ?.submitAction(SelectScreen(ScreenVariant.Favorite()))
+        }
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithTag(APP_BAR_TITLE)
+                .text == ARTIST_FAVORITE
+        }
+        composeTestRule
+            .onNodeWithTag(APP_BAR_TITLE)
+            .assertTextEquals(ARTIST_FAVORITE)
+        Log.e("test $testNumber assert", "app bar title is equals $ARTIST_FAVORITE")
+
+        actualSongs.forEach {
+            composeTestRule
+                .onNodeWithText(it.title)
+                .assertIsDisplayed()
+            Log.e("test $testNumber assert", "${it.title} is displayed")
+        }
+
+        fun checkAndRemoveSong(song: Song) {
+            Log.e("test $testNumber click", song.title)
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithText("${song.title} (${song.artist})")
+                    .isDisplayed()
+            }
+            composeTestRule
+                .onNodeWithText("${song.title} (${song.artist})")
+                .assertIsDisplayed()
+            Log.e("test $testNumber assert", "${song.title} (${song.artist}) is displayed")
+            composeTestRule
+                .onNodeWithText(song.text)
+                .assertIsDisplayed()
+            Log.e("test $testNumber assert", "song text is displayed")
+            composeTestRule
+                .onNodeWithTag(DELETE_FROM_FAVORITE_BUTTON)
+                .performClick()
+        }
+
+        actualSongs[2].let {
+            composeTestRule
+                .onNodeWithText(it.title)
+                .performClick()
+            checkAndRemoveSong(it)
+        }
+
+        checkAndRemoveSong(actualSongs[3])
+        checkAndRemoveSong(actualSongs[4])
+        checkAndRemoveSong(actualSongs[1])
+        checkAndRemoveSong(actualSongs[0])
+
+        composeTestRule.waitForCondition {
+            composeTestRule
+                .onNodeWithText(stringConst.listIsEmpty)
+                .isDisplayed()
+        }
+        composeTestRule
+            .onNodeWithText(stringConst.listIsEmpty)
+            .assertIsDisplayed()
+        Log.e("test $testNumber assert", "${stringConst.listIsEmpty} is displayed")
+    }
+
 }
 
 const val timeout = 1500L
