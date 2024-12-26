@@ -82,7 +82,7 @@ class LocalRepositoryImplTest {
             val list = localRepo.getSongsByArtist(artists1[0]).first()
             assertTrue(list.all { it.artist == artists1[0] })
             Log.e("song list","artist match")
-            val song = localRepo.getSongByArtistAndPosition(artists1[0], 5).first()
+            val song = localRepo.getSongByArtistAndPosition(artists1[0], 5)
             assertEquals(song, list[5])
         }
     }

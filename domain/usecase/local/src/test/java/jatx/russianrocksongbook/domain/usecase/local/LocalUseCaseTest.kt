@@ -33,7 +33,7 @@ class LocalUseCaseTest {
 
     private val cloudSong = CloudSong(artist = "artist", title = "title", text = "text")
     private val song = Song(artist = "artist", title = "title", text = "text")
-    private val songFlow = MutableStateFlow<Song?>(song)
+    private val theSong: Song? = song
     private val artistList = listOf("Александр Башлачёв", "Немного Нервно", "Сплин")
     private val artistsFlow = MutableStateFlow(artistList)
     private val songList = listOf(
@@ -135,15 +135,14 @@ class LocalUseCaseTest {
 
     @Test
     fun test006_getSongByArtistAndPositionUseCase_isWorkingCorrect() {
-        every { localRepository.getSongByArtistAndPosition(any(), any()) } returns songFlow
-
-        val result = getSongByArtistAndPositionUseCase.execute("Кино", 13)
+        coEvery { localRepository.getSongByArtistAndPosition(any(), any()) } returns theSong
 
         runBlocking {
-            assertEquals(song, result.first())
+            val result = getSongByArtistAndPositionUseCase.execute("Кино", 13)
+            assertEquals(song, result)
         }
 
-        verifySequence {
+        coVerifySequence {
             localRepository.getSongByArtistAndPosition("Кино", 13)
         }
     }
