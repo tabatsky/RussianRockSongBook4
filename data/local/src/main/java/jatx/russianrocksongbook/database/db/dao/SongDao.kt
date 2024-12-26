@@ -38,13 +38,13 @@ interface SongDao {
         SELECT * FROM songs WHERE favorite=1 AND deleted=0 
         ORDER BY artist||title LIMIT 1 OFFSET :position
         """)
-    fun getSongByPositionFavorite(position: Int): Flow<SongEntity?>
+    suspend fun getSongByPositionFavorite(position: Int): SongEntity?
 
     @Query("""
         SELECT * FROM songs WHERE artist=:artist AND deleted=0 
         ORDER BY title LIMIT 1 OFFSET :position
     """)
-    fun getSongByPositionAndArtist(position: Int, artist: String): Flow<SongEntity?>
+    suspend fun getSongByPositionAndArtist(position: Int, artist: String): SongEntity?
 
     @Query("SELECT * FROM songs WHERE artist=:artist AND title=:title")
     fun getSongByArtistAndTitle(artist: String, title: String): SongEntity?

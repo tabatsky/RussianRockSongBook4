@@ -111,12 +111,12 @@ class LocalRepositoryImpl @Inject constructor(
             }
     }
 
-    override fun getSongByArtistAndPosition(artist: String, position: Int) =
+    override suspend fun getSongByArtistAndPosition(artist: String, position: Int) =
         (if (artist == ARTIST_FAVORITE)
             songDao.getSongByPositionFavorite(position)
         else
             songDao.getSongByPositionAndArtist(position, artist))
-            .map { it?.toSong() }
+            .let { it?.toSong() }
 
 
     override fun getSongByArtistAndTitle(artist: String, title: String): Song? {

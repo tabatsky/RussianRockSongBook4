@@ -99,7 +99,7 @@ open class LocalViewModel @Inject constructor(
                 withContext(Dispatchers.IO) {
                     getSongByArtistAndPositionUseCase
                         .execute(currentArtist, position)
-                        .collect { song ->
+                        .let { song ->
                             updateCurrentSong(song, position)
 
                             val newArtist = song?.artist

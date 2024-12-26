@@ -8,6 +8,6 @@ import javax.inject.Singleton
 class GetSongByArtistAndPositionUseCase @Inject constructor(
     private val localRepository: LocalRepository
 ) {
-    fun execute(artist: String, position: Int) =
+    suspend fun execute(artist: String, position: Int) =
         localRepository.getSongByArtistAndPosition(artist, position)
 }
