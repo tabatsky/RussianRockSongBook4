@@ -84,7 +84,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
     private val songsFlow = MutableStateFlow<List<Song>>(listOf())
 
-    private val songFlow = MutableStateFlow(songList[0])
+    private var theSong = songList[0]
 
     @Before
     fun initLocal() {
@@ -116,13 +116,13 @@ open class LocalViewModelTest: CommonViewModelTest() {
             songsFlow.value.size
         }
         every { getSongsByArtistUseCase.execute(any()) } returns songsFlow
-        every { getSongByArtistAndPositionUseCase.execute(any(), any()) } returns songFlow
+        coEvery { getSongByArtistAndPositionUseCase.execute(any(), any()) } returns theSong
 
         val songSlot = slot<Song>()
         every { updateSongUseCase.execute(capture(songSlot)) } answers {
             val song = songSlot.captured
 
-            songFlow.value = song
+            theSong = song
 
             if (appStateHolder.appStateFlow.value.currentArtist == ARTIST_FAVORITE &&
                 !song.favorite) {
@@ -296,7 +296,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
     fun test108B_deleteFromFavorite_singleSong_isWorkingCorrect() {
         val song = songList[0].copy(favorite = true)
         songsFlow.value = listOf(song)
-        songFlow.value = song
+        theSong = song
 
         TimeUnit.MILLISECONDS.sleep(500)
         localViewModel.submitAction(SelectScreen(ScreenVariant.Favorite()))
@@ -331,7 +331,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
         songsFlow.value = listOf(songList[1], songList[2], song).map {
             it.copy(favorite = true)
         }
-        songFlow.value = song.copy(favorite = true)
+        theSong = song.copy(favorite = true)
 
         TimeUnit.MILLISECONDS.sleep(500)
         localViewModel.submitAction(SelectScreen(ScreenVariant.Favorite()))
@@ -366,7 +366,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
         songsFlow.value = listOf(songList[1], song, songList[2]).map {
             it.copy(favorite = true)
         }
-        songFlow.value = song.copy(favorite = true)
+        theSong = song.copy(favorite = true)
 
         TimeUnit.MILLISECONDS.sleep(500)
         localViewModel.submitAction(SelectScreen(ScreenVariant.Favorite()))
