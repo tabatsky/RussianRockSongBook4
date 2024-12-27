@@ -79,7 +79,7 @@ class LocalRepositoryImplTest {
         runBlocking {
             val artists3 = localRepo.getArtists().first()
             assertEquals(artists2, artists3)
-            val list = localRepo.getSongsByArtist(artists1[0]).first()
+            val list = localRepo.getSongsByArtist(artists1[0])
             assertTrue(list.all { it.artist == artists1[0] })
             Log.e("song list","artist match")
             val song = localRepo.getSongByArtistAndPosition(artists1[0], 5)

@@ -33,7 +33,7 @@ interface LocalRepository {
     fun getArtists(): Flow<List<String>>
     fun getArtistsAsList(): List<String>
     fun getCountByArtist(artist: String): Int
-    fun getSongsByArtist(artist: String): Flow<List<Song>>
+    suspend fun getSongsByArtist(artist: String): List<Song>
     fun getSongsByArtistAsList(artist: String): List<Song>
     fun getSongsByVoiceSearch(voiceSearch: String): List<Song>
     fun getSongsByTextSearch(words: List<String>, orderBy: TextSearchOrderBy): List<Song>

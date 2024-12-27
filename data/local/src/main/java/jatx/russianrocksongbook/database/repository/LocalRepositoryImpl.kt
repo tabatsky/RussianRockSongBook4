@@ -62,12 +62,12 @@ class LocalRepositoryImpl @Inject constructor(
         else
             songDao.getCountByArtist(artist)
 
-    override fun getSongsByArtist(artist: String) =
+    override suspend fun getSongsByArtist(artist: String) =
         (if (artist == ARTIST_FAVORITE)
             songDao.getSongsFavorite()
         else
             songDao.getSongsByArtist(artist))
-            .map { list ->
+            .let { list ->
                 list.map { it.toSong() }
             }
 

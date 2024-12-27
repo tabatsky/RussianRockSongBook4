@@ -234,10 +234,11 @@ open class LocalViewModel @Inject constructor(
                 withContext(Dispatchers.IO) {
                     getSongsByArtistUseCase
                         .execute(artist)
-                        .collect { songs ->
+                        .let { songs ->
                             withContext(Dispatchers.Main) {
                                 val oldArtist = localStateFlow.value.currentSongList.getOrNull(0)?.artist
                                 val newArtist = songs.getOrNull(0)?.artist
+                                Log.e("new artist", newArtist ?: "null")
                                 if (newArtist == artist || newArtist == null || artist == ARTIST_FAVORITE) {
                                     updateCurrentSongList(songs)
                                     songTitleToPass?.let {
