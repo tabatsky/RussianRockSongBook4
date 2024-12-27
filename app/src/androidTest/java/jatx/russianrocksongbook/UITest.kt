@@ -19,6 +19,7 @@ import dagger.hilt.android.testing.HiltTestApplication
 import io.mockk.core.ValueClassSupport.boxedValue
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.commonviewmodel.SelectScreen
+import jatx.russianrocksongbook.commonviewmodel.ShowSongs
 import jatx.russianrocksongbook.commonviewmodel.deps.impl.ToastsTestImpl
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.cloud.CloudRepository
@@ -32,6 +33,7 @@ import jatx.russianrocksongbook.donationhelper.api.DONATIONS
 import jatx.russianrocksongbook.localsongs.api.methods.parseAndExecuteVoiceCommand
 import jatx.russianrocksongbook.localsongs.api.methods.selectArtist
 import jatx.russianrocksongbook.localsongs.api.methods.selectSongByArtistAndTitle
+import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import jatx.russianrocksongbook.testing.*
 import leakcanary.DetectLeaksAfterTestSuccess
@@ -2896,6 +2898,8 @@ class UITest {
         Log.e("test $testNumber assert", "${song3.title} is displayed")
 
         localRepository.setFavorite(false, ARTIST_1, TITLE_1_3)
+
+        LocalViewModel.getStoredInstance()?.submitAction(ShowSongs(ARTIST_FAVORITE))
 
         composeTestRule.waitForCondition {
             composeTestRule
