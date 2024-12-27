@@ -19,8 +19,7 @@ import jatx.russianrocksongbook.networking.converters.toWarningApiModel
 import jatx.russianrocksongbook.networking.apimodels.ResultWithCloudSongApiModelListData
 import jatx.russianrocksongbook.networking.songbookapi.RetrofitClient
 import jatx.russianrocksongbook.networking.songbookapi.SongBookAPI
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.FixMethodOrder
@@ -75,7 +74,7 @@ class CloudRepositoryImplTest {
 
     @Test
     fun test001_sendCrash_isWorkingCorrect() {
-        GlobalScope.launch {
+        runBlocking {
             cloudRepository.sendCrash(appCrash)
         }
 
@@ -92,7 +91,7 @@ class CloudRepositoryImplTest {
 
     @Test
     fun test002_addCloudSong_isWorkingCorrect() {
-        GlobalScope.launch {
+        runBlocking {
             cloudRepository.addCloudSong(cloudSong)
         }
 
@@ -109,7 +108,7 @@ class CloudRepositoryImplTest {
 
     @Test
     fun test003_addCloudSongList_isWorkingCorrect() {
-        GlobalScope.launch {
+        runBlocking {
             cloudRepository.addCloudSongList(cloudSongList)
         }
 
@@ -129,7 +128,7 @@ class CloudRepositoryImplTest {
     fun test004_addWarning_isWorkingCorrect() {
         val warning = cloudSong.warningWithComment("some comment")
 
-        GlobalScope.launch {
+        runBlocking {
             cloudRepository.addWarning(warning)
         }
 
@@ -153,7 +152,7 @@ class CloudRepositoryImplTest {
                     data = cloudSongList.map { it.toCloudSongApiModel() }
                 )
 
-        GlobalScope.launch {
+        runBlocking {
             val result = cloudRepository.searchSongs("Сплин", CloudSearchOrderBy.BY_ARTIST)
             assertEquals(cloudSongList, result.data)
         }
@@ -165,7 +164,7 @@ class CloudRepositoryImplTest {
 
     @Test
     fun test006_vote_isWorkingCorrect() {
-        GlobalScope.launch {
+        runBlocking {
             cloudRepository.vote(cloudSong, userInfo, 1)
         }
 
@@ -185,7 +184,7 @@ class CloudRepositoryImplTest {
 
     @Test
     fun test007_delete_isWorkingCorrect() {
-        GlobalScope.launch {
+        runBlocking {
             cloudRepository.delete("gh47", "sd93", cloudSong)
         }
 
@@ -211,7 +210,7 @@ class CloudRepositoryImplTest {
                     data = cloudSongList.map { it.toCloudSongApiModel() }
                 )
 
-        GlobalScope.launch {
+        runBlocking {
             val result = cloudRepository.pagedSearch("Сплин", CloudSearchOrderBy.BY_ARTIST, 3)
             assertEquals(cloudSongList, result.data)
         }
@@ -232,7 +231,7 @@ class CloudRepositoryImplTest {
                     data = cloudSongList.map { it.toCloudSongApiModel() }
                 )
 
-        GlobalScope.launch {
+        runBlocking {
             val result = cloudRepository.search("Сплин", CloudSearchOrderBy.BY_ARTIST)
             assertEquals(cloudSongList, result)
         }
