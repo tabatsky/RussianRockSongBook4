@@ -20,10 +20,10 @@ interface SongDao {
     fun getCountByArtist(artist: String): Int
 
     @Query("SELECT * FROM songs WHERE favorite=1 AND deleted=0 ORDER BY artist||title")
-    fun getSongsFavorite(): Flow<List<SongEntity>>
+    suspend fun getSongsFavorite(): List<SongEntity>
 
     @Query("SELECT * FROM songs WHERE artist=:artist AND deleted=0 ORDER BY title")
-    fun getSongsByArtist(artist: String): Flow<List<SongEntity>>
+    suspend fun getSongsByArtist(artist: String): List<SongEntity>
 
     @Query("SELECT * FROM songs WHERE favorite=1 AND deleted=0 ORDER BY artist||title")
     fun getSongsFavoriteAsList(): List<SongEntity>

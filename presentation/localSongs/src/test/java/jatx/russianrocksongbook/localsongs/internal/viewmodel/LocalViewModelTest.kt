@@ -82,7 +82,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
     private val artistsFlow = MutableStateFlow<List<String>>(listOf())
 
-    private val songsFlow = MutableStateFlow<List<Song>>(listOf())
+    private var theSongs = listOf<Song>()
 
     private var theSong = songList[0]
 
@@ -113,10 +113,14 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         every { getArtistsUseCase.execute() } returns artistsFlow
         every { getCountByArtistUseCase.execute(any()) } answers {
-            songsFlow.value.size
+            theSongs.size
         }
-        every { getSongsByArtistUseCase.execute(any()) } returns songsFlow
-        coEvery { getSongByArtistAndPositionUseCase.execute(any(), any()) } returns theSong
+        coEvery { getSongsByArtistUseCase.execute(any()) } answers {
+            theSongs
+        }
+        coEvery { getSongByArtistAndPositionUseCase.execute(any(), any()) } answers {
+            theSong
+        }
 
         val songSlot = slot<Song>()
         every { updateSongUseCase.execute(capture(songSlot)) } answers {
@@ -127,8 +131,8 @@ open class LocalViewModelTest: CommonViewModelTest() {
             if (appStateHolder.appStateFlow.value.currentArtist == ARTIST_FAVORITE &&
                 !song.favorite) {
 
-                val songs = songsFlow.value
-                songsFlow.value = songs.filter {
+                val songs = theSongs
+                theSongs = songs.filter {
                     it.artist != song.artist || it.title != song.title
                 }
             }
@@ -159,7 +163,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
     @Test
     fun test101_showSongs_Kino_withPassToSong_isWorkingCorrect() {
-        songsFlow.value = songList
+        theSongs = songList
         localViewModel.submitAction(ShowSongs("Кино", "Кукушка"))
 
         waitForCondition {
@@ -179,13 +183,6 @@ open class LocalViewModelTest: CommonViewModelTest() {
     @Test
     fun test102_selectArtist_Kino_and_Alisa_withoutPassToSong_isWorkingCorrect() {
         val songList2 = listOf(
-            Song(artist = "Кино", title = "title 6", text = "text text text"),
-            Song(artist = "Кино", title = "title 7", text = "text text text"),
-            Song(artist = "Кино", title = "title 8", text = "text text text"),
-            Song(artist = "Кино", title = "title 9", text = "text text text"),
-            Song(artist = "Кино", title = "title 10", text = "text text text")
-        )
-        val songList3 = listOf(
             Song(artist = "Алиса", title = "title 1", text = "text text text"),
             Song(artist = "Алиса", title = "title 2", text = "text text text"),
             Song(artist = "Алиса", title = "title 3", text = "text text text"),
@@ -193,7 +190,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
             Song(artist = "Алиса", title = "title 5", text = "text text text")
         )
 
-        songsFlow.value = songList
+        theSongs = songList
         localViewModel.submitAction(SelectArtist("Кино"))
 
         waitForCondition {
@@ -204,17 +201,12 @@ open class LocalViewModelTest: CommonViewModelTest() {
             localViewModel.localStateFlow.value.currentSongList == songList
         }
         assertEquals(songList, localViewModel.localStateFlow.value.currentSongList)
-        songsFlow.value = songList2
+        localViewModel.submitAction(SelectArtist("Алиса"))
+        theSongs = songList2
         waitForCondition {
             localViewModel.localStateFlow.value.currentSongList == songList2
         }
         assertEquals(songList2, localViewModel.localStateFlow.value.currentSongList)
-        localViewModel.submitAction(SelectArtist("Алиса"))
-        songsFlow.value = songList3
-        waitForCondition {
-            localViewModel.localStateFlow.value.currentSongList == songList3
-        }
-        assertEquals(songList3, localViewModel.localStateFlow.value.currentSongList)
     }
 
     @Test
@@ -247,7 +239,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
     @Test
     fun test107_selectSong_isWorkingCorrect() {
-        songsFlow.value = songList
+        theSongs = songList
 
         TimeUnit.MILLISECONDS.sleep(500)
 
@@ -295,7 +287,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
     @Test
     fun test108B_deleteFromFavorite_singleSong_isWorkingCorrect() {
         val song = songList[0].copy(favorite = true)
-        songsFlow.value = listOf(song)
+        theSongs = listOf(song)
         theSong = song
 
         TimeUnit.MILLISECONDS.sleep(500)
@@ -328,7 +320,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
     @Test
     fun test108C_deleteFromFavorite_lastSongAtList_isWorkingCorrect() {
         val song = songList[0]
-        songsFlow.value = listOf(songList[1], songList[2], song).map {
+        theSongs = listOf(songList[1], songList[2], song).map {
             it.copy(favorite = true)
         }
         theSong = song.copy(favorite = true)
@@ -363,7 +355,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
     @Test
     fun test108D_deleteFromFavorite_notLastSongAtList_isWorkingCorrect() {
         val song = songList[0]
-        songsFlow.value = listOf(songList[1], song, songList[2]).map {
+        theSongs = listOf(songList[1], song, songList[2]).map {
             it.copy(favorite = true)
         }
         theSong = song.copy(favorite = true)
@@ -397,7 +389,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
     @Test
     fun test109A_deleteCurrentToTrash_emptyList_isWorkingCorrect() {
-        songsFlow.value = listOf()
+        theSongs = listOf()
 
         localViewModel.submitAction(SelectArtist("Кино"))
 
@@ -418,7 +410,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
     @Test
     fun test109B_deleteCurrentToTrash_notEmptyList_regular_isWorkingCorrect() {
-        songsFlow.value = songList
+        theSongs = songList
 
         localViewModel.submitAction(SelectArtist("Кино"))
 
@@ -441,15 +433,15 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
     @Test
     fun test109C_deleteCurrentToTrash_notEmptyList_last_isWorkingCorrect() {
-        songsFlow.value = songList
+        theSongs = songList
 
         localViewModel.submitAction(SelectArtist("Кино"))
 
         TimeUnit.MILLISECONDS.sleep(500)
 
-        localViewModel.submitAction(SelectSong(songsFlow.value.size))
+        localViewModel.submitAction(SelectSong(theSongs.size))
         waitForCondition {
-            localViewModel.commonSongTextStateFlow.value.currentSongPosition == songsFlow.value.size
+            localViewModel.commonSongTextStateFlow.value.currentSongPosition == theSongs.size
         }
         val song = localViewModel.commonSongTextStateFlow.value.currentSong ?: throw IllegalStateException()
 
@@ -533,7 +525,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
     @Test
     fun test114_nextSong_regular_isWorkingCorrect() {
-        songsFlow.value = songList + songList + songList + songList
+        theSongs = songList + songList + songList + songList
 
         localViewModel.submitAction(SelectArtist("Кино"))
 
@@ -556,13 +548,13 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
     @Test
     fun test115_nextSong_last_isWorkingCorrect() {
-        songsFlow.value = songList + songList + songList + songList
+        theSongs = songList + songList + songList + songList
 
         localViewModel.submitAction(SelectArtist("Кино"))
 
         TimeUnit.MILLISECONDS.sleep(500)
 
-        localViewModel.submitAction(SelectSong(songsFlow.value.size - 1))
+        localViewModel.submitAction(SelectSong(theSongs.size - 1))
 
         TimeUnit.MILLISECONDS.sleep(500)
 
@@ -579,7 +571,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
     @Test
     fun test116_prevSong_regular_isWorkingCorrect() {
-        songsFlow.value = songList + songList + songList + songList
+        theSongs = songList + songList + songList + songList
 
         localViewModel.submitAction(SelectArtist("Кино"))
 
@@ -602,7 +594,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
     @Test
     fun test117_prevSong_first_isWorkingCorrect() {
-        songsFlow.value = songList + songList + songList + songList
+        theSongs = songList + songList + songList + songList
 
         localViewModel.submitAction(SelectArtist("Кино"))
 
@@ -620,7 +612,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         TimeUnit.MILLISECONDS.sleep(500)
 
-        assertEquals(ScreenVariant.SongText("Кино", songsFlow.value.size - 1), localViewModel.appStateFlow.value.currentScreenVariant)
+        assertEquals(ScreenVariant.SongText("Кино", theSongs.size - 1), localViewModel.appStateFlow.value.currentScreenVariant)
     }
 
     @Test
