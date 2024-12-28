@@ -36,6 +36,7 @@ import jatx.russianrocksongbook.localsongs.api.methods.selectSongByArtistAndTitl
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import jatx.russianrocksongbook.testing.*
+import kotlinx.coroutines.runBlocking
 import leakcanary.DetectLeaksAfterTestSuccess
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -354,7 +355,9 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(ARTIST_1))
         Log.e("test $testNumber assert", "app bar title starts equally with $ARTIST_1")
 
-        val songs = localRepository.getSongsByArtistAsList(ARTIST_1)
+        val songs = runBlocking {
+            localRepository.getSongsByArtist(ARTIST_1)
+        }
 
         composeTestRule
             .onNodeWithText(songs[0].title)
@@ -450,9 +453,11 @@ class UITest {
     fun test0106_songListIsScrollingCorrectly() {
         val testNumber = 106
 
-        val titles = localRepository
-            .getSongsByArtistAsList(ARTIST_1)
-            .map { it.title }
+        val titles = runBlocking {
+            localRepository
+                .getSongsByArtist(ARTIST_1)
+                .map { it.title }
+        }
 
         composeTestRule.activityRule.scenario.onActivity {
             selectArtist(ARTIST_1)
@@ -554,8 +559,10 @@ class UITest {
                 .text?.startEquallyWith(ARTIST_1) ?: false
         }
 
-        val songs = localRepository
-            .getSongsByArtistAsList(ARTIST_1)
+        val songs = runBlocking {
+            localRepository
+                .getSongsByArtist(ARTIST_1)
+        }
         val titles = songs
             .map { it.title }
         val songIndex1 = titles.indexOf(TITLE_1_3)
@@ -614,8 +621,10 @@ class UITest {
                 .isDisplayed()
         }
 
-        val songs = localRepository
-            .getSongsByArtistAsList(ARTIST_1)
+        val songs = runBlocking {
+            localRepository
+                .getSongsByArtist(ARTIST_1)
+        }
         val titles = songs
             .map { it.title }
         val songIndex1 = titles.indexOf(TITLE_1_3)
@@ -737,8 +746,10 @@ class UITest {
                 .isDisplayed()
         }
 
-        val songs = localRepository
-            .getSongsByArtistAsList(ARTIST_1)
+        val songs = runBlocking {
+            localRepository
+                .getSongsByArtist(ARTIST_1)
+        }
         val titles = songs
             .map { it.title }
         val songIndex1 = titles.indexOf(TITLE_1_3)
@@ -1704,23 +1715,29 @@ class UITest {
                 .performClick()
             Log.e("test $testNumber click", DOWNLOAD_BUTTON)
             composeTestRule.waitForCondition {
-                localRepository
-                    .getSongsByArtistAsList(list[2].artist)
-                    .map { it.title }
-                    .contains(list[2].visibleTitle)
+                runBlocking {
+                    localRepository
+                        .getSongsByArtist(list[2].artist)
+                        .map { it.title }
+                        .contains(list[2].visibleTitle)
+                }
             }
             assert(
-                localRepository
-                    .getSongsByArtistAsList(list[2].artist)
-                    .map { it.title }
-                    .contains(list[2].visibleTitle)
+                runBlocking {
+                    localRepository
+                        .getSongsByArtist(list[2].artist)
+                        .map { it.title }
+                        .contains(list[2].visibleTitle)
+                }
             )
             Log.e("test $testNumber assert", "${list[2].artist} contains ${list[2].visibleTitle}")
             assert(
-                localRepository
-                    .getSongsByArtistAsList(ARTIST_FAVORITE)
-                    .map { it.title }
-                    .contains(list[2].visibleTitle)
+                runBlocking {
+                    localRepository
+                        .getSongsByArtist(ARTIST_FAVORITE)
+                        .map { it.title }
+                        .contains(list[2].visibleTitle)
+                }
             )
             Log.e("test $testNumber assert", "$ARTIST_FAVORITE contains ${list[2].visibleTitle}")
 
@@ -2813,7 +2830,9 @@ class UITest {
         localRepository.setFavorite(true, ARTIST_1, TITLE_1_3)
         val song3 = localRepository.getSongByArtistAndTitle(ARTIST_1, TITLE_1_3)!!
 
-        val songs = localRepository.getSongsByArtistAsList(ARTIST_FAVORITE)
+        val songs = runBlocking {
+            localRepository.getSongsByArtist(ARTIST_FAVORITE)
+        }
 
         val index1 = songs.indexOf(song1)
         assertTrue(index1 >= 0)
@@ -3273,8 +3292,10 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        val songs = localRepository
-            .getSongsByArtistAsList(settingsRepository.defaultArtist)
+        val songs = runBlocking {
+            localRepository
+                .getSongsByArtist(settingsRepository.defaultArtist)
+        }
 
         val firstSongIndex = 3
 
@@ -3395,8 +3416,10 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        val songs = localRepository
-            .getSongsByArtistAsList(settingsRepository.defaultArtist)
+        val songs = runBlocking {
+            localRepository
+                .getSongsByArtist(settingsRepository.defaultArtist)
+        }
 
         val firstSongIndex = 3
 
@@ -4570,12 +4593,16 @@ class UITest {
     fun test1401_favoriteSongTextIsWorkingCorrectly() {
         val testNumber = 1401
 
-        val favoriteSongs = localRepository.getSongsByArtistAsList(ARTIST_FAVORITE)
+        val favoriteSongs = runBlocking {
+            localRepository.getSongsByArtist(ARTIST_FAVORITE)
+        }
         favoriteSongs.forEach {
             localRepository.setFavorite(false, it.artist, it.title)
         }
 
-        val songs = localRepository.getSongsByArtistAsList(ARTIST_1)
+        val songs = runBlocking {
+            localRepository.getSongsByArtist(ARTIST_1)
+        }
         val actualSongs = (3..7).map {
             songs[it]
         }

@@ -12,6 +12,7 @@ import jatx.russianrocksongbook.domain.repository.cloud.CloudRepository
 import jatx.russianrocksongbook.domain.repository.cloud.CloudSearchOrderBy
 import jatx.russianrocksongbook.domain.repository.cloud.result.*
 import jatx.russianrocksongbook.domain.repository.local.LocalRepository
+import kotlinx.coroutines.runBlocking
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,13 +28,19 @@ class CloudRepositoryTestImpl @Inject constructor(
     override var isOnline = true
 
     private val list1 by lazy {
-        localRepo.getSongsByArtistAsList("Немного Нервно")
+        runBlocking {
+            localRepo.getSongsByArtist("Немного Нервно")
+        }
     }
     private val list2 by lazy {
-        localRepo.getSongsByArtistAsList("Александр Башлачёв")
+        runBlocking {
+            localRepo.getSongsByArtist("Александр Башлачёв")
+        }
     }
     private val list3 by lazy {
-        localRepo.getSongsByArtistAsList("Сплин")
+        runBlocking {
+            localRepo.getSongsByArtist("Сплин")
+        }
     }
 
     private val arrayList by lazy {

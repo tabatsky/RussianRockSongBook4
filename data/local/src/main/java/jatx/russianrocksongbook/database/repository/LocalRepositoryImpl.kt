@@ -71,13 +71,6 @@ class LocalRepositoryImpl @Inject constructor(
                 list.map { it.toSong() }
             }
 
-    override fun getSongsByArtistAsList(artist: String) =
-        (if (artist == ARTIST_FAVORITE)
-            songDao.getSongsFavoriteAsList()
-        else
-            songDao.getSongsByArtistAsList(artist))
-            .map { it.toSong() }
-
     override fun getSongsByVoiceSearch(voiceSearch: String): List<Song> {
         val query = SimpleSQLiteQuery(voiceSearchQueryCached, arrayOf(voiceSearch, voiceSearch))
         return songDao

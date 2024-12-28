@@ -25,12 +25,6 @@ interface SongDao {
     @Query("SELECT * FROM songs WHERE artist=:artist AND deleted=0 ORDER BY title")
     suspend fun getSongsByArtist(artist: String): List<SongEntity>
 
-    @Query("SELECT * FROM songs WHERE favorite=1 AND deleted=0 ORDER BY artist||title")
-    fun getSongsFavoriteAsList(): List<SongEntity>
-
-    @Query("SELECT * FROM songs WHERE artist=:artist AND deleted=0 ORDER BY title")
-    fun getSongsByArtistAsList(artist: String): List<SongEntity>
-
     @RawQuery
     fun getSongsRawQuery(query: SupportSQLiteQuery): List<SongEntity>
 

@@ -34,7 +34,6 @@ interface LocalRepository {
     fun getArtistsAsList(): List<String>
     fun getCountByArtist(artist: String): Int
     suspend fun getSongsByArtist(artist: String): List<Song>
-    fun getSongsByArtistAsList(artist: String): List<Song>
     fun getSongsByVoiceSearch(voiceSearch: String): List<Song>
     fun getSongsByTextSearch(words: List<String>, orderBy: TextSearchOrderBy): List<Song>
     suspend fun getSongByArtistAndPosition(artist: String, position: Int): Song?
