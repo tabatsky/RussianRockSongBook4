@@ -61,7 +61,6 @@ import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.preferences.ListenToMusicVariant
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import kotlinx.coroutines.launch
-import kotlin.math.abs
 
 @Composable
 fun CommonSongTextScreenImplContent(
@@ -100,9 +99,11 @@ fun CommonSongTextScreenImplContent(
     var positionDeltaSign by rememberSaveable { mutableIntStateOf(1) }
     if (positionChanged) {
         val positionIncreased = position > currentSongPosition
-        val positionReseted = abs(position - currentSongPosition) > 1
+        val positionWasReset =
+            (position - currentSongPosition > 1) && (currentSongPosition == 0)
+                    || (currentSongPosition - position > 1) && (position == 0)
         positionDeltaSign =
-            (if (positionIncreased) 1 else -1) * (if (positionReseted) -1 else 1)
+            (if (positionIncreased) 1 else -1) * (if (positionWasReset) -1 else 1)
     }
 
     val key = artist to song?.title
@@ -250,7 +251,7 @@ fun CommonSongTextScreenImplContent(
 
                 AnimatedContent(
                     targetState = skipBody,
-                    label = "",
+                    label = "songTextBody",
                     transitionSpec = {
                         slideInHorizontally {
                             fullWidth -> fullWidth * positionDeltaSign
@@ -285,15 +286,30 @@ fun CommonSongTextScreenImplContent(
                     actions = { TheActions() }
                 )
 
-                if (skipBody) {
-                    Spacer(
-                        modifier = Modifier
-                            .weight(1.0f)
-                            .background(theme.colorBg)
-                    )
-                } else {
-                    TheBody(Modifier.weight(1.0f))
+                AnimatedContent(
+                    targetState = skipBody,
+                    label = "songTextBody",
+                    transitionSpec = {
+                        slideInHorizontally {
+                                fullWidth -> fullWidth * positionDeltaSign
+                        } togetherWith slideOutHorizontally {
+                                fullWidth -> -fullWidth * positionDeltaSign
+                        }
+                    },
+                    modifier = Modifier
+                        .weight(1.0f)
+                ) { skip ->
+                    if (skip) {
+                        Spacer(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(theme.colorBg)
+                        )
+                    } else {
+                        TheBody(Modifier.fillMaxSize())
+                    }
                 }
+
                 ThePanel()
             }
         }
