@@ -1,5 +1,9 @@
 package jatx.russianrocksongbook.commonsongtext.view
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -12,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -56,6 +61,7 @@ import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.preferences.ListenToMusicVariant
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 @Composable
 fun CommonSongTextScreenImplContent(
@@ -91,6 +97,14 @@ fun CommonSongTextScreenImplContent(
 
     val positionChanged = position != currentSongPosition
 
+    var positionDeltaSign by rememberSaveable { mutableIntStateOf(1) }
+    if (positionChanged) {
+        val positionIncreased = position > currentSongPosition
+        val positionReseted = abs(position - currentSongPosition) > 1
+        positionDeltaSign =
+            (if (positionIncreased) 1 else -1) * (if (positionReseted) -1 else 1)
+    }
+
     val key = artist to song?.title
     var lastKey by rememberSaveable { mutableStateOf(key) }
     val keyChanged = key != lastKey
@@ -99,7 +113,7 @@ fun CommonSongTextScreenImplContent(
         lastKey = key
     }
 
-    val skipBody = positionChanged || keyChanged
+    val skipBody = positionChanged || keyChanged || song == null
 
     var text by editorText
 
@@ -164,16 +178,16 @@ fun CommonSongTextScreenImplContent(
     val fontSizeTextSp = dimensionResource(id = R.dimen.text_size_16)
         .toScaledSp(ScalePow.TEXT)
 
-    song?.let { _song ->
-        BoxWithConstraints(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            val W = this.maxWidth
-            val H = this.maxHeight
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        val W = this.maxWidth
+        val H = this.maxHeight
 
-            @Composable
-            fun TheBody(modifier: Modifier) {
+        @Composable
+        fun TheBody(modifier: Modifier) {
+            song?.let { _song ->
                 CommonSongTextBody(
                     W = W,
                     H = H,
@@ -191,152 +205,166 @@ fun CommonSongTextScreenImplContent(
                     onWordClick = onWordClick
                 )
             }
+        }
 
-            @Composable
-            fun ThePanel() {
-                CommonSongTextPanel(
-                    W = W,
-                    H = H,
-                    theme = theme,
-                    isEditorMode = isEditorMode,
-                    listenToMusicVariant = listenToMusicVariant,
-                    onYandexMusicClick = onYandexMusicClick,
-                    onVkMusicClick = onVkMusicClick,
-                    onYoutubeMusicClick = onYoutubeMusicClick,
-                    onUploadClick = onUploadClick,
-                    onWarningClick = onWarningClick,
-                    onTrashClick = onTrashClick,
-                    onEditClick = onEditClick,
-                    onSaveClick = onSaveClick
+        @Composable
+        fun ThePanel() {
+            CommonSongTextPanel(
+                W = W,
+                H = H,
+                theme = theme,
+                isEditorMode = isEditorMode,
+                listenToMusicVariant = listenToMusicVariant,
+                onYandexMusicClick = onYandexMusicClick,
+                onVkMusicClick = onVkMusicClick,
+                onYoutubeMusicClick = onYoutubeMusicClick,
+                onUploadClick = onUploadClick,
+                onWarningClick = onWarningClick,
+                onTrashClick = onTrashClick,
+                onEditClick = onEditClick,
+                onSaveClick = onSaveClick
+            )
+        }
+
+        @Composable
+        fun TheActions() {
+            CommonSongTextActions(
+                isFavorite = song?.favorite ?: false,
+                onSongChanged = onSongChanged,
+                isAutoPlayMode = isAutoPlayMode,
+                isEditorMode = isEditorMode,
+                submitAction = submitAction
+            )
+        }
+
+        if (W < H) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = theme.colorBg)
+                    .padding(bottom = 4.dp)
+            ) {
+                CommonTopAppBar(
+                    actions = { TheActions() }
                 )
-            }
 
-            @Composable
-            fun TheActions() {
-                CommonSongTextActions(
-                    isFavorite = _song.favorite,
-                    onSongChanged = onSongChanged,
-                    isAutoPlayMode = isAutoPlayMode,
-                    isEditorMode = isEditorMode,
-                    submitAction = submitAction
-                )
-            }
-
-            if (W < H) {
-                Column(
+                AnimatedContent(
+                    targetState = skipBody,
+                    label = "",
+                    transitionSpec = {
+                        slideInHorizontally {
+                            fullWidth -> fullWidth * positionDeltaSign
+                        } togetherWith slideOutHorizontally {
+                            fullWidth -> -fullWidth * positionDeltaSign
+                        }
+                    },
                     modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = theme.colorBg)
-                        .padding(bottom = 4.dp)
-                ) {
-                    CommonTopAppBar(
-                        actions = { TheActions() }
-                    )
-
-                    if (skipBody) {
+                        .weight(1.0f)
+                ) { skip ->
+                    if (skip) {
                         Spacer(
                             modifier = Modifier
-                                .weight(1.0f)
+                                .fillMaxSize()
                                 .background(theme.colorBg)
                         )
                     } else {
-                        TheBody(Modifier.weight(1.0f))
+                        TheBody(Modifier.fillMaxSize())
                     }
-
-                    ThePanel()
                 }
+
+                ThePanel()
+            }
+        } else {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = theme.colorBg)
+                    .padding(end = 4.dp)
+            ) {
+                CommonSideAppBar(
+                    actions = { TheActions() }
+                )
+
+                if (skipBody) {
+                    Spacer(
+                        modifier = Modifier
+                            .weight(1.0f)
+                            .background(theme.colorBg)
+                    )
+                } else {
+                    TheBody(Modifier.weight(1.0f))
+                }
+                ThePanel()
+            }
+        }
+
+        if (showVkDialog) {
+            if (vkMusicDontAsk) {
+                submitAction(UpdateShowVkDialog(false))
+                submitAction(OpenVkMusic(true))
             } else {
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = theme.colorBg)
-                        .padding(end = 4.dp)
-                ) {
-                    CommonSideAppBar(
-                        actions = { TheActions() }
-                    )
-
-                    if (skipBody) {
-                        Spacer(
-                            modifier = Modifier
-                                .weight(1.0f)
-                                .background(theme.colorBg)
-                        )
-                    } else {
-                        TheBody(Modifier.weight(1.0f))
-                    }
-                    ThePanel()
-                }
-            }
-
-            if (showVkDialog) {
-                if (vkMusicDontAsk) {
-                    submitAction(UpdateShowVkDialog(false))
-                    submitAction(OpenVkMusic(true))
-                } else {
-                    VkMusicDialog(
-                        submitAction = submitAction,
-                        onDismiss = {
-                            submitAction(UpdateShowVkDialog(false))
-                        })
-                }
-            }
-            if (showYandexDialog) {
-                if (yandexMusicDontAsk) {
-                    submitAction(UpdateShowYandexDialog(false))
-                    submitAction(OpenYandexMusic(true))
-                } else {
-                    YandexMusicDialog(
-                        submitAction = submitAction,
-                        onDismiss = {
-                            submitAction(UpdateShowYandexDialog(false))
-                        })
-                }
-            }
-            if (showYoutubeDialog) {
-                if (youtubeMusicDontAsk) {
-                    submitAction(UpdateShowYoutubeDialog(false))
-                    submitAction(OpenYoutubeMusic(true))
-                } else {
-                    YoutubeMusicDialog(
-                        submitAction = submitAction,
-                        onDismiss = {
-                            submitAction(UpdateShowYoutubeDialog(false))
-                        })
-                }
-            }
-            if (showUploadDialog) {
-                UploadDialog(
-                    onConfirm = {
-                        submitAction(UploadCurrentToCloud)
-                    },
+                VkMusicDialog(
+                    submitAction = submitAction,
                     onDismiss = {
-                        submitAction(UpdateShowUploadDialog(false))
-                    }
-                )
+                        submitAction(UpdateShowVkDialog(false))
+                    })
             }
-            if (showDeleteToTrashDialog) {
-                DeleteToTrashDialog(
+        }
+        if (showYandexDialog) {
+            if (yandexMusicDontAsk) {
+                submitAction(UpdateShowYandexDialog(false))
+                submitAction(OpenYandexMusic(true))
+            } else {
+                YandexMusicDialog(
+                    submitAction = submitAction,
                     onDismiss = {
-                        submitAction(UpdateShowDeleteToTrashDialog(false))
-                    },
-                    submitAction = submitAction
-                )
+                        submitAction(UpdateShowYandexDialog(false))
+                    })
             }
-            if (showWarningDialog) {
-                WarningDialog(
-                    onConfirm = { comment ->
-                        submitAction(SendWarning(comment))
-                    },
+        }
+        if (showYoutubeDialog) {
+            if (youtubeMusicDontAsk) {
+                submitAction(UpdateShowYoutubeDialog(false))
+                submitAction(OpenYoutubeMusic(true))
+            } else {
+                YoutubeMusicDialog(
+                    submitAction = submitAction,
                     onDismiss = {
-                        submitAction(UpdateShowWarningDialog(false))
-                    }
-                )
+                        submitAction(UpdateShowYoutubeDialog(false))
+                    })
             }
-            if (showChordDialog) {
-                ChordDialog(chord = selectedChord) {
-                    submitAction(UpdateShowChordDialog(needShow = false))
+        }
+        if (showUploadDialog) {
+            UploadDialog(
+                onConfirm = {
+                    submitAction(UploadCurrentToCloud)
+                },
+                onDismiss = {
+                    submitAction(UpdateShowUploadDialog(false))
                 }
+            )
+        }
+        if (showDeleteToTrashDialog) {
+            DeleteToTrashDialog(
+                onDismiss = {
+                    submitAction(UpdateShowDeleteToTrashDialog(false))
+                },
+                submitAction = submitAction
+            )
+        }
+        if (showWarningDialog) {
+            WarningDialog(
+                onConfirm = { comment ->
+                    submitAction(SendWarning(comment))
+                },
+                onDismiss = {
+                    submitAction(UpdateShowWarningDialog(false))
+                }
+            )
+        }
+        if (showChordDialog) {
+            ChordDialog(chord = selectedChord) {
+                submitAction(UpdateShowChordDialog(needShow = false))
             }
         }
     }
