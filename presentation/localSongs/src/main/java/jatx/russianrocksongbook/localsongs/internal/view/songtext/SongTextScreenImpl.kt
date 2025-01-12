@@ -20,6 +20,7 @@ internal fun SongTextScreenImpl(artist: String, position: Int) {
         artist = artist,
         position = position,
         song = song,
+        songCount = commonSongTextState.currentSongCount,
         currentSongPosition = commonSongTextState.currentSongPosition,
         isAutoPlayMode = commonSongTextState.isAutoPlayMode,
         isEditorMode = commonSongTextState.isEditorMode,
