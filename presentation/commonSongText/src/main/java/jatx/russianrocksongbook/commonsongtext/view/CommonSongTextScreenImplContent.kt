@@ -210,6 +210,32 @@ fun CommonSongTextScreenImplContent(
         }
 
         @Composable
+        fun TheAnimatedContent(modifier: Modifier) {
+            AnimatedContent(
+                targetState = skipBody,
+                label = "songTextBody",
+                transitionSpec = {
+                    slideInHorizontally {
+                            fullWidth -> fullWidth * positionDeltaSign
+                    } togetherWith slideOutHorizontally {
+                            fullWidth -> -fullWidth * positionDeltaSign
+                    }
+                },
+                modifier = modifier
+            ) { skip ->
+                if (skip) {
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(theme.colorBg)
+                    )
+                } else {
+                    TheBody(Modifier.fillMaxSize())
+                }
+            }
+        }
+
+        @Composable
         fun ThePanel() {
             CommonSongTextPanel(
                 W = W,
@@ -250,29 +276,10 @@ fun CommonSongTextScreenImplContent(
                     actions = { TheActions() }
                 )
 
-                AnimatedContent(
-                    targetState = skipBody,
-                    label = "songTextBody",
-                    transitionSpec = {
-                        slideInHorizontally {
-                            fullWidth -> fullWidth * positionDeltaSign
-                        } togetherWith slideOutHorizontally {
-                            fullWidth -> -fullWidth * positionDeltaSign
-                        }
-                    },
+                TheAnimatedContent(
                     modifier = Modifier
                         .weight(1.0f)
-                ) { skip ->
-                    if (skip) {
-                        Spacer(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(theme.colorBg)
-                        )
-                    } else {
-                        TheBody(Modifier.fillMaxSize())
-                    }
-                }
+                )
 
                 ThePanel()
             }
@@ -287,29 +294,10 @@ fun CommonSongTextScreenImplContent(
                     actions = { TheActions() }
                 )
 
-                AnimatedContent(
-                    targetState = skipBody,
-                    label = "songTextBody",
-                    transitionSpec = {
-                        slideInHorizontally {
-                                fullWidth -> fullWidth * positionDeltaSign
-                        } togetherWith slideOutHorizontally {
-                                fullWidth -> -fullWidth * positionDeltaSign
-                        }
-                    },
+                TheAnimatedContent(
                     modifier = Modifier
                         .weight(1.0f)
-                ) { skip ->
-                    if (skip) {
-                        Spacer(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(theme.colorBg)
-                        )
-                    } else {
-                        TheBody(Modifier.fillMaxSize())
-                    }
-                }
+                )
 
                 ThePanel()
             }
