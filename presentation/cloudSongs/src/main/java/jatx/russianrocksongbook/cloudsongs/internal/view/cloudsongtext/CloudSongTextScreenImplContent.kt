@@ -1,6 +1,10 @@
 package jatx.russianrocksongbook.cloudsongs.internal.view.cloudsongtext
 
 import android.util.Log
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -65,23 +69,31 @@ internal fun CloudSongTextScreenImplContent(
     submitAction: (UIAction) -> Unit
 ) {
     val key = position
-    var lastKey by rememberSaveable { mutableStateOf(key) }
+    var lastKey by rememberSaveable { mutableIntStateOf(key) }
     val keyChanged = key != lastKey
+    var positionDeltaSign by rememberSaveable { mutableIntStateOf(1) }
 
     if (keyChanged) {
+        positionDeltaSign = if (key > lastKey) 1 else -1
         lastKey = key
     }
 
-    submitAction(SelectCloudSong(position))
+    LaunchedEffect(position) {
+        submitAction(SelectCloudSong(position))
+    }
 
     val itemsAdapter = ItemsAdapter(cloudSongItems)
 
     val cloudSong = itemsAdapter.getItem(position)
 
-    submitAction(UpdateCurrentCloudSong(cloudSong))
+    LaunchedEffect(cloudSong) {
+        submitAction(UpdateCurrentCloudSong(cloudSong))
+    }
 
     val count = itemsAdapter.size
-    submitAction(UpdateCurrentCloudSongCount(count))
+    LaunchedEffect(count) {
+        submitAction(UpdateCurrentCloudSongCount(count))
+    }
 
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -124,161 +136,190 @@ internal fun CloudSongTextScreenImplContent(
     val fontSizeTextSp = dimensionResource(id = R.dimen.text_size_16)
         .toScaledSp(ScalePow.TEXT)
 
-    if (cloudSong == null) {
-        CloudSongTextProgress(theme)
-    }
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        val W = this.maxWidth
+        val H = this.minHeight
 
-    cloudSong?.let { _cloudSong ->
-        BoxWithConstraints(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            val W = this.maxWidth
-            val H = this.minHeight
-
-            @Composable
-            fun TheBody(modifier: Modifier) {
-                if (!keyChanged) {
-                    CloudSongTextBody(
-                        W = W,
-                        H = H,
-                        cloudSong = _cloudSong,
-                        listState = listState,
-                        fontSizeTextSp = fontSizeTextSp,
-                        fontSizeTitleSp = fontSizeTitleSp,
-                        theme = theme,
-                        modifier = modifier,
-                        onWordClick = onWordClick
-                    )
-                }
-            }
-
-
-            @Composable
-            fun ThePanel() {
-                CloudSongTextPanel(
+        @Composable
+        fun TheBody(modifier: Modifier) {
+            if (cloudSong != null) {
+                CloudSongTextBody(
                     W = W,
                     H = H,
+                    cloudSong = cloudSong,
+                    listState = listState,
+                    fontSizeTextSp = fontSizeTextSp,
+                    fontSizeTitleSp = fontSizeTitleSp,
                     theme = theme,
-                    listenToMusicVariant = listenToMusicVariant,
-                    onYandexMusicClick = onYandexMusicClick,
-                    onVkMusicClick = onVkMusicClick,
-                    onYoutubeMusicClick = onYoutubeMusicClick,
-                    onDownloadClick = onDownloadClick,
-                    onWarningClick = onWarningClick,
-                    onLikeClick = onLikeClick,
-                    onDislikeClick = onDislikeClick,
-                    onDislikeLongClick = onDislikeLongClick
+                    modifier = modifier,
+                    onWordClick = onWordClick
                 )
             }
+        }
 
-            if (W < H) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = theme.colorBg)
-                        .padding(bottom = 4.dp)
-                ) {
-                    CommonTopAppBar(
-                        actions = {
-                            CloudSongTextActions(
-                                position = position,
-                                count = count,
-                                onCloudSongChanged = onCloudSongChanged,
-                                submitAction = submitAction
-                            )
-                        }
+        @Composable
+        fun TheAnimatedContent(modifier: Modifier) {
+            AnimatedContent(
+                targetState = keyChanged,
+                label = "cloudSongTextBody",
+                transitionSpec = {
+                    slideInHorizontally { fullWidth ->
+                        fullWidth * positionDeltaSign
+                    } togetherWith slideOutHorizontally { fullWidth ->
+                        -fullWidth * positionDeltaSign
+                    }
+                },
+                modifier = modifier
+            ) { changed ->
+                if (cloudSong == null) {
+                    CloudSongTextProgress(theme)
+                } else if (changed) {
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(theme.colorBg)
                     )
-
-                    TheBody(Modifier.weight(1.0f))
-                    ThePanel()
-                }
-            } else {
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = theme.colorBg)
-                        .padding(end = 4.dp)
-                ) {
-                    CommonSideAppBar(
-                        actions = {
-                            CloudSongTextActions(
-                                position = position,
-                                count = count,
-                                onCloudSongChanged = onCloudSongChanged,
-                                submitAction = submitAction
-                            )
-                        },
-                        appBarWidth = CLOUD_SONG_TEXT_APP_BAR_WIDTH
-                    )
-
-                    TheBody(Modifier.weight(1.0f))
-                    ThePanel()
-                }
-            }
-
-            if (showVkDialog) {
-                if (vkMusicDontAsk) {
-                    submitAction(UpdateShowVkDialog(false))
-                    submitAction(OpenVkMusic(true))
                 } else {
-                    VkMusicDialog(
-                        submitAction = submitAction,
-                        onDismiss = {
-                            submitAction(UpdateShowVkDialog(false))
-                        })
+                    TheBody(Modifier.fillMaxSize())
                 }
             }
-            if (showYandexDialog) {
-                if (yandexMusicDontAsk) {
-                    submitAction(UpdateShowYandexDialog(false))
-                    submitAction(OpenYandexMusic(true))
-                } else {
-                    YandexMusicDialog(
-                        submitAction = submitAction,
-                        onDismiss = {
-                            submitAction(UpdateShowYandexDialog(false))
-                        })
-                }
-            }
-            if (showYoutubeDialog) {
-                if (youtubeMusicDontAsk) {
-                    submitAction(UpdateShowYoutubeDialog(false))
-                    submitAction(OpenYoutubeMusic(true))
-                } else {
-                    YoutubeMusicDialog(
-                        submitAction = submitAction,
-                        onDismiss = {
-                            submitAction(UpdateShowYoutubeDialog(false))
-                        })
-                }
-            }
-            if (showWarningDialog) {
-                WarningDialog(
-                    onConfirm = { comment ->
-                        submitAction(SendWarning(comment))
-                    },
-                    onDismiss = {
-                        submitAction(UpdateShowWarningDialog(false))
+        }
+
+        @Composable
+        fun ThePanel() {
+            CloudSongTextPanel(
+                W = W,
+                H = H,
+                theme = theme,
+                listenToMusicVariant = listenToMusicVariant,
+                onYandexMusicClick = onYandexMusicClick,
+                onVkMusicClick = onVkMusicClick,
+                onYoutubeMusicClick = onYoutubeMusicClick,
+                onDownloadClick = onDownloadClick,
+                onWarningClick = onWarningClick,
+                onLikeClick = onLikeClick,
+                onDislikeClick = onDislikeClick,
+                onDislikeLongClick = onDislikeLongClick
+            )
+        }
+
+        if (W < H) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = theme.colorBg)
+                    .padding(bottom = 4.dp)
+            ) {
+                CommonTopAppBar(
+                    actions = {
+                        CloudSongTextActions(
+                            position = position,
+                            count = count,
+                            onCloudSongChanged = onCloudSongChanged,
+                            submitAction = submitAction
+                        )
                     }
                 )
+
+                TheAnimatedContent(
+                    modifier = Modifier
+                        .weight(1.0f)
+                )
+
+                ThePanel()
             }
-            if (showDeleteDialog) {
-                DeleteCloudSongDialog(
-                    onConfirm = { secret1, secret2 ->
-                        submitAction(
-                            DeleteCurrentFromCloud(secret1, secret2)
+        } else {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = theme.colorBg)
+                    .padding(end = 4.dp)
+            ) {
+                CommonSideAppBar(
+                    actions = {
+                        CloudSongTextActions(
+                            position = position,
+                            count = count,
+                            onCloudSongChanged = onCloudSongChanged,
+                            submitAction = submitAction
                         )
                     },
-                    onDismiss = {
-                        submitAction(UpdateShowDeleteDialog(false))
-                    }
+                    appBarWidth = CLOUD_SONG_TEXT_APP_BAR_WIDTH
                 )
+
+                TheAnimatedContent(
+                    modifier = Modifier
+                        .weight(1.0f)
+                )
+
+                ThePanel()
             }
-            if (showChordDialog) {
-                ChordDialog(chord = selectedChord) {
-                    submitAction(UpdateShowChordDialog(needShow = false))
+        }
+
+        if (showVkDialog) {
+            if (vkMusicDontAsk) {
+                submitAction(UpdateShowVkDialog(false))
+                submitAction(OpenVkMusic(true))
+            } else {
+                VkMusicDialog(
+                    submitAction = submitAction,
+                    onDismiss = {
+                        submitAction(UpdateShowVkDialog(false))
+                    })
+            }
+        }
+        if (showYandexDialog) {
+            if (yandexMusicDontAsk) {
+                submitAction(UpdateShowYandexDialog(false))
+                submitAction(OpenYandexMusic(true))
+            } else {
+                YandexMusicDialog(
+                    submitAction = submitAction,
+                    onDismiss = {
+                        submitAction(UpdateShowYandexDialog(false))
+                    })
+            }
+        }
+        if (showYoutubeDialog) {
+            if (youtubeMusicDontAsk) {
+                submitAction(UpdateShowYoutubeDialog(false))
+                submitAction(OpenYoutubeMusic(true))
+            } else {
+                YoutubeMusicDialog(
+                    submitAction = submitAction,
+                    onDismiss = {
+                        submitAction(UpdateShowYoutubeDialog(false))
+                    })
+            }
+        }
+        if (showWarningDialog) {
+            WarningDialog(
+                onConfirm = { comment ->
+                    submitAction(SendWarning(comment))
+                },
+                onDismiss = {
+                    submitAction(UpdateShowWarningDialog(false))
                 }
+            )
+        }
+        if (showDeleteDialog) {
+            DeleteCloudSongDialog(
+                onConfirm = { secret1, secret2 ->
+                    submitAction(
+                        DeleteCurrentFromCloud(secret1, secret2)
+                    )
+                },
+                onDismiss = {
+                    submitAction(UpdateShowDeleteDialog(false))
+                }
+            )
+        }
+        if (showChordDialog) {
+            ChordDialog(chord = selectedChord) {
+                submitAction(UpdateShowChordDialog(needShow = false))
             }
         }
     }
