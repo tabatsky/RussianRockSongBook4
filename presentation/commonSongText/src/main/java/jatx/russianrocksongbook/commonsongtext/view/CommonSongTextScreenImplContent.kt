@@ -67,6 +67,7 @@ fun CommonSongTextScreenImplContent(
     artist: String,
     position: Int,
     song: Song?,
+    songCount: Int,
     currentSongPosition: Int,
     isAutoPlayMode: Boolean = false,
     isEditorMode: Boolean = false,
@@ -99,11 +100,11 @@ fun CommonSongTextScreenImplContent(
     var positionDeltaSign by rememberSaveable { mutableIntStateOf(1) }
     if (positionChanged) {
         val positionIncreased = position > currentSongPosition
-        val positionWasReset =
-            (position - currentSongPosition > 1) && (currentSongPosition == 0)
-                    || (currentSongPosition - position > 1) && (position == 0)
+        val positionWasJumped =
+            (position == songCount - 1) && (currentSongPosition == 0)
+                    || (currentSongPosition == songCount - 1) && (position == 0)
         positionDeltaSign =
-            (if (positionIncreased) 1 else -1) * (if (positionWasReset) -1 else 1)
+            (if (positionIncreased) 1 else -1) * (if (positionWasJumped) -1 else 1)
     }
 
     val key = artist to song?.title

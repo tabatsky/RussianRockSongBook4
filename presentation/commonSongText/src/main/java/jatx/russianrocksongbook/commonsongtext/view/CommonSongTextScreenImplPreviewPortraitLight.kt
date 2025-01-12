@@ -17,6 +17,7 @@ fun CommonSongTextScreenImplPreviewPortraitLight() {
         title = "Название",
         text = "Текст текст\nТекст\nAm Em\nТекст\n"
     )
+    val songCount = 10
     val editorText = remember { mutableStateOf(song.text) }
 
     LightTheme {
@@ -24,6 +25,7 @@ fun CommonSongTextScreenImplPreviewPortraitLight() {
             artist = artist,
             position = position,
             song = song,
+            songCount = songCount,
             currentSongPosition = position,
             editorText = editorText,
             submitAction = {},

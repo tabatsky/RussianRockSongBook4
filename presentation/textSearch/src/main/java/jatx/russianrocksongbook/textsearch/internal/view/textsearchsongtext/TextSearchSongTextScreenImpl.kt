@@ -19,6 +19,7 @@ internal fun TextSearchSongTextScreenImpl(position: Int) {
         artist = song?.artist ?: "",
         position = position,
         song = song,
+        songCount = commonSongTextState.currentSongCount,
         currentSongPosition = commonSongTextState.currentSongPosition,
         isAutoPlayMode = commonSongTextState.isAutoPlayMode,
         isEditorMode = commonSongTextState.isEditorMode,
