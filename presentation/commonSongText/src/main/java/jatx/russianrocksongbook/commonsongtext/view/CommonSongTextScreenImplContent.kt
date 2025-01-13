@@ -95,18 +95,6 @@ fun CommonSongTextScreenImplContent(
         submitAction(SelectSong(position))
     }
 
-    val positionChanged = position != currentSongPosition
-
-    var positionDeltaSign by rememberSaveable { mutableIntStateOf(1) }
-    if (positionChanged) {
-        val positionIncreased = position > currentSongPosition
-        val positionWasJumped =
-            (position == songCount - 1) && (currentSongPosition == 0)
-                    || (currentSongPosition == songCount - 1) && (position == 0)
-        positionDeltaSign =
-            (if (positionIncreased) 1 else -1) * (if (positionWasJumped) -1 else 1)
-    }
-
     val key = artist to song?.title
     var lastKey by rememberSaveable { mutableStateOf(key) }
     val keyChanged = key != lastKey
@@ -115,7 +103,26 @@ fun CommonSongTextScreenImplContent(
         lastKey = key
     }
 
-    val skipBody = positionChanged || keyChanged || song == null
+    var lastSongCount by rememberSaveable { mutableIntStateOf(songCount) }
+    val songCountChanged = songCount != lastSongCount
+    if (songCountChanged) {
+        lastSongCount = songCount
+    }
+
+    val positionChanged = position != currentSongPosition
+
+    var positionDeltaSign by rememberSaveable { mutableIntStateOf(1) }
+
+    if (positionChanged || songCountChanged) {
+        val positionIncreased = position >= currentSongPosition
+        val positionWasJumped =
+            (position == songCount - 1) && (currentSongPosition == 0)
+                    || (currentSongPosition == songCount - 1) && (position == 0)
+        positionDeltaSign =
+            (if (positionIncreased) 1 else -1) * (if (positionWasJumped) -1 else 1)
+    }
+
+    val skipBody = positionChanged || keyChanged || songCountChanged|| song == null
 
     var text by editorText
 
