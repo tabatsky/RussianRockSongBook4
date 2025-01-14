@@ -19,6 +19,7 @@ import jatx.russianrocksongbook.domain.repository.local.ARTIST_ADD_ARTIST
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_ADD_SONG
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_CLOUD_SONGS
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_DONATION
+import jatx.russianrocksongbook.domain.repository.local.ARTIST_TEXT_SEARCH
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.domain.repository.preferences.colorBlack
 import jatx.russianrocksongbook.settings.R
@@ -44,6 +45,7 @@ internal fun DefaultArtistRow(
         remove(ARTIST_ADD_SONG)
         remove(ARTIST_ADD_ARTIST)
         remove(ARTIST_DONATION)
+        remove(ARTIST_TEXT_SEARCH)
     }
     val initialPosition = artists.indexOf(valueDefaultArtist.value)
 
