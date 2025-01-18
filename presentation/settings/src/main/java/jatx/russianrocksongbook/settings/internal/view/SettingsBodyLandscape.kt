@@ -27,13 +27,10 @@ internal fun SettingsBodyLandscape(
     theme: Theme,
     fontSizeLabelSp: TextUnit,
     fontSizeButtonSp: TextUnit,
-    artistList: List<String>,
     valueTheme: MutableState<Theme>,
     spinnerStateTheme: MutableState<SpinnerState>,
     valueFontScale: MutableState<FontScale>,
     spinnerStateFontScale: MutableState<SpinnerState>,
-    valueDefaultArtist: MutableState<String>,
-    spinnerStateDefaultArtist: MutableState<SpinnerState>,
     valueOrientation: MutableState<Orientation>,
     spinnerStateOrientation: MutableState<SpinnerState>,
     valueListenToMusicVariant: MutableState<ListenToMusicVariant>,
@@ -81,16 +78,6 @@ internal fun SettingsBodyLandscape(
                 .wrapContentHeight(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            DefaultArtistRow(
-                theme = theme,
-                modifier = Modifier
-                    .weight(1.0f)
-                    .wrapContentHeight(),
-                fontSize = fontSizeLabelSp,
-                artistList = artistList,
-                valueDefaultArtist = valueDefaultArtist,
-                spinnerStateDefaultArtist = spinnerStateDefaultArtist
-            )
             OrientationRow(
                 theme = theme,
                 modifier = Modifier
@@ -99,6 +86,15 @@ internal fun SettingsBodyLandscape(
                 fontSize = fontSizeLabelSp,
                 valueOrientation = valueOrientation,
                 spinnerStateOrientation = spinnerStateOrientation
+            )
+            ListenToMusicVariantRow(
+                theme = theme,
+                modifier = Modifier
+                    .weight(1.0f)
+                    .wrapContentHeight(),
+                fontSize = fontSizeLabelSp,
+                valueListenToMusicVariant = valueListenToMusicVariant,
+                spinnerStateListenToMusicVariant = spinnerStateListenToMusicVariant
             )
         }
         Divider(
@@ -111,15 +107,6 @@ internal fun SettingsBodyLandscape(
                 .wrapContentHeight(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            ListenToMusicVariantRow(
-                theme = theme,
-                modifier = Modifier
-                    .weight(1.0f)
-                    .wrapContentHeight(),
-                fontSize = fontSizeLabelSp,
-                valueListenToMusicVariant = valueListenToMusicVariant,
-                spinnerStateListenToMusicVariant = spinnerStateListenToMusicVariant
-            )
             ScrollSpeedRow(
                 theme = theme,
                 modifier = Modifier
@@ -128,6 +115,10 @@ internal fun SettingsBodyLandscape(
                 fontSize = fontSizeLabelSp,
                 valueScrollSpeed = valueScrollSpeed,
                 stringScrollSpeed = stringScrollSpeed
+            )
+            Spacer(
+                modifier = Modifier
+                    .weight(1.0f)
             )
         }
         Divider(

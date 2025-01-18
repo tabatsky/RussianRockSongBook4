@@ -209,6 +209,7 @@ open class LocalViewModel @Inject constructor(
                 ARTIST_ADD_ARTIST,
                 ARTIST_ADD_SONG,
                 ARTIST_CLOUD_SONGS,
+                ARTIST_TEXT_SEARCH,
                 ARTIST_DONATION)
             && AppNavigator.navControllerIsNull) {
 
@@ -223,6 +224,7 @@ open class LocalViewModel @Inject constructor(
         songTitleToPass: String? = null
     ) {
         Log.e("show songs", artist)
+        settings.defaultArtist = artist
         if (artist != appStateFlow.value.currentArtist) updateCurrentSongList(listOf())
         updateCurrentArtist(artist)
         updateCurrentSongCount(getCountByArtistUseCase.execute(artist))

@@ -34,8 +34,6 @@ internal class SettingsViewModel @Inject constructor(
         }
     }
 
-    val spinnerStateDefaultArtist = mutableStateOf(SpinnerState(0, false))
-    val valueDefaultArtist = mutableStateOf(settings.defaultArtist)
     val spinnerStateFontScale = mutableStateOf(SpinnerState(0, false))
     val valueFontScale = mutableStateOf(settings.commonFontScaleEnum)
     val spinnerStateListenToMusicVariant = mutableStateOf(SpinnerState(0, false))
@@ -54,7 +52,6 @@ internal class SettingsViewModel @Inject constructor(
                 saveSettings(
                     theme,
                     fontScale,
-                    defaultArtist,
                     orientation,
                     listenToMusicVariant,
                     scrollSpeed
@@ -68,14 +65,12 @@ internal class SettingsViewModel @Inject constructor(
     private fun saveSettings(
         theme: Theme,
         fontScale: Float,
-        defaultArtist: String,
         orientation: Orientation,
         listenToMusicVariant: ListenToMusicVariant,
         scrollSpeed: Float) {
 
         settings.theme = theme
         settings.commonFontScale = fontScale
-        settings.defaultArtist = defaultArtist
         settings.orientation = orientation
         settings.listenToMusicVariant = listenToMusicVariant
         settings.scrollSpeed = scrollSpeed

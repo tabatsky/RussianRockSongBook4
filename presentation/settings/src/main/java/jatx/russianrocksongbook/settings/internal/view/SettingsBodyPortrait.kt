@@ -26,13 +26,10 @@ internal fun SettingsBodyPortrait(
     theme: Theme,
     fontSizeLabelSp: TextUnit,
     fontSizeButtonSp: TextUnit,
-    artistList: List<String>,
     valueTheme: MutableState<Theme>,
     spinnerStateTheme: MutableState<SpinnerState>,
     valueFontScale: MutableState<FontScale>,
     spinnerStateFontScale: MutableState<SpinnerState>,
-    valueDefaultArtist: MutableState<String>,
-    spinnerStateDefaultArtist: MutableState<SpinnerState>,
     valueOrientation: MutableState<Orientation>,
     spinnerStateOrientation: MutableState<SpinnerState>,
     valueListenToMusicVariant: MutableState<ListenToMusicVariant>,
@@ -66,20 +63,6 @@ internal fun SettingsBodyPortrait(
             fontSize = fontSizeLabelSp,
             valueFontScale = valueFontScale,
             spinnerStateFontScale = spinnerStateFontScale
-        )
-        Divider(
-            color = theme.colorBg,
-            thickness = 2.dp
-        )
-        DefaultArtistRow(
-            theme = theme,
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight(),
-            fontSize = fontSizeLabelSp,
-            artistList = artistList,
-            valueDefaultArtist = valueDefaultArtist,
-            spinnerStateDefaultArtist = spinnerStateDefaultArtist
         )
         Divider(
             color = theme.colorBg,
