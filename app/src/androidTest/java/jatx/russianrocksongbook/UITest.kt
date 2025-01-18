@@ -153,6 +153,7 @@ class UITest {
             it.clean()
         }
         composeTestRule.activityRule.scenario.close()
+        settingsRepository.defaultArtist = ARTIST_KINO
     }
 
     @Test
