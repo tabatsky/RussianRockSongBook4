@@ -15,15 +15,10 @@ import jatx.spinner.SpinnerState
 @Preview
 @Composable
 fun SettingsScreenImplPreviewPortraitDark() {
-    val artistList = (1..30)
-        .map { "Исполнитель $it" }
-
     val valueTheme = remember { mutableStateOf(Theme.entries[0]) }
     val spinnerStateTheme = remember { mutableStateOf(SpinnerState(0, false)) }
     val valueFontScale = remember { mutableStateOf(FontScale.entries[0]) }
     val spinnerStateFontScale = remember { mutableStateOf(SpinnerState(0, false)) }
-    val valueDefaultArtist = remember { mutableStateOf("Исполнитель 1") }
-    val spinnerStateDefaultArtist = remember { mutableStateOf(SpinnerState(0, false)) }
     val valueOrientation = remember { mutableStateOf(Orientation.entries[0]) }
     val spinnerStateOrientation = remember { mutableStateOf(SpinnerState(0, false)) }
     val valueListenToMusicVariant = remember { mutableStateOf(ListenToMusicVariant.entries[0]) }
@@ -33,13 +28,10 @@ fun SettingsScreenImplPreviewPortraitDark() {
 
     DarkTheme {
         SettingsScreenImplContent(
-            artistList = artistList,
             valueTheme = valueTheme,
             spinnerStateTheme = spinnerStateTheme,
             valueFontScale = valueFontScale,
             spinnerStateFontScale = spinnerStateFontScale,
-            valueDefaultArtist = valueDefaultArtist,
-            spinnerStateDefaultArtist = spinnerStateDefaultArtist,
             valueOrientation = valueOrientation,
             spinnerStateOrientation = spinnerStateOrientation,
             valueListenToMusicVariant = valueListenToMusicVariant,

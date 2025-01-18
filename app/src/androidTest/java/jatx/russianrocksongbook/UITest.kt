@@ -2264,22 +2264,6 @@ class UITest {
         )
 
         composeTestRule
-            .onNodeWithText(stringConst.defArtist)
-            .assertIsDisplayed()
-        Log.e("test $testNumber assert", "${stringConst.defArtist} is displayed")
-        composeTestRule
-            .onNodeWithTag(DEFAULT_ARTIST_SPINNER)
-            .assertIsDisplayed()
-        Log.e("test $testNumber assert", "$DEFAULT_ARTIST_SPINNER is displayed")
-        composeTestRule
-            .onNodeWithTag(DEFAULT_ARTIST_SPINNER)
-            .assertTextEquals(settingsRepository.defaultArtist)
-        Log.e(
-            "test $testNumber assert",
-            "$DEFAULT_ARTIST_SPINNER text is ${settingsRepository.defaultArtist}"
-        )
-
-        composeTestRule
             .onNodeWithText(stringConst.orientFix)
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "${stringConst.orientFix} is displayed")
@@ -2431,22 +2415,6 @@ class UITest {
             "test $testNumber assert",
             "$FONT_SCALE_SPINNER text is " +
                     stringConst.fontScaleList[settingsRepository.commonFontScaleEnum.ordinal]
-        )
-
-        composeTestRule
-            .onNodeWithText(stringConst.defArtist)
-            .assertIsDisplayed()
-        Log.e("test $testNumber assert", "${stringConst.defArtist} is displayed")
-        composeTestRule
-            .onNodeWithTag(DEFAULT_ARTIST_SPINNER)
-            .assertIsDisplayed()
-        Log.e("test $testNumber assert", "$DEFAULT_ARTIST_SPINNER is displayed")
-        composeTestRule
-            .onNodeWithTag(DEFAULT_ARTIST_SPINNER)
-            .assertTextEquals(settingsRepository.defaultArtist)
-        Log.e(
-            "test $testNumber assert",
-            "$DEFAULT_ARTIST_SPINNER text is ${settingsRepository.defaultArtist}"
         )
 
         composeTestRule

@@ -30,13 +30,10 @@ import jatx.spinner.SpinnerState
 
 @Composable
 fun SettingsScreenImplContent(
-    artistList: List<String>,
     valueTheme: MutableState<Theme>,
     spinnerStateTheme: MutableState<SpinnerState>,
     valueFontScale: MutableState<FontScale>,
     spinnerStateFontScale: MutableState<SpinnerState>,
-    valueDefaultArtist: MutableState<String>,
-    spinnerStateDefaultArtist: MutableState<SpinnerState>,
     valueOrientation: MutableState<Orientation>,
     spinnerStateOrientation: MutableState<SpinnerState>,
     valueListenToMusicVariant: MutableState<ListenToMusicVariant>,
@@ -49,7 +46,6 @@ fun SettingsScreenImplContent(
 
     val themeToSave by valueTheme
     val fontScaleToSave by valueFontScale
-    val defaultArtistToSave by valueDefaultArtist
     val orientationToSave by valueOrientation
     val listenToMusicVariantToSave by valueListenToMusicVariant
     val scrollSpeedToSave by valueScrollSpeed
@@ -59,7 +55,6 @@ fun SettingsScreenImplContent(
             SaveSettings(
                 themeToSave,
                 fontScaleToSave.scale,
-                defaultArtistToSave,
                 orientationToSave,
                 listenToMusicVariantToSave,
                 scrollSpeedToSave
@@ -94,13 +89,10 @@ fun SettingsScreenImplContent(
                     theme = theme,
                     fontSizeLabelSp = fontSizeLabelSp,
                     fontSizeButtonSp = fontSizeButtonSp,
-                    artistList = artistList,
                     valueTheme = valueTheme,
                     spinnerStateTheme = spinnerStateTheme,
                     valueFontScale = valueFontScale,
                     spinnerStateFontScale = spinnerStateFontScale,
-                    valueDefaultArtist = valueDefaultArtist,
-                    spinnerStateDefaultArtist = spinnerStateDefaultArtist,
                     valueOrientation = valueOrientation,
                     spinnerStateOrientation = spinnerStateOrientation,
                     valueListenToMusicVariant = valueListenToMusicVariant,
@@ -124,13 +116,10 @@ fun SettingsScreenImplContent(
                     theme = theme,
                     fontSizeLabelSp = fontSizeLabelSp,
                     fontSizeButtonSp = fontSizeButtonSp,
-                    artistList = artistList,
                     valueTheme = valueTheme,
                     spinnerStateTheme = spinnerStateTheme,
                     valueFontScale = valueFontScale,
                     spinnerStateFontScale = spinnerStateFontScale,
-                    valueDefaultArtist = valueDefaultArtist,
-                    spinnerStateDefaultArtist = spinnerStateDefaultArtist,
                     valueOrientation = valueOrientation,
                     spinnerStateOrientation = spinnerStateOrientation,
                     valueListenToMusicVariant = valueListenToMusicVariant,
