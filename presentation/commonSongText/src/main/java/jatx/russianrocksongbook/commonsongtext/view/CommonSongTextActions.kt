@@ -1,5 +1,6 @@
 package jatx.russianrocksongbook.commonsongtext.view
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.runtime.Composable
 import jatx.russianrocksongbook.commonsongtext.R
 import jatx.russianrocksongbook.commonsongtext.viewmodel.NextSong
@@ -21,24 +22,29 @@ internal fun CommonSongTextActions(
     isEditorMode: Boolean,
     submitAction: (UIAction) -> Unit
 ) {
-    if (isAutoPlayMode) {
-        val onPauseClick = {
-            submitAction(SetAutoPlayMode(false))
-        }
-        CommonIconButton(
-            resId = R.drawable.ic_pause,
-            onClick = onPauseClick
-        )
-    } else {
-        val onPlayClick = {
-            if (!isEditorMode) {
-                submitAction(SetAutoPlayMode(true))
+    Crossfade(
+        targetState = isAutoPlayMode,
+        label = "autoPlay",
+    ) { autoPlay ->
+        if (autoPlay) {
+            val onPauseClick = {
+                submitAction(SetAutoPlayMode(false))
             }
+            CommonIconButton(
+                resId = R.drawable.ic_pause,
+                onClick = onPauseClick
+            )
+        } else {
+            val onPlayClick = {
+                if (!isEditorMode) {
+                    submitAction(SetAutoPlayMode(true))
+                }
+            }
+            CommonIconButton(
+                resId = R.drawable.ic_play,
+                onClick = onPlayClick
+            )
         }
-        CommonIconButton(
-            resId = R.drawable.ic_play,
-            onClick = onPlayClick
-        )
     }
     val onLeftClick =  {
         submitAction(PrevSong)
@@ -49,24 +55,29 @@ internal fun CommonSongTextActions(
         testTag = LEFT_BUTTON,
         onClick = onLeftClick
     )
-    if (isFavorite) {
-        val onDeleteClick = {
-            submitAction(SetFavorite(false))
+    Crossfade(
+        targetState = isFavorite,
+        label = "favorite",
+    ) { favorite ->
+        if (favorite) {
+            val onDeleteClick = {
+                submitAction(SetFavorite(false))
+            }
+            CommonIconButton(
+                resId = R.drawable.ic_delete,
+                testTag = DELETE_FROM_FAVORITE_BUTTON,
+                onClick = onDeleteClick
+            )
+        } else {
+            val onStarClick = {
+                submitAction(SetFavorite(true))
+            }
+            CommonIconButton(
+                resId = R.drawable.ic_star,
+                testTag = ADD_TO_FAVORITE_BUTTON,
+                onClick = onStarClick
+            )
         }
-        CommonIconButton(
-            resId = R.drawable.ic_delete,
-            testTag = DELETE_FROM_FAVORITE_BUTTON,
-            onClick = onDeleteClick
-        )
-    } else {
-        val onStarClick = {
-            submitAction(SetFavorite(true))
-        }
-        CommonIconButton(
-            resId = R.drawable.ic_star,
-            testTag = ADD_TO_FAVORITE_BUTTON,
-            onClick = onStarClick
-        )
     }
     val onRightClick = {
         submitAction(NextSong)
