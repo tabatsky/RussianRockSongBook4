@@ -5,7 +5,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.TextUnit
 import com.dqt.libs.chorddroid.classes.ChordLibrary
 import jatx.clickablewordstextcompose.api.ClickableWordText
-import jatx.clickablewordstextcompose.api.Word
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 
@@ -14,7 +13,7 @@ internal fun CloudSongTextViewer(
     cloudSong: CloudSong,
     theme: Theme,
     fontSizeTextSp: TextUnit,
-    onWordClick: (Word) -> Unit
+    onWordClick: (String) -> Unit
 ) {
     ClickableWordText(
         text = cloudSong.text,

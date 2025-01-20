@@ -6,7 +6,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.TextUnit
 import com.dqt.libs.chorddroid.classes.ChordLibrary
 import jatx.clickablewordstextcompose.api.ClickableWordText
-import jatx.clickablewordstextcompose.api.Word
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 import jatx.russianrocksongbook.testing.SONG_TEXT_VIEWER
@@ -16,7 +15,7 @@ internal fun CommonSongTextViewer(
     song: Song,
     theme: Theme,
     fontSizeTextSp: TextUnit,
-    onWordClick: (Word) -> Unit
+    onWordClick: (String) -> Unit
 ) {
     ClickableWordText(
         text = song.text,

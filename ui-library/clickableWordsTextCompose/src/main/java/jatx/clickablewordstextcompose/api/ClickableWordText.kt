@@ -1,13 +1,14 @@
 package jatx.clickablewordstextcompose.api
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.text.ClickableText
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.TextUnit
 import jatx.clickablewordstextcompose.internal.WordScanner
@@ -21,30 +22,48 @@ fun ClickableWordText(
     colorMain: Color,
     colorBg: Color,
     fontSize: TextUnit,
-    onWordClick: (Word) -> Unit
+    onWordClick: (String) -> Unit
 ) {
     val wordList = WordScanner(text).getWordList()
 
-    val annotatedText = AnnotatedString(
-        text = text,
-        spanStyles = wordList.mapNotNull {
+    val onClick: (link: LinkAnnotation) -> Unit = {
+        val wordText = (it as? LinkAnnotation.Clickable)?.tag
+        if (wordText != null) {
+            var actualWord: String = wordText
+            for (key in actualWordMappings.keys) {
+                actualWord = actualWord.replace(key, actualWordMappings[key] ?: "")
+            }
+            if (actualWord in actualWordSet) {
+                onWordClick(wordText)
+            }
+        }
+    }
+    val annotatedText = buildAnnotatedString {
+        append(text)
+        wordList.forEach {
             var actualWord = it.text
             for (key in actualWordMappings.keys) {
                 actualWord = actualWord.replace(key, actualWordMappings[key] ?: "")
             }
             if (actualWord in actualWordSet) {
-                AnnotatedString.Range(
+                addStyle(
                     SpanStyle(color = colorBg, background = colorMain, fontSize = fontSize * 1.1),
                     it.startIndex,
                     it.endIndex
                 )
-            } else {
-                null
+                addLink(
+                    LinkAnnotation.Clickable(
+                        tag = it.text,
+                        linkInteractionListener = onClick
+                    ),
+                    it.startIndex,
+                    it.endIndex
+                )
             }
         }
-    )
+    }
 
-    ClickableText(
+    Text(
         text = annotatedText,
         modifier = modifier
             .background(colorBg),
@@ -53,16 +72,5 @@ fun ClickableWordText(
             fontSize = fontSize,
             color = colorMain
         )
-    ) { offset ->
-        val word = wordList.firstOrNull { offset >= it.startIndex && offset <= it.endIndex }
-        word?.let {
-            var actualWord = word.text
-            for (key in actualWordMappings.keys) {
-                actualWord = actualWord.replace(key, actualWordMappings[key] ?: "")
-            }
-            if (actualWord in actualWordSet) {
-                onWordClick(word)
-            }
-        }
-    }
+    )
 }

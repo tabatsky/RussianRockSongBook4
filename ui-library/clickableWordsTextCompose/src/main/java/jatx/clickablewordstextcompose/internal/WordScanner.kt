@@ -1,7 +1,5 @@
 package jatx.clickablewordstextcompose.internal
 
-import jatx.clickablewordstextcompose.api.Word
-
 internal class WordScanner(private val text: String) {
     private var currentIndex: Int = 0
 

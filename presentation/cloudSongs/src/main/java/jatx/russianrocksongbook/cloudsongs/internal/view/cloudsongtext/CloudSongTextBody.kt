@@ -12,7 +12,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import jatx.clickablewordstextcompose.api.Word
 import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
@@ -27,7 +26,7 @@ internal fun CloudSongTextBody(
     fontSizeTitleSp: TextUnit,
     theme: Theme,
     modifier: Modifier,
-    onWordClick: (Word) -> Unit
+    onWordClick: (String) -> Unit
 ) {
     val paddingStart = if (W > H) 20.dp else 8.dp
 
