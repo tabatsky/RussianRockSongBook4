@@ -5,7 +5,6 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.TextUnit
-import jatx.clickablewordstextcompose.api.Word
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
 
@@ -16,7 +15,7 @@ internal fun CloudSongTextLazyColumn(
     fontSizeTextSp: TextUnit,
     theme: Theme,
     modifier: Modifier,
-    onWordClick: (Word) -> Unit
+    onWordClick: (String) -> Unit
 ) {
     LazyColumn(
         state = listState,

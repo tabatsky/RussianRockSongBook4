@@ -15,7 +15,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import jatx.clickablewordstextcompose.api.Word
 import jatx.russianrocksongbook.commonsongtext.R
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.preferences.Theme
@@ -38,7 +37,7 @@ internal fun CommonSongTextBody(
     isAutoPlayMode: Boolean,
     dY: Int,
     onTextChange: (String) -> Unit,
-    onWordClick: (Word) -> Unit
+    onWordClick: (String) -> Unit
 ) {
     val paddingStart = if (W > H) 20.dp else 8.dp
 

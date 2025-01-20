@@ -24,7 +24,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
-import jatx.clickablewordstextcompose.api.Word
 import jatx.russianrocksongbook.commonsongtext.R
 import jatx.russianrocksongbook.commonsongtext.viewmodel.SaveSong
 import jatx.russianrocksongbook.commonsongtext.viewmodel.SelectSong
@@ -141,11 +140,11 @@ fun CommonSongTextScreenImplContent(
         }
     }
 
-    val onWordClick: (Word) -> Unit = {
+    val onWordClick: (String) -> Unit = {
         submitAction(
             UpdateShowChordDialog(
                 needShow = true,
-                selectedChord = it.text
+                selectedChord = it
             )
         )
     }

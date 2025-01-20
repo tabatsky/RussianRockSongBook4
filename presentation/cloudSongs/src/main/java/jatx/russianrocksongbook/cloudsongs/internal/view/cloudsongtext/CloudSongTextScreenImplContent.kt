@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
-import jatx.clickablewordstextcompose.api.Word
 import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.paging.ItemsAdapter
 import jatx.russianrocksongbook.cloudsongs.internal.view.dialogs.DeleteCloudSongDialog
@@ -110,11 +109,11 @@ internal fun CloudSongTextScreenImplContent(
         }
     }
 
-    val onWordClick: (Word) -> Unit = {
+    val onWordClick: (String) -> Unit = {
         submitAction(
             UpdateShowChordDialog(
                 needShow = true,
-                selectedChord = it.text
+                selectedChord = it
             )
         )
     }

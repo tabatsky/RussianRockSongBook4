@@ -1,6 +1,6 @@
 package jatx.clickablewordstextcompose
 
-import jatx.clickablewordstextcompose.api.Word
+import jatx.clickablewordstextcompose.internal.Word
 import jatx.clickablewordstextcompose.internal.WordScanner
 import org.junit.Test
 
