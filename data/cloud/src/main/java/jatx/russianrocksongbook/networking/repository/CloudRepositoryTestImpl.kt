@@ -12,6 +12,7 @@ import jatx.russianrocksongbook.domain.repository.cloud.CloudRepository
 import jatx.russianrocksongbook.domain.repository.cloud.CloudSearchOrderBy
 import jatx.russianrocksongbook.domain.repository.cloud.result.*
 import jatx.russianrocksongbook.domain.repository.local.LocalRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
@@ -135,7 +136,7 @@ class CloudRepositoryTestImpl @Inject constructor(
         orderBy: CloudSearchOrderBy,
         page: Int
     ): ResultWithCloudSongListData {
-        Thread.sleep(100)
+        delay(100)
         return if (isOnline) {
             val list = search(searchFor, orderBy)
                 .safeSublist((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
