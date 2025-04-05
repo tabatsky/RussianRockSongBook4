@@ -136,7 +136,7 @@ internal fun CloudSearchBody(
                     }
                 }
 
-                LaunchedEffect(needScroll) {
+                LaunchedEffect(scrollPosition to needScroll) {
                     if (needScroll) {
                         if (scrollPosition < itemsAdapter.size) {
                             if (TestingConfig.isTesting) {
