@@ -136,8 +136,15 @@ internal fun CloudSearchBody(
                     }
                 }
 
-                LaunchedEffect(scrollPosition to needScroll) {
+                LaunchedEffect(needScroll) {
                     if (needScroll) {
+                        for (i in 0 until 30) {
+                            if (scrollPosition >= itemsAdapter.size) {
+                                delay(50L)
+                            } else {
+                                break
+                            }
+                        }
                         if (scrollPosition < itemsAdapter.size) {
                             if (TestingConfig.isTesting) {
                                 delay(100L)
