@@ -118,7 +118,7 @@ class UITest {
 
     @Before
     fun init() {
-        TestingConfig.isTesting = true
+        TestingConfig.isUITesting = true
 
         hiltRule.inject()
 

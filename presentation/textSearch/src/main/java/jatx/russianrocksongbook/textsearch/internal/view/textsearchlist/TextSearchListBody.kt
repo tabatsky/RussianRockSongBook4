@@ -123,7 +123,7 @@ internal fun TextSearchListBody(
             LaunchedEffect(needScroll) {
                 if (needScroll) {
                     if (scrollPosition < songs.size) {
-                        if (TestingConfig.isTesting) {
+                        if (TestingConfig.isUITesting) {
                             delay(100L)
                         }
                         listState.scrollToItem(scrollPosition)

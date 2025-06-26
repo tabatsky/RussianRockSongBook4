@@ -1,5 +1,6 @@
 package jatx.russianrocksongbook.testing
 
 object TestingConfig {
-    var isTesting = false
+    var isUITesting = false
+    var isUnitTesting = false
 }
