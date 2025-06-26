@@ -15,6 +15,8 @@ object AppNavigator {
 
     private var skipSubmitBackAction = 0
 
+    private var skipOnce = false
+
     private var destinationChangedListener =
         NavController.OnDestinationChangedListener { controller, destination, arguments ->
             val wasSongListScreen = previousDestination.isSongListScreen
@@ -40,8 +42,6 @@ object AppNavigator {
             val wasTextSearchSongTextScreen = previousDestination.isTextSearchSongTextScreen
             val becomeTextSearchListScreen = destination.isTextSearchListScreen
 
-            previousDestination = destination
-
             var needSubmitBackAction = false
 
             val dontSubmitBackAction = skipSubmitBackAction > 0
@@ -64,13 +64,17 @@ object AppNavigator {
 
             needSubmitBackAction = needSubmitBackAction && !dontSubmitBackAction
 
-            if (needSubmitBackAction) {
+            if (needSubmitBackAction && !skipOnce) {
                 this@AppNavigator.onSubmitBackAction?.invoke()
             }
 
             if (skipSubmitBackAction > 0) {
                 skipSubmitBackAction -= 1
             }
+
+            skipOnce = false
+
+            previousDestination = destination
         }
 
     fun injectNavController(navController: NavHostController, onSubmitBackAction: (() -> Unit)) {
@@ -85,19 +89,22 @@ object AppNavigator {
         this.navController = null
     }
 
-    fun popBackStack(dontSubmitBackAction: Boolean = false, times: Int = 1) {
+    fun popBackStack(
+        dontSubmitBackAction: Boolean = false,
+        skipOnce: Boolean = false,
+        times: Int = 1
+    ) {
         if (dontSubmitBackAction) {
             skipSubmitBackAction += times
         }
+        this.skipOnce = skipOnce
         repeat(times) {
             navController?.popBackStack()
         }
     }
 
     fun navigate(screenVariant: ScreenVariant) {
-        navController?.navigate(screenVariant.route) {
-            launchSingleTop = true
-        }
+        navController?.navigate(screenVariant.route) {}
     }
 
     val navControllerIsNull: Boolean

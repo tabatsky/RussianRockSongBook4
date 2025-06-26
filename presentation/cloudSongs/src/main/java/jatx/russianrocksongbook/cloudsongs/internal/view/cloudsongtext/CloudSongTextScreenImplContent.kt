@@ -54,6 +54,8 @@ private val CLOUD_SONG_TEXT_APP_BAR_WIDTH = 96.dp
 internal fun CloudSongTextScreenImplContent(
     position: Int,
     cloudSongItems: LazyPagingItems<CloudSong>?,
+    currentCloudSongPosition: Int,
+    currentCloudSongCount: Int,
     listenToMusicVariant: ListenToMusicVariant = ListenToMusicVariant.YANDEX_AND_YOUTUBE,
     showVkDialog: Boolean = false,
     showYandexDialog: Boolean = false,
@@ -67,13 +69,11 @@ internal fun CloudSongTextScreenImplContent(
     youtubeMusicDontAsk: Boolean = false,
     submitAction: (UIAction) -> Unit
 ) {
-    var lastPosition by rememberSaveable { mutableIntStateOf(position) }
-    val positionChanged = position != lastPosition
+    val positionChanged = position != currentCloudSongPosition
     var positionDeltaSign by rememberSaveable { mutableIntStateOf(1) }
 
     if (positionChanged) {
-        positionDeltaSign = if (position > lastPosition) 1 else -1
-        lastPosition = position
+        positionDeltaSign = if (position > currentCloudSongPosition) 1 else -1
     }
 
     LaunchedEffect(position) {
@@ -88,13 +88,11 @@ internal fun CloudSongTextScreenImplContent(
         submitAction(UpdateCurrentCloudSong(cloudSong))
     }
 
-    var savedCount by rememberSaveable { mutableIntStateOf(0) }
     val count = itemsAdapter.size
     if (count > 0) {
-        savedCount = count
-    }
-    LaunchedEffect(savedCount) {
-        submitAction(UpdateCurrentCloudSongCount(savedCount))
+        LaunchedEffect(count) {
+            submitAction(UpdateCurrentCloudSongCount(count))
+        }
     }
 
     val listState = rememberLazyListState()
@@ -219,7 +217,7 @@ internal fun CloudSongTextScreenImplContent(
                     actions = {
                         CloudSongTextActions(
                             position = position,
-                            count = savedCount,
+                            count = currentCloudSongCount,
                             onCloudSongChanged = onCloudSongChanged,
                             submitAction = submitAction
                         )
@@ -244,7 +242,7 @@ internal fun CloudSongTextScreenImplContent(
                     actions = {
                         CloudSongTextActions(
                             position = position,
-                            count = savedCount,
+                            count = currentCloudSongCount,
                             onCloudSongChanged = onCloudSongChanged,
                             submitAction = submitAction
                         )

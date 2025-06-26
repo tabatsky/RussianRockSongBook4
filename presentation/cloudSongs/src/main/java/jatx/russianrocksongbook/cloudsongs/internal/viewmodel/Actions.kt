@@ -11,6 +11,7 @@ data class UpdateOrderBy(val orderBy: CloudSearchOrderBy): UIAction
 data class UpdateCurrentCloudSongCount(val count: Int): UIAction
 data class UpdateCurrentCloudSong(val cloudSong: CloudSong?): UIAction
 data class SelectCloudSong(val position: Int): UIAction
+data class UpdateCurrentCloudSongPosition(val position: Int): UIAction
 data class UpdateCloudSongListScrollPosition(val position: Int): UIAction
 data class UpdateCloudSongListNeedScroll(val needScroll: Boolean): UIAction
 object NextCloudSong: UIAction

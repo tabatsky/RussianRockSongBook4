@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 data class CloudState(
     val searchState: SearchState,
     val currentCloudSongCount: Int,
-    val cloudSongPosition: Int,
+    val currentCloudSongPosition: Int,
     val currentCloudSong: CloudSong?,
     val cloudSongsFlow: Flow<PagingData<CloudSong>>?,
     val searchFor: String,
@@ -27,11 +27,11 @@ data class CloudState(
         fun initial() = CloudState(
             searchState = SearchState.LOADING_FIRST_PAGE,
             currentCloudSongCount = 0,
-            cloudSongPosition = 0,
             currentCloudSong = null,
             cloudSongsFlow = null,
             searchFor = "",
             orderBy = CloudSearchOrderBy.BY_ID_DESC,
+            currentCloudSongPosition = 0,
             scrollPosition = 0,
             needScroll = false,
             showVkDialog = false,
