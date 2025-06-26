@@ -29,6 +29,8 @@ fun CloudSongTextScreenImplPreviewLandscapeDark() {
         CloudSongTextScreenImplContent(
             position = 3,
             cloudSongItems = cloudSongItems,
+            currentCloudSongPosition = 3,
+            currentCloudSongCount = cloudSongs.size,
             submitAction = {}
         )
     }

@@ -13,6 +13,8 @@ internal fun CloudSongTextScreenImpl(position: Int) {
     val cloudState by cloudViewModel.cloudStateFlow.collectAsState()
     val cloudSongsFlow = cloudState.cloudSongsFlow
     val cloudSongItems = cloudSongsFlow?.collectAsLazyPagingItems()
+    val currentCloudSongPosition = cloudState.currentCloudSongPosition
+    val currentCloudSongCount = cloudState.currentCloudSongCount
 
     val vkMusicDontAsk by cloudViewModel.settings.vkMusicDontAskState.collectAsState()
     val yandexMusicDontAsk by cloudViewModel.settings.yandexMusicDontAskState.collectAsState()
@@ -21,6 +23,8 @@ internal fun CloudSongTextScreenImpl(position: Int) {
     CloudSongTextScreenImplContent(
         position = position,
         cloudSongItems = cloudSongItems,
+        currentCloudSongPosition = currentCloudSongPosition,
+        currentCloudSongCount = currentCloudSongCount,
         listenToMusicVariant = cloudViewModel.settings.listenToMusicVariant,
         showVkDialog = cloudState.showVkDialog,
         showYandexDialog = cloudState.showYandexDialog,

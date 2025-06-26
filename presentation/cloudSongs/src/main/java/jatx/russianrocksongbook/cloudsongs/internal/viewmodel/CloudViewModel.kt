@@ -87,6 +87,7 @@ class CloudViewModel @Inject constructor(
             is UpdateCurrentCloudSongCount -> updateCurrentCloudSongCount(action.count)
             is UpdateCurrentCloudSong -> updateCurrentCloudSong(action.cloudSong)
             is SelectCloudSong -> selectCloudSong(action.position)
+            is UpdateCurrentCloudSongPosition -> updateCurrentCloudSongPosition(action.position)
             is UpdateCloudSongListScrollPosition -> updateScrollPosition(action.position)
             is UpdateCloudSongListNeedScroll -> updateNeedScroll(action.needScroll)
             is NextCloudSong -> nextCloudSong()
@@ -173,8 +174,14 @@ class CloudViewModel @Inject constructor(
     private fun selectCloudSong(position: Int) {
         val cloudState = cloudStateFlow.value
         val newState = cloudState.copy(
-            cloudSongPosition = position, scrollPosition = position, needScroll = true
+            currentCloudSongPosition = position, scrollPosition = position, needScroll = true
         )
+        changeCloudState(newState)
+    }
+
+    private fun updateCurrentCloudSongPosition(position: Int) {
+        val cloudState = cloudStateFlow.value
+        val newState = cloudState.copy(currentCloudSongPosition = position)
         changeCloudState(newState)
     }
 
@@ -191,7 +198,7 @@ class CloudViewModel @Inject constructor(
     }
 
     private fun nextCloudSong() {
-        val currentPosition = cloudStateFlow.value.cloudSongPosition
+        val currentPosition = cloudStateFlow.value.currentCloudSongPosition
         val songCount = cloudStateFlow.value.currentCloudSongCount
         if (currentPosition + 1 < songCount)
             selectScreen(
@@ -200,7 +207,7 @@ class CloudViewModel @Inject constructor(
     }
 
     private fun prevCloudSong() {
-        val currentPosition = cloudStateFlow.value.cloudSongPosition
+        val currentPosition = cloudStateFlow.value.currentCloudSongPosition
         if (currentPosition > 0)
             selectScreen(
                 ScreenVariant

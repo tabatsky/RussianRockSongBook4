@@ -319,30 +319,58 @@ open class CommonViewModel @Inject constructor(
         val becomeSongByArtistAndTitle = newScreenVariant is ScreenVariant.SongTextByArtistAndTitle
         val isAddArtist = currentScreenVariant is ScreenVariant.AddArtist
 
+        val isCloudSearch = currentScreenVariant is ScreenVariant.CloudSearch
+        val isTextSearchList = currentScreenVariant is ScreenVariant.TextSearchList
+
+        val isSongText = currentScreenVariant is ScreenVariant.SongText
+        val becomeSongText = newScreenVariant is ScreenVariant.SongText
+        val isCloudSongText = currentScreenVariant is ScreenVariant.CloudSongText
+        val becomeCloudSongText = newScreenVariant is ScreenVariant.CloudSongText
+        val isTextSearchSongText = currentScreenVariant is ScreenVariant.TextSearchSongText
+        val becomeTextSearchSongText = newScreenVariant is ScreenVariant.TextSearchSongText
+
         val artistNow = (currentScreenVariant as? ScreenVariant.SongList)?.artist
         val artistBecome = (newScreenVariant as? ScreenVariant.SongList)?.artist
 
-        val needToPopTwice = isSongByArtistAndTitle && wasFavorite
-        val needToReturn = isSongList && becomeSongList && artistNow == artistBecome
+        val needToPopTwice = isSongByArtistAndTitle
+        val needToReturn = isSongList && becomeSongList && (artistNow == artistBecome)
 
         var needToPop = false
-        needToPop = needToPop || isSongByArtistAndTitle
         needToPop = needToPop || isStart && becomeSongList
         needToPop = needToPop || isFavorite && becomeSongList
         needToPop = needToPop || isSongList && becomeFavorite
         needToPop = needToPop || isAddSong && becomeSongByArtistAndTitle
         needToPop = needToPop || isAddArtist && becomeSongList
 
+        var needToPopWithSkippingBackOnce = false
+        needToPopWithSkippingBackOnce = needToPopWithSkippingBackOnce || (isSongList || isFavorite) && (becomeSongList || becomeFavorite)
+        needToPopWithSkippingBackOnce = needToPopWithSkippingBackOnce || isSongText && becomeSongText
+        needToPopWithSkippingBackOnce = needToPopWithSkippingBackOnce || isCloudSongText && becomeCloudSongText
+        needToPopWithSkippingBackOnce = needToPopWithSkippingBackOnce || isTextSearchSongText && becomeTextSearchSongText
+
         if (needToPopTwice) {
-            AppNavigator.popBackStack(true, 2)
+            AppNavigator.popBackStack(dontSubmitBackAction = true, times = 2)
         } else if (needToPop) {
-            AppNavigator.popBackStack(true)
+            AppNavigator.popBackStack(dontSubmitBackAction = true)
         } else if (needToReturn) {
             return
+        } else if (needToPopWithSkippingBackOnce) {
+            AppNavigator.popBackStack(skipOnce = true)
         }
 
         changeCurrentScreenVariant(newScreenVariant)
-        AppNavigator.navigate(newScreenVariant)
+
+        val isBackFromCertainScreen = (newScreenVariant as? ScreenVariant.SongList)?.isBackFromSomeScreen
+            ?: (newScreenVariant as? ScreenVariant.Favorite)?.isBackFromSomeScreen
+            ?: (newScreenVariant as? ScreenVariant.CloudSearch)?.isBackFromSong
+            ?: (newScreenVariant as? ScreenVariant.TextSearchList)?.isBackFromSong
+            ?: false
+                && (isSongText || isCloudSongText || isTextSearchSongText ||
+                        isCloudSearch || isTextSearchList)
+
+        if (!isBackFromCertainScreen) {
+            AppNavigator.navigate(newScreenVariant)
+        }
 
         Log.e("navigated", newScreenVariant.route.toString())
     }
