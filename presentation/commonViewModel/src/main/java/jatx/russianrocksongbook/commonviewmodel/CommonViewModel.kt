@@ -304,23 +304,16 @@ open class CommonViewModel @Inject constructor(
             .value
             .currentScreenVariant
 
-        val previousScreenVariant = appStateFlow
-            .value
-            .previousScreenVariant
-
         val isSongByArtistAndTitle = currentScreenVariant is ScreenVariant.SongTextByArtistAndTitle
-        val wasFavorite = previousScreenVariant is ScreenVariant.Favorite
         val isStart = currentScreenVariant is ScreenVariant.Start
         val isFavorite = currentScreenVariant is ScreenVariant.Favorite
         val becomeSongList = newScreenVariant is ScreenVariant.SongList
         val isSongList = currentScreenVariant is ScreenVariant.SongList
         val becomeFavorite = newScreenVariant is ScreenVariant.Favorite
-        val isAddSong = currentScreenVariant is ScreenVariant.AddSong
         val becomeSongByArtistAndTitle = newScreenVariant is ScreenVariant.SongTextByArtistAndTitle
-        val isAddArtist = currentScreenVariant is ScreenVariant.AddArtist
 
-        val isCloudSearch = currentScreenVariant is ScreenVariant.CloudSearch
-        val isTextSearchList = currentScreenVariant is ScreenVariant.TextSearchList
+        val isAddSong = currentScreenVariant is ScreenVariant.AddSong
+        val isAddArtist = currentScreenVariant is ScreenVariant.AddArtist
 
         val isSongText = currentScreenVariant is ScreenVariant.SongText
         val becomeSongText = newScreenVariant is ScreenVariant.SongText
@@ -332,7 +325,7 @@ open class CommonViewModel @Inject constructor(
         val artistNow = (currentScreenVariant as? ScreenVariant.SongList)?.artist
         val artistBecome = (newScreenVariant as? ScreenVariant.SongList)?.artist
 
-        val needToPopTwice = isSongByArtistAndTitle
+        val needToPopTwice = isSongByArtistAndTitle || isAddArtist && becomeSongList
         val needToReturn = isSongList && becomeSongList && (artistNow == artistBecome)
 
         var needToPop = false
@@ -340,7 +333,6 @@ open class CommonViewModel @Inject constructor(
         needToPop = needToPop || isFavorite && becomeSongList
         needToPop = needToPop || isSongList && becomeFavorite
         needToPop = needToPop || isAddSong && becomeSongByArtistAndTitle
-        needToPop = needToPop || isAddArtist && becomeSongList
 
         var needToPopWithSkippingBackOnce = false
         needToPopWithSkippingBackOnce = needToPopWithSkippingBackOnce || (isSongList || isFavorite) && (becomeSongList || becomeFavorite)
@@ -365,8 +357,7 @@ open class CommonViewModel @Inject constructor(
             ?: (newScreenVariant as? ScreenVariant.CloudSearch)?.isBackFromSong
             ?: (newScreenVariant as? ScreenVariant.TextSearchList)?.isBackFromSong
             ?: false
-                && (isSongText || isCloudSongText || isTextSearchSongText ||
-                        isCloudSearch || isTextSearchList)
+                && !isAddArtist // already popped
 
         if (!isBackFromCertainScreen) {
             AppNavigator.navigate(newScreenVariant)
