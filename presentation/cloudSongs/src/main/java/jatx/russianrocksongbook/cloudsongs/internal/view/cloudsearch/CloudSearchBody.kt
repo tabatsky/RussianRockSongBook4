@@ -146,7 +146,7 @@ internal fun CloudSearchBody(
                             }
                         }
                         if (scrollPosition < itemsAdapter.size) {
-                            if (TestingConfig.isTesting) {
+                            if (TestingConfig.isUITesting) {
                                 delay(100L)
                             }
                             listState.scrollToItem(scrollPosition)

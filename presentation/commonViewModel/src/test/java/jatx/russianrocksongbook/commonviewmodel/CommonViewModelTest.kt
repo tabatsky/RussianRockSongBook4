@@ -18,6 +18,7 @@ import jatx.russianrocksongbook.domain.usecase.cloud.AddSongToCloudUseCase
 import jatx.russianrocksongbook.domain.usecase.cloud.AddWarningUseCase
 import jatx.russianrocksongbook.navigation.AppNavigator
 import jatx.russianrocksongbook.navigation.ScreenVariant
+import jatx.russianrocksongbook.testing.TestingConfig
 import org.junit.*
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -67,6 +68,8 @@ open class CommonViewModelTest {
 
     @Before
     fun initCommon() {
+        TestingConfig.isUnitTesting = true
+
         mockkStatic(Log::class)
 
         val tagSlot = slot<String>()

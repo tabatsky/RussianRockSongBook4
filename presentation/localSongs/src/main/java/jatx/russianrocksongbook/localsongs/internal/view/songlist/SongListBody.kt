@@ -70,7 +70,7 @@ internal fun SongListBody(
     ) {
         LaunchedEffect(needScroll) {
             if (needScroll) {
-                if (TestingConfig.isTesting) {
+                if (TestingConfig.isUITesting) {
                     delay(100L)
                 }
                 if (scrollPosition >= 0) onPerformScroll(scrollPosition)

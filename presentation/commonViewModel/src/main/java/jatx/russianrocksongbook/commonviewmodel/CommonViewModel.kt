@@ -17,6 +17,7 @@ import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import jatx.russianrocksongbook.navigation.ScreenVariant
 import jatx.russianrocksongbook.navigation.AppNavigator
+import jatx.russianrocksongbook.testing.TestingConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.BufferOverflow
@@ -359,7 +360,7 @@ open class CommonViewModel @Inject constructor(
             ?: false
                 && !isAddArtist // already popped
 
-        if (!isBackFromCertainScreen) {
+        if (!isBackFromCertainScreen || TestingConfig.isUnitTesting) {
             AppNavigator.navigate(newScreenVariant)
         }
 
