@@ -35,9 +35,13 @@
         android:theme="@style/Theme.RussianRockSongBook4"
         android:largeHeap="true"
         tools:targetApi="m">
+
         <meta-data
-            android:name="com.google.android.play.billingclient.version"
-            android:value="6.1.0" />
+            android:name="com.android.vending.billing.TEST_PURCHASE_ENABLED"
+            android:value="true" />
+<!--        <meta-data-->
+<!--            android:name="com.android.vending.billing.NONPRODUCTION_ENVIRONMENT"-->
+<!--            android:value="true" />-->
 
         <activity
             android:name=".MainActivity"
