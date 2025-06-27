@@ -3,15 +3,16 @@ package jatx.russianrocksongbook.donationhelper.internal.impl
 import android.app.Activity
 import android.util.Log
 import com.android.billingclient.api.*
+import com.android.billingclient.api.BillingClient.ProductType
+import com.android.billingclient.api.BillingFlowParams.ProductDetailsParams
+import com.android.billingclient.api.QueryProductDetailsParams.Product
 import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.scopes.ActivityScoped
 import it.czerwinski.android.hilt.annotations.BoundTo
 import jatx.russianrocksongbook.donationhelper.api.DonationHelper
-import jatx.russianrocksongbook.donationhelper.api.SKUS
 import jatx.russianrocksongbook.donationhelper.R
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.commonviewmodel.ShowToastWithResource
-import java.util.*
 import javax.inject.Inject
 
 @ActivityScoped
@@ -25,7 +26,9 @@ class DonationHelperImpl @Inject constructor(
 
     private var billingClient: BillingClient = BillingClient
         .newBuilder(activity)
-        .enablePendingPurchases()
+        .enablePendingPurchases(
+            PendingPurchasesParams.newBuilder().enableOneTimeProducts().build()
+        )
         .setListener(this)
         .build()
 
@@ -45,19 +48,33 @@ class DonationHelperImpl @Inject constructor(
     }
 
     override fun purchaseItem(sku: String) {
-        val skuList = ArrayList<String>()
-        skuList.add(sku)
-        val params = SkuDetailsParams.newBuilder()
-        params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP)
+        val productList = listOf(
+            Product.newBuilder()
+                .setProductId(sku)
+                .setProductType(ProductType.INAPP)
+                .build()
+        )
+        val params = QueryProductDetailsParams.newBuilder()
+            .setProductList(productList)
+            .build()
 
-        billingClient.querySkuDetailsAsync(params.build()) { billingResult, mutableList ->
-            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && mutableList != null) {
+        billingClient.queryProductDetailsAsync(params) { billingResult, mutableList ->
+            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                 Log.e("mutableList", mutableList.toString())
                 mutableList.forEach {
-                    if (it.sku == sku) {
+                    val productDetailsParamsList = arrayListOf<ProductDetailsParams>()
+                    if (it.productId == sku && it.productType == ProductType.INAPP) {
                         Log.e("billing flow", "launching")
+                        val detailParams = ProductDetailsParams
+                            .newBuilder()
+                            .setProductDetails(it)
+                            .build()
+                        productDetailsParamsList.add(detailParams)
+                    }
+
+                    if (productDetailsParamsList.isNotEmpty()) {
                         val flowParams = BillingFlowParams.newBuilder()
-                            .setSkuDetails(it)
+                            .setProductDetailsParamsList(productDetailsParamsList)
                             .build()
                         billingClient.launchBillingFlow(activity, flowParams)
                     }
@@ -79,8 +96,12 @@ class DonationHelperImpl @Inject constructor(
     }
 
     private fun checkDonations() {
+        val queryPurchasesParams = QueryPurchasesParams
+            .newBuilder()
+            .setProductType(ProductType.INAPP)
+            .build()
         billingClient.queryPurchasesAsync(
-            BillingClient.SkuType.INAPP
+            queryPurchasesParams
         ) { _, list ->
             list.forEach {
                 consumePurchase(it)
@@ -89,20 +110,18 @@ class DonationHelperImpl @Inject constructor(
     }
 
     private fun consumePurchase(purchase: Purchase) {
-        for (sku in purchase.skus) {
-            if (sku in SKUS) {
-                val consumeParams = ConsumeParams
-                    .newBuilder()
-                    .setPurchaseToken(purchase.purchaseToken)
-                    .build()
-                billingClient.consumeAsync(consumeParams) { responseCode, _ ->
-                    Log.e("consume", responseCode.responseCode.toString())
-                    activity.runOnUiThread {
-                        if (responseCode.responseCode == 0) {
-                            commonViewModel?.submitEffect(
-                                ShowToastWithResource(R.string.thanks_for_donation)
-                            )
-                        }
+        for (product in purchase.products) {
+            val consumeParams = ConsumeParams
+                .newBuilder()
+                .setPurchaseToken(purchase.purchaseToken)
+                .build()
+            billingClient.consumeAsync(consumeParams) { responseCode, _ ->
+                Log.e("consume", responseCode.responseCode.toString())
+                activity.runOnUiThread {
+                    if (responseCode.responseCode == 0) {
+                        commonViewModel?.submitEffect(
+                            ShowToastWithResource(R.string.thanks_for_donation)
+                        )
                     }
                 }
             }
