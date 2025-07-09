@@ -22,10 +22,11 @@ fun CommonSongTextScreenImplPreviewPortraitDark() {
 
     DarkTheme {
         CommonSongTextScreenImplContent(
-            artist = artist,
             position = position,
+            randomKey = 0,
             song = song,
             songCount = songCount,
+            lastRandomKey = 0,
             currentSongPosition = position,
             editorText = editorText,
             submitAction = {},

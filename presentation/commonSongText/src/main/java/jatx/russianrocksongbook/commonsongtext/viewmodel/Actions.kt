@@ -4,6 +4,7 @@ import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.domain.models.local.Song
 
 data class UpdateCurrentSong(val song: Song?): UIAction
+data class UpdateLastRandomKey(val randomKey: Int): UIAction
 data class SelectSong(val position: Int): UIAction
 object NextSong: UIAction
 object PrevSong: UIAction

@@ -193,8 +193,8 @@ open class CommonViewModelTest {
     fun test005_selectScreen_SongText_withBackPressing_isWorkingCorrect() {
         commonViewModel.submitAction(SelectScreen(ScreenVariant.SongList("Кино")))
         assertEquals(ScreenVariant.SongList("Кино"), commonViewModel.appStateFlow.value.currentScreenVariant)
-        commonViewModel.submitAction(SelectScreen(ScreenVariant.SongText("Кино", 13)))
-        assertEquals(ScreenVariant.SongText("Кино", 13), commonViewModel.appStateFlow.value.currentScreenVariant)
+        commonViewModel.submitAction(SelectScreen(ScreenVariant.SongText(13, 1237)))
+        assertEquals(ScreenVariant.SongText(13, 1237), commonViewModel.appStateFlow.value.currentScreenVariant)
         commonViewModel.submitAction(Back(false))
         waitForCondition {
             commonViewModel.appStateFlow.value.currentScreenVariant is ScreenVariant.SongList

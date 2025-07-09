@@ -5,7 +5,7 @@ import jatx.russianrocksongbook.commonsongtext.view.CommonSongTextScreenImplCont
 import jatx.russianrocksongbook.textsearch.internal.viewmodel.TextSearchViewModel
 
 @Composable
-internal fun TextSearchSongTextScreenImpl(position: Int) {
+internal fun TextSearchSongTextScreenImpl(position: Int, randomKey: Int) {
     val textSearchViewModel = TextSearchViewModel.getInstance()
     val commonSongTextState by textSearchViewModel.commonSongTextStateFlow.collectAsState()
 
@@ -16,10 +16,11 @@ internal fun TextSearchSongTextScreenImpl(position: Int) {
     val youtubeMusicDontAsk by textSearchViewModel.settings.youtubeMusicDontAskState.collectAsState()
 
     CommonSongTextScreenImplContent(
-        artist = song?.artist ?: "",
         position = position,
+        randomKey = randomKey,
         song = song,
         songCount = commonSongTextState.currentSongCount,
+        lastRandomKey = commonSongTextState.lastRandomKey,
         currentSongPosition = commonSongTextState.currentSongPosition,
         isAutoPlayMode = commonSongTextState.isAutoPlayMode,
         isEditorMode = commonSongTextState.isEditorMode,

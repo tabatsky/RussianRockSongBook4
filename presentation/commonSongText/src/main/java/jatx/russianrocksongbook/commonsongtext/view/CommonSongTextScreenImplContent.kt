@@ -1,8 +1,8 @@
 package jatx.russianrocksongbook.commonsongtext.view
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -17,7 +17,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -30,6 +29,7 @@ import jatx.russianrocksongbook.commonsongtext.viewmodel.SelectSong
 import jatx.russianrocksongbook.commonsongtext.viewmodel.SetAutoPlayMode
 import jatx.russianrocksongbook.commonsongtext.viewmodel.SetEditorMode
 import jatx.russianrocksongbook.commonsongtext.viewmodel.UpdateCurrentSong
+import jatx.russianrocksongbook.commonsongtext.viewmodel.UpdateLastRandomKey
 import jatx.russianrocksongbook.commonsongtext.viewmodel.UpdateShowChordDialog
 import jatx.russianrocksongbook.commonsongtext.viewmodel.UpdateShowDeleteToTrashDialog
 import jatx.russianrocksongbook.commonsongtext.viewmodel.UpdateShowUploadDialog
@@ -63,10 +63,11 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun CommonSongTextScreenImplContent(
-    artist: String,
     position: Int,
+    randomKey: Int,
     song: Song?,
     songCount: Int,
+    lastRandomKey: Int,
     currentSongPosition: Int,
     isAutoPlayMode: Boolean = false,
     isEditorMode: Boolean = false,
@@ -90,38 +91,29 @@ fun CommonSongTextScreenImplContent(
 ) {
     val theme = LocalAppTheme.current
 
-    LaunchedEffect(artist to position) {
+    LaunchedEffect(randomKey) {
         submitAction(SelectSong(position))
     }
 
-    val key = artist to song?.title
-    var lastKey by rememberSaveable { mutableStateOf(key) }
-    val keyChanged = key != lastKey
-
-    if (keyChanged) {
-        lastKey = key
-    }
-
-    var lastSongCount by rememberSaveable { mutableIntStateOf(songCount) }
-    val songCountChanged = songCount != lastSongCount
-    if (songCountChanged) {
-        lastSongCount = songCount
+    val randomKeyChanged = randomKey != lastRandomKey
+    if (randomKeyChanged) {
+        submitAction(UpdateLastRandomKey(randomKey))
     }
 
     val positionChanged = position != currentSongPosition
 
     var positionDeltaSign by rememberSaveable { mutableIntStateOf(1) }
 
-    if (positionChanged || songCountChanged) {
+    if (positionChanged) {
         val positionIncreased = position >= currentSongPosition
-        val positionWasJumped =
-            (position == songCount - 1) && (currentSongPosition == 0)
-                    || (currentSongPosition == songCount - 1) && (position == 0)
+        val positionWasJumped = (songCount > 2) &&
+                ((position == songCount - 1) && (currentSongPosition == 0)
+                    || (currentSongPosition == songCount - 1) && (position == 0))
         positionDeltaSign =
             (if (positionIncreased) 1 else -1) * (if (positionWasJumped) -1 else 1)
     }
 
-    val skipBody = positionChanged || keyChanged || songCountChanged|| song == null
+    val skipBody = positionChanged || randomKeyChanged || song == null
 
     var text by editorText
 
@@ -223,9 +215,7 @@ fun CommonSongTextScreenImplContent(
                 transitionSpec = {
                     slideInHorizontally {
                             fullWidth -> fullWidth * positionDeltaSign
-                    } togetherWith slideOutHorizontally {
-                            fullWidth -> -fullWidth * positionDeltaSign
-                    }
+                    } togetherWith ExitTransition.None
                 },
                 modifier = modifier
             ) { skip ->
