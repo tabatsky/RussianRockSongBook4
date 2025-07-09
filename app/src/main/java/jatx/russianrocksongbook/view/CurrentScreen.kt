@@ -95,8 +95,8 @@ fun CurrentScreen() {
         composable<SongTextRoute> { backStackEntry ->
             val route: SongTextRoute = backStackEntry.toRoute()
             SongTextScreen(
-                artist = route.artist,
-                position = route.position
+                position = route.position,
+                randomKey = route.randomKey
             )
         }
 
@@ -134,7 +134,8 @@ fun CurrentScreen() {
         composable<TextSearchSongTextRoute> { backStackEntry ->
             val route: TextSearchSongTextRoute = backStackEntry.toRoute()
             TextSearchSongTextScreen(
-                position = route.position
+                position = route.position,
+                randomkey = route.randomKey
             )
         }
 

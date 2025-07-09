@@ -28,11 +28,11 @@ sealed interface ScreenVariant {
     }
 
     data class SongText(
-        val artist: String,
-        val position: Int
+        val position: Int,
+        val randomKey: Int = rnd.nextInt()
         ): ScreenVariant {
         override val route: Any
-            get() = SongTextRoute(artist, position)
+            get() = SongTextRoute(position, randomKey)
     }
 
     data class SongTextByArtistAndTitle(
@@ -67,10 +67,11 @@ sealed interface ScreenVariant {
     }
 
     data class TextSearchSongText(
-        val position: Int
+        val position: Int,
+        val randomKey: Int = rnd.nextInt()
     ): ScreenVariant {
         override val route: Any
-            get() = TextSearchSongTextRoute(position)
+            get() = TextSearchSongTextRoute(position, randomKey)
     }
 
     data object AddArtist: ScreenVariant {

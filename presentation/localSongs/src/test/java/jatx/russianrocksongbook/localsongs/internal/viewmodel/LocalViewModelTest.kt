@@ -300,7 +300,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
         localViewModel.submitAction(SelectSong(0))
 
         TimeUnit.MILLISECONDS.sleep(500)
-        localViewModel.submitAction(SelectScreen(ScreenVariant.SongText(ARTIST_FAVORITE, 0)))
+        localViewModel.submitAction(SelectScreen(ScreenVariant.SongText(0, 1237)))
 
         TimeUnit.MILLISECONDS.sleep(500)
         localViewModel.submitAction(SetFavorite(false))
@@ -309,7 +309,6 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         println(localViewModel.commonSongTextStateFlow.value.toString())
 
-        assertEquals(false, localViewModel.commonSongTextStateFlow.value.currentSong?.favorite)
         assertEquals(ScreenVariant.Favorite(isBackFromSomeScreen = true), appStateHolder.appStateFlow.value.currentScreenVariant)
 
         verifyAll {
@@ -335,7 +334,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
         localViewModel.submitAction(SelectSong(2))
 
         TimeUnit.MILLISECONDS.sleep(500)
-        localViewModel.submitAction(SelectScreen(ScreenVariant.SongText(ARTIST_FAVORITE, 2)))
+        localViewModel.submitAction(SelectScreen(ScreenVariant.SongText(2, 1237)))
 
         TimeUnit.MILLISECONDS.sleep(500)
         localViewModel.submitAction(SetFavorite(false))
@@ -344,8 +343,8 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         println(localViewModel.commonSongTextStateFlow.value.toString())
 
-        assertEquals(false, localViewModel.commonSongTextStateFlow.value.currentSong?.favorite)
-        assertEquals(ScreenVariant.SongText(ARTIST_FAVORITE, 1), appStateHolder.appStateFlow.value.currentScreenVariant)
+        assertTrue(appStateHolder.appStateFlow.value.currentScreenVariant is ScreenVariant.SongText)
+        assertEquals(1, (appStateHolder.appStateFlow.value.currentScreenVariant as? ScreenVariant.SongText)?.position)
 
         verifyAll {
             toasts.showToast(R.string.toast_removed_from_favorite)
@@ -370,7 +369,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
         localViewModel.submitAction(SelectSong(1))
 
         TimeUnit.MILLISECONDS.sleep(500)
-        localViewModel.submitAction(SelectScreen(ScreenVariant.SongText(ARTIST_FAVORITE, 1)))
+        localViewModel.submitAction(SelectScreen(ScreenVariant.SongText(1, 1237)))
 
         TimeUnit.MILLISECONDS.sleep(500)
         localViewModel.submitAction(SetFavorite(false))
@@ -379,8 +378,8 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         println(localViewModel.commonSongTextStateFlow.value.toString())
 
-        assertEquals(false, localViewModel.commonSongTextStateFlow.value.currentSong?.favorite)
-        assertEquals(ScreenVariant.SongText(ARTIST_FAVORITE, 1), appStateHolder.appStateFlow.value.currentScreenVariant)
+        assertTrue(appStateHolder.appStateFlow.value.currentScreenVariant is ScreenVariant.SongText)
+        assertEquals(1, (appStateHolder.appStateFlow.value.currentScreenVariant as? ScreenVariant.SongText)?.position)
 
         verifyAll {
             toasts.showToast(R.string.toast_removed_from_favorite)
@@ -535,7 +534,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         TimeUnit.MILLISECONDS.sleep(500)
 
-        localViewModel.submitAction(SelectScreen(ScreenVariant.SongText("Кино", 13)))
+        localViewModel.submitAction(SelectScreen(ScreenVariant.SongText(13, 1237)))
 
         TimeUnit.MILLISECONDS.sleep(500)
 
@@ -543,7 +542,8 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         TimeUnit.MILLISECONDS.sleep(500)
 
-        assertEquals(ScreenVariant.SongText("Кино", 14), localViewModel.appStateFlow.value.currentScreenVariant)
+        assertTrue(appStateHolder.appStateFlow.value.currentScreenVariant is ScreenVariant.SongText)
+        assertEquals(14, (appStateHolder.appStateFlow.value.currentScreenVariant as? ScreenVariant.SongText)?.position)
     }
 
     @Test
@@ -558,7 +558,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         TimeUnit.MILLISECONDS.sleep(500)
 
-        localViewModel.submitAction(SelectScreen(ScreenVariant.SongText("Кино", 13)))
+        localViewModel.submitAction(SelectScreen(ScreenVariant.SongText(13, 1237)))
 
         TimeUnit.MILLISECONDS.sleep(500)
 
@@ -566,7 +566,8 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         TimeUnit.MILLISECONDS.sleep(500)
 
-        assertEquals(ScreenVariant.SongText("Кино", 0), localViewModel.appStateFlow.value.currentScreenVariant)
+        assertTrue(appStateHolder.appStateFlow.value.currentScreenVariant is ScreenVariant.SongText)
+        assertEquals(0, (appStateHolder.appStateFlow.value.currentScreenVariant as? ScreenVariant.SongText)?.position)
     }
 
     @Test
@@ -581,7 +582,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         TimeUnit.MILLISECONDS.sleep(500)
 
-        localViewModel.submitAction(SelectScreen(ScreenVariant.SongText("Кино", 13)))
+        localViewModel.submitAction(SelectScreen(ScreenVariant.SongText(13, 1237)))
 
         TimeUnit.MILLISECONDS.sleep(500)
 
@@ -589,7 +590,8 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         TimeUnit.MILLISECONDS.sleep(500)
 
-        assertEquals(ScreenVariant.SongText("Кино", 12), localViewModel.appStateFlow.value.currentScreenVariant)
+        assertTrue(appStateHolder.appStateFlow.value.currentScreenVariant is ScreenVariant.SongText)
+        assertEquals(12, (appStateHolder.appStateFlow.value.currentScreenVariant as? ScreenVariant.SongText)?.position)
     }
 
     @Test
@@ -604,7 +606,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         TimeUnit.MILLISECONDS.sleep(500)
 
-        localViewModel.submitAction(SelectScreen(ScreenVariant.SongText("Кино", 0)))
+        localViewModel.submitAction(SelectScreen(ScreenVariant.SongText(0, 1237)))
 
         TimeUnit.MILLISECONDS.sleep(500)
 
@@ -612,7 +614,8 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         TimeUnit.MILLISECONDS.sleep(500)
 
-        assertEquals(ScreenVariant.SongText("Кино", theSongs.size - 1), localViewModel.appStateFlow.value.currentScreenVariant)
+        assertTrue(appStateHolder.appStateFlow.value.currentScreenVariant is ScreenVariant.SongText)
+        assertEquals(theSongs.size - 1, (appStateHolder.appStateFlow.value.currentScreenVariant as? ScreenVariant.SongText)?.position)
     }
 
     @Test

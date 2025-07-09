@@ -34,7 +34,6 @@ import kotlinx.coroutines.flow.debounce
 @Composable
 internal fun SongListBody(
     navigationFocusRequester: FocusRequester,
-    currentArtist: String,
     songList: List<Song>,
     scrollPosition: Int,
     needScroll: Boolean,
@@ -56,7 +55,7 @@ internal fun SongListBody(
                 submitAction(
                     SelectScreen(
                         ScreenVariant
-                            .SongText(currentArtist, index)
+                            .SongText(index)
                     )
                 )
             }

@@ -46,7 +46,9 @@ abstract class CommonSongTextViewModel(
             is SetFavorite -> setFavorite(action.favorite)
             is DeleteCurrentToTrash -> deleteCurrentToTrash()
             is UploadCurrentToCloud -> uploadCurrentToCloud()
-            is UpdateCurrentSong -> updateCurrentSong(action.song, commonSongTextStateFlow.value.currentSongPosition)
+            is UpdateCurrentSong -> updateCurrentSong(action.song,
+                commonSongTextStateFlow.value.currentSongPosition)
+            is UpdateLastRandomKey -> updateLastRandomKey(action.randomKey)
             is SetEditorMode -> setEditorMode(action.isEditor)
             is SetAutoPlayMode -> setAutoPlayMode(action.isAutoPlay)
             is UpdateSongListScrollPosition -> updateSongListScrollPosition(action.position)
@@ -103,6 +105,14 @@ abstract class CommonSongTextViewModel(
             currentSongPosition = position,
             songListScrollPosition = position,
             songListNeedScroll = true
+        )
+        changeCommonSongTextState(newState)
+    }
+
+    protected fun updateLastRandomKey(randomKey: Int) {
+        val commonSongTextState = commonSongTextStateFlow.value
+        val newState = commonSongTextState.copy(
+            lastRandomKey = randomKey
         )
         changeCommonSongTextState(newState)
     }

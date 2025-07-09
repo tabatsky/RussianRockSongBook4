@@ -18,8 +18,8 @@ data class FavoriteRoute(
 
 @Serializable
 data class SongTextRoute(
-    val artist: String,
-    val position: Int
+    val position: Int,
+    val randomKey: Int
 )
 
 @Serializable
@@ -47,7 +47,8 @@ data class CloudSongTextRoute(
 
 @Serializable
 data class TextSearchSongTextRoute(
-    val position: Int
+    val position: Int,
+    val randomKey: Int
 )
 
 @Serializable

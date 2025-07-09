@@ -82,7 +82,6 @@ internal fun SongListContent(
 
                 SongListBody(
                     navigationFocusRequester,
-                    currentArtist,
                     songList,
                     scrollPosition,
                     needScroll,
@@ -116,7 +115,6 @@ internal fun SongListContent(
 
                 SongListBody(
                     navigationFocusRequester,
-                    currentArtist,
                     songList,
                     scrollPosition,
                     needScroll,

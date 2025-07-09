@@ -5,7 +5,7 @@ import jatx.russianrocksongbook.commonsongtext.view.CommonSongTextScreenImplCont
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 
 @Composable
-internal fun SongTextScreenImpl(artist: String, position: Int) {
+internal fun SongTextScreenImpl(position: Int, randomKey: Int) {
     val localViewModel = LocalViewModel.getInstance()
 
     val commonSongTextState by localViewModel.commonSongTextStateFlow.collectAsState()
@@ -17,10 +17,11 @@ internal fun SongTextScreenImpl(artist: String, position: Int) {
     val youtubeMusicDontAsk by localViewModel.settings.youtubeMusicDontAskState.collectAsState()
 
     CommonSongTextScreenImplContent(
-        artist = artist,
         position = position,
+        randomKey = randomKey,
         song = song,
         songCount = commonSongTextState.currentSongCount,
+        lastRandomKey = commonSongTextState.lastRandomKey,
         currentSongPosition = commonSongTextState.currentSongPosition,
         isAutoPlayMode = commonSongTextState.isAutoPlayMode,
         isEditorMode = commonSongTextState.isEditorMode,

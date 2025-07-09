@@ -4,5 +4,5 @@ import androidx.compose.runtime.Composable
 import jatx.russianrocksongbook.localsongs.internal.view.songtext.SongTextScreenImpl
 
 @Composable
-fun SongTextScreen(artist: String, position: Int) =
-    SongTextScreenImpl(artist, position)
+fun SongTextScreen(position: Int, randomKey: Int) =
+    SongTextScreenImpl(position, randomKey)

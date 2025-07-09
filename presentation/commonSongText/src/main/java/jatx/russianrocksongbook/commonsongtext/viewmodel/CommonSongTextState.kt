@@ -4,6 +4,7 @@ import jatx.russianrocksongbook.domain.models.local.Song
 
 data class CommonSongTextState(
     val currentSongCount: Int,
+    val lastRandomKey: Int,
     val currentSongPosition: Int,
     val currentSong: Song?,
     val isEditorMode: Boolean,
@@ -24,6 +25,7 @@ data class CommonSongTextState(
     companion object {
         fun initial() = CommonSongTextState(
             currentSongCount = 0,
+            lastRandomKey = 0,
             currentSongPosition = 0,
             currentSong = null,
             isEditorMode = false,

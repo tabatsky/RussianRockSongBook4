@@ -74,7 +74,6 @@ open class LocalViewModel @Inject constructor(
 
     override fun getSongTextScreenVariant(position: Int) = ScreenVariant
         .SongText(
-            artist = appStateFlow.value.currentArtist,
             position = position
         )
 
@@ -122,7 +121,6 @@ open class LocalViewModel @Inject constructor(
         val currentArtist = appStateFlow.value.currentArtist
         with (commonSongTextStateFlow.value) {
             currentSong?.copy(favorite = favorite)?.let {
-                updateCurrentSong(it, currentSongPosition)
                 saveSong(it)
                 if (!favorite && currentArtist == ARTIST_FAVORITE) {
                     val newSongCount = getCountByArtistUseCase.execute(ARTIST_FAVORITE)
@@ -138,6 +136,8 @@ open class LocalViewModel @Inject constructor(
                     } else {
                         back()
                     }
+                } else {
+                    updateCurrentSong(it, currentSongPosition)
                 }
                 if (favorite) {
                     showToast(R.string.toast_added_to_favorite)
@@ -271,7 +271,7 @@ open class LocalViewModel @Inject constructor(
                 )
                 selectScreen(
                     ScreenVariant
-                        .SongText(artist, position))
+                        .SongText(position))
             }
     }
 
