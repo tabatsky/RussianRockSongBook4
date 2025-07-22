@@ -6,6 +6,7 @@ import jatx.russianrocksongbook.domain.models.appcrash.AppCrash
 import jatx.russianrocksongbook.domain.usecase.cloud.SendCrashUseCase
 import jatx.russianrocksongbook.domain.models.appcrash.Version
 import jatx.russianrocksongbook.util.debug.exceptionToString
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -35,6 +36,7 @@ class AppCrashHandler(
     private val version: Version
     ) : Thread.UncaughtExceptionHandler {
 
+    @OptIn(DelicateCoroutinesApi::class)
     @SuppressLint("CheckResult")
     override fun uncaughtException(
         thread: Thread,
