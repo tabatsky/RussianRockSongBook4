@@ -1,96 +1,70 @@
 package jatx.russianrocksongbook.navigation
 
+import kotlinx.serialization.Serializable
 import kotlin.random.Random
 
 val rnd = Random(42)
 
 sealed interface ScreenVariant {
-    val route: Any
 
-    data object Start: ScreenVariant {
-        override val route: Any
-            get() = StartRoute
-    }
+    @Serializable
+    data object Start: ScreenVariant
 
+    @Serializable
     data class SongList(
         val artist: String,
         val isBackFromSomeScreen: Boolean = false
-    ): ScreenVariant {
-        override val route: Any
-            get() = SongListRoute(artist, isBackFromSomeScreen)
-    }
+    ): ScreenVariant
 
+    @Serializable
     data class Favorite(
         val isBackFromSomeScreen: Boolean = false
-    ): ScreenVariant {
-        override val route: Any
-            get() = FavoriteRoute(isBackFromSomeScreen)
-    }
+    ): ScreenVariant
 
+    @Serializable
     data class SongText(
         val position: Int,
         val randomKey: Int = rnd.nextInt()
-        ): ScreenVariant {
-        override val route: Any
-            get() = SongTextRoute(position, randomKey)
-    }
+        ): ScreenVariant
 
+    @Serializable
     data class SongTextByArtistAndTitle(
         val artist: String,
         val title: String
-        ): ScreenVariant {
-        override val route: Any
-            get() = SongTextByArtistAndTitleRoute(artist, title)
-    }
+        ): ScreenVariant
 
+    @Serializable
     data class CloudSearch(
         val randomKey: Int = rnd.nextInt(),
         val isBackFromSong: Boolean = false
-    ): ScreenVariant {
-        override val route: Any
-            get() = CloudSearchRoute(randomKey, isBackFromSong)
-    }
+    ): ScreenVariant
 
+    @Serializable
     data class CloudSongText(
         val position: Int
-    ): ScreenVariant {
-        override val route: Any
-            get() = CloudSongTextRoute(position)
-    }
+    ): ScreenVariant
 
+    @Serializable
     data class TextSearchList(
         val randomKey: Int = rnd.nextInt(),
         val isBackFromSong: Boolean = false
-    ): ScreenVariant {
-        override val route: Any
-            get() = TextSearchListRoute(randomKey, isBackFromSong)
-    }
+    ): ScreenVariant
 
+    @Serializable
     data class TextSearchSongText(
         val position: Int,
         val randomKey: Int = rnd.nextInt()
-    ): ScreenVariant {
-        override val route: Any
-            get() = TextSearchSongTextRoute(position, randomKey)
-    }
+    ): ScreenVariant
 
-    data object AddArtist: ScreenVariant {
-        override val route: Any
-            get() = AddArtistRoute
-    }
+    @Serializable
+    data object AddArtist: ScreenVariant
 
-    data object AddSong: ScreenVariant {
-        override val route: Any
-            get() = AddSongRoute
-    }
+    @Serializable
+    data object AddSong: ScreenVariant
 
-    data object Donation: ScreenVariant {
-        override val route: Any
-            get() = DonationRoute
-    }
+    @Serializable
+    data object Donation: ScreenVariant
 
-    data object Settings: ScreenVariant {
-        override val route: Any
-            get() = SettingsRoute
-    }
+    @Serializable
+    data object Settings: ScreenVariant
 }

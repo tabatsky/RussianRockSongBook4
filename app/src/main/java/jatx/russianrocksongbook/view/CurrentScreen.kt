@@ -20,22 +20,10 @@ import jatx.russianrocksongbook.localsongs.api.view.SongListScreen
 import jatx.russianrocksongbook.localsongs.api.view.SongTextScreen
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.VoiceCommandViewModel
-import jatx.russianrocksongbook.navigation.AddArtistRoute
-import jatx.russianrocksongbook.navigation.AddSongRoute
 import jatx.russianrocksongbook.settings.api.view.SettingsScreen
 import jatx.russianrocksongbook.start.api.view.StartScreen
 import jatx.russianrocksongbook.navigation.AppNavigator
-import jatx.russianrocksongbook.navigation.CloudSearchRoute
-import jatx.russianrocksongbook.navigation.CloudSongTextRoute
-import jatx.russianrocksongbook.navigation.DonationRoute
-import jatx.russianrocksongbook.navigation.FavoriteRoute
-import jatx.russianrocksongbook.navigation.SettingsRoute
-import jatx.russianrocksongbook.navigation.SongListRoute
-import jatx.russianrocksongbook.navigation.SongTextByArtistAndTitleRoute
-import jatx.russianrocksongbook.navigation.SongTextRoute
-import jatx.russianrocksongbook.navigation.StartRoute
-import jatx.russianrocksongbook.navigation.TextSearchListRoute
-import jatx.russianrocksongbook.navigation.TextSearchSongTextRoute
+import jatx.russianrocksongbook.navigation.ScreenVariant
 import jatx.russianrocksongbook.textsearch.api.view.TextSearchListScreen
 import jatx.russianrocksongbook.textsearch.api.view.TextSearchSongTextScreen
 import jatx.russianrocksongbook.textsearch.internal.viewmodel.TextSearchViewModel
@@ -65,93 +53,93 @@ fun CurrentScreen() {
 
     NavHost(
         navController,
-        startDestination = StartRoute,
+        startDestination = ScreenVariant.Start,
         enterTransition = { EnterTransition.None },
         popEnterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None },
         popExitTransition = { ExitTransition.None }
     ) {
 
-        composable<StartRoute> {
+        composable<ScreenVariant.Start> {
             StartScreen()
         }
 
-        composable<SongListRoute> { backStackEntry ->
-            val route: SongListRoute = backStackEntry.toRoute()
+        composable<ScreenVariant.SongList> { backStackEntry ->
+            val route: ScreenVariant.SongList = backStackEntry.toRoute()
             SongListScreen(
                 artist = route.artist,
                 isBackFromSomeScreen = route.isBackFromSomeScreen
             )
         }
 
-        composable<FavoriteRoute> { backStackEntry ->
-            val route: FavoriteRoute = backStackEntry.toRoute()
+        composable<ScreenVariant.Favorite> { backStackEntry ->
+            val route: ScreenVariant.Favorite = backStackEntry.toRoute()
             SongListScreen(
                 artist = ARTIST_FAVORITE,
                 isBackFromSomeScreen = route.isBackFromSomeScreen
             )
         }
 
-        composable<SongTextRoute> { backStackEntry ->
-            val route: SongTextRoute = backStackEntry.toRoute()
+        composable<ScreenVariant.SongText> { backStackEntry ->
+            val route: ScreenVariant.SongText = backStackEntry.toRoute()
             SongTextScreen(
                 position = route.position,
                 randomKey = route.randomKey
             )
         }
 
-        composable<SongTextByArtistAndTitleRoute> { backStackEntry ->
-            val route: SongTextByArtistAndTitleRoute = backStackEntry.toRoute()
+        composable<ScreenVariant.SongTextByArtistAndTitle> { backStackEntry ->
+            val route: ScreenVariant.SongTextByArtistAndTitle = backStackEntry.toRoute()
             SongListScreen(
                 artist = route.artist,
                 songTitleToPass = route.title
             )
         }
 
-        composable<CloudSearchRoute> { backStackEntry ->
-            val route: CloudSearchRoute = backStackEntry.toRoute()
+        composable<ScreenVariant.CloudSearch> { backStackEntry ->
+            val route: ScreenVariant.CloudSearch = backStackEntry.toRoute()
             CloudSearchScreen(
                 randomKey = route.randomKey,
                 isBackFromSong = route.isBackFromSong
             )
         }
 
-        composable<TextSearchListRoute> { backStackEntry ->
-            val route: TextSearchListRoute = backStackEntry.toRoute()
+        composable<ScreenVariant.TextSearchList> { backStackEntry ->
+            val route: ScreenVariant.TextSearchList = backStackEntry.toRoute()
             TextSearchListScreen(
                 randomKey = route.randomKey,
                 isBackFromSong = route.isBackFromSong
             )
         }
 
-        composable<CloudSongTextRoute> { backStackEntry ->
-            val route: CloudSongTextRoute = backStackEntry.toRoute()
+        composable<ScreenVariant.CloudSongText> { backStackEntry ->
+            val route: ScreenVariant.CloudSongText = backStackEntry.toRoute()
             CloudSongTextScreen(
                 position = route.position
             )
         }
 
-        composable<TextSearchSongTextRoute> { backStackEntry ->
-            val route: TextSearchSongTextRoute = backStackEntry.toRoute()
+        composable<ScreenVariant.TextSearchSongText> { backStackEntry ->
+            val route: ScreenVariant.TextSearchSongText = backStackEntry.toRoute()
             TextSearchSongTextScreen(
                 position = route.position,
                 randomkey = route.randomKey
             )
         }
 
-        composable<AddArtistRoute> {
+        composable<ScreenVariant.AddArtist> {
             AddArtistScreen()
         }
 
-        composable<AddSongRoute> {
+        composable<ScreenVariant.AddSong> {
             AddSongScreen()
         }
 
-        composable<DonationRoute> {
+        composable<ScreenVariant.Donation> {
             DonationScreen()
         }
 
-        composable<SettingsRoute> {
+        composable<ScreenVariant.Settings> {
             SettingsScreen()
         }
     }

@@ -104,7 +104,7 @@ object AppNavigator {
     }
 
     fun navigate(screenVariant: ScreenVariant) {
-        navController?.navigate(screenVariant.route) {}
+        navController?.navigate(screenVariant) {}
     }
 
     val navControllerIsNull: Boolean
