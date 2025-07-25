@@ -81,6 +81,8 @@ dependencies {
     implementation libs.lifecycleRuntime
     implementation libs.lifecycleViewmodel
     implementation libs.ktxSerializationCore
+    implementation libs.navigation3Runtime
+    implementation libs.navigation3Ui
 
     implementation libs.hiltAndroid
     ksp libs.hiltCompiler

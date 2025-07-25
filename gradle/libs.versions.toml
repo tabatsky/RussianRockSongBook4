@@ -21,6 +21,8 @@ gson = "2.13.1"
 documentFile = "1.1.0"
 androidFileChooser = "v1.2.0-final"
 
+navigation3 = "1.0.0-alpha04"
+
 hiltExtensions = "1.4.0"
 hiltNavigationCompose = "1.2.0"
 
@@ -75,6 +77,9 @@ commonsLang = { module="org.apache.commons:commons-lang3", version.ref="commonsL
 gson = { module="com.google.code.gson:gson", version.ref="gson" }
 documentFile = { module="androidx.documentfile:documentfile", version.ref="documentFile" }
 androidFileChooser = { module = "com.github.hedzr:android-file-chooser", version.ref = "androidFileChooser" }
+
+navigation3Runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "navigation3" }
+navigation3Ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "navigation3" }
 
 hiltAndroid = { module="com.google.dagger:hilt-android", version.ref="hilt" }
 hiltCompiler = { module="com.google.dagger:hilt-compiler", version.ref="hilt" }
