@@ -2,7 +2,6 @@ package jatx.russianrocksongbook
 
 import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
@@ -34,12 +33,12 @@ import jatx.russianrocksongbook.domain.repository.preferences.SettingsRepository
 import jatx.russianrocksongbook.donationhelper.api.DonationHelper
 import jatx.russianrocksongbook.localsongs.api.methods.selectArtist
 import jatx.russianrocksongbook.localsongs.api.methods.selectSongByArtistAndTitle
-import jatx.russianrocksongbook.navigation.AppNavigator
 import jatx.russianrocksongbook.view.CurrentScreen
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.domain.repository.preferences.colorDarkYellow
 import jatx.russianrocksongbook.voicecommands.api.VoiceCommandHelper
 import javax.inject.Inject
+import androidx.core.net.toUri
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -102,11 +101,11 @@ class MainActivity : ComponentActivity() {
     }
 
     fun clean() {
-        AppNavigator.cleanNavController()
         if (CommonViewModel.needReset) {
             CommonViewModel.clearStorage()
             viewModelStore.clear()
         }
+        CommonViewModel.clearAppNavigator()
     }
 
     @Composable
@@ -148,7 +147,7 @@ class MainActivity : ComponentActivity() {
         startActivity(
             Intent(
                 Intent.ACTION_VIEW,
-                Uri.parse("http://tabatsky.ru")
+                "http://tabatsky.ru".toUri()
             )
         )
     }
@@ -157,7 +156,7 @@ class MainActivity : ComponentActivity() {
         startActivity(
             Intent(
                 Intent.ACTION_VIEW,
-                Uri.parse("https://play.google.com/store/apps/details?id=jatx.russianrocksongbook")
+                "https://play.google.com/store/apps/details?id=jatx.russianrocksongbook".toUri()
             )
         )
     }

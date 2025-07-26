@@ -20,7 +20,7 @@ import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.local.TextSearchOrderBy
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
-import jatx.russianrocksongbook.navigation.ScreenVariant
+import jatx.russianrocksongbook.navigation.*
 import jatx.russianrocksongbook.testing.TestingConfig
 import jatx.russianrocksongbook.textsearch.R
 import jatx.russianrocksongbook.textsearch.internal.viewmodel.PerformTextSearch
@@ -68,7 +68,7 @@ internal fun TextSearchListBody(
 
     val onItemClick: (Int, Song) -> Unit = { index, song ->
         println("selected: ${song.artist} - ${song.title}")
-        submitAction(SelectScreen(ScreenVariant.TextSearchSongText(index)))
+        submitAction(SelectScreen(TextSearchSongTextScreenVariant(index)))
     }
 
     Column(

@@ -1,15 +1,11 @@
 package jatx.russianrocksongbook.navigation
 
-import android.annotation.SuppressLint
-import androidx.navigation.NavController
-import androidx.navigation.NavDestination
-import androidx.navigation.NavHostController
+import androidx.navigation3.runtime.NavBackStack
 
-object AppNavigator {
-    @SuppressLint("StaticFieldLeak")
-    private var navController: NavHostController? = null
-
-    private var previousDestination: NavDestination? = null
+class AppNavigator(
+    val backStack: NavBackStack
+) {
+    private var previousScreenVariant: ScreenVariant? = null
 
     private var onSubmitBackAction: (() -> Unit)? = null
 
@@ -17,38 +13,38 @@ object AppNavigator {
 
     private var skipOnce = false
 
-    private var destinationChangedListener =
-        NavController.OnDestinationChangedListener { controller, destination, arguments ->
-            val wasSongListScreen = previousDestination.isSongListScreen
-            val becomeStartScreen = destination.isStartScreen
+    private var screenChangedListener: (ScreenVariant?) -> Unit = { screenVariant ->
+            val wasSongListScreen = previousScreenVariant.isSongListScreen
+            val wasStartScreen = previousScreenVariant.isStartScreen
+            val becomeEmptyScreen = screenVariant.isEmptyScreen
 
-            val wasFavoriteScreen = previousDestination.isFavorite
-            val wasCloudSearchScreen = previousDestination.isCloudSearchScreen
-            val wasTextSearchListScreen = previousDestination.isTextSearchListScreen
-            val wasDonationScreen = previousDestination.isDonationScreen
-            val wasSettingsScreen = previousDestination.isSettingsScreen
-            val wasAddArtistScreen = previousDestination.isAddArtistScreen
-            val wasAddSongScreen = previousDestination.isAddSongScreen
+            val wasFavoriteScreen = previousScreenVariant.isFavoriteScreen
+            val wasCloudSearchScreen = previousScreenVariant.isCloudSearchScreen
+            val wasTextSearchListScreen = previousScreenVariant.isTextSearchListScreen
+            val wasDonationScreen = previousScreenVariant.isDonationScreen
+            val wasSettingsScreen = previousScreenVariant.isSettingsScreen
+            val wasAddArtistScreen = previousScreenVariant.isAddArtistScreen
+            val wasAddSongScreen = previousScreenVariant.isAddSongScreen
 
-            val wasSongTextScreen = previousDestination.isSongTextScreen
+            val wasSongTextScreen = previousScreenVariant.isSongTextScreen
 
-            val becomeSongListScreen = destination.isSongListScreen
-            val becomeFavoriteScreen = destination.isFavorite
+            val becomeSongListScreen = screenVariant.isSongListScreen
+            val becomeFavoriteScreen = screenVariant.isFavoriteScreen
             val becomeSongListOrFavoriteScreen = becomeSongListScreen || becomeFavoriteScreen
 
-            val wasCloudSongTextScreen = previousDestination.isCloudSongTextScreen
-            val becomeCloudSearchScreen = destination.isCloudSearchScreen
+            val wasCloudSongTextScreen = previousScreenVariant.isCloudSongTextScreen
+            val becomeCloudSearchScreen = screenVariant.isCloudSearchScreen
 
-            val wasTextSearchSongTextScreen = previousDestination.isTextSearchSongTextScreen
-            val becomeTextSearchListScreen = destination.isTextSearchListScreen
+            val wasTextSearchSongTextScreen = previousScreenVariant.isTextSearchSongTextScreen
+            val becomeTextSearchListScreen = screenVariant.isTextSearchListScreen
 
             var needSubmitBackAction = false
 
             val dontSubmitBackAction = skipSubmitBackAction > 0
 
-            needSubmitBackAction = needSubmitBackAction || (wasSongListScreen && becomeStartScreen)
-
-            needSubmitBackAction = needSubmitBackAction || (wasFavoriteScreen && becomeSongListScreen)
+            needSubmitBackAction = needSubmitBackAction || (wasStartScreen && becomeEmptyScreen)
+            needSubmitBackAction = needSubmitBackAction || (wasSongListScreen && becomeEmptyScreen)
+            needSubmitBackAction = needSubmitBackAction || (wasFavoriteScreen && becomeEmptyScreen)
 
             needSubmitBackAction = needSubmitBackAction || (wasSongTextScreen && becomeSongListOrFavoriteScreen)
 
@@ -74,39 +70,37 @@ object AppNavigator {
 
             skipOnce = false
 
-            previousDestination = destination
+            previousScreenVariant = screenVariant
         }
 
-    fun injectNavController(navController: NavHostController, onSubmitBackAction: (() -> Unit)) {
-        this.navController = navController
-        this.navController?.addOnDestinationChangedListener(destinationChangedListener)
+    fun inject(onSubmitBackAction: (() -> Unit)) {
         this.onSubmitBackAction = onSubmitBackAction
     }
 
-    fun cleanNavController() {
-        this.onSubmitBackAction = null
-        this.navController?.removeOnDestinationChangedListener(destinationChangedListener)
-        this.navController = null
-    }
-
-    fun popBackStack(
+    fun pop(
         dontSubmitBackAction: Boolean = false,
         skipOnce: Boolean = false,
         times: Int = 1
     ) {
+        this.backStack.removeLastOrNull()
         if (dontSubmitBackAction) {
             skipSubmitBackAction += times
         }
         this.skipOnce = skipOnce
+        val screenVariant = this.backStack.lastOrNull() as? ScreenVariant
         repeat(times) {
-            navController?.popBackStack()
+            this.screenChangedListener(screenVariant)
         }
     }
 
-    fun navigate(screenVariant: ScreenVariant) {
-        navController?.navigate(screenVariant) {}
+    fun push(screenVariant: ScreenVariant) {
+        this.backStack.add(screenVariant)
+        this.screenChangedListener(screenVariant)
     }
 
-    val navControllerIsNull: Boolean
-        get() = navController == null
+    fun replace(screenVariant: ScreenVariant) {
+        this.backStack.removeLastOrNull()
+        this.backStack.add(screenVariant)
+        this.screenChangedListener(screenVariant)
+    }
 }

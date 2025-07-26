@@ -34,7 +34,7 @@ import jatx.russianrocksongbook.localsongs.api.methods.parseAndExecuteVoiceComma
 import jatx.russianrocksongbook.localsongs.api.methods.selectArtist
 import jatx.russianrocksongbook.localsongs.api.methods.selectSongByArtistAndTitle
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
-import jatx.russianrocksongbook.navigation.ScreenVariant
+import jatx.russianrocksongbook.navigation.*
 import jatx.russianrocksongbook.testing.*
 import kotlinx.coroutines.runBlocking
 import leakcanary.DetectLeaksAfterTestSuccess
@@ -133,7 +133,15 @@ class UITest {
             composeTestRule.waitForTimeout(1000L)
         }
 
+        composeTestRule.waitForTimeout(1000L)
+
         if (appWasUpdated) {
+            composeTestRule
+                .waitForCondition {
+                    composeTestRule
+                        .onNodeWithText(stringConst.ok)
+                        .isDisplayed()
+                }
             composeTestRule
                 .onNodeWithText(stringConst.ok)
                 .performClick()
@@ -446,7 +454,7 @@ class UITest {
             composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
         }
 
-        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        assertEquals(Lifecycle.State.DESTROYED, composeTestRule.activityRule.scenario.state)
         Log.e("test $testNumber assert", "activity is destroyed")
     }
 
@@ -1143,7 +1151,7 @@ class UITest {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
-                    ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
+                    ?.submitAction(SelectScreen(CloudSearchScreenVariant()))
             }
 
             composeTestRule.waitForCondition {
@@ -1178,7 +1186,7 @@ class UITest {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
-                    ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
+                    ?.submitAction(SelectScreen(CloudSearchScreenVariant()))
             }
 
             composeTestRule.waitForCondition {
@@ -1222,7 +1230,7 @@ class UITest {
         composeTestRule.activityRule.scenario.onActivity {
             CommonViewModel
                 .getStoredInstance()
-                ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
+                ?.submitAction(SelectScreen(CloudSearchScreenVariant()))
         }
 
         composeTestRule.waitForCondition {
@@ -1263,7 +1271,7 @@ class UITest {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
-                    ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
+                    ?.submitAction(SelectScreen(CloudSearchScreenVariant()))
             }
 
             composeTestRule.waitForCondition {
@@ -1319,7 +1327,7 @@ class UITest {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
-                    ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
+                    ?.submitAction(SelectScreen(CloudSearchScreenVariant()))
             }
 
             composeTestRule.waitForCondition {
@@ -1373,7 +1381,7 @@ class UITest {
         composeTestRule.activityRule.scenario.onActivity {
             CommonViewModel
                 .getStoredInstance()
-                ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
+                ?.submitAction(SelectScreen(CloudSearchScreenVariant()))
         }
 
         composeTestRule.waitForCondition {
@@ -1414,7 +1422,7 @@ class UITest {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
-                    ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
+                    ?.submitAction(SelectScreen(CloudSearchScreenVariant()))
             }
 
             composeTestRule.waitForCondition {
@@ -1449,7 +1457,7 @@ class UITest {
         composeTestRule.activityRule.scenario.onActivity {
             CommonViewModel
                 .getStoredInstance()
-                ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
+                ?.submitAction(SelectScreen(CloudSearchScreenVariant()))
         }
 
         composeTestRule.waitForCondition {
@@ -1461,7 +1469,7 @@ class UITest {
         composeTestRule.activityRule.scenario.onActivity {
             CommonViewModel
                 .getStoredInstance()
-                ?.submitAction(SelectScreen(ScreenVariant.CloudSongText(2)))
+                ?.submitAction(SelectScreen(CloudSongTextScreenVariant(2)))
         }
 
         composeTestRule.waitForCondition {
@@ -1523,7 +1531,7 @@ class UITest {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
-                    ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
+                    ?.submitAction(SelectScreen(CloudSearchScreenVariant()))
             }
 
             composeTestRule.waitForCondition {
@@ -1535,7 +1543,7 @@ class UITest {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
-                    ?.submitAction(SelectScreen(ScreenVariant.CloudSongText(2)))
+                    ?.submitAction(SelectScreen(CloudSongTextScreenVariant(2)))
             }
 
             composeTestRule.waitForCondition {
@@ -1611,7 +1619,7 @@ class UITest {
         composeTestRule.activityRule.scenario.onActivity {
             CommonViewModel
                 .getStoredInstance()
-                ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
+                ?.submitAction(SelectScreen(CloudSearchScreenVariant()))
         }
 
         composeTestRule.waitForCondition {
@@ -1623,7 +1631,7 @@ class UITest {
         composeTestRule.activityRule.scenario.onActivity {
             CommonViewModel
                 .getStoredInstance()
-                ?.submitAction(SelectScreen(ScreenVariant.CloudSongText(2)))
+                ?.submitAction(SelectScreen(CloudSongTextScreenVariant(2)))
         }
 
         composeTestRule.waitForCondition {
@@ -1690,7 +1698,7 @@ class UITest {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
-                    ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
+                    ?.submitAction(SelectScreen(CloudSearchScreenVariant()))
             }
 
             composeTestRule.waitForCondition {
@@ -1702,7 +1710,7 @@ class UITest {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
-                    ?.submitAction(SelectScreen(ScreenVariant.CloudSongText(2)))
+                    ?.submitAction(SelectScreen(CloudSongTextScreenVariant(2)))
             }
 
             composeTestRule.waitForCondition {
@@ -1759,7 +1767,7 @@ class UITest {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
-                    ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
+                    ?.submitAction(SelectScreen(CloudSearchScreenVariant()))
             }
 
             composeTestRule.waitForCondition {
@@ -1771,7 +1779,7 @@ class UITest {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
-                    ?.submitAction(SelectScreen(ScreenVariant.CloudSongText(2)))
+                    ?.submitAction(SelectScreen(CloudSongTextScreenVariant(2)))
             }
 
             val cloudSong2 = list[2].let {
@@ -1831,7 +1839,7 @@ class UITest {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
-                    ?.submitAction(SelectScreen(ScreenVariant.CloudSearch()))
+                    ?.submitAction(SelectScreen(CloudSearchScreenVariant()))
             }
 
             composeTestRule.waitForCondition {
@@ -1843,7 +1851,7 @@ class UITest {
             composeTestRule.activityRule.scenario.onActivity {
                 CommonViewModel
                     .getStoredInstance()
-                    ?.submitAction(SelectScreen(ScreenVariant.CloudSongText(3)))
+                    ?.submitAction(SelectScreen(CloudSongTextScreenVariant(3)))
             }
 
             val cloudSong3 = list[3].let {
@@ -2126,7 +2134,7 @@ class UITest {
         composeTestRule.waitForCondition {
             composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
         }
-        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        assertEquals(Lifecycle.State.DESTROYED, composeTestRule.activityRule.scenario.state)
         Log.e("test $testNumber assert", "activity is destroyed")
     }
 
@@ -2191,7 +2199,7 @@ class UITest {
         composeTestRule.waitForCondition {
             composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
         }
-        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        assertEquals(Lifecycle.State.DESTROYED, composeTestRule.activityRule.scenario.state)
         Log.e("test $testNumber assert", "activity is destroyed")
     }
 
@@ -2345,7 +2353,7 @@ class UITest {
         composeTestRule.waitForCondition {
             composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
         }
-        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        assertEquals(Lifecycle.State.DESTROYED, composeTestRule.activityRule.scenario.state)
         Log.e("test $testNumber assert", "activity is destroyed")
     }
 
@@ -2494,7 +2502,7 @@ class UITest {
         composeTestRule.waitForCondition {
             composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
         }
-        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        assertEquals(Lifecycle.State.DESTROYED, composeTestRule.activityRule.scenario.state)
         Log.e("test $testNumber assert", "activity is destroyed")
     }
 
@@ -2563,7 +2571,7 @@ class UITest {
         composeTestRule.waitForCondition {
             composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
         }
-        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        assertEquals(Lifecycle.State.DESTROYED, composeTestRule.activityRule.scenario.state)
         Log.e("test $testNumber assert", "activity is destroyed")
     }
 
@@ -2634,7 +2642,7 @@ class UITest {
         composeTestRule.waitForCondition {
             composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
         }
-        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        assertEquals(Lifecycle.State.DESTROYED, composeTestRule.activityRule.scenario.state)
         Log.e("test $testNumber assert", "activity is destroyed")
     }
 
@@ -2708,7 +2716,7 @@ class UITest {
         composeTestRule.waitForCondition {
             composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
         }
-        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        assertEquals(Lifecycle.State.DESTROYED, composeTestRule.activityRule.scenario.state)
         Log.e("test $testNumber assert", "activity is destroyed")
     }
 
@@ -2784,7 +2792,7 @@ class UITest {
         composeTestRule.waitForCondition {
             composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
         }
-        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        assertEquals(Lifecycle.State.DESTROYED, composeTestRule.activityRule.scenario.state)
         Log.e("test $testNumber assert", "activity is destroyed")
     }
 
@@ -2905,7 +2913,7 @@ class UITest {
         composeTestRule.waitForCondition {
             composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
         }
-        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        assertEquals(Lifecycle.State.DESTROYED, composeTestRule.activityRule.scenario.state)
         Log.e("test $testNumber assert", "activity is destroyed")
     }
 
@@ -3040,7 +3048,7 @@ class UITest {
         composeTestRule.waitForCondition {
             composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
         }
-        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        assertEquals(Lifecycle.State.DESTROYED, composeTestRule.activityRule.scenario.state)
         Log.e("test $testNumber assert", "activity is destroyed")
     }
 
@@ -3098,7 +3106,7 @@ class UITest {
         composeTestRule.waitForCondition {
             composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
         }
-        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        assertEquals(Lifecycle.State.DESTROYED, composeTestRule.activityRule.scenario.state)
         Log.e("test $testNumber assert", "activity is destroyed")
     }
 
@@ -3168,7 +3176,7 @@ class UITest {
         composeTestRule.waitForCondition {
             composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
         }
-        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        assertEquals(Lifecycle.State.DESTROYED, composeTestRule.activityRule.scenario.state)
         Log.e("test $testNumber assert", "activity is destroyed")
     }
 
@@ -3240,7 +3248,7 @@ class UITest {
         composeTestRule.waitForCondition {
             composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
         }
-        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        assertEquals(Lifecycle.State.DESTROYED, composeTestRule.activityRule.scenario.state)
         Log.e("test $testNumber assert", "activity is destroyed")
     }
 
@@ -3364,7 +3372,7 @@ class UITest {
         composeTestRule.waitForCondition {
             composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
         }
-        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        assertEquals(Lifecycle.State.DESTROYED, composeTestRule.activityRule.scenario.state)
         Log.e("test $testNumber assert", "activity is destroyed")
     }
 
@@ -3490,7 +3498,7 @@ class UITest {
         composeTestRule.waitForCondition {
             composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
         }
-        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        assertEquals(Lifecycle.State.DESTROYED, composeTestRule.activityRule.scenario.state)
         Log.e("test $testNumber assert", "activity is destroyed")
     }
 
@@ -3662,7 +3670,7 @@ class UITest {
         composeTestRule.waitForCondition {
             composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
         }
-        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        assertEquals(Lifecycle.State.DESTROYED, composeTestRule.activityRule.scenario.state)
         Log.e("test $testNumber assert", "activity is destroyed")
     }
 
@@ -3830,7 +3838,7 @@ class UITest {
         composeTestRule.waitForCondition {
             composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
         }
-        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        assertEquals(Lifecycle.State.DESTROYED, composeTestRule.activityRule.scenario.state)
         Log.e("test $testNumber assert", "activity is destroyed")
     }
 
@@ -3994,7 +4002,7 @@ class UITest {
         composeTestRule.waitForCondition {
             composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
         }
-        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        assertEquals(Lifecycle.State.DESTROYED, composeTestRule.activityRule.scenario.state)
         Log.e("test $testNumber assert", "activity is destroyed")
     }
 
@@ -4172,7 +4180,7 @@ class UITest {
         composeTestRule.waitForCondition {
             composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED
         }
-        assertEquals(composeTestRule.activityRule.scenario.state, Lifecycle.State.DESTROYED)
+        assertEquals(Lifecycle.State.DESTROYED, composeTestRule.activityRule.scenario.state)
         Log.e("test $testNumber assert", "activity is destroyed")
     }
 
@@ -4227,7 +4235,7 @@ class UITest {
         composeTestRule.activityRule.scenario.onActivity {
             CommonViewModel
                 .getStoredInstance()
-                ?.submitAction(SelectScreen(ScreenVariant.TextSearchList()))
+                ?.submitAction(SelectScreen(TextSearchListScreenVariant()))
         }
 
         composeTestRule.waitForCondition {
@@ -4290,7 +4298,7 @@ class UITest {
         composeTestRule.activityRule.scenario.onActivity {
             CommonViewModel
                 .getStoredInstance()
-                ?.submitAction(SelectScreen(ScreenVariant.TextSearchList()))
+                ?.submitAction(SelectScreen(TextSearchListScreenVariant()))
         }
 
         composeTestRule.waitForCondition {
@@ -4370,7 +4378,7 @@ class UITest {
         composeTestRule.activityRule.scenario.onActivity {
             CommonViewModel
                 .getStoredInstance()
-                ?.submitAction(SelectScreen(ScreenVariant.TextSearchList()))
+                ?.submitAction(SelectScreen(TextSearchListScreenVariant()))
         }
 
         composeTestRule.waitForCondition {
@@ -4423,7 +4431,7 @@ class UITest {
         composeTestRule.activityRule.scenario.onActivity {
             CommonViewModel
                 .getStoredInstance()
-                ?.submitAction(SelectScreen(ScreenVariant.TextSearchList()))
+                ?.submitAction(SelectScreen(TextSearchListScreenVariant()))
         }
 
         composeTestRule.waitForCondition {
@@ -4476,7 +4484,7 @@ class UITest {
         composeTestRule.activityRule.scenario.onActivity {
             CommonViewModel
                 .getStoredInstance()
-                ?.submitAction(SelectScreen(ScreenVariant.TextSearchList()))
+                ?.submitAction(SelectScreen(TextSearchListScreenVariant()))
         }
 
         composeTestRule.waitForCondition {
@@ -4583,7 +4591,7 @@ class UITest {
         composeTestRule.activityRule.scenario.onActivity {
             CommonViewModel
                 .getStoredInstance()
-                ?.submitAction(SelectScreen(ScreenVariant.Favorite()))
+                ?.submitAction(SelectScreen(FavoriteScreenVariant()))
         }
 
         composeTestRule.waitForCondition {

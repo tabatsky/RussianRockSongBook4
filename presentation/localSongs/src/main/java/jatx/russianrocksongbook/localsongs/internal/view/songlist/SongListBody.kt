@@ -24,7 +24,7 @@ import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.localsongs.R
 import jatx.russianrocksongbook.testing.SONG_LIST_LAZY_COLUMN
 import jatx.russianrocksongbook.testing.TestingConfig
-import jatx.russianrocksongbook.navigation.ScreenVariant
+import jatx.russianrocksongbook.navigation.*
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -54,8 +54,7 @@ internal fun SongListBody(
                 Log.e("SongListBody", "selected: ${song.artist} - ${song.title}")
                 submitAction(
                     SelectScreen(
-                        ScreenVariant
-                            .SongText(index)
+                        SongTextScreenVariant(index)
                     )
                 )
             }
