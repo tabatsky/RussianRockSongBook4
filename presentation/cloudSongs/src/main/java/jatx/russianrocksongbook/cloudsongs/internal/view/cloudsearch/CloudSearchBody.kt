@@ -33,7 +33,7 @@ import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.repository.cloud.CloudSearchOrderBy
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import jatx.russianrocksongbook.testing.TestingConfig
-import jatx.russianrocksongbook.navigation.ScreenVariant
+import jatx.russianrocksongbook.navigation.*
 import jatx.russianrocksongbook.networking.repository.PAGE_SIZE
 import jatx.spinner.SpinnerState
 import kotlinx.coroutines.delay
@@ -81,7 +81,7 @@ internal fun CloudSearchBody(
 
     val onItemClick: (Int, CloudSong) -> Unit = { index, cloudSong ->
         println("selected: ${cloudSong.artist} - ${cloudSong.title}")
-        submitAction(SelectScreen(ScreenVariant.CloudSongText(index)))
+        submitAction(SelectScreen(CloudSongTextScreenVariant(index)))
     }
 
     Column(

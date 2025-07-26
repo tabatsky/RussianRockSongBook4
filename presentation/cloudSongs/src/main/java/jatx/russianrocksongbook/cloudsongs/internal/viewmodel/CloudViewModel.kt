@@ -24,7 +24,7 @@ import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.domain.models.music.Music
 import jatx.russianrocksongbook.domain.models.warning.Warnable
-import jatx.russianrocksongbook.navigation.ScreenVariant
+import jatx.russianrocksongbook.navigation.*
 import jatx.spinner.SpinnerState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -201,17 +201,13 @@ class CloudViewModel @Inject constructor(
         val currentPosition = cloudStateFlow.value.currentCloudSongPosition
         val songCount = cloudStateFlow.value.currentCloudSongCount
         if (currentPosition + 1 < songCount)
-            selectScreen(
-                ScreenVariant
-                    .CloudSongText(currentPosition + 1))
+            selectScreen(CloudSongTextScreenVariant(currentPosition + 1))
     }
 
     private fun prevCloudSong() {
         val currentPosition = cloudStateFlow.value.currentCloudSongPosition
         if (currentPosition > 0)
-            selectScreen(
-                ScreenVariant
-                    .CloudSongText(currentPosition - 1))
+            selectScreen(CloudSongTextScreenVariant(currentPosition - 1))
     }
 
     @SuppressLint("CheckResult")

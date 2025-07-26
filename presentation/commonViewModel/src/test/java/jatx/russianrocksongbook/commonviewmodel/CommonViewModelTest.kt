@@ -17,7 +17,7 @@ import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.domain.usecase.cloud.AddSongToCloudUseCase
 import jatx.russianrocksongbook.domain.usecase.cloud.AddWarningUseCase
 import jatx.russianrocksongbook.navigation.AppNavigator
-import jatx.russianrocksongbook.navigation.ScreenVariant
+import jatx.russianrocksongbook.navigation.*
 import jatx.russianrocksongbook.testing.TestingConfig
 import org.junit.*
 import org.junit.Assert.assertEquals
@@ -87,20 +87,20 @@ open class CommonViewModelTest {
         val screenVariantStack = Stack<ScreenVariant>()
         val screenVariantSlot = slot<ScreenVariant>()
 
-        every { AppNavigator.navigate(capture(screenVariantSlot)) } answers {
+        every { AppNavigator.push(capture(screenVariantSlot)) } answers {
             val screenVariant = screenVariantSlot.captured
             screenVariantStack.push(screenVariant)
             println("stack size: ${screenVariantStack.size}")
         }
-        every { AppNavigator.popBackStack() } answers {
+        every { AppNavigator.pop() } answers {
             if (screenVariantStack.isNotEmpty()) {
                 screenVariantStack.pop()
                 if (screenVariantStack.isNotEmpty()) {
                     val screenVariant = screenVariantStack.peek().let {
                         when (it) {
-                            is ScreenVariant.SongList -> it.copy(isBackFromSomeScreen = true)
-                            is ScreenVariant.Favorite -> it.copy(isBackFromSomeScreen = true)
-                            is ScreenVariant.CloudSearch -> it.copy(isBackFromSong = true)
+                            is SongListScreenVariant -> it.copy(isBackFromSomeScreen = true)
+                            is FavoriteScreenVariant -> it.copy(isBackFromSomeScreen = true)
+                            is CloudSearchScreenVariant -> it.copy(isBackFromSong = true)
                             else -> it
                         }
                     }
@@ -132,7 +132,7 @@ open class CommonViewModelTest {
                     val screenVariant = action.screenVariant
                     println(screenVariant)
                     val appState = appStateHolder.appStateFlow.value
-                    val newState = if (screenVariant is ScreenVariant.SongList) {
+                    val newState = if (screenVariant is SongListScreenVariant) {
                         appState.copy(
                             currentArtist = screenVariant.artist
                         )
@@ -163,56 +163,56 @@ open class CommonViewModelTest {
 
     @Test
     fun test003_selectScreen_CloudSearch_withBackPressing_isWorkingCorrect() {
-        commonViewModel.submitAction(SelectScreen(ScreenVariant.SongList("Кино")))
-        assertEquals(ScreenVariant.SongList("Кино"), commonViewModel.appStateFlow.value.currentScreenVariant)
-        commonViewModel.submitAction(SelectScreen(ScreenVariant.CloudSearch(137,true)))
-        assertEquals(ScreenVariant.CloudSearch(137, true), commonViewModel.appStateFlow.value.currentScreenVariant)
+        commonViewModel.submitAction(SelectScreen(SongListScreenVariant("Кино")))
+        assertEquals(SongListScreenVariant("Кино"), commonViewModel.appStateFlow.value.currentScreenVariant)
+        commonViewModel.submitAction(SelectScreen(CloudSearchScreenVariant(137,true)))
+        assertEquals(CloudSearchScreenVariant(137, true), commonViewModel.appStateFlow.value.currentScreenVariant)
         commonViewModel.submitAction(Back(false))
         waitForCondition {
-            commonViewModel.appStateFlow.value.currentScreenVariant is ScreenVariant.SongList
+            commonViewModel.appStateFlow.value.currentScreenVariant is SongListScreenVariant
         }
-        assertEquals(ScreenVariant.SongList("Кино", isBackFromSomeScreen = true), commonViewModel.appStateFlow.value.currentScreenVariant)
+        assertEquals(SongListScreenVariant("Кино", isBackFromSomeScreen = true), commonViewModel.appStateFlow.value.currentScreenVariant)
     }
 
     @Test
     fun test004_selectScreen_CloudSongText_withBackPressing_isWorkingCorrect() {
-        commonViewModel.submitAction(SelectScreen(ScreenVariant.SongList("Кино")))
-        assertEquals(ScreenVariant.SongList("Кино"), commonViewModel.appStateFlow.value.currentScreenVariant)
-        commonViewModel.submitAction(SelectScreen(ScreenVariant.CloudSearch(137,false)))
-        assertEquals(ScreenVariant.CloudSearch(137,false), commonViewModel.appStateFlow.value.currentScreenVariant)
-        commonViewModel.submitAction(SelectScreen(ScreenVariant.CloudSongText(13)))
-        assertEquals(ScreenVariant.CloudSongText(13), commonViewModel.appStateFlow.value.currentScreenVariant)
+        commonViewModel.submitAction(SelectScreen(SongListScreenVariant("Кино")))
+        assertEquals(SongListScreenVariant("Кино"), commonViewModel.appStateFlow.value.currentScreenVariant)
+        commonViewModel.submitAction(SelectScreen(CloudSearchScreenVariant(137,false)))
+        assertEquals(CloudSearchScreenVariant(137,false), commonViewModel.appStateFlow.value.currentScreenVariant)
+        commonViewModel.submitAction(SelectScreen(CloudSongTextScreenVariant(13)))
+        assertEquals(CloudSongTextScreenVariant(13), commonViewModel.appStateFlow.value.currentScreenVariant)
         commonViewModel.submitAction(Back(false))
         waitForCondition {
-            commonViewModel.appStateFlow.value.currentScreenVariant is ScreenVariant.CloudSearch
+            commonViewModel.appStateFlow.value.currentScreenVariant is CloudSearchScreenVariant
         }
-        assertEquals(ScreenVariant.CloudSearch(137,true), commonViewModel.appStateFlow.value.currentScreenVariant)
+        assertEquals(CloudSearchScreenVariant(137,true), commonViewModel.appStateFlow.value.currentScreenVariant)
     }
 
     @Test
     fun test005_selectScreen_SongText_withBackPressing_isWorkingCorrect() {
-        commonViewModel.submitAction(SelectScreen(ScreenVariant.SongList("Кино")))
-        assertEquals(ScreenVariant.SongList("Кино"), commonViewModel.appStateFlow.value.currentScreenVariant)
-        commonViewModel.submitAction(SelectScreen(ScreenVariant.SongText(13, 1237)))
-        assertEquals(ScreenVariant.SongText(13, 1237), commonViewModel.appStateFlow.value.currentScreenVariant)
+        commonViewModel.submitAction(SelectScreen(SongListScreenVariant("Кино")))
+        assertEquals(SongListScreenVariant("Кино"), commonViewModel.appStateFlow.value.currentScreenVariant)
+        commonViewModel.submitAction(SelectScreen(SongTextScreenVariant(13, 1237)))
+        assertEquals(SongTextScreenVariant(13, 1237), commonViewModel.appStateFlow.value.currentScreenVariant)
         commonViewModel.submitAction(Back(false))
         waitForCondition {
-            commonViewModel.appStateFlow.value.currentScreenVariant is ScreenVariant.SongList
+            commonViewModel.appStateFlow.value.currentScreenVariant is SongListScreenVariant
         }
-        assertEquals(ScreenVariant.SongList("Кино", isBackFromSomeScreen = true), commonViewModel.appStateFlow.value.currentScreenVariant)
+        assertEquals(SongListScreenVariant("Кино", isBackFromSomeScreen = true), commonViewModel.appStateFlow.value.currentScreenVariant)
     }
 
     @Test
     fun test006_selectScreen_Settings_withBackPressing_isWorkingCorrect() {
-        commonViewModel.submitAction(SelectScreen(ScreenVariant.SongList("Кино")))
-        assertEquals(ScreenVariant.SongList("Кино"), commonViewModel.appStateFlow.value.currentScreenVariant)
-        commonViewModel.submitAction(SelectScreen(ScreenVariant.Settings))
-        assertEquals(ScreenVariant.Settings, commonViewModel.appStateFlow.value.currentScreenVariant)
+        commonViewModel.submitAction(SelectScreen(SongListScreenVariant("Кино")))
+        assertEquals(SongListScreenVariant("Кино"), commonViewModel.appStateFlow.value.currentScreenVariant)
+        commonViewModel.submitAction(SelectScreen(SettingsScreenVariant))
+        assertEquals(SettingsScreenVariant, commonViewModel.appStateFlow.value.currentScreenVariant)
         commonViewModel.submitAction(Back(false))
         waitForCondition {
-            commonViewModel.appStateFlow.value.currentScreenVariant is ScreenVariant.SongList
+            commonViewModel.appStateFlow.value.currentScreenVariant is SongListScreenVariant
         }
-        assertEquals(ScreenVariant.SongList("Кино", isBackFromSomeScreen = true), commonViewModel.appStateFlow.value.currentScreenVariant)
+        assertEquals(SongListScreenVariant("Кино", isBackFromSomeScreen = true), commonViewModel.appStateFlow.value.currentScreenVariant)
     }
 
     @Test

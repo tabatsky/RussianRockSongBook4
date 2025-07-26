@@ -1,55 +1,43 @@
 package jatx.russianrocksongbook.navigation
 
-import androidx.navigation.NavDestination
-import kotlin.reflect.KClass
+val ScreenVariant?.isEmptyScreen: Boolean
+    get() = this?.let { it::class == EmptyScreenVariant::class } ?: false
 
-fun String.replaceLast(oldValue: String, newValue: String): String =
-    substringBeforeLast(oldValue) + newValue + substringAfterLast(oldValue)
+val ScreenVariant?.isStartScreen: Boolean
+    get() = this?.let { it::class == StartScreenVariant::class } ?: false
 
-fun NavDestination?.routeClass(): KClass<*>? {
-    return this?.route
-        ?.split("/", "?")
-        ?.first()
-        ?.replaceLast(".", "$")
-        ?.let { Class.forName(it) }
-        ?.kotlin
-}
+val ScreenVariant?.isSongListScreen: Boolean
+    get() = this?.let { it::class == SongListScreenVariant::class } ?: false
 
-val NavDestination?.isStartScreen: Boolean
-    get() = this?.routeClass() == ScreenVariant.Start::class
+val ScreenVariant?.isFavoriteScreen: Boolean
+    get() = this?.let { it::class == FavoriteScreenVariant::class } ?: false
 
-val NavDestination?.isSongListScreen: Boolean
-    get() = this?.routeClass() == ScreenVariant.SongList::class
+val ScreenVariant?.isSongTextScreen: Boolean
+    get() = this?.let { it::class == SongTextScreenVariant::class } ?: false
 
-val NavDestination?.isFavorite: Boolean
-    get() = this?.routeClass() == ScreenVariant.Favorite::class
+val ScreenVariant?.isSongTextByArtistAndTitleScreen: Boolean
+    get() = this?.let { it::class == SongTextByArtistAndTitleScreenVariant::class } ?: false
 
-val NavDestination?.isSongTextScreen: Boolean
-    get() = this?.routeClass() == ScreenVariant.SongText::class
+val ScreenVariant?.isCloudSearchScreen: Boolean
+    get() = this?.let { it::class == CloudSearchScreenVariant::class } ?: false
 
-val NavDestination?.isSongTextByArtistAndTitleScreen: Boolean
-    get() = this?.routeClass() == ScreenVariant.SongTextByArtistAndTitle::class
+val ScreenVariant?.isTextSearchListScreen: Boolean
+    get() = this?.let { it::class == TextSearchListScreenVariant::class } ?: false
 
-val NavDestination?.isCloudSearchScreen: Boolean
-    get() = this?.routeClass() == ScreenVariant.CloudSearch::class
+val ScreenVariant?.isCloudSongTextScreen: Boolean
+    get() = this?.let { it::class == CloudSongTextScreenVariant::class } ?: false
 
-val NavDestination?.isTextSearchListScreen: Boolean
-    get() = this?.routeClass() == ScreenVariant.TextSearchList::class
+val ScreenVariant?.isTextSearchSongTextScreen: Boolean
+    get() = this?.let { it::class == TextSearchSongTextScreenVariant::class } ?: false
 
-val NavDestination?.isCloudSongTextScreen: Boolean
-    get() = this?.routeClass() == ScreenVariant.CloudSongText::class
+val ScreenVariant?.isAddArtistScreen: Boolean
+    get() = this?.let { it::class == AddArtistScreenVariant::class } ?: false
 
-val NavDestination?.isTextSearchSongTextScreen: Boolean
-    get() = this?.routeClass() == ScreenVariant.TextSearchSongText::class
+val ScreenVariant?.isAddSongScreen: Boolean
+    get() = this?.let { it::class == AddSongScreenVariant::class } ?: false
 
-val NavDestination?.isAddArtistScreen: Boolean
-    get() = this?.routeClass() == ScreenVariant.AddArtist::class
+val ScreenVariant?.isDonationScreen: Boolean
+    get() = this?.let { it::class == DonationScreenVariant::class } ?: false
 
-val NavDestination?.isAddSongScreen: Boolean
-    get() = this?.routeClass() == ScreenVariant.AddSong::class
-
-val NavDestination?.isDonationScreen: Boolean
-    get() = this?.routeClass() == ScreenVariant.Donation::class
-
-val NavDestination?.isSettingsScreen: Boolean
-    get() = this?.routeClass() == ScreenVariant.Settings::class
+val ScreenVariant?.isSettingsScreen: Boolean
+    get() = this?.let { it::class == SettingsScreenVariant::class } ?: false

@@ -11,8 +11,8 @@ import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.local.*
 import jatx.russianrocksongbook.commonviewmodel.ShowSongs
 import jatx.russianrocksongbook.commonviewmodel.UIAction
-import jatx.russianrocksongbook.navigation.AppNavigator
-import jatx.russianrocksongbook.navigation.ScreenVariant
+import jatx.russianrocksongbook.navigation.*
+import jatx.russianrocksongbook.testing.TestingConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -72,8 +72,7 @@ open class LocalViewModel @Inject constructor(
         }
     }
 
-    override fun getSongTextScreenVariant(position: Int) = ScreenVariant
-        .SongText(
+    override fun getSongTextScreenVariant(position: Int) = SongTextScreenVariant(
             position = position
         )
 
@@ -178,27 +177,27 @@ open class LocalViewModel @Inject constructor(
         Log.e("select artist", artist)
         val newScreenVariant = when (artist) {
             ARTIST_ADD_ARTIST -> {
-                ScreenVariant.AddArtist
+                AddArtistScreenVariant
             }
             ARTIST_ADD_SONG -> {
-                ScreenVariant.AddSong
+                AddSongScreenVariant
             }
             ARTIST_CLOUD_SONGS -> {
-                ScreenVariant.CloudSearch()
+                CloudSearchScreenVariant()
             }
             ARTIST_TEXT_SEARCH -> {
-                ScreenVariant.TextSearchList()
+                TextSearchListScreenVariant()
             }
             ARTIST_DONATION -> {
-                ScreenVariant.Donation
+                DonationScreenVariant
             }
             ARTIST_FAVORITE -> {
-                ScreenVariant.Favorite(
+                FavoriteScreenVariant(
                     isBackFromSomeScreen = false
                 )
             }
             else -> {
-                ScreenVariant.SongList(
+                SongListScreenVariant(
                     artist = artist,
                     isBackFromSomeScreen = false
                 )
@@ -211,8 +210,7 @@ open class LocalViewModel @Inject constructor(
                 ARTIST_CLOUD_SONGS,
                 ARTIST_TEXT_SEARCH,
                 ARTIST_DONATION)
-            && AppNavigator.navControllerIsNull) {
-
+            && TestingConfig.isUnitTesting) {
             showSongs(artist)
         } else {
             selectScreen(newScreenVariant)
@@ -266,12 +264,10 @@ open class LocalViewModel @Inject constructor(
             .takeIf { it >= 0 }
             ?.let { position ->
                 selectScreen(
-                    ScreenVariant
-                        .SongList(artist)
+                    SongListScreenVariant(artist)
                 )
                 selectScreen(
-                    ScreenVariant
-                        .SongText(position))
+                    SongTextScreenVariant(position))
             }
     }
 

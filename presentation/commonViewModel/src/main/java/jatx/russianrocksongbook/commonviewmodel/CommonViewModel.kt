@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation3.runtime.NavBackStack
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jatx.russianrocksongbook.commonviewmodel.contracts.MusicOpener
 import jatx.russianrocksongbook.commonviewmodel.contracts.WarningSender
@@ -15,9 +16,7 @@ import jatx.russianrocksongbook.domain.models.warning.Warnable
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_ERROR
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
-import jatx.russianrocksongbook.navigation.ScreenVariant
-import jatx.russianrocksongbook.navigation.AppNavigator
-import jatx.russianrocksongbook.testing.TestingConfig
+import jatx.russianrocksongbook.navigation.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.BufferOverflow
@@ -47,6 +46,10 @@ open class CommonViewModel @Inject constructor(
 
         val storage = ConcurrentHashMap<String, CommonViewModel>()
 
+        private var _appNavigator: AppNavigator? = null
+        val appNavigator: AppNavigator
+            get() = _appNavigator!!
+
         @Composable
         fun getInstance(): CommonViewModel {
             if (!storage.containsKey(key)) {
@@ -59,6 +62,10 @@ open class CommonViewModel @Inject constructor(
         fun getStoredInstance() = storage[key]
 
         fun clearStorage() = storage.clear()
+
+        fun clearAppNavigator() {
+            _appNavigator = null
+        }
     }
 
     val settings =
@@ -152,6 +159,12 @@ open class CommonViewModel @Inject constructor(
 
     open fun resetState() = appStateHolder.reset()
 
+    fun injectBackStack(backStack: NavBackStack) {
+        _appNavigator = AppNavigator(backStack).also {
+            it.inject { submitAction(Back(true)) }
+        }
+    }
+
     fun submitAction(action: UIAction) {
         _actions.tryEmit(action)
     }
@@ -221,29 +234,29 @@ open class CommonViewModel @Inject constructor(
         with (appStateFlow.value) {
             Log.e("back from", currentScreenVariant.toString())
             when (currentScreenVariant) {
-                is ScreenVariant.Start -> {
+                is StartScreenVariant -> {
                     doNothing()
                 }
 
-                is ScreenVariant.SongList -> {
+                is SongListScreenVariant -> {
                     doNothing()
                 }
 
-                is ScreenVariant.SongText  -> {
+                is SongTextScreenVariant  -> {
                     if (currentArtist != ARTIST_FAVORITE) {
                         selectScreen(
-                            ScreenVariant.SongList(
+                            SongListScreenVariant(
                                 artist = currentArtist,
                                 isBackFromSomeScreen = true
                             )
                         )
                     } else {
-                        selectScreen(ScreenVariant.Favorite(isBackFromSomeScreen = true))
+                        selectScreen(FavoriteScreenVariant(isBackFromSomeScreen = true))
                     }
                 }
 
-                is ScreenVariant.SongTextByArtistAndTitle -> {
-                    if (previousScreenVariant is ScreenVariant.Favorite) {
+                is SongTextByArtistAndTitleScreenVariant -> {
+                    if (previousScreenVariant is FavoriteScreenVariant) {
                         submitAction(
                             ShowSongs(
                                 artist = currentScreenVariant.artist,
@@ -253,17 +266,17 @@ open class CommonViewModel @Inject constructor(
                     }
                 }
 
-                is ScreenVariant.CloudSongText -> {
+                is CloudSongTextScreenVariant -> {
                     selectScreen(
-                        ScreenVariant.CloudSearch(
+                        CloudSearchScreenVariant(
                             randomKey = lastRandomKey,
                             isBackFromSong = true
                         ))
                 }
 
-                is ScreenVariant.TextSearchSongText -> {
+                is TextSearchSongTextScreenVariant -> {
                     selectScreen(
-                        ScreenVariant.TextSearchList(
+                        TextSearchListScreenVariant(
                             randomKey = lastRandomKey,
                             isBackFromSong = true
                         ))
@@ -272,13 +285,13 @@ open class CommonViewModel @Inject constructor(
                 else -> {
                     if (currentArtist != ARTIST_FAVORITE) {
                         selectScreen(
-                            ScreenVariant.SongList(
+                            SongListScreenVariant(
                                 artist = currentArtist,
                                 isBackFromSomeScreen = true
                             )
                         )
                     } else {
-                        selectScreen(ScreenVariant.Favorite(isBackFromSomeScreen = true))
+                        selectScreen(FavoriteScreenVariant(isBackFromSomeScreen = true))
                     }
                 }
             }
@@ -286,15 +299,15 @@ open class CommonViewModel @Inject constructor(
     }
 
     private fun backByUserPressBackButton() {
-        AppNavigator.popBackStack()
         when (appStateFlow.value.currentScreenVariant) {
-            is ScreenVariant.SongList,
-            is ScreenVariant.Favorite -> {
+            is SongListScreenVariant,
+            is FavoriteScreenVariant,
+            is StartScreenVariant -> {
                 needReset = true
                 callbacks.onFinish()
             }
 
-            else -> doNothing()
+            else -> appNavigator.pop()
         }
     }
 
@@ -305,26 +318,26 @@ open class CommonViewModel @Inject constructor(
             .value
             .currentScreenVariant
 
-        val isSongByArtistAndTitle = currentScreenVariant is ScreenVariant.SongTextByArtistAndTitle
-        val isStart = currentScreenVariant is ScreenVariant.Start
-        val isFavorite = currentScreenVariant is ScreenVariant.Favorite
-        val becomeSongList = newScreenVariant is ScreenVariant.SongList
-        val isSongList = currentScreenVariant is ScreenVariant.SongList
-        val becomeFavorite = newScreenVariant is ScreenVariant.Favorite
-        val becomeSongByArtistAndTitle = newScreenVariant is ScreenVariant.SongTextByArtistAndTitle
+        val isSongByArtistAndTitle = currentScreenVariant is SongTextByArtistAndTitleScreenVariant
+        val isStart = currentScreenVariant is StartScreenVariant
+        val isFavorite = currentScreenVariant is FavoriteScreenVariant
+        val becomeSongList = newScreenVariant is SongListScreenVariant
+        val isSongList = currentScreenVariant is SongListScreenVariant
+        val becomeFavorite = newScreenVariant is FavoriteScreenVariant
+        val becomeSongByArtistAndTitle = newScreenVariant is SongTextByArtistAndTitleScreenVariant
 
-        val isAddSong = currentScreenVariant is ScreenVariant.AddSong
-        val isAddArtist = currentScreenVariant is ScreenVariant.AddArtist
+        val isAddSong = currentScreenVariant is AddSongScreenVariant
+        val isAddArtist = currentScreenVariant is AddArtistScreenVariant
 
-        val isSongText = currentScreenVariant is ScreenVariant.SongText
-        val becomeSongText = newScreenVariant is ScreenVariant.SongText
-        val isCloudSongText = currentScreenVariant is ScreenVariant.CloudSongText
-        val becomeCloudSongText = newScreenVariant is ScreenVariant.CloudSongText
-        val isTextSearchSongText = currentScreenVariant is ScreenVariant.TextSearchSongText
-        val becomeTextSearchSongText = newScreenVariant is ScreenVariant.TextSearchSongText
+        val isSongText = currentScreenVariant is SongTextScreenVariant
+        val becomeSongText = newScreenVariant is SongTextScreenVariant
+        val isCloudSongText = currentScreenVariant is CloudSongTextScreenVariant
+        val becomeCloudSongText = newScreenVariant is CloudSongTextScreenVariant
+        val isTextSearchSongText = currentScreenVariant is TextSearchSongTextScreenVariant
+        val becomeTextSearchSongText = newScreenVariant is TextSearchSongTextScreenVariant
 
-        val artistNow = (currentScreenVariant as? ScreenVariant.SongList)?.artist
-        val artistBecome = (newScreenVariant as? ScreenVariant.SongList)?.artist
+        val artistNow = (currentScreenVariant as? SongListScreenVariant)?.artist
+        val artistBecome = (newScreenVariant as? SongListScreenVariant)?.artist
 
         val needToPopTwice = isSongByArtistAndTitle || isAddArtist && becomeSongList
         val needToReturn = isSongList && becomeSongList && (artistNow == artistBecome)
@@ -342,26 +355,28 @@ open class CommonViewModel @Inject constructor(
         needToPopWithSkippingBackOnce = needToPopWithSkippingBackOnce || isTextSearchSongText && becomeTextSearchSongText
 
         if (needToPopTwice) {
-            AppNavigator.popBackStack(dontSubmitBackAction = true, times = 2)
+            appNavigator.pop(dontSubmitBackAction = true, times = 2)
         } else if (needToPop) {
-            AppNavigator.popBackStack(dontSubmitBackAction = true)
+            appNavigator.pop(dontSubmitBackAction = true)
         } else if (needToReturn) {
             return
         } else if (needToPopWithSkippingBackOnce) {
-            AppNavigator.popBackStack(skipOnce = true)
+            appNavigator.pop(skipOnce = true)
         }
 
         changeCurrentScreenVariant(newScreenVariant)
 
-        val isBackFromCertainScreen = (newScreenVariant as? ScreenVariant.SongList)?.isBackFromSomeScreen
-            ?: (newScreenVariant as? ScreenVariant.Favorite)?.isBackFromSomeScreen
-            ?: (newScreenVariant as? ScreenVariant.CloudSearch)?.isBackFromSong
-            ?: (newScreenVariant as? ScreenVariant.TextSearchList)?.isBackFromSong
+        val isBackFromCertainScreen = (newScreenVariant as? SongListScreenVariant)?.isBackFromSomeScreen
+            ?: (newScreenVariant as? FavoriteScreenVariant)?.isBackFromSomeScreen
+            ?: (newScreenVariant as? CloudSearchScreenVariant)?.isBackFromSong
+            ?: (newScreenVariant as? TextSearchListScreenVariant)?.isBackFromSong
             ?: false
                 && !isAddArtist // already popped
 
-        if (!isBackFromCertainScreen || TestingConfig.isUnitTesting) {
-            AppNavigator.navigate(newScreenVariant)
+        if (!isBackFromCertainScreen) {
+            appNavigator.push(newScreenVariant)
+        } else {
+            appNavigator.replace(newScreenVariant)
         }
 
         Log.e("navigated", newScreenVariant.toString())
@@ -370,13 +385,13 @@ open class CommonViewModel @Inject constructor(
     fun changeCurrentScreenVariant(screenVariant: ScreenVariant) {
         val appState = appStateFlow.value
         val previousScreenVariant = appState.currentScreenVariant
-        val newState = if (screenVariant is ScreenVariant.CloudSearch) {
+        val newState = if (screenVariant is CloudSearchScreenVariant) {
             appState.copy(
                 currentScreenVariant = screenVariant,
                 previousScreenVariant = previousScreenVariant,
                 lastRandomKey = screenVariant.randomKey
             )
-        } else if (screenVariant is ScreenVariant.TextSearchList) {
+        } else if (screenVariant is TextSearchListScreenVariant) {
             appState.copy(
                 currentScreenVariant = screenVariant,
                 previousScreenVariant = previousScreenVariant,

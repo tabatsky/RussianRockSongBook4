@@ -46,6 +46,6 @@ dependencies {
     implementation libs.composeUiTooling
     implementation libs.navigationCompose
     implementation libs.ktxSerializationCore
-    implementation libs.navigation3Runtime
-    implementation libs.navigation3Ui
+    api libs.navigation3Runtime
+    api libs.navigation3Ui
 }

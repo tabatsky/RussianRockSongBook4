@@ -10,7 +10,7 @@ import jatx.russianrocksongbook.commonview.viewmodel.DeleteCurrentToTrash
 import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.local.TextSearchOrderBy
-import jatx.russianrocksongbook.navigation.ScreenVariant
+import jatx.russianrocksongbook.navigation.*
 import jatx.russianrocksongbook.textsearch.R
 import jatx.spinner.SpinnerState
 import javax.inject.Inject
@@ -56,8 +56,7 @@ class TextSearchViewModel @Inject constructor(
         }
     }
 
-    override fun getSongTextScreenVariant(position: Int) = ScreenVariant
-        .TextSearchSongText(position = position)
+    override fun getSongTextScreenVariant(position: Int) = TextSearchSongTextScreenVariant(position = position)
 
     override fun selectSong(position: Int) {
         val oldArtist = commonSongTextStateFlow.value.currentSong?.artist

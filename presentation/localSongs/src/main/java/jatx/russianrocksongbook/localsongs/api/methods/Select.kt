@@ -3,7 +3,7 @@ package jatx.russianrocksongbook.localsongs.api.methods
 import jatx.russianrocksongbook.commonviewmodel.SelectScreen
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.SelectArtist
-import jatx.russianrocksongbook.navigation.ScreenVariant
+import jatx.russianrocksongbook.navigation.*
 
 fun selectArtist(artist: String) {
     LocalViewModel.getStoredInstance()?.submitAction(SelectArtist(artist))
@@ -12,8 +12,7 @@ fun selectArtist(artist: String) {
 fun selectSongByArtistAndTitle(artist: String, title: String) {
     LocalViewModel.getStoredInstance()?.submitAction(
         SelectScreen(
-            ScreenVariant
-                .SongTextByArtistAndTitle(artist, title)
+            SongTextByArtistAndTitleScreenVariant(artist, title)
         )
     )
 }
