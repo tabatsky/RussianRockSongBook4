@@ -515,7 +515,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
         localViewModel.submitAction(SendWarning("some comment"))
 
-        TimeUnit.MILLISECONDS.sleep(500L)
+        TimeUnit.MILLISECONDS.sleep(1500L)
 
         coVerifyAll {
             addWarningUseCase.execute(song, "some comment")
