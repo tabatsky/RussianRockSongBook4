@@ -1,6 +1,8 @@
 package jatx.russianrocksongbook.commonviewmodel
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateListOf
+import androidx.navigation3.runtime.NavKey
 import io.mockk.*
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.RelaxedMockK
@@ -16,7 +18,6 @@ import jatx.russianrocksongbook.domain.repository.cloud.result.ResultWithoutData
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
 import jatx.russianrocksongbook.domain.usecase.cloud.AddSongToCloudUseCase
 import jatx.russianrocksongbook.domain.usecase.cloud.AddWarningUseCase
-import jatx.russianrocksongbook.navigation.AppNavigator
 import jatx.russianrocksongbook.navigation.*
 import jatx.russianrocksongbook.testing.TestingConfig
 import org.junit.*
@@ -25,7 +26,6 @@ import org.junit.Assert.assertTrue
 import org.junit.runners.MethodSorters
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
-import java.util.Stack
 import java.util.concurrent.TimeUnit
 
 @MockKExtension.ConfirmVerification
@@ -82,32 +82,7 @@ open class CommonViewModelTest {
             0
         }
 
-        mockkObject(AppNavigator)
-
-        val screenVariantStack = Stack<ScreenVariant>()
-        val screenVariantSlot = slot<ScreenVariant>()
-
-        every { AppNavigator.push(capture(screenVariantSlot)) } answers {
-            val screenVariant = screenVariantSlot.captured
-            screenVariantStack.push(screenVariant)
-            println("stack size: ${screenVariantStack.size}")
-        }
-        every { AppNavigator.pop() } answers {
-            if (screenVariantStack.isNotEmpty()) {
-                screenVariantStack.pop()
-                if (screenVariantStack.isNotEmpty()) {
-                    val screenVariant = screenVariantStack.peek().let {
-                        when (it) {
-                            is SongListScreenVariant -> it.copy(isBackFromSomeScreen = true)
-                            is FavoriteScreenVariant -> it.copy(isBackFromSomeScreen = true)
-                            is CloudSearchScreenVariant -> it.copy(isBackFromSong = true)
-                            else -> it
-                        }
-                    }
-                    commonViewModel.changeCurrentScreenVariant(screenVariant)
-                }
-            }
-        }
+        val backStack = mutableStateListOf<NavKey>(EmptyScreenVariant, StartScreenVariant)
 
         every { toasts.showToast(anyInt()) } just runs
         every { toasts.showToast(anyString()) } just runs
@@ -122,6 +97,7 @@ open class CommonViewModelTest {
                 ResultWithoutData(STATUS_SUCCESS, null)
 
         val _commonViewModel = CommonViewModel(appStateHolder, commonViewModelDeps)
+        _commonViewModel.injectBackStack(backStack)
         _commonViewModel.launchJobsIfNecessary()
         commonViewModel = spyk(_commonViewModel)
 
@@ -141,13 +117,6 @@ open class CommonViewModelTest {
                     }
                     appStateHolder.changeAppState(newState)
                     _commonViewModel.submitAction(action)
-                }
-                is Back -> {
-                    if (action.byDestinationChangedListener) {
-                        TODO("too hard to implement")
-                    } else {
-                        _commonViewModel.submitAction(action)
-                    }
                 }
                 else -> {
                     _commonViewModel.submitAction(action)

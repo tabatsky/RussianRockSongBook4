@@ -339,8 +339,13 @@ open class CommonViewModel @Inject constructor(
         val artistNow = (currentScreenVariant as? SongListScreenVariant)?.artist
         val artistBecome = (newScreenVariant as? SongListScreenVariant)?.artist
 
+        val isBackNow = (currentScreenVariant as? SongListScreenVariant)?.isBackFromSomeScreen
+        val isBackBecome = (newScreenVariant as? SongListScreenVariant)?.isBackFromSomeScreen
+
         val needToPopTwice = isSongByArtistAndTitle || isAddArtist && becomeSongList
-        val needToReturn = isSongList && becomeSongList && (artistNow == artistBecome)
+        val needToReturn = isSongList && becomeSongList &&
+                (artistNow == artistBecome) &&
+                (isBackNow == isBackBecome)
 
         var needToPop = false
         needToPop = needToPop || isStart && becomeSongList
@@ -372,6 +377,7 @@ open class CommonViewModel @Inject constructor(
             ?: (newScreenVariant as? TextSearchListScreenVariant)?.isBackFromSong
             ?: false
                 && !isAddArtist // already popped
+                && (appNavigator.backStack.lastOrNull()?.javaClass == newScreenVariant.javaClass)
 
         if (!isBackFromCertainScreen) {
             appNavigator.push(newScreenVariant)
