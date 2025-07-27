@@ -14,7 +14,7 @@ import javax.inject.Inject
 @ViewModelScoped
 @BoundTo(supertype = Toasts::class, component = ViewModelComponent::class)
 class ToastsImpl @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @param:ApplicationContext private val context: Context,
     private val resources: Resources
 ): Toasts {
     override fun showToast(toastText: String) {
