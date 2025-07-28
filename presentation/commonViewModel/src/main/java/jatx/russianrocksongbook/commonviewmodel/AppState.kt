@@ -4,7 +4,6 @@ import jatx.russianrocksongbook.navigation.*
 
 data class AppState(
     val currentScreenVariant: ScreenVariant,
-    val previousScreenVariant: ScreenVariant? = null,
     val currentArtist: String,
     val appWasUpdated: Boolean,
     val artistList: List<String>,

@@ -255,17 +255,6 @@ open class CommonViewModel @Inject constructor(
                     }
                 }
 
-                is SongTextByArtistAndTitleScreenVariant -> {
-                    if (previousScreenVariant is FavoriteScreenVariant) {
-                        submitAction(
-                            ShowSongs(
-                                artist = currentScreenVariant.artist,
-                                songTitleToPass = currentScreenVariant.title
-                            )
-                        )
-                    }
-                }
-
                 is CloudSongTextScreenVariant -> {
                     selectScreen(
                         CloudSearchScreenVariant(
@@ -390,12 +379,10 @@ open class CommonViewModel @Inject constructor(
 
     fun changeCurrentScreenVariant(screenVariant: ScreenVariant) {
         val appState = appStateFlow.value
-        val previousScreenVariant = appState.currentScreenVariant
         val newState = when (screenVariant) {
             is CloudSearchScreenVariant -> {
                 appState.copy(
                     currentScreenVariant = screenVariant,
-                    previousScreenVariant = previousScreenVariant,
                     lastRandomKey = screenVariant.randomKey
                 )
             }
@@ -403,15 +390,13 @@ open class CommonViewModel @Inject constructor(
             is TextSearchListScreenVariant -> {
                 appState.copy(
                     currentScreenVariant = screenVariant,
-                    previousScreenVariant = previousScreenVariant,
                     lastRandomKey = screenVariant.randomKey
                 )
             }
 
             else -> {
                 appState.copy(
-                    currentScreenVariant = screenVariant,
-                    previousScreenVariant = previousScreenVariant
+                    currentScreenVariant = screenVariant
                 )
             }
         }
