@@ -391,23 +391,29 @@ open class CommonViewModel @Inject constructor(
     fun changeCurrentScreenVariant(screenVariant: ScreenVariant) {
         val appState = appStateFlow.value
         val previousScreenVariant = appState.currentScreenVariant
-        val newState = if (screenVariant is CloudSearchScreenVariant) {
-            appState.copy(
-                currentScreenVariant = screenVariant,
-                previousScreenVariant = previousScreenVariant,
-                lastRandomKey = screenVariant.randomKey
-            )
-        } else if (screenVariant is TextSearchListScreenVariant) {
-            appState.copy(
-                currentScreenVariant = screenVariant,
-                previousScreenVariant = previousScreenVariant,
-                lastRandomKey = screenVariant.randomKey
-            )
-        } else {
-            appState.copy(
-                currentScreenVariant = screenVariant,
-                previousScreenVariant = previousScreenVariant
-            )
+        val newState = when (screenVariant) {
+            is CloudSearchScreenVariant -> {
+                appState.copy(
+                    currentScreenVariant = screenVariant,
+                    previousScreenVariant = previousScreenVariant,
+                    lastRandomKey = screenVariant.randomKey
+                )
+            }
+
+            is TextSearchListScreenVariant -> {
+                appState.copy(
+                    currentScreenVariant = screenVariant,
+                    previousScreenVariant = previousScreenVariant,
+                    lastRandomKey = screenVariant.randomKey
+                )
+            }
+
+            else -> {
+                appState.copy(
+                    currentScreenVariant = screenVariant,
+                    previousScreenVariant = previousScreenVariant
+                )
+            }
         }
         changeAppState(newState)
     }
