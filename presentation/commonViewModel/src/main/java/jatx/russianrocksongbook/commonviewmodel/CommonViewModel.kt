@@ -234,11 +234,9 @@ open class CommonViewModel @Inject constructor(
         with (appStateFlow.value) {
             Log.e("back from", currentScreenVariant.toString())
             when (currentScreenVariant) {
+                is SongListScreenVariant,
+                is FavoriteScreenVariant,
                 is StartScreenVariant -> {
-                    doNothing()
-                }
-
-                is SongListScreenVariant -> {
                     doNothing()
                 }
 
