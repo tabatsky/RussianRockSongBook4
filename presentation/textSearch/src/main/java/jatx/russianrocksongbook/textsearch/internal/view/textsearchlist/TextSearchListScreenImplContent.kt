@@ -1,7 +1,8 @@
 package jatx.russianrocksongbook.textsearch.internal.view.textsearchlist
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,7 +15,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.commonsongtext.viewmodel.UpdateSongListNeedScroll
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
@@ -27,6 +30,7 @@ import jatx.russianrocksongbook.textsearch.R
 import jatx.russianrocksongbook.textsearch.internal.viewmodel.PerformTextSearch
 import jatx.spinner.SpinnerState
 
+@SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 fun TextSearchListScreenImplContent(
     randomKey: Int,
@@ -44,12 +48,13 @@ fun TextSearchListScreenImplContent(
     var savedRandomKey by rememberSaveable { mutableIntStateOf(0) }
     val randomKeyChanged = randomKey != savedRandomKey
 
-    BoxWithConstraints(
+    Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val W = this.maxWidth
-        val H = this.maxHeight
+        val configuration = LocalConfiguration.current
+        val W = configuration.screenWidthDp.dp
+        val H = configuration.screenHeightDp.dp
 
         val isPortrait = W < H
         var isLastOrientationPortrait by rememberSaveable { mutableStateOf(isPortrait) }
@@ -78,7 +83,7 @@ fun TextSearchListScreenImplContent(
             }
         }
 
-        if (wasOrientationChanged) return@BoxWithConstraints
+        if (wasOrientationChanged) return@Box
 
         if (W < H) {
             Column(

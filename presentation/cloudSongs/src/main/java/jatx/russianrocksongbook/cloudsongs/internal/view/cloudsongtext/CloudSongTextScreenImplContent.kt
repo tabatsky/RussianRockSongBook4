@@ -1,5 +1,6 @@
 package jatx.russianrocksongbook.cloudsongs.internal.view.cloudsongtext
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.slideInHorizontally
@@ -11,6 +12,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
@@ -50,6 +52,7 @@ import kotlinx.coroutines.launch
 
 private val CLOUD_SONG_TEXT_APP_BAR_WIDTH = 96.dp
 
+@SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 internal fun CloudSongTextScreenImplContent(
     position: Int,
@@ -140,15 +143,17 @@ internal fun CloudSongTextScreenImplContent(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val W = this.maxWidth
-        val H = this.minHeight
+        val configuration = LocalConfiguration.current
+        val W = configuration.screenWidthDp.dp
+        val H = configuration.screenHeightDp.dp
+        val H_CONTENT = this.maxHeight
 
         @Composable
         fun TheBody(modifier: Modifier) {
             if (cloudSong != null) {
                 CloudSongTextBody(
                     W = W,
-                    H = H,
+                    H = H_CONTENT,
                     cloudSong = cloudSong,
                     listState = listState,
                     fontSizeTextSp = fontSizeTextSp,
@@ -192,7 +197,7 @@ internal fun CloudSongTextScreenImplContent(
         fun ThePanel() {
             CloudSongTextPanel(
                 W = W,
-                H = H,
+                H = H_CONTENT,
                 theme = theme,
                 listenToMusicVariant = listenToMusicVariant,
                 onYandexMusicClick = onYandexMusicClick,

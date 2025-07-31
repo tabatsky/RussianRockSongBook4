@@ -1,5 +1,6 @@
 package jatx.russianrocksongbook.localsongs.internal.view.songlist
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
@@ -8,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.commonsongtext.viewmodel.UpdateSongListNeedScroll
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
@@ -24,6 +26,7 @@ import jatx.russianrocksongbook.whatsnewdialog.api.view.WhatsNewDialog
 private const val MAX_ARTIST_LENGTH_LANDSCAPE = 12
 private const val MAX_ARTIST_LENGTH_PORTRAIT = 15
 
+@SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 internal fun SongListContent(
     openDrawer: () -> Unit,
@@ -36,12 +39,13 @@ internal fun SongListContent(
 ) {
     val theme = LocalAppTheme.current
 
-    BoxWithConstraints(
+    Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val W = this.maxWidth
-        val H = this.maxHeight
+        val configuration = LocalConfiguration.current
+        val W = configuration.screenWidthDp.dp
+        val H = configuration.screenHeightDp.dp
 
         val isPortrait = W < H
         var isLastOrientationPortrait by rememberSaveable { mutableStateOf(isPortrait) }
@@ -55,7 +59,7 @@ internal fun SongListContent(
             }
         }
 
-        if (wasOrientationChanged) return@BoxWithConstraints
+        if (wasOrientationChanged) return@Box
 
         if (W < H) {
             val visibleArtist = currentArtist.crop(MAX_ARTIST_LENGTH_PORTRAIT)

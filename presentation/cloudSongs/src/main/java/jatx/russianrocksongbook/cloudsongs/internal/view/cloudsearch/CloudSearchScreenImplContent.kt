@@ -1,14 +1,17 @@
 package jatx.russianrocksongbook.cloudsongs.internal.view.cloudsearch
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import jatx.russianrocksongbook.cloudsongs.R
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.PerformCloudSearch
@@ -23,6 +26,7 @@ import jatx.russianrocksongbook.domain.repository.cloud.CloudSearchOrderBy
 import jatx.russianrocksongbook.testing.APP_BAR_TITLE
 import jatx.spinner.SpinnerState
 
+@SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 internal fun CloudSearchScreenImplContent(
     randomKey: Int,
@@ -41,12 +45,13 @@ internal fun CloudSearchScreenImplContent(
     var savedRandomKey by rememberSaveable { mutableIntStateOf(0) }
     val randomKeyChanged = randomKey != savedRandomKey
 
-    BoxWithConstraints(
+    Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val W = this.maxWidth
-        val H = this.maxHeight
+        val configuration = LocalConfiguration.current
+        val W = configuration.screenWidthDp.dp
+        val H = configuration.screenHeightDp.dp
 
         val isPortrait = W < H
         var isLastOrientationPortrait by rememberSaveable { mutableStateOf(isPortrait) }
@@ -75,7 +80,7 @@ internal fun CloudSearchScreenImplContent(
             }
         }
 
-        if (wasOrientationChanged) return@BoxWithConstraints
+        if (wasOrientationChanged) return@Box
 
         if (W < H) {
             Column(

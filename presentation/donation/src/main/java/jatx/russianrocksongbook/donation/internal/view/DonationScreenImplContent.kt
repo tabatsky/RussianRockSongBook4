@@ -1,13 +1,16 @@
 package jatx.russianrocksongbook.donation.internal.view
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.theme.LocalAppTheme
@@ -18,6 +21,7 @@ import jatx.russianrocksongbook.donationhelper.api.SKUS
 import jatx.russianrocksongbook.donationhelper.api.SKUS_LANDSCAPE
 import jatx.russianrocksongbook.testing.APP_BAR_TITLE
 
+@SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 fun DonationScreenImplContent(
     submitAction: (UIAction) -> Unit
@@ -29,12 +33,13 @@ fun DonationScreenImplContent(
         submitAction(PurchaseItem(sku))
     }
 
-    BoxWithConstraints(
+    Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val W = this.maxWidth
-        val H = this.minHeight
+        val configuration = LocalConfiguration.current
+        val W = configuration.screenWidthDp.dp
+        val H = configuration.screenHeightDp.dp
 
         if (W < H) {
             Column(
