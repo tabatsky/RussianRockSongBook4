@@ -1,5 +1,6 @@
 package jatx.russianrocksongbook.commonsongtext.view
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.slideInHorizontally
@@ -21,6 +22,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.commonsongtext.R
@@ -61,6 +63,7 @@ import jatx.russianrocksongbook.domain.repository.preferences.ListenToMusicVaria
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import kotlinx.coroutines.launch
 
+@SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 fun CommonSongTextScreenImplContent(
     position: Int,
@@ -182,15 +185,17 @@ fun CommonSongTextScreenImplContent(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val W = this.maxWidth
-        val H = this.maxHeight
+        val configuration = LocalConfiguration.current
+        val W = configuration.screenWidthDp.dp
+        val H = configuration.screenHeightDp.dp
+        val H_CONTENT = this.maxHeight
 
         @Composable
         fun TheBody(modifier: Modifier) {
             song?.let { _song ->
                 CommonSongTextBody(
                     W = W,
-                    H = H,
+                    H = H_CONTENT,
                     song = _song,
                     text = text,
                     isEditorMode = isEditorMode,
@@ -235,7 +240,7 @@ fun CommonSongTextScreenImplContent(
         fun ThePanel() {
             CommonSongTextPanel(
                 W = W,
-                H = H,
+                H = H_CONTENT,
                 theme = theme,
                 isEditorMode = isEditorMode,
                 listenToMusicVariant = listenToMusicVariant,

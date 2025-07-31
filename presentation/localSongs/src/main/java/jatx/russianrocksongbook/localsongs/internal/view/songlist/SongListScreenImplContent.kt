@@ -1,6 +1,7 @@
 package jatx.russianrocksongbook.localsongs.internal.view.songlist
 
-import androidx.compose.foundation.layout.BoxWithConstraints
+import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.DrawerValue
 import androidx.compose.material.ModalDrawer
@@ -9,6 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.commonsongtext.viewmodel.UpdateSongListNeedScroll
 import jatx.russianrocksongbook.commonviewmodel.ShowSongs
 import jatx.russianrocksongbook.commonviewmodel.UIAction
@@ -17,6 +20,7 @@ import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.UpdateArtists
 import kotlinx.coroutines.launch
 
+@SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 internal fun SongListScreenImplContent(
     artist: String,
@@ -55,12 +59,13 @@ internal fun SongListScreenImplContent(
         submitAction(ShowSongs(artist, songTitleToPass))
     }
 
-    BoxWithConstraints(
+    Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val W = this.maxWidth
-        val H = this.maxHeight
+        val configuration = LocalConfiguration.current
+        val W = configuration.screenWidthDp.dp
+        val H = configuration.screenHeightDp.dp
 
         val isPortrait = W < H
 

@@ -1,7 +1,8 @@
 package jatx.russianrocksongbook.settings.internal.view
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,8 +11,10 @@ import androidx.compose.runtime.MutableFloatState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import jatx.russianrocksongbook.commonview.appbar.CommonSideAppBar
 import jatx.russianrocksongbook.commonview.appbar.CommonTopAppBar
 import jatx.russianrocksongbook.commonview.font.toScaledSp
@@ -28,6 +31,7 @@ import jatx.russianrocksongbook.settings.internal.viewmodel.SaveSettings
 import jatx.russianrocksongbook.testing.APP_BAR_TITLE
 import jatx.spinner.SpinnerState
 
+@SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 fun SettingsScreenImplContent(
     valueTheme: MutableState<Theme>,
@@ -68,12 +72,13 @@ fun SettingsScreenImplContent(
     val fontSizeButtonSp = dimensionResource(id = R.dimen.text_size_20)
         .toScaledSp(ScalePow.BUTTON)
 
-    BoxWithConstraints(
+    Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val W = this.maxWidth
-        val H = this.minHeight
+        val configuration = LocalConfiguration.current
+        val W = configuration.screenWidthDp.dp
+        val H = configuration.screenHeightDp.dp
 
         if (W < H) {
             Column(
