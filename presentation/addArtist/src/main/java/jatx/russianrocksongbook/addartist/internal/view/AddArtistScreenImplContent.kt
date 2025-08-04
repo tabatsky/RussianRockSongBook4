@@ -42,15 +42,20 @@ fun AddArtistScreenImplContent(
         val W = configuration.screenWidthDp.dp
         val H = configuration.screenHeightDp.dp
 
+        @Composable
+        fun TheBody() {
+            AddArtistBody(
+                submitAction = submitAction
+            )
+        }
+
         if (W < H) {
             Column {
                 CommonTopAppBar(
                     title = stringResource(id = R.string.title_add_artist),
                     titleTestTag = APP_BAR_TITLE
                 )
-                AddArtistBody(
-                    submitAction = submitAction
-                )
+                TheBody()
             }
         } else {
             Row {
@@ -58,9 +63,7 @@ fun AddArtistScreenImplContent(
                     title = stringResource(id = R.string.title_add_artist),
                     titleTestTag = APP_BAR_TITLE
                 )
-                AddArtistBody(
-                    submitAction = submitAction
-                )
+                TheBody()
             }
         }
 

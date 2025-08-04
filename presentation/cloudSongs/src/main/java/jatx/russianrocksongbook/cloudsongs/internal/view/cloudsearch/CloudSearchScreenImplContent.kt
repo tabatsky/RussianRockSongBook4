@@ -82,6 +82,22 @@ internal fun CloudSearchScreenImplContent(
 
         if (wasOrientationChanged) return@Box
 
+        @Composable
+        fun TheBody(modifier: Modifier) {
+            CloudSearchBody(
+                modifier = modifier,
+                isPortrait = true,
+                searchState = searchState,
+                needScroll = needScroll,
+                scrollPosition = scrollPosition,
+                cloudSongItems = cloudSongItems,
+                searchFor = searchFor,
+                orderBy = orderBy,
+                spinnerStateOrderBy = spinnerStateOrderBy,
+                submitAction = submitAction
+            )
+        }
+
         if (W < H) {
             Column(
                 modifier = Modifier
@@ -92,17 +108,8 @@ internal fun CloudSearchScreenImplContent(
                     title = stringResource(id = R.string.title_activity_cloud_search),
                     titleTestTag = APP_BAR_TITLE
                 )
-                CloudSearchBody(
-                    modifier = Modifier.weight(1.0f),
-                    isPortrait = true,
-                    searchState = searchState,
-                    needScroll = needScroll,
-                    scrollPosition = scrollPosition,
-                    cloudSongItems = cloudSongItems,
-                    searchFor = searchFor,
-                    orderBy = orderBy,
-                    spinnerStateOrderBy = spinnerStateOrderBy,
-                    submitAction = submitAction
+                TheBody(
+                    modifier = Modifier.weight(1.0f)
                 )
             }
         } else {
@@ -115,17 +122,8 @@ internal fun CloudSearchScreenImplContent(
                     title = stringResource(id = R.string.title_activity_cloud_search),
                     titleTestTag = APP_BAR_TITLE
                 )
-                CloudSearchBody(
-                    modifier = Modifier.weight(1.0f),
-                    isPortrait = false,
-                    searchState = searchState,
-                    needScroll = needScroll,
-                    scrollPosition = scrollPosition,
-                    cloudSongItems = cloudSongItems,
-                    searchFor = searchFor,
-                    orderBy = orderBy,
-                    spinnerStateOrderBy = spinnerStateOrderBy,
-                    submitAction = submitAction
+                TheBody(
+                    modifier = Modifier.weight(1.0f)
                 )
             }
         }
