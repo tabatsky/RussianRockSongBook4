@@ -61,6 +61,19 @@ internal fun SongListContent(
 
         if (wasOrientationChanged) return@Box
 
+        val navigationFocusRequester = remember { FocusRequester() }
+
+        @Composable
+        fun TheBody() {
+            SongListBody(
+                navigationFocusRequester = navigationFocusRequester,
+                songList = songList,
+                scrollPosition = scrollPosition,
+                needScroll = needScroll,
+                submitAction = submitAction
+            )
+        }
+
         if (W < H) {
             val visibleArtist = currentArtist.crop(MAX_ARTIST_LENGTH_PORTRAIT)
 
@@ -69,7 +82,6 @@ internal fun SongListContent(
                     .background(theme.colorBg)
                     .fillMaxSize()
             ) {
-                val navigationFocusRequester = remember { FocusRequester() }
                 CommonTopAppBar(
                     title = visibleArtist,
                     titleTestTag = APP_BAR_TITLE,
@@ -84,13 +96,7 @@ internal fun SongListContent(
                     }
                 )
 
-                SongListBody(
-                    navigationFocusRequester,
-                    songList,
-                    scrollPosition,
-                    needScroll,
-                    submitAction
-                )
+                TheBody()
 
                 WhatsNewDialog()
             }
@@ -102,7 +108,6 @@ internal fun SongListContent(
                     .background(theme.colorBg)
                     .fillMaxSize()
             ) {
-                val navigationFocusRequester = remember { FocusRequester() }
                 CommonSideAppBar(
                     title = visibleArtist,
                     titleTestTag = APP_BAR_TITLE,
@@ -117,13 +122,7 @@ internal fun SongListContent(
                     }
                 )
 
-                SongListBody(
-                    navigationFocusRequester,
-                    songList,
-                    scrollPosition,
-                    needScroll,
-                    submitAction
-                )
+                TheBody()
 
                 WhatsNewDialog()
             }

@@ -85,6 +85,21 @@ fun TextSearchListScreenImplContent(
 
         if (wasOrientationChanged) return@Box
 
+        @Composable
+        fun TheBody(modifier: Modifier) {
+            TextSearchListBody(
+                modifier = modifier,
+                isPortrait = true,
+                needScroll = needScroll,
+                scrollPosition = scrollPosition,
+                songs = songs,
+                searchFor = searchFor,
+                orderBy = orderBy,
+                spinnerStateOrderBy = spinnerStateOrderBy,
+                submitAction = submitAction
+            )
+        }
+
         if (W < H) {
             Column(
                 modifier = Modifier
@@ -95,17 +110,7 @@ fun TextSearchListScreenImplContent(
                     title = stringResource(id = R.string.title_activity_text_search_list),
                     titleTestTag = APP_BAR_TITLE
                 )
-                TextSearchListBody(
-                    modifier = Modifier.weight(1.0f),
-                    isPortrait = true,
-                    needScroll = needScroll,
-                    scrollPosition = scrollPosition,
-                    songs = songs,
-                    searchFor = searchFor,
-                    orderBy = orderBy,
-                    spinnerStateOrderBy = spinnerStateOrderBy,
-                    submitAction = submitAction
-                )
+                TheBody(modifier = Modifier.weight(1.0f))
             }
         } else {
             Row(
@@ -117,17 +122,7 @@ fun TextSearchListScreenImplContent(
                     title = stringResource(id = R.string.title_activity_text_search_list),
                     titleTestTag = APP_BAR_TITLE
                 )
-                TextSearchListBody(
-                    modifier = Modifier.weight(1.0f),
-                    isPortrait = false,
-                    needScroll = needScroll,
-                    scrollPosition = scrollPosition,
-                    songs = songs,
-                    searchFor = searchFor,
-                    orderBy = orderBy,
-                    spinnerStateOrderBy = spinnerStateOrderBy,
-                    submitAction = submitAction
-                )
+                TheBody(modifier = Modifier.weight(1.0f))
             }
         }
     }

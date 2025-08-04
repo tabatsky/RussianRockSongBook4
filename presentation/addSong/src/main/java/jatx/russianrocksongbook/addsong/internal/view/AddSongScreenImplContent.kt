@@ -63,6 +63,17 @@ fun AddSongScreenImplContent(
         val W = configuration.screenWidthDp.dp
         val H = configuration.screenHeightDp.dp
 
+        @Composable
+        fun TheBody() {
+            AddSongBody(
+                artistState = artistState,
+                titleState = titleState,
+                textState = textState,
+                submitAction = submitAction,
+                submitEffect = submitEffect
+            )
+        }
+
         if (W < H) {
             Column(
                 modifier = Modifier
@@ -70,13 +81,7 @@ fun AddSongScreenImplContent(
                     .background(color = theme.colorBg)
             ) {
                 CommonTopAppBar(title = stringResource(id = R.string.title_add_song))
-                AddSongBody(
-                    artistState = artistState,
-                    titleState = titleState,
-                    textState = textState,
-                    submitAction = submitAction,
-                    submitEffect = submitEffect
-                )
+                TheBody()
             }
         } else {
             Row(
@@ -85,13 +90,7 @@ fun AddSongScreenImplContent(
                     .background(color = theme.colorBg)
             ) {
                 CommonSideAppBar(title = stringResource(id = R.string.title_add_song))
-                AddSongBody(
-                    artistState = artistState,
-                    titleState = titleState,
-                    textState = textState,
-                    submitAction = submitAction,
-                    submitEffect = submitEffect
-                )
+                TheBody()
             }
         }
 
