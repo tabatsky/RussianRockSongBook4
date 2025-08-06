@@ -8,7 +8,6 @@ import jatx.russianrocksongbook.database.converters.toSong
 import jatx.russianrocksongbook.database.converters.toSongEntity
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.models.local.USER_SONG_MD5
-import jatx.russianrocksongbook.domain.models.local.songTextHash
 import jatx.russianrocksongbook.domain.repository.local.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -119,8 +118,7 @@ class LocalRepositoryImpl @Inject constructor(
     override fun setFavorite(favorite: Boolean, artist: String, title: String) = songDao.setFavorite(favorite, artist, title)
 
     override fun updateSong(song: Song) {
-        val outOfTheBox = (songTextHash(song.text) == song.origTextMD5)
-        songDao.updateSong(song.copy(outOfTheBox = outOfTheBox).toSongEntity())
+        songDao.updateSong(song.toSongEntity())
     }
 
     override fun deleteSongToTrash(song: Song) = songDao.setDeleted(true, song.artist, song.title)
