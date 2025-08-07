@@ -104,8 +104,8 @@ class MainActivity : ComponentActivity() {
         if (CommonViewModel.needReset) {
             CommonViewModel.clearStorage()
             viewModelStore.clear()
+            CommonViewModel.clearAppNavigator()
         }
-        CommonViewModel.clearAppNavigator()
     }
 
     @Composable
