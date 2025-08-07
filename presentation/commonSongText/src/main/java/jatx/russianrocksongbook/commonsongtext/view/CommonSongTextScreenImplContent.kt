@@ -170,7 +170,7 @@ fun CommonSongTextScreenImplContent(
     }
 
     val onSaveClick = {
-        song?.let {
+        song?.copy(text = text)?.let {
             val outOfTheBox = (songTextHash(text) == it.origTextMD5)
             val updatedSong = it.copy(text = text, outOfTheBox = outOfTheBox)
             submitAction(UpdateCurrentSong(updatedSong))
