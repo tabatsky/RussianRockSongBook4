@@ -160,9 +160,12 @@ open class CommonViewModel @Inject constructor(
     open fun resetState() = appStateHolder.reset()
 
     fun injectBackStack(backStack: NavBackStack) {
-        _appNavigator = AppNavigator(backStack).also {
-            it.inject { submitAction(Back(true)) }
+        if (_appNavigator == null) {
+            _appNavigator = AppNavigator().also {
+                it.inject { submitAction(Back(true)) }
+            }
         }
+        appNavigator.updateBackStack(backStack)
     }
 
     fun submitAction(action: UIAction) {
