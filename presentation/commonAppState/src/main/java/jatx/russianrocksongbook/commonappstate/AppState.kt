@@ -1,9 +1,6 @@
-package jatx.russianrocksongbook.commonviewmodel
-
-import jatx.russianrocksongbook.navigation.*
+package jatx.russianrocksongbook.commonappstate
 
 data class AppState(
-    val currentScreenVariant: ScreenVariant,
     val currentArtist: String,
     val appWasUpdated: Boolean,
     val artistList: List<String>,
@@ -12,7 +9,6 @@ data class AppState(
 
     companion object {
         fun initial(defaultArtist: String) = AppState(
-            currentScreenVariant = StartScreenVariant,
             currentArtist = defaultArtist,
             appWasUpdated = false,
             artistList = listOf(),

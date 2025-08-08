@@ -93,7 +93,7 @@ class MainActivity : ComponentActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
-    private fun back() = CommonViewModel.getStoredInstance()?.submitAction(Back())
+    private fun back() = CommonViewModel.getStoredInstance()?.submitAction(Back)
 
     override fun onDestroy() {
         super.onDestroy()

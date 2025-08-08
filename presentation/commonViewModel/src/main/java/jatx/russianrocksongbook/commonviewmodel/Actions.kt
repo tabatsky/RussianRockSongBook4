@@ -4,7 +4,7 @@ import jatx.russianrocksongbook.navigation.ScreenVariant
 
 interface UIAction
 
-data class Back(val byDestinationChangedListener: Boolean = false): UIAction
+data object Back: UIAction
 data class SelectScreen(val screenVariant: ScreenVariant): UIAction
 data class AppWasUpdated(val wasUpdated: Boolean): UIAction
 data class OpenVkMusic(val dontAskMore: Boolean): UIAction
