@@ -52,4 +52,6 @@ data class Song(
         variant = -1,
         comment = comment
     )
+
+    fun actualize() = copy(outOfTheBox = (songTextHash(text) == origTextMD5))
 }

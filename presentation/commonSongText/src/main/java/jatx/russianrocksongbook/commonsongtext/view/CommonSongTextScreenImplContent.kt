@@ -59,7 +59,6 @@ import jatx.russianrocksongbook.commonviewmodel.ShowToastWithResource
 import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.commonviewmodel.UIEffect
 import jatx.russianrocksongbook.domain.models.local.Song
-import jatx.russianrocksongbook.domain.models.local.songTextHash
 import jatx.russianrocksongbook.domain.repository.preferences.ListenToMusicVariant
 import jatx.russianrocksongbook.domain.repository.preferences.ScalePow
 import kotlinx.coroutines.launch
@@ -171,8 +170,7 @@ fun CommonSongTextScreenImplContent(
 
     val onSaveClick = {
         song?.copy(text = text)?.let {
-            val outOfTheBox = (songTextHash(text) == it.origTextMD5)
-            val updatedSong = it.copy(text = text, outOfTheBox = outOfTheBox)
+            val updatedSong = it.copy(text = text).actualize()
             submitAction(UpdateCurrentSong(updatedSong))
             submitAction(SaveSong(updatedSong))
         }

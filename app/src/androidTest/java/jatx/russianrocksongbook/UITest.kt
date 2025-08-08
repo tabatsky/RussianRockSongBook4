@@ -898,7 +898,7 @@ class UITest {
 
         var song = localRepository.getSongByArtistAndTitle(ARTIST_1, TITLE_1_3)!!
         val origText = song.text
-        song = song.copy(text = "dsgssdg sdg fdg", outOfTheBox = false)
+        song = song.copy(text = "dsgssdg sdg fdg").actualize()
         localRepository.updateSong(song)
 
         song = localRepository.getSongByArtistAndTitle(ARTIST_1, TITLE_1_3)!!
@@ -950,7 +950,7 @@ class UITest {
             .performClick()
         Log.e("test $testNumber click", stringConst.cancel)
 
-        song = song.copy(text = origText, outOfTheBox = true)
+        song = song.copy(text = origText).actualize()
         localRepository.updateSong(song)
 
         song = localRepository.getSongByArtistAndTitle(ARTIST_1, TITLE_1_3)!!
