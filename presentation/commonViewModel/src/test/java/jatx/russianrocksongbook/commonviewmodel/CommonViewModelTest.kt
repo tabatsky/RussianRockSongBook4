@@ -82,7 +82,7 @@ open class CommonViewModelTest {
             0
         }
 
-        val backStack = mutableStateListOf<NavKey>(EmptyScreenVariant, StartScreenVariant)
+        val backStack = mutableStateListOf<NavKey>(EmptyScreenVariant)
 
         every { toasts.showToast(anyInt()) } just runs
         every { toasts.showToast(anyString()) } just runs
@@ -127,6 +127,7 @@ open class CommonViewModelTest {
 
     @After
     fun clean() {
+        CommonViewModel.clearAppNavigator()
         unmockkStatic(Log::class)
     }
 

@@ -204,6 +204,8 @@ open class LocalViewModel @Inject constructor(
             }
         }
 
+        selectScreen(newScreenVariant)
+
         if (artist !in listOf(
                 ARTIST_ADD_ARTIST,
                 ARTIST_ADD_SONG,
@@ -212,8 +214,6 @@ open class LocalViewModel @Inject constructor(
                 ARTIST_DONATION)
             && TestingConfig.isUnitTesting) {
             showSongs(artist)
-        } else {
-            selectScreen(newScreenVariant)
         }
     }
 
