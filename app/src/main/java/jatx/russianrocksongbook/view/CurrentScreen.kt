@@ -53,7 +53,7 @@ fun CurrentScreen() {
 
     NavDisplay(
         backStack = backStack,
-        onBack = { CommonViewModel.appNavigator.pop() },
+        onBack = { CommonViewModel.appNavigator.backByUser() },
         entryProvider = entryProvider {
             entry(EmptyScreenVariant) {}
 

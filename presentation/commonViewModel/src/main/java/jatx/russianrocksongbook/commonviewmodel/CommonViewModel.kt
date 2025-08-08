@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation3.runtime.NavBackStack
 import dagger.hilt.android.lifecycle.HiltViewModel
+import jatx.russianrocksongbook.commonappstate.AppState
 import jatx.russianrocksongbook.commonviewmodel.contracts.MusicOpener
 import jatx.russianrocksongbook.commonviewmodel.contracts.WarningSender
 import jatx.russianrocksongbook.domain.models.local.Song
@@ -15,7 +16,6 @@ import jatx.russianrocksongbook.domain.models.music.Music
 import jatx.russianrocksongbook.domain.models.warning.Warnable
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_ERROR
 import jatx.russianrocksongbook.domain.repository.cloud.result.STATUS_SUCCESS
-import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import jatx.russianrocksongbook.navigation.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -162,7 +162,13 @@ open class CommonViewModel @Inject constructor(
     fun injectBackStack(backStack: NavBackStack) {
         if (_appNavigator == null) {
             _appNavigator = AppNavigator().also {
-                it.inject { submitAction(Back(true)) }
+                it.injectCallbacks(
+                    getAppState = {
+                        getStoredInstance()?.appStateFlow?.value
+                            ?: throw IllegalStateException("cannot resolve current app state")
+                    },
+                    onChangeCurrentScreenVariant = ::changeCurrentScreenVariant
+                )
             }
         }
         appNavigator.updateBackStack(backStack)
@@ -178,7 +184,7 @@ open class CommonViewModel @Inject constructor(
 
     protected open fun handleAction(action: UIAction) {
         when (action) {
-            is Back -> back(action.byDestinationChangedListener)
+            is Back -> back()
             is SelectScreen -> selectScreen(action.screenVariant)
             is AppWasUpdated -> setAppWasUpdated(action.wasUpdated)
             is OpenVkMusic -> openVkMusic(action.dontAskMore)
@@ -223,73 +229,9 @@ open class CommonViewModel @Inject constructor(
         }
     }
 
-    protected fun back(byDestinationChangedListener: Boolean = false) {
-        Log.e("back by",
-            if (byDestinationChangedListener) "destination listener" else "user")
-        if (byDestinationChangedListener) {
-            backByDestinationChangedListener()
-        } else {
-            backByUserPressBackButton()
-        }
-    }
-
-    private fun backByDestinationChangedListener() {
-        with (appStateFlow.value) {
-            Log.e("back from", currentScreenVariant.toString())
-            when (currentScreenVariant) {
-                is SongListScreenVariant,
-                is FavoriteScreenVariant,
-                is StartScreenVariant -> {
-                    doNothing()
-                }
-
-                is SongTextScreenVariant  -> {
-                    if (currentArtist != ARTIST_FAVORITE) {
-                        selectScreen(
-                            SongListScreenVariant(
-                                artist = currentArtist,
-                                isBackFromSomeScreen = true
-                            )
-                        )
-                    } else {
-                        selectScreen(FavoriteScreenVariant(isBackFromSomeScreen = true))
-                    }
-                }
-
-                is CloudSongTextScreenVariant -> {
-                    selectScreen(
-                        CloudSearchScreenVariant(
-                            randomKey = lastRandomKey,
-                            isBackFromSong = true
-                        ))
-                }
-
-                is TextSearchSongTextScreenVariant -> {
-                    selectScreen(
-                        TextSearchListScreenVariant(
-                            randomKey = lastRandomKey,
-                            isBackFromSong = true
-                        ))
-                }
-
-                else -> {
-                    if (currentArtist != ARTIST_FAVORITE) {
-                        selectScreen(
-                            SongListScreenVariant(
-                                artist = currentArtist,
-                                isBackFromSomeScreen = true
-                            )
-                        )
-                    } else {
-                        selectScreen(FavoriteScreenVariant(isBackFromSomeScreen = true))
-                    }
-                }
-            }
-        }
-    }
-
-    private fun backByUserPressBackButton() {
-        when (appStateFlow.value.currentScreenVariant) {
+    protected fun back() {
+        Log.e("back by","user")
+        when (appNavigator.currentScreenVariant) {
             is SongListScreenVariant,
             is FavoriteScreenVariant,
             is StartScreenVariant -> {
@@ -297,109 +239,29 @@ open class CommonViewModel @Inject constructor(
                 callbacks.onFinish()
             }
 
-            else -> appNavigator.pop()
+            else -> appNavigator.backByUser()
         }
     }
 
-    protected fun selectScreen(
-        newScreenVariant: ScreenVariant
-    ) {
-        val currentScreenVariant = appStateFlow
-            .value
-            .currentScreenVariant
-
-        val isSongByArtistAndTitle = currentScreenVariant is SongTextByArtistAndTitleScreenVariant
-        val isStart = currentScreenVariant is StartScreenVariant
-        val isFavorite = currentScreenVariant is FavoriteScreenVariant
-        val becomeSongList = newScreenVariant is SongListScreenVariant
-        val isSongList = currentScreenVariant is SongListScreenVariant
-        val becomeFavorite = newScreenVariant is FavoriteScreenVariant
-        val becomeSongByArtistAndTitle = newScreenVariant is SongTextByArtistAndTitleScreenVariant
-
-        val isAddSong = currentScreenVariant is AddSongScreenVariant
-        val isAddArtist = currentScreenVariant is AddArtistScreenVariant
-
-        val isSongText = currentScreenVariant is SongTextScreenVariant
-        val becomeSongText = newScreenVariant is SongTextScreenVariant
-        val isCloudSongText = currentScreenVariant is CloudSongTextScreenVariant
-        val becomeCloudSongText = newScreenVariant is CloudSongTextScreenVariant
-        val isTextSearchSongText = currentScreenVariant is TextSearchSongTextScreenVariant
-        val becomeTextSearchSongText = newScreenVariant is TextSearchSongTextScreenVariant
-
-        val artistNow = (currentScreenVariant as? SongListScreenVariant)?.artist
-        val artistBecome = (newScreenVariant as? SongListScreenVariant)?.artist
-
-        val isBackNow = (currentScreenVariant as? SongListScreenVariant)?.isBackFromSomeScreen
-        val isBackBecome = (newScreenVariant as? SongListScreenVariant)?.isBackFromSomeScreen
-
-        val needToPopTwice = isSongByArtistAndTitle || isAddArtist && becomeSongList
-        val needToReturn = isSongList && becomeSongList &&
-                (artistNow == artistBecome) &&
-                (isBackNow == isBackBecome)
-
-        var needToPop = false
-        needToPop = needToPop || isStart && becomeSongList
-        needToPop = needToPop || isFavorite && becomeSongList
-        needToPop = needToPop || isSongList && becomeFavorite
-        needToPop = needToPop || isAddSong && becomeSongByArtistAndTitle
-
-        var needToPopWithSkippingBackOnce = false
-        needToPopWithSkippingBackOnce = needToPopWithSkippingBackOnce || (isSongList || isFavorite) && (becomeSongList || becomeFavorite)
-        needToPopWithSkippingBackOnce = needToPopWithSkippingBackOnce || isSongText && becomeSongText
-        needToPopWithSkippingBackOnce = needToPopWithSkippingBackOnce || isCloudSongText && becomeCloudSongText
-        needToPopWithSkippingBackOnce = needToPopWithSkippingBackOnce || isTextSearchSongText && becomeTextSearchSongText
-
-        if (needToPopTwice) {
-            appNavigator.pop(dontSubmitBackAction = true, times = 2)
-        } else if (needToPop) {
-            appNavigator.pop(dontSubmitBackAction = true)
-        } else if (needToReturn) {
-            return
-        } else if (needToPopWithSkippingBackOnce) {
-            appNavigator.pop(skipOnce = true)
-        }
-
-        changeCurrentScreenVariant(newScreenVariant)
-
-        val isBackFromCertainScreen = (newScreenVariant as? SongListScreenVariant)?.isBackFromSomeScreen
-            ?: (newScreenVariant as? FavoriteScreenVariant)?.isBackFromSomeScreen
-            ?: (newScreenVariant as? CloudSearchScreenVariant)?.isBackFromSong
-            ?: (newScreenVariant as? TextSearchListScreenVariant)?.isBackFromSong
-            ?: false
-                && !isAddArtist // already popped
-                && (appNavigator.backStack.lastOrNull()?.javaClass == newScreenVariant.javaClass)
-
-        if (!isBackFromCertainScreen) {
-            appNavigator.push(newScreenVariant)
-        } else {
-            appNavigator.replace(newScreenVariant)
-        }
-
-        Log.e("navigated", newScreenVariant.toString())
-    }
+    protected fun selectScreen(newScreenVariant: ScreenVariant) =
+        appNavigator.selectScreen(newScreenVariant)
 
     fun changeCurrentScreenVariant(screenVariant: ScreenVariant) {
         val appState = appStateFlow.value
         val newState = when (screenVariant) {
             is CloudSearchScreenVariant -> {
                 appState.copy(
-                    currentScreenVariant = screenVariant,
                     lastRandomKey = screenVariant.randomKey
                 )
             }
 
             is TextSearchListScreenVariant -> {
                 appState.copy(
-                    currentScreenVariant = screenVariant,
                     lastRandomKey = screenVariant.randomKey
                 )
             }
 
-            else -> {
-                appState.copy(
-                    currentScreenVariant = screenVariant
-                )
-            }
+            else -> appState
         }
         changeAppState(newState)
     }
@@ -440,8 +302,6 @@ open class CommonViewModel @Inject constructor(
             }
         }
     }
-
-    private fun doNothing() = Unit
 
     private fun openVkMusic(dontAskMore: Boolean) =
         musicOpener.openVkMusicImpl(dontAskMore)
