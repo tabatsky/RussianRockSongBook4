@@ -17,11 +17,6 @@ class AppNavigator() {
     private var skipOnce = false
 
     private var screenChangedListener: (ScreenVariant?) -> Unit = { screenVariant ->
-        val wasSongListScreen = previousScreenVariant.isSongListScreen
-        val wasStartScreen = previousScreenVariant.isStartScreen
-        val becomeEmptyScreen = screenVariant.isEmptyScreen
-
-        val wasFavoriteScreen = previousScreenVariant.isFavoriteScreen
         val wasCloudSearchScreen = previousScreenVariant.isCloudSearchScreen
         val wasTextSearchListScreen = previousScreenVariant.isTextSearchListScreen
         val wasDonationScreen = previousScreenVariant.isDonationScreen
@@ -44,10 +39,6 @@ class AppNavigator() {
         var needSubmitBackAction = false
 
         val dontSubmitBackAction = skipSubmitBackAction > 0
-
-        needSubmitBackAction = needSubmitBackAction || (wasStartScreen && becomeEmptyScreen)
-        needSubmitBackAction = needSubmitBackAction || (wasSongListScreen && becomeEmptyScreen)
-        needSubmitBackAction = needSubmitBackAction || (wasFavoriteScreen && becomeEmptyScreen)
 
         needSubmitBackAction = needSubmitBackAction || (wasSongTextScreen && becomeSongListOrFavoriteScreen)
 
