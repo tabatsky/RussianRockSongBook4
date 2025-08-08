@@ -302,6 +302,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
         TimeUnit.MILLISECONDS.sleep(500)
         localViewModel.submitAction(SelectScreen(SongTextScreenVariant(0, 1237)))
 
+        theSongs = listOf()
         TimeUnit.MILLISECONDS.sleep(500)
         localViewModel.submitAction(SetFavorite(false))
 
