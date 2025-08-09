@@ -163,10 +163,7 @@ open class CommonViewModel @Inject constructor(
         if (_appNavigator == null) {
             _appNavigator = AppNavigator().also {
                 it.injectCallbacks(
-                    getAppState = {
-                        getStoredInstance()?.appStateFlow?.value
-                            ?: throw IllegalStateException("cannot resolve current app state")
-                    },
+                    getAppState = { appStateFlow.value },
                     onChangeCurrentScreenVariant = ::changeCurrentScreenVariant
                 )
             }
