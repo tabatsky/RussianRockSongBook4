@@ -63,7 +63,10 @@ class AppNavigator() {
         needSubmitBackAction = needSubmitBackAction && !dontSubmitBackAction
 
         if (needSubmitBackAction && !skipOnce) {
-            backByDestinationChangedListener()
+            backByDestinationChangedListener(
+                previousScreenVariant
+                    ?: throw IllegalStateException("no previous screen")
+            )
         }
 
         if (skipSubmitBackAction > 0) {
@@ -137,12 +140,12 @@ class AppNavigator() {
                 ?: (newScreenVariant as? TextSearchListScreenVariant)?.isBackFromSong
                 ?: false
                 && !isAddArtist // already popped
-                && (backStack.lastOrNull()?.javaClass == newScreenVariant.javaClass)
+                && (currentScreenVariant.javaClass == newScreenVariant.javaClass)
 
         if (!isBackFromCertainScreen) {
             push(newScreenVariant)
         } else {
-            replace(newScreenVariant)
+            justReplace(newScreenVariant)
         }
 
         Log.e("navigated", newScreenVariant.toString())
@@ -165,11 +168,12 @@ class AppNavigator() {
         skipOnce: Boolean = false,
         times: Int = 1
     ) {
-        val screenVariant = this.backStack.removeLastOrNull() as? ScreenVariant
+        this.backStack.removeLastOrNull()
         if (dontSubmitBackAction) {
             skipSubmitBackAction += times
         }
         this.skipOnce = skipOnce
+        val screenVariant = this.backStack.lastOrNull() as? ScreenVariant
         repeat(times) {
             this.screenChangedListener(screenVariant)
         }
@@ -180,18 +184,17 @@ class AppNavigator() {
         this.screenChangedListener(screenVariant)
     }
 
-    private fun replace(screenVariant: ScreenVariant) {
+    private fun justReplace(screenVariant: ScreenVariant) {
         this.backStack.removeLastOrNull()
         this.backStack.add(screenVariant)
-        this.screenChangedListener(screenVariant)
     }
 
-    private fun backByDestinationChangedListener() {
+    private fun backByDestinationChangedListener(fromScreenVariant: ScreenVariant) {
         Log.e("back by", "destination listener")
         getAppState?.invoke()?.let {
             with(it) {
-                Log.e("back from", currentScreenVariant.toString())
-                when (currentScreenVariant) {
+                Log.e("back from", fromScreenVariant.toString())
+                when (fromScreenVariant) {
                     is SongListScreenVariant,
                     is FavoriteScreenVariant,
                     is StartScreenVariant -> {
