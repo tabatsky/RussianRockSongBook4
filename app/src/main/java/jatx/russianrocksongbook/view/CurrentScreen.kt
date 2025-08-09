@@ -14,6 +14,7 @@ import jatx.russianrocksongbook.addsong.api.view.AddSongScreen
 import jatx.russianrocksongbook.cloudsongs.api.view.CloudSearchScreen
 import jatx.russianrocksongbook.cloudsongs.api.view.CloudSongTextScreen
 import jatx.russianrocksongbook.cloudsongs.internal.viewmodel.CloudViewModel
+import jatx.russianrocksongbook.commonviewmodel.Back
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import jatx.russianrocksongbook.donation.api.view.DonationScreen
@@ -53,7 +54,7 @@ fun CurrentScreen() {
 
     NavDisplay(
         backStack = backStack,
-        onBack = { CommonViewModel.appNavigator.backByUser() },
+        onBack = { commonViewModel.submitAction(Back) },
         entryProvider = entryProvider {
             entry(EmptyScreenVariant) {}
 
