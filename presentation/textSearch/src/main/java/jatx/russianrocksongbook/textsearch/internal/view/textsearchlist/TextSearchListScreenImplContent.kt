@@ -45,7 +45,8 @@ fun TextSearchListScreenImplContent(
 ) {
     val theme = LocalAppTheme.current
 
-    var savedRandomKey by rememberSaveable { mutableIntStateOf(0) }
+    val actualRandomKey = if (isBackFromSong) randomKey else 0
+    var savedRandomKey by rememberSaveable { mutableIntStateOf(actualRandomKey) }
     val randomKeyChanged = randomKey != savedRandomKey
 
     Box(
@@ -61,24 +62,24 @@ fun TextSearchListScreenImplContent(
 
         val wasOrientationChanged = isPortrait != isLastOrientationPortrait
 
-        LaunchedEffect(isPortrait) {
-            if (wasOrientationChanged) {
+        if (wasOrientationChanged) {
+            LaunchedEffect(Unit) {
                 isLastOrientationPortrait = isPortrait
                 submitAction(UpdateSongListNeedScroll(true))
             }
         }
 
         if (randomKeyChanged) {
-            savedRandomKey = randomKey
             LaunchedEffect(Unit) {
+                savedRandomKey = randomKey
                 if (!isBackFromSong && !wasOrientationChanged) {
                     submitAction(PerformTextSearch("", TextSearchOrderBy.BY_TITLE))
                 }
             }
         }
 
-        LaunchedEffect(Unit) {
-            if (isBackFromSong) {
+        if (isBackFromSong) {
+            LaunchedEffect(Unit) {
                 submitAction(UpdateSongListNeedScroll(true))
             }
         }

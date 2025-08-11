@@ -39,14 +39,14 @@ internal fun SongListScreenImplContent(
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-    LaunchedEffect(Unit) {
-        if (!isBackFromSomeScreen || artist == ARTIST_FAVORITE) {
+    if (!isBackFromSomeScreen || artist == ARTIST_FAVORITE) {
+        LaunchedEffect(Unit) {
             submitAction(UpdateArtists)
         }
     }
 
-    LaunchedEffect(Unit) {
-        if (isBackFromSomeScreen) {
+    if (isBackFromSomeScreen) {
+        LaunchedEffect(Unit) {
             submitAction(UpdateSongListNeedScroll(true))
         }
     }
