@@ -6,7 +6,10 @@ import jatx.russianrocksongbook.commonappstate.AppState
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import kotlin.properties.Delegates.notNull
 
-class AppNavigator() {
+class AppNavigator(
+    private val getAppState: (() -> AppState)? = null,
+    private val onChangeCurrentScreenVariant: ((ScreenVariant) -> Unit)? = null
+) {
     private var _backStack by notNull<NavBackStack>()
     val backStack: NavBackStack
         get() = _backStack
@@ -16,9 +19,6 @@ class AppNavigator() {
             ?: throw IllegalStateException("incorrect stack")
 
     private var previousScreenVariant: ScreenVariant? = null
-
-    private var getAppState: (() -> AppState)? = null
-    private var onChangeCurrentScreenVariant: ((ScreenVariant) -> Unit)? = null
 
     private var skipSubmitBackAction = 0
 
@@ -149,14 +149,6 @@ class AppNavigator() {
         }
 
         Log.e("navigated", newScreenVariant.toString())
-    }
-
-    fun injectCallbacks(
-        getAppState: (() -> AppState),
-        onChangeCurrentScreenVariant: (ScreenVariant) -> Unit
-    ) {
-        this.getAppState = getAppState
-        this.onChangeCurrentScreenVariant = onChangeCurrentScreenVariant
     }
 
     fun updateBackStack(backStack: NavBackStack) {
