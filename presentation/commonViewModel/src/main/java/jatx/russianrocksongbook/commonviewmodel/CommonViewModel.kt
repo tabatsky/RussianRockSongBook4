@@ -161,12 +161,10 @@ open class CommonViewModel @Inject constructor(
 
     fun injectBackStack(backStack: NavBackStack) {
         if (_appNavigator == null) {
-            _appNavigator = AppNavigator().also {
-                it.injectCallbacks(
-                    getAppState = { appStateFlow.value },
-                    onChangeCurrentScreenVariant = ::changeCurrentScreenVariant
-                )
-            }
+            _appNavigator = AppNavigator(
+                getAppState = { appStateFlow.value },
+                onChangeCurrentScreenVariant = ::changeCurrentScreenVariant
+            )
         }
         appNavigator.updateBackStack(backStack)
     }
