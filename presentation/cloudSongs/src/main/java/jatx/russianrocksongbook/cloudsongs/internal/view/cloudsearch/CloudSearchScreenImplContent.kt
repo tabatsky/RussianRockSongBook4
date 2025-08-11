@@ -42,7 +42,8 @@ internal fun CloudSearchScreenImplContent(
 ) {
     val theme = LocalAppTheme.current
 
-    var savedRandomKey by rememberSaveable { mutableIntStateOf(0) }
+    val actualRandomKey = if (isBackFromSong) randomKey else 0
+    var savedRandomKey by rememberSaveable { mutableIntStateOf(actualRandomKey) }
     val randomKeyChanged = randomKey != savedRandomKey
 
     Box(
@@ -58,24 +59,24 @@ internal fun CloudSearchScreenImplContent(
 
         val wasOrientationChanged = isPortrait != isLastOrientationPortrait
 
-        LaunchedEffect(isPortrait) {
-            if (wasOrientationChanged) {
+        if (wasOrientationChanged) {
+            LaunchedEffect(Unit) {
                 isLastOrientationPortrait = isPortrait
                 submitAction(UpdateCloudSongListNeedScroll(true))
             }
         }
 
         if (randomKeyChanged) {
-            savedRandomKey = randomKey
             LaunchedEffect(Unit) {
+                savedRandomKey = randomKey
                 if (!isBackFromSong && !wasOrientationChanged) {
                     submitAction(PerformCloudSearch("", CloudSearchOrderBy.BY_ID_DESC))
                 }
             }
         }
 
-        LaunchedEffect(Unit) {
-            if (isBackFromSong) {
+        if (isBackFromSong) {
+            LaunchedEffect(Unit) {
                 submitAction(UpdateCloudSongListNeedScroll(true))
             }
         }

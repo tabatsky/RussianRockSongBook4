@@ -52,8 +52,8 @@ internal fun SongListContent(
 
         val wasOrientationChanged = isPortrait != isLastOrientationPortrait
 
-        LaunchedEffect(isPortrait) {
-            if (wasOrientationChanged) {
+        if (wasOrientationChanged) {
+            LaunchedEffect(Unit) {
                 isLastOrientationPortrait = isPortrait
                 submitAction(UpdateSongListNeedScroll(true))
             }
@@ -144,8 +144,10 @@ internal fun SongListContent(
 
         if (showVoiceHelpDialog) {
             if (voiceHelpDontAsk) {
-                showVoiceHelpDialog = false
-                submitAction(SpeechRecognize(true))
+                LaunchedEffect(Unit) {
+                    showVoiceHelpDialog = false
+                    submitAction(SpeechRecognize(true))
+                }
             } else {
                 VoiceHelpDialog(
                     onConfirm = { submitAction(SpeechRecognize(it)) },
