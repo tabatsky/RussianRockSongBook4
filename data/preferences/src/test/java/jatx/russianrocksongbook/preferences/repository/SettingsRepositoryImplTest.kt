@@ -289,8 +289,8 @@ class SettingsRepositoryImplTest {
         assertEquals(FontScale.M, fontScaleEnum)
 
         verifySequence {
-            sp.getFloat(KEY_FONT_SCALE, 1.0f)
-            sp.getFloat(KEY_FONT_SCALE, 1.0f)
+            sp.getFloat(KEY_FONT_SCALE, 0.75f)
+            sp.getFloat(KEY_FONT_SCALE, 0.75f)
         }
     }
 
@@ -314,7 +314,7 @@ class SettingsRepositoryImplTest {
         assertEquals(FontScale.S.scale.pow(ScalePow.MENU.pow), scale)
 
         verifySequence {
-            sp.getFloat(KEY_FONT_SCALE, 1.0f)
+            sp.getFloat(KEY_FONT_SCALE, 0.75f)
         }
     }
 
