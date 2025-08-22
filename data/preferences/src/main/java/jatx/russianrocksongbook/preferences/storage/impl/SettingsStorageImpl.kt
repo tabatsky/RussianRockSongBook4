@@ -25,6 +25,8 @@ internal const val KEY_VK_MUSIC_DONT_ASK = "vkMusicDontAsk"
 internal const val KEY_YANDEX_MUSIC_DONT_ASK = "yandexMusicDontAsk"
 internal const val KEY_VOICE_HELP_DONT_ASK = "voiceHelpDontAsk"
 
+const val DEFAULT_FONT_SCALE = 0.75f
+
 @Singleton
 @BoundTo(supertype = SettingsStorage::class, component = SingletonComponent::class)
 @SuppressLint("ApplySharedPref")
@@ -141,7 +143,7 @@ class SettingsStorageImpl @Inject constructor(
 
 
     override var commonFontScale: Float
-        get() = sp.getFloat(KEY_FONT_SCALE, 1.0f)
+        get() = sp.getFloat(KEY_FONT_SCALE, DEFAULT_FONT_SCALE)
         set(value) {
             val editor = sp.edit()
             editor.putFloat(KEY_FONT_SCALE, value)

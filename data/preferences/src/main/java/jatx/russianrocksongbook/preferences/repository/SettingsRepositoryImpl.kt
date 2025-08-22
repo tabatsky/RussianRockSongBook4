@@ -90,7 +90,7 @@ class SettingsRepositoryImpl @Inject constructor(
     override val commonFontScaleEnum: FontScale
         get() = commonFontScale.let { scale ->
             FontScale.entries.find { it.scale == scale }
-        } ?: FontScale.M
+        } ?: FontScale.S
 
     override val fontScaler: FontScaler
         get() = FontScalerImpl(commonFontScale)
