@@ -134,6 +134,7 @@ internal val artistMap = mapOf(
     "Тараканы!" to R.raw.tarakany,
     "Телевизор" to R.raw.televizor,
     "Торба-на-Круче" to R.raw.torba_n,
+    "Умка и Броневик" to R.raw.umka,
     "Ундервуд" to R.raw.undervud,
     "Чайф" to R.raw.chaif,
     "Чёрный Кофе" to R.raw.cherniykofe,
