@@ -109,31 +109,51 @@ dependencies {
 
     debugImplementation libs.mockkAndroid
 
-    debugImplementation libs.androidXCore
+    debugImplementation(libs.androidXCore) {
+        exclude group: 'org.hamcrest'
+    }
 
-    testImplementation libs.androidXCore
-    testImplementation libs.androidXCoreKtx
-    testImplementation libs.androidXRunner
-    testImplementation libs.androidXTruth
-    testImplementation libs.androidXRules
+    testImplementation(libs.androidXCore) {
+        exclude group: 'org.hamcrest'
+    }
+    testImplementation(libs.androidXCoreKtx) {
+        exclude group: 'org.hamcrest'
+    }
+    testImplementation(libs.androidXRunner) {
+        exclude group: 'org.hamcrest'
+    }
+    testImplementation(libs.androidXTruth) {
+        exclude group: 'org.hamcrest'
+    }
+    testImplementation(libs.androidXRules) {
+        exclude group: 'org.hamcrest'
+    }
 
-    androidTestImplementation libs.androidXCore
+    androidTestImplementation(libs.androidXCore) {
+        exclude group: 'org.hamcrest'
+    }
 
     androidTestImplementation(libs.androidXJUnit) {
         exclude group: 'org.hamcrest'
     }
 
-    androidTestImplementation libs.androidXCoreTesting
+    androidTestImplementation(libs.androidXCoreTesting) {
+        exclude group: 'org.hamcrest'
+    }
 
-    debugImplementation libs.androidXMonitor
+    debugImplementation(libs.androidXMonitor) {
+        exclude group: 'org.hamcrest'
+    }
 
     androidTestImplementation(libs.espressoCore) {
         exclude group: 'org.hamcrest'
+        exclude group: 'junit'
     }
     androidTestImplementation(libs.espressoContrib) {
         exclude group: 'org.checkerframework', module: 'checker'
         exclude group: 'com.google.android.apps.common.testing.accessibility.framework'
         exclude group: 'org.hamcrest'
+        exclude group: 'junit'
     }
 
     androidTestImplementation libs.hamcrest
