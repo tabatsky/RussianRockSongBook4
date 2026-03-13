@@ -156,7 +156,11 @@ dependencies {
         exclude group: 'junit'
     }
 
-    androidTestImplementation libs.hamcrest
+    androidTestImplementation(libs.hamcrest) {
+        version {
+            strictly '2.2'
+        }
+    }
 
     androidTestImplementation(libs.hiltAndroidTesting) {
         exclude group: 'androidx.test', module: 'core'
