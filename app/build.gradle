@@ -109,45 +109,31 @@ dependencies {
 
     debugImplementation libs.mockkAndroid
 
-    debugImplementation(libs.androidXCore)
-//    debugImplementation("androidx.test:core") {
-//        version {
-//            strictly versions.androidXTestCore
-//        }
-//    }
+    debugImplementation libs.androidXCore
 
-    testImplementation(libs.androidXCore)
-//    testImplementation("androidx.test:core") {
-//        version {
-//            strictly versions.androidXTestCore
-//        }
-//    }
+    testImplementation libs.androidXCore
     testImplementation libs.androidXCoreKtx
     testImplementation libs.androidXRunner
     testImplementation libs.androidXTruth
     testImplementation libs.androidXRules
 
-    androidTestImplementation(libs.androidXCore)
-//    androidTestImplementation("androidx.test:core") {
-//        version {
-//            strictly versions.androidXTestCore
-//        }
-//    }
+    androidTestImplementation libs.androidXCore
 
-    androidTestImplementation(libs.androidXJUnit)
-//    androidTestImplementation("androidx.test.ext:junit") {
-//        version {
-//            strictly versions.androidXJUnit
-//        }
-//    }
+    androidTestImplementation(libs.androidXJUnit) {
+        exclude group: 'org.hamcrest'
+    }
 
     androidTestImplementation libs.androidXCoreTesting
 
     debugImplementation libs.androidXMonitor
 
-    androidTestImplementation libs.espressoCore
+    androidTestImplementation(libs.espressoCore) {
+        exclude group: 'org.hamcrest'
+    }
     androidTestImplementation(libs.espressoContrib) {
         exclude group: 'org.checkerframework', module: 'checker'
+        exclude group: 'com.google.android.apps.common.testing.accessibility.framework'
+        exclude group: 'org.hamcrest'
     }
 
     androidTestImplementation libs.hamcrest
