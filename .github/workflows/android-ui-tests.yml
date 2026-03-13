@@ -19,7 +19,7 @@ jobs:
     
     strategy:
         matrix:
-          api-level: [24, 27, 29, 30, 31, 33, 34]
+          api-level: [24, 27, 29, 30, 31, 33, 34, 35-ext15]
           target: [default]
     
     steps:
@@ -47,7 +47,7 @@ jobs:
         run: ./gradlew clean
 
       - name: Android Tests
-        uses: reactivecircus/android-emulator-runner@v2.35.0
+        uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
           target: ${{ matrix.target }}
