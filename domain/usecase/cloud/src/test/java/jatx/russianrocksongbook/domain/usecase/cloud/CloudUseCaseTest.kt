@@ -261,6 +261,8 @@ class CloudUseCaseTest {
             assertEquals(resultWithNumber, result)
         }
 
+        TimeUnit.MILLISECONDS.sleep(500)
+
         coVerifySequence {
             cloudRepository.vote(
                 cloudSong = song asCloudSongWithUserInfo userInfo,
