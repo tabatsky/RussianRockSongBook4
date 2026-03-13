@@ -205,6 +205,9 @@ open class LocalViewModelTest: CommonViewModelTest() {
         localViewModel.submitAction(SelectArtist("Алиса"))
         theSongs = songList2
         waitForCondition {
+            localViewModel.appStateFlow.value.currentArtist == "Алиса"
+        }
+        waitForCondition {
             localViewModel.localStateFlow.value.currentSongList == songList2
         }
         assertEquals(songList2, localViewModel.localStateFlow.value.currentSongList)
