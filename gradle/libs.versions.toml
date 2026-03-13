@@ -129,7 +129,8 @@ androidXMonitor = { module="androidx.test:monitor", version.ref="monitor" }
 androidXOrchestrator = { module="androidx.test:orchestrator", version.ref="androidXOrchestrator" }
 espressoCore = { module="androidx.test.espresso:espresso-core", version.ref="espresso" }
 espressoContrib = { module="androidx.test.espresso:espresso-contrib", version.ref="espresso" }
-hamcrest = { module="org.hamcrest:hamcrest", version.ref="hamcrest" }
+hamcrestCore = { module="org.hamcrest:hamcrest-core", version.ref="hamcrest" }
+hamcrestLibrary = { module="org.hamcrest:hamcrest-library", version.ref="hamcrest" }
 leakCanary = { module="com.squareup.leakcanary:leakcanary-android-instrumentation", version.ref="leakCanary" }
 
 [plugins]
