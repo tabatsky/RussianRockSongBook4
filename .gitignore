@@ -9,4 +9,5 @@ myLogs.txt
 private_key.pepk
 keystore.properties
 .kotlin
-
+my-release-key.keystore
+..bfg-report
