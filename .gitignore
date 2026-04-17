@@ -10,4 +10,7 @@ private_key.pepk
 keystore.properties
 .kotlin
 my-release-key.keystore
+google-services.json
+app-release.aab
 ..bfg-report
+bfg-1.14.0.jar
