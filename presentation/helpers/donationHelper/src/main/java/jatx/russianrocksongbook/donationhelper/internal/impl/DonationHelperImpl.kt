@@ -58,10 +58,10 @@ class DonationHelperImpl @Inject constructor(
             .setProductList(productList)
             .build()
 
-        billingClient.queryProductDetailsAsync(params) { billingResult, mutableList ->
+        billingClient.queryProductDetailsAsync(params) { billingResult, queryProductDetailsResult ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                Log.e("mutableList", mutableList.toString())
-                mutableList.forEach {
+                Log.e("queryProductDetailsResult", queryProductDetailsResult.toString())
+                queryProductDetailsResult.productDetailsList.forEach {
                     val productDetailsParamsList = arrayListOf<ProductDetailsParams>()
                     if (it.productId == sku && it.productType == ProductType.INAPP) {
                         Log.e("billing flow", "launching")

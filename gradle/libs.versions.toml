@@ -35,7 +35,7 @@ ktxSerialization = "1.9.0"
 tvFoundation = "1.0.0-alpha12"
 tvMaterial = "1.0.1"
 
-billing = "7.1.1"
+billing = "9.1.0"
 
 firebaseBom = "34.10.0"
 
