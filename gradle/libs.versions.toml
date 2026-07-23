@@ -1,9 +1,9 @@
 [versions]
 
-gradleAndroid = "8.11.1"
-kotlin = "2.2.0"
-ksp = "2.2.0-2.0.2"
-hilt = "2.57"
+gradleAndroid = "9.2.1"
+kotlin = "2.4.10"
+ksp = "2.3.10"
+hilt = "2.60.1"
 googleServices = "4.4.3"
 
 coreKtx = "1.16.0"

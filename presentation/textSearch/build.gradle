@@ -2,7 +2,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id 'com.android.library'
-    alias libs.plugins.kotlin.android
     alias libs.plugins.hilt.android
     alias libs.plugins.compose
     alias libs.plugins.ksp
@@ -83,6 +82,6 @@ dependencies {
     testImplementation libs.mockk
     testImplementation libs.coroutinesTest
     testImplementation libs.androidXCoreTesting
-    testApi project(':presentation:commonViewModel')
+    testImplementation project(':presentation:commonViewModel')
 
 }
