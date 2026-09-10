@@ -39,6 +39,7 @@ android {
     sourceSets {
         test {
             java.srcDir project(":presentation:commonViewModel").file("src/test/java")
+            kotlin.srcDir project(":presentation:commonViewModel").file("src/test/java")
         }
     }
 
