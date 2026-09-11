@@ -19,12 +19,12 @@ android {
         }
     }
 
-    compileSdk 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId "jatx.russianrocksongbook"
         minSdk 23
-        targetSdk 36
+        targetSdk = 37
         versionCode 125
         versionName "6.2.9"
 
@@ -37,6 +37,7 @@ android {
         }
         release {
             minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
         }

@@ -1,6 +1,6 @@
 [versions]
 
-gradleAndroid = "9.2.1"
+gradleAndroid = "9.4.0"
 kotlin = "2.4.10"
 ksp = "2.3.10"
 hilt = "2.60.1"
@@ -134,9 +134,7 @@ hamcrestLibrary = { module="org.hamcrest:hamcrest-library", version.ref="hamcres
 leakCanary = { module="com.squareup.leakcanary:leakcanary-android-instrumentation", version.ref="leakCanary" }
 
 [plugins]
-kotlin-android = { id="org.jetbrains.kotlin.android", version.ref="kotlin" }
 compose = { id="org.jetbrains.kotlin.plugin.compose", version.ref="kotlin" }
-kapt = { id="org.jetbrains.kotlin.kapt", version.ref="kotlin" }
 ksp = { id="com.google.devtools.ksp", version.ref="ksp" }
 hilt-android = { id="com.google.dagger.hilt.android", version.ref="hilt" }
 kotlin-serialization = { id="org.jetbrains.kotlin.plugin.serialization", version.ref="kotlin" }
