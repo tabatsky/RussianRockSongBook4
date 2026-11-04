@@ -2,7 +2,7 @@ package jatx.russianrocksongbook.commonviewmodel
 
 import jatx.russianrocksongbook.commonappstate.AppStateHolder
 import android.util.Log
-import androidx.compose.runtime.mutableStateListOf
+import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import io.mockk.*
 import io.mockk.impl.annotations.InjectMockKs
@@ -83,7 +83,7 @@ open class CommonViewModelTest {
             0
         }
 
-        val backStack = mutableStateListOf<NavKey>(EmptyScreenVariant)
+        val backStack = NavBackStack<NavKey>(EmptyScreenVariant)
 
         every { toasts.showToast(anyInt()) } just runs
         every { toasts.showToast(anyString()) } just runs

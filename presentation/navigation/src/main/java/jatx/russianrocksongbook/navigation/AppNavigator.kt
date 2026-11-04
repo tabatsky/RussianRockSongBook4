@@ -2,6 +2,7 @@ package jatx.russianrocksongbook.navigation
 
 import android.util.Log
 import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 import jatx.russianrocksongbook.commonappstate.AppState
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_FAVORITE
 import kotlin.properties.Delegates.notNull
@@ -10,8 +11,8 @@ class AppNavigator(
     private val getAppState: (() -> AppState)? = null,
     private val onChangeCurrentScreenVariant: ((ScreenVariant) -> Unit)? = null
 ) {
-    private var _backStack by notNull<NavBackStack>()
-    val backStack: NavBackStack
+    private var _backStack by notNull<NavBackStack<NavKey>>()
+    val backStack: NavBackStack<NavKey>
         get() = _backStack
 
     val currentScreenVariant: ScreenVariant
@@ -151,7 +152,7 @@ class AppNavigator(
         Log.e("navigated", newScreenVariant.toString())
     }
 
-    fun updateBackStack(backStack: NavBackStack) {
+    fun updateBackStack(backStack: NavBackStack<NavKey>) {
         _backStack = backStack
     }
 

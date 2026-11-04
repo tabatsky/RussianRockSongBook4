@@ -88,6 +88,7 @@ dependencies {
 
     testImplementation libs.junit
     testImplementation libs.mockk
+    testImplementation libs.junitJupiterApi
     testImplementation libs.coroutinesTest
     testImplementation libs.androidXCoreTesting
     testImplementation project(':presentation:commonViewModel')

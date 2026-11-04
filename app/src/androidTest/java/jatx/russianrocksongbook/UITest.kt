@@ -158,12 +158,12 @@ class UITest {
 
     @After
     fun clean() {
+        settingsRepository.defaultArtist = ARTIST_KINO
         if (composeTestRule.activityRule.scenario.state == Lifecycle.State.DESTROYED) return
         composeTestRule.activityRule.scenario.onActivity {
             it.clean()
         }
         composeTestRule.activityRule.scenario.close()
-        settingsRepository.defaultArtist = ARTIST_KINO
     }
 
     @Test

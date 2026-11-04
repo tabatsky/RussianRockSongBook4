@@ -8,6 +8,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jatx.russianrocksongbook.commonappstate.AppState
 import jatx.russianrocksongbook.commonviewmodel.contracts.MusicOpener
@@ -160,7 +161,7 @@ open class CommonViewModel @Inject constructor(
 
     open fun resetState() = appStateHolder.reset()
 
-    fun injectBackStack(backStack: NavBackStack) {
+    fun injectBackStack(backStack: NavBackStack<NavKey>) {
         if (_appNavigator == null) {
             _appNavigator = AppNavigator(
                 getAppState = { appStateFlow.value },
