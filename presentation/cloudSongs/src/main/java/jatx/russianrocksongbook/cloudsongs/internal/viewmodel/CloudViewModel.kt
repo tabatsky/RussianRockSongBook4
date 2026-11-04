@@ -1,5 +1,6 @@
 package jatx.russianrocksongbook.cloudsongs.internal.viewmodel
 
+import jatx.russianrocksongbook.commonappstate.AppStateHolder
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.runtime.Composable
@@ -35,10 +36,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CloudViewModel @Inject constructor(
-    private val cloudStateHolder: CloudStateHolder,
+    appStateHolder: AppStateHolder,
     cloudViewModelDeps: CloudViewModelDeps
 ): CommonViewModel(
-    cloudStateHolder.appStateHolder,
+    appStateHolder,
     cloudViewModelDeps.commonViewModelDeps
 ) {
     companion object {
@@ -68,7 +69,7 @@ class CloudViewModel @Inject constructor(
     private val allLikes = mutableStateMapOf<CloudSong, Int>()
     private val allDislikes = mutableStateMapOf<CloudSong, Int>()
 
-    val cloudStateFlow = cloudStateHolder.cloudStateFlow
+    val cloudStateFlow = appStateHolder.stateFlow(CloudStateKey)
 
     override val currentMusic: Music?
         get() = cloudStateFlow.value.currentCloudSong
@@ -76,7 +77,7 @@ class CloudViewModel @Inject constructor(
     override val currentWarnable: Warnable?
         get() = cloudStateFlow.value.currentCloudSong
 
-    override fun resetState() = cloudStateHolder.reset()
+    override fun resetState() = appStateHolder.resetState(CloudStateKey)
 
     override fun handleAction(action: UIAction) {
         when (action) {
@@ -328,6 +329,6 @@ class CloudViewModel @Inject constructor(
     }
 
     private fun changeCloudState(cloudState: CloudState) {
-        cloudStateHolder.changeCloudState(cloudState)
+        appStateHolder.changeState(CloudStateKey, cloudState)
     }
 }

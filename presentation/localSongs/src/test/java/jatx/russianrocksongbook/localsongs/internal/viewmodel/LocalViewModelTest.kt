@@ -3,7 +3,6 @@ package jatx.russianrocksongbook.localsongs.internal.viewmodel
 import io.mockk.*
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
-import jatx.russianrocksongbook.commonsongtext.viewmodel.CommonSongTextStateHolder
 import jatx.russianrocksongbook.commonsongtext.viewmodel.CommonSongTextViewModelDeps
 import jatx.russianrocksongbook.domain.models.local.Song
 import jatx.russianrocksongbook.domain.repository.local.ARTIST_ADD_ARTIST
@@ -67,10 +66,6 @@ open class LocalViewModelTest: CommonViewModelTest() {
 
     internal lateinit var localViewModelDeps: LocalViewModelDeps
 
-    internal lateinit var commonSongTextStateHolder: CommonSongTextStateHolder
-
-    internal lateinit var localStateHolder: LocalStateHolder
-
     private lateinit var localViewModel: LocalViewModel
 
     private val songList = listOf(
@@ -91,8 +86,6 @@ open class LocalViewModelTest: CommonViewModelTest() {
     fun initLocal() {
         initCommon()
 
-        commonSongTextStateHolder = CommonSongTextStateHolder(appStateHolder)
-        localStateHolder = LocalStateHolder(commonSongTextStateHolder)
         commonSongTextViewModelDeps = CommonSongTextViewModelDeps(
             commonViewModelDeps = commonViewModelDeps,
             getCountByArtistUseCase = getCountByArtistUseCase,
@@ -107,7 +100,7 @@ open class LocalViewModelTest: CommonViewModelTest() {
         )
 
         localViewModel = LocalViewModel(
-            localStateHolder = localStateHolder,
+            appStateHolder = appStateHolder,
             localViewModelDeps = localViewModelDeps
         )
         localViewModel.launchJobsIfNecessary()

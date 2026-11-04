@@ -1,5 +1,6 @@
 package jatx.russianrocksongbook.addsong.internal.viewmodel
 
+import jatx.russianrocksongbook.commonappstate.AppStateHolder
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -14,18 +15,16 @@ import jatx.russianrocksongbook.commonviewmodel.R
 import jatx.russianrocksongbook.commonviewmodel.UIAction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 internal class AddSongViewModel @Inject constructor(
-    private val addSongStateHolder: AddSongStateHolder,
+    appStateHolder: AppStateHolder,
     addSongViewModelDeps: AddSongViewModelDeps
 ): CommonViewModel(
-    addSongStateHolder.appStateHolder,
+    appStateHolder,
     addSongViewModelDeps.commonViewModelDeps
 ) {
     companion object {
@@ -50,7 +49,7 @@ internal class AddSongViewModel @Inject constructor(
     val title = mutableStateOf("")
     val text = mutableStateOf("")
 
-    val addSongStateFlow = addSongStateHolder.addSongStateFlow.asStateFlow()
+    val addSongStateFlow = appStateHolder.stateFlow(AddSongStateKey)
 
     override fun handleAction(action: UIAction) {
         when (action) {
@@ -72,14 +71,14 @@ internal class AddSongViewModel @Inject constructor(
     private fun showUploadOfferForSong(song: Song) {
         Log.e("upload", "show offer")
 
-        addSongStateHolder.addSongStateFlow.update {
+        appStateHolder.updateState(AddSongStateKey) {
             it.copy(showUploadDialogForSong = true, newSong = song)
         }
     }
 
     private fun hideUploadOfferForSong() {
         Log.e("upload", "hide offer")
-        addSongStateHolder.addSongStateFlow.update {
+        appStateHolder.updateState(AddSongStateKey) {
             it.copy(showUploadDialogForSong = false)
         }
     }

@@ -1,5 +1,6 @@
 package jatx.russianrocksongbook.addartist.internal.viewmodel
 
+import jatx.russianrocksongbook.commonappstate.AppStateHolder
 import androidx.compose.runtime.Composable
 import androidx.documentfile.provider.DocumentFile
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -13,8 +14,6 @@ import jatx.russianrocksongbook.commonviewmodel.R
 import jatx.russianrocksongbook.commonviewmodel.UIAction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -22,10 +21,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class AddArtistViewModel @Inject constructor(
-    private val addArtistStateHolder: AddArtistStateHolder,
+    appStateHolder: AppStateHolder,
     addArtistViewModelDeps: AddArtistViewModelDeps
 ): CommonViewModel(
-    addArtistStateHolder.appStateHolder,
+    appStateHolder,
     addArtistViewModelDeps.commonViewModelDeps
 ) {
     companion object {
@@ -48,8 +47,7 @@ internal class AddArtistViewModel @Inject constructor(
     private val fileSystemAdapter =
         addArtistViewModelDeps.fileSystemRepository
 
-    val addArtistStateFlow = addArtistStateHolder
-        .addArtistStateFlow.asStateFlow()
+    val addArtistStateFlow = appStateHolder.stateFlow(AddArtistStateKey)
 
     private var uploadListJob: Job? = null
 
@@ -68,7 +66,7 @@ internal class AddArtistViewModel @Inject constructor(
     }
 
     private fun showUploadOfferForDir(artist: String, songs: List<Song>) {
-        addArtistStateHolder.addArtistStateFlow.update {
+        appStateHolder.updateState(AddArtistStateKey) {
             it.copy(
                 showUploadDialogForDir = true,
                 newArtist = artist,
@@ -78,7 +76,7 @@ internal class AddArtistViewModel @Inject constructor(
     }
 
     private fun hideUploadOfferForDir() {
-        addArtistStateHolder.addArtistStateFlow.update {
+        appStateHolder.updateState(AddArtistStateKey) {
             it.copy(showUploadDialogForDir = false)
         }
     }

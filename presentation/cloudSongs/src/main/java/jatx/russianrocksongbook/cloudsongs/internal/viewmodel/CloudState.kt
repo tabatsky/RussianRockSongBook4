@@ -1,5 +1,7 @@
 package jatx.russianrocksongbook.cloudsongs.internal.viewmodel
 
+import jatx.russianrocksongbook.commonappstate.UIStateKey
+import jatx.russianrocksongbook.commonappstate.UIState
 import androidx.paging.PagingData
 import jatx.russianrocksongbook.domain.models.cloud.CloudSong
 import jatx.russianrocksongbook.domain.repository.cloud.CloudSearchOrderBy
@@ -22,7 +24,7 @@ data class CloudState(
     val showDeleteDialog: Boolean,
     val showChordDialog: Boolean,
     val selectedChord: String
-) {
+) : UIState {
     companion object {
         fun initial() = CloudState(
             searchState = SearchState.LOADING_FIRST_PAGE,
@@ -44,3 +46,5 @@ data class CloudState(
         )
     }
 }
+
+internal val CloudStateKey = UIStateKey(CloudState::class.java) { CloudState.initial() }

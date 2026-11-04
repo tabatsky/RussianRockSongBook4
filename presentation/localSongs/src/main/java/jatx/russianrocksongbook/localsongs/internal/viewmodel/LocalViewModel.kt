@@ -1,5 +1,7 @@
 package jatx.russianrocksongbook.localsongs.internal.viewmodel
 
+import jatx.russianrocksongbook.commonsongtext.viewmodel.newCommonSongTextStateKey
+import jatx.russianrocksongbook.commonappstate.AppStateHolder
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -20,13 +22,21 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-open class LocalViewModel @Inject constructor(
-    private val localStateHolder: LocalStateHolder,
-    localViewModelDeps: LocalViewModelDeps
+open class LocalViewModel protected constructor(
+    appStateHolder: AppStateHolder,
+    localViewModelDeps: LocalViewModelDeps,
+    stateOwner: String
 ): CommonSongTextViewModel(
-    localStateHolder.commonSongTextStateHolder,
+    appStateHolder,
+    newCommonSongTextStateKey(stateOwner),
     localViewModelDeps.commonSongTextViewModelDeps
 ) {
+    @Inject
+    constructor(
+        appStateHolder: AppStateHolder,
+        localViewModelDeps: LocalViewModelDeps
+    ) : this(appStateHolder, localViewModelDeps, "Local")
+
     companion object {
         private const val key = "Local"
 
@@ -47,8 +57,14 @@ open class LocalViewModel @Inject constructor(
     private val getArtistsUseCase =
         localViewModelDeps.getArtistsUseCase
 
+    private val localStateKey = newLocalStateKey(stateOwner)
+
+    init {
+        appStateHolder.resetState(localStateKey)
+    }
+
     val localStateFlow by lazy {
-        localStateHolder.localStateFlow
+        appStateHolder.stateFlow(localStateKey)
     }
 
     private var showSongsJob: Job? = null
@@ -56,7 +72,10 @@ open class LocalViewModel @Inject constructor(
 
     private var selectSongJob: Job? = null
 
-    override fun resetState() = localStateHolder.reset()
+    override fun resetState() {
+        resetCommonSongTextState()
+        appStateHolder.resetState(localStateKey)
+    }
 
     override fun handleAction(action: UIAction) {
         when (action) {
@@ -318,17 +337,11 @@ open class LocalViewModel @Inject constructor(
     }
 
     private fun changeLocalState(localState: LocalState) =
-        localStateHolder.changeLocalState(localState)
+        appStateHolder.changeState(localStateKey, localState)
 
-    private fun updateArtists(artists: List<String>) {
-        val appState = appStateFlow.value
-        val newState = appState.copy(artistList = artists)
-        changeAppState(newState)
-    }
+    private fun updateArtists(artists: List<String>) =
+        updateAppState { it.copy(artistList = artists) }
 
-    private fun updateCurrentArtist(artist: String) {
-        val appState = appStateFlow.value
-        val newState = appState.copy(currentArtist = artist)
-        changeAppState(newState)
-    }
+    private fun updateCurrentArtist(artist: String) =
+        updateAppState { it.copy(currentArtist = artist) }
 }

@@ -1,5 +1,7 @@
 package jatx.russianrocksongbook.textsearch.internal.viewmodel
 
+import jatx.russianrocksongbook.commonsongtext.viewmodel.newCommonSongTextStateKey
+import jatx.russianrocksongbook.commonappstate.AppStateHolder
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -17,10 +19,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TextSearchViewModel @Inject constructor(
-    private val textSearchStateHolder: TextSearchStateHolder,
+    appStateHolder: AppStateHolder,
     textSearchViewModelDeps: TextSearchViewModelDeps
 ): CommonSongTextViewModel(
-    textSearchStateHolder.commonSongTextStateHolder,
+    appStateHolder,
+    newCommonSongTextStateKey("TextSearch"),
     textSearchViewModelDeps.commonSongTextViewModelDeps
 ) {
     companion object {
@@ -41,9 +44,16 @@ class TextSearchViewModel @Inject constructor(
 
     val spinnerStateOrderBy = mutableStateOf(SpinnerState(0, false))
 
-    val textSearchStateFlow = textSearchStateHolder.textSearchStateFlow
+    init {
+        appStateHolder.resetState(TextSearchStateKey)
+    }
 
-    override fun resetState() = textSearchStateHolder.reset()
+    val textSearchStateFlow = appStateHolder.stateFlow(TextSearchStateKey)
+
+    override fun resetState() {
+        resetCommonSongTextState()
+        appStateHolder.resetState(TextSearchStateKey)
+    }
 
     override fun handleAction(action: UIAction) {
         when (action) {
@@ -135,13 +145,13 @@ class TextSearchViewModel @Inject constructor(
     }
 
     private fun updateSearchFor(searchFor: String) {
-        textSearchStateHolder.textSearchStateFlow.value.let {
+        textSearchStateFlow.value.let {
             changeTextSearchState(it.copy(searchFor = searchFor))
         }
     }
 
     private fun updateOrderBy(orderBy: TextSearchOrderBy) {
-        textSearchStateHolder.textSearchStateFlow.value.let {
+        textSearchStateFlow.value.let {
             changeTextSearchState(it.copy(orderBy = orderBy))
         }
     }
@@ -155,7 +165,7 @@ class TextSearchViewModel @Inject constructor(
     }
 
     private fun updateSongs(songs: List<Song>) {
-        textSearchStateHolder.textSearchStateFlow.value.let {
+        textSearchStateFlow.value.let {
             changeTextSearchState(it.copy(songs = songs))
         }
     }
@@ -167,5 +177,5 @@ class TextSearchViewModel @Inject constructor(
     }
 
     private fun changeTextSearchState(newState: TextSearchState) =
-        textSearchStateHolder.changeTextSearchState(newState)
+        appStateHolder.changeState(TextSearchStateKey, newState)
 }

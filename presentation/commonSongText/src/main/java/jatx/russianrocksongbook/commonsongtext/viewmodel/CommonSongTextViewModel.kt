@@ -1,5 +1,7 @@
 package jatx.russianrocksongbook.commonsongtext.viewmodel
 
+import jatx.russianrocksongbook.commonappstate.UIStateKey
+import jatx.russianrocksongbook.commonappstate.AppStateHolder
 import androidx.compose.runtime.mutableStateOf
 import jatx.russianrocksongbook.commonview.viewmodel.DeleteCurrentToTrash
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
@@ -10,10 +12,11 @@ import jatx.russianrocksongbook.domain.models.warning.Warnable
 import jatx.russianrocksongbook.navigation.ScreenVariant
 
 abstract class CommonSongTextViewModel(
-    private val commonSongTextStateHolder: CommonSongTextStateHolder,
+    appStateHolder: AppStateHolder,
+    private val commonSongTextStateKey: UIStateKey<CommonSongTextState>,
     commonSongTextViewModelDeps: CommonSongTextViewModelDeps
 ): CommonViewModel(
-    commonSongTextStateHolder.appStateHolder,
+    appStateHolder,
     commonSongTextViewModelDeps.commonViewModelDeps
 ) {
     protected val getCountByArtistUseCase =
@@ -25,9 +28,16 @@ abstract class CommonSongTextViewModel(
     protected val deleteSongToTrashUseCase =
         commonSongTextViewModelDeps.deleteSongToTrashUseCase
 
-    val commonSongTextStateFlow by lazy {
-        commonSongTextStateHolder.commonSongTextStateFlow
+    init {
+        appStateHolder.resetState(commonSongTextStateKey)
     }
+
+    val commonSongTextStateFlow by lazy {
+        appStateHolder.stateFlow(commonSongTextStateKey)
+    }
+
+    protected fun resetCommonSongTextState() =
+        appStateHolder.resetState(commonSongTextStateKey)
 
     val editorText = mutableStateOf("")
 
@@ -229,5 +239,5 @@ abstract class CommonSongTextViewModel(
     }
 
     private fun changeCommonSongTextState(commonSongTextState: CommonSongTextState) =
-        commonSongTextStateHolder.changeCommonSongTextState(commonSongTextState)
+        appStateHolder.changeState(commonSongTextStateKey, commonSongTextState)
 }

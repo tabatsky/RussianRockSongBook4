@@ -2,6 +2,8 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id 'com.android.library'
+    alias libs.plugins.hilt.android
+    alias libs.plugins.ksp
 }
 
 android {
@@ -34,6 +36,10 @@ android {
 
 dependencies {
     implementation libs.coreKtx
+    api libs.coroutines
+
+    implementation libs.hiltAndroid
+    ksp libs.hiltCompiler
 
     api project(':domain:usecase:local')
 }

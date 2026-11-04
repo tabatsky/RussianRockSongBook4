@@ -1,5 +1,6 @@
 package jatx.russianrocksongbook.start.internal.viewmodel
 
+import jatx.russianrocksongbook.commonappstate.AppStateHolder
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,18 +10,16 @@ import jatx.russianrocksongbook.commonviewmodel.UIAction
 import jatx.russianrocksongbook.navigation.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 internal class StartViewModel @Inject constructor(
-    private val startStateHolder: StartStateHolder,
+    appStateHolder: AppStateHolder,
     startViewModelDeps: StartViewModelDeps
 ): CommonViewModel(
-    startStateHolder.appStateHolder,
+    appStateHolder,
     startViewModelDeps.commonViewModelDeps
 ) {
     companion object {
@@ -39,8 +38,7 @@ internal class StartViewModel @Inject constructor(
     private val localRepoInitializer =
         startViewModelDeps.localRepoInitializer
 
-    val startStateFlow = startStateHolder
-        .startStateFlow.asStateFlow()
+    val startStateFlow = appStateHolder.stateFlow(StartStateKey)
 
     val needShowStartScreen = settings.appWasUpdated
 
@@ -83,7 +81,7 @@ internal class StartViewModel @Inject constructor(
     }
 
     private fun updateProgress(current: Int, total: Int) {
-        startStateHolder.startStateFlow.update {
+        appStateHolder.updateState(StartStateKey) {
             it.copy(currentProgress = current, totalProgress = total)
         }
     }

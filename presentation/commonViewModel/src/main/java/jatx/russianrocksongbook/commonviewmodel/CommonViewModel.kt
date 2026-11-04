@@ -1,5 +1,6 @@
 package jatx.russianrocksongbook.commonviewmodel
 
+import jatx.russianrocksongbook.commonappstate.AppStateHolder
 import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
@@ -36,7 +37,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 open class CommonViewModel @Inject constructor(
-    private val appStateHolder: AppStateHolder,
+    protected val appStateHolder: AppStateHolder,
     commonViewModelDeps: CommonViewModelDeps
 ): ViewModel() {
     companion object {
@@ -242,32 +243,32 @@ open class CommonViewModel @Inject constructor(
         appNavigator.selectScreen(newScreenVariant)
 
     fun changeCurrentScreenVariant(screenVariant: ScreenVariant) {
-        val appState = appStateFlow.value
-        val newState = when (screenVariant) {
-            is CloudSearchScreenVariant -> {
-                appState.copy(
-                    lastRandomKey = screenVariant.randomKey
-                )
-            }
+        updateAppState { appState ->
+            when (screenVariant) {
+                is CloudSearchScreenVariant -> {
+                    appState.copy(
+                        lastRandomKey = screenVariant.randomKey
+                    )
+                }
 
-            is TextSearchListScreenVariant -> {
-                appState.copy(
-                    lastRandomKey = screenVariant.randomKey
-                )
-            }
+                is TextSearchListScreenVariant -> {
+                    appState.copy(
+                        lastRandomKey = screenVariant.randomKey
+                    )
+                }
 
-            else -> appState
+                else -> appState
+            }
         }
-        changeAppState(newState)
     }
 
-    protected fun setAppWasUpdated(wasUpdated: Boolean) {
-        val appState = appStateFlow.value
-        val newState = appState.copy(appWasUpdated = wasUpdated)
-        changeAppState(newState)
-    }
+    protected fun setAppWasUpdated(wasUpdated: Boolean) =
+        updateAppState { it.copy(appWasUpdated = wasUpdated) }
 
     protected fun changeAppState(appState: AppState) = appStateHolder.changeAppState(appState)
+
+    protected fun updateAppState(transform: (AppState) -> AppState) =
+        appStateHolder.updateAppState(transform)
 
     protected fun showToast(toastText: String) = toasts.showToast(toastText)
 

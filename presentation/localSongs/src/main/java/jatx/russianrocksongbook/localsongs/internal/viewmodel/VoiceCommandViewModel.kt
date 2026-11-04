@@ -1,5 +1,6 @@
 package jatx.russianrocksongbook.localsongs.internal.viewmodel
 
+import jatx.russianrocksongbook.commonappstate.AppStateHolder
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -13,11 +14,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VoiceCommandViewModel @Inject constructor(
-    localStateHolder: LocalStateHolder,
+    appStateHolder: AppStateHolder,
     voiceCommandViewModelDeps: VoiceCommandViewModelDeps
 ): LocalViewModel(
-    localStateHolder,
-    voiceCommandViewModelDeps.localViewModelDeps
+    appStateHolder,
+    voiceCommandViewModelDeps.localViewModelDeps,
+    "VoiceCommand"
 ) {
     private val getArtistsAsListUseCase =
         voiceCommandViewModelDeps.getArtistsAsListUseCase

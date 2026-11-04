@@ -9,6 +9,8 @@ import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 import androidx.test.espresso.Espresso
 import androidx.test.runner.AndroidJUnitRunner
@@ -1199,7 +1201,7 @@ class UITest {
                 .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
                 .performTextReplacement("Ло")
             Log.e("test $testNumber input", "Ло")
-            Espresso.closeSoftKeyboard()
+            closeSoftKeyboard()
             composeTestRule.waitForTimeout(timeout)
             composeTestRule
                 .onNodeWithTag(SEARCH_BUTTON)
@@ -1393,7 +1395,7 @@ class UITest {
             .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
             .performTextReplacement("Хзщшг")
         Log.e("test $testNumber input", "Хзщшг")
-        Espresso.closeSoftKeyboard()
+        closeSoftKeyboard()
         composeTestRule.waitForTimeout(timeout)
         composeTestRule
             .onNodeWithTag(SEARCH_BUTTON)
@@ -2110,7 +2112,7 @@ class UITest {
             .performTextReplacement(ARTIST_NEW)
         Log.e("test $testNumber input", ARTIST_NEW)
 
-        Espresso.closeSoftKeyboard()
+        closeSoftKeyboard()
         composeTestRule.waitForTimeout(timeout)
         composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
@@ -2329,7 +2331,7 @@ class UITest {
             .performTextReplacement("2.0")
         Log.e("test $testNumber input", ARTIST_NEW)
 
-        Espresso.closeSoftKeyboard()
+        closeSoftKeyboard()
         composeTestRule.waitForTimeout(timeout)
         composeTestRule.pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
@@ -3645,7 +3647,7 @@ class UITest {
             .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
             .performTextReplacement("Ло")
         Log.e("test $testNumber input", "Ло")
-        Espresso.closeSoftKeyboard()
+        closeSoftKeyboard()
         composeTestRule.waitForTimeout(timeout)
 
         composeTestRule.pressBackUnconditionally()
@@ -3879,7 +3881,7 @@ class UITest {
             .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
             .performTextReplacement("сердца")
         Log.e("test $testNumber input", "сердца")
-        Espresso.closeSoftKeyboard()
+        closeSoftKeyboard()
         composeTestRule.waitForTimeout(timeout)
         composeTestRule
             .onNodeWithTag(SEARCH_BUTTON)
@@ -4043,7 +4045,7 @@ class UITest {
             .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
             .performTextReplacement("сердца")
         Log.e("test $testNumber input", "сердца")
-        Espresso.closeSoftKeyboard()
+        closeSoftKeyboard()
         composeTestRule.waitForTimeout(timeout)
         composeTestRule
             .onNodeWithTag(SEARCH_BUTTON)
@@ -4248,7 +4250,7 @@ class UITest {
             .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
             .performTextReplacement("сердца")
         Log.e("test $testNumber input", "сердца")
-        Espresso.closeSoftKeyboard()
+        closeSoftKeyboard()
         composeTestRule.waitForTimeout(timeout)
         composeTestRule
             .onNodeWithTag(SEARCH_BUTTON)
@@ -4311,7 +4313,7 @@ class UITest {
             .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
             .performTextReplacement("сердца")
         Log.e("test $testNumber input", "сердца")
-        Espresso.closeSoftKeyboard()
+        closeSoftKeyboard()
         composeTestRule.waitForTimeout(timeout)
         composeTestRule
             .onNodeWithTag(SEARCH_BUTTON)
@@ -4391,7 +4393,7 @@ class UITest {
             .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
             .performTextReplacement("сердца")
         Log.e("test $testNumber input", "сердца")
-        Espresso.closeSoftKeyboard()
+        closeSoftKeyboard()
         composeTestRule.waitForTimeout(timeout)
         composeTestRule
             .onNodeWithTag(SEARCH_BUTTON)
@@ -4407,7 +4409,7 @@ class UITest {
             .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
             .performTextReplacement("Ппщдылдж")
         Log.e("test $testNumber input", "Ппщдылдж")
-        Espresso.closeSoftKeyboard()
+        closeSoftKeyboard()
         composeTestRule.waitForTimeout(timeout)
         composeTestRule
             .onNodeWithTag(SEARCH_BUTTON)
@@ -4444,7 +4446,7 @@ class UITest {
             .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
             .performTextReplacement("сердца")
         Log.e("test $testNumber input", "сердца")
-        Espresso.closeSoftKeyboard()
+        closeSoftKeyboard()
         composeTestRule.waitForTimeout(timeout)
         composeTestRule
             .onNodeWithTag(SEARCH_BUTTON)
@@ -4497,7 +4499,7 @@ class UITest {
             .onNodeWithTag(TEXT_FIELD_SEARCH_FOR)
             .performTextReplacement("сердца")
         Log.e("test $testNumber input", "сердца")
-        Espresso.closeSoftKeyboard()
+        closeSoftKeyboard()
         composeTestRule.waitForTimeout(timeout)
         composeTestRule
             .onNodeWithTag(SEARCH_BUTTON)
@@ -4654,6 +4656,36 @@ class UITest {
         Log.e("test $testNumber assert", "${stringConst.listIsEmpty} is displayed")
     }
 
+    private fun closeSoftKeyboard() {
+        composeTestRule.activityRule.scenario.onActivity { activity ->
+            WindowCompat.getInsetsController(activity.window, activity.window.decorView)
+                .hide(WindowInsetsCompat.Type.ime())
+        }
+    }
+
+    fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.waitForTimeout(time: Long) {
+        try {
+            waitUntil(time) { false }
+        } catch (e: ComposeTimeoutException) {
+            Log.e("test wait", "timeout")
+        }
+    }
+
+    fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.waitForCondition(
+        condition: () -> Boolean
+    ) {
+        try {
+            waitUntil(10000L) { condition() }
+        } catch (e: ComposeTimeoutException) {
+            Log.e("test wait", "timeout")
+        }
+    }
+
+    fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.pressBackUnconditionally() {
+        closeSoftKeyboard()
+        waitForTimeout(timeout)
+        Espresso.pressBackUnconditionally()
+    }
 }
 
 const val timeout = 1500L
@@ -4670,30 +4702,6 @@ fun String.startEquallyWith(with: String, len: Int = 10): Boolean {
     val startOfThis = this.take(len)
     val startOfWith = with.take(len)
     return startOfThis == startOfWith
-}
-
-fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.waitForTimeout(time: Long) {
-    try {
-        waitUntil(time) { false }
-    } catch (e: ComposeTimeoutException) {
-        Log.e("test wait", "timeout")
-    }
-}
-
-fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.waitForCondition(
-    condition: () -> Boolean
-) {
-    try {
-        waitUntil(10000L) { condition() }
-    } catch (e: ComposeTimeoutException) {
-        Log.e("test wait", "timeout")
-    }
-}
-
-fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.pressBackUnconditionally() {
-    Espresso.closeSoftKeyboard()
-    waitForTimeout(timeout)
-    Espresso.pressBackUnconditionally()
 }
 
 class StringConst @Inject constructor(

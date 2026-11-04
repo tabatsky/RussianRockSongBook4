@@ -42,7 +42,7 @@ class VoiceCommandViewModelTest: LocalViewModelTest() {
         )
 
         voiceCommandViewModel = VoiceCommandViewModel(
-            localStateHolder = localStateHolder,
+            appStateHolder = appStateHolder,
             voiceCommandViewModelDeps = voiceCommandViewModelDeps
         )
         voiceCommandViewModel.launchJobsIfNecessary()

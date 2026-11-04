@@ -3,7 +3,7 @@ package jatx.russianrocksongbook.donation.internal.viewmodel
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jatx.russianrocksongbook.commonviewmodel.AppStateHolder
+import jatx.russianrocksongbook.commonappstate.AppStateHolder
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModelDeps
 import jatx.russianrocksongbook.commonviewmodel.UIAction

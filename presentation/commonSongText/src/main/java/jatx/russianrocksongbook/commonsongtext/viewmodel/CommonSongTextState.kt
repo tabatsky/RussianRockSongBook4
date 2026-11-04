@@ -1,5 +1,7 @@
 package jatx.russianrocksongbook.commonsongtext.viewmodel
 
+import jatx.russianrocksongbook.commonappstate.UIStateKey
+import jatx.russianrocksongbook.commonappstate.UIState
 import jatx.russianrocksongbook.domain.models.local.Song
 
 data class CommonSongTextState(
@@ -20,7 +22,7 @@ data class CommonSongTextState(
     val showWarningDialog: Boolean,
     val showChordDialog: Boolean,
     val selectedChord: String
-) {
+) : UIState {
 
     companion object {
         fun initial() = CommonSongTextState(
@@ -44,3 +46,7 @@ data class CommonSongTextState(
         )
     }
 }
+
+/** У каждого экрана-владельца свой независимый CommonSongTextState. */
+fun newCommonSongTextStateKey(owner: String) =
+    UIStateKey(CommonSongTextState::class.java, "${CommonSongTextState::class.java.name}#$owner") { CommonSongTextState.initial() }
