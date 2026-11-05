@@ -2,7 +2,7 @@ package jatx.russianrocksongbook.start.internal.viewmodel
 
 import jatx.russianrocksongbook.commonappstate.AppStateHolder
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel

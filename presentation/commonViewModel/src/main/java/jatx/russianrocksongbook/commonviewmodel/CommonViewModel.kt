@@ -4,7 +4,7 @@ import jatx.russianrocksongbook.commonappstate.AppStateHolder
 import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation3.runtime.NavBackStack

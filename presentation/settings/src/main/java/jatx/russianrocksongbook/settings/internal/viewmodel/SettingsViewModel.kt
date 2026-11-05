@@ -3,7 +3,7 @@ package jatx.russianrocksongbook.settings.internal.viewmodel
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jatx.russianrocksongbook.commonappstate.AppStateHolder
 import jatx.russianrocksongbook.commonviewmodel.CommonViewModel

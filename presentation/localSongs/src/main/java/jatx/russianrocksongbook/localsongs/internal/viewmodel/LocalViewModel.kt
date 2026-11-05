@@ -4,7 +4,7 @@ import jatx.russianrocksongbook.commonsongtext.viewmodel.newCommonSongTextStateK
 import jatx.russianrocksongbook.commonappstate.AppStateHolder
 import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jatx.russianrocksongbook.commonsongtext.R

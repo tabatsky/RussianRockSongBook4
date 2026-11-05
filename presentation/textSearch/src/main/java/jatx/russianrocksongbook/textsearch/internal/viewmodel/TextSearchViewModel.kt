@@ -5,7 +5,7 @@ import jatx.russianrocksongbook.commonappstate.AppStateHolder
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jatx.russianrocksongbook.commonsongtext.viewmodel.CommonSongTextViewModel
 import jatx.russianrocksongbook.commonview.viewmodel.DeleteCurrentToTrash
