@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
@@ -46,15 +47,13 @@ fun ClickableWordText(
                 actualWord = actualWord.replace(key, actualWordMappings[key] ?: "")
             }
             if (actualWord in actualWordSet) {
-                addStyle(
-                    SpanStyle(color = colorBg, background = colorMain, fontSize = fontSize * 1.1),
-                    it.startIndex,
-                    it.endIndex
-                )
                 addLink(
                     LinkAnnotation.Clickable(
                         tag = it.text,
-                        linkInteractionListener = onClick
+                        linkInteractionListener = onClick,
+                        styles = TextLinkStyles(
+                            style = SpanStyle(color = colorBg, background = colorMain, fontSize = fontSize * 1.1)
+                        )
                     ),
                     it.startIndex,
                     it.endIndex
