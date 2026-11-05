@@ -1,6 +1,6 @@
 [versions]
 
-gradleAndroid = "9.5.0"
+gradleAndroid = "9.4.1"
 kotlin = "2.4.21"
 ksp = "2.3.10"
 hilt = "2.60.1"
