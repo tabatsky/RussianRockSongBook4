@@ -4663,9 +4663,11 @@ class UITest {
         }
     }
 
+    // TODO: need to rename the method and remove the parameter
     fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.waitForTimeout(time: Long) {
         try {
-            waitUntil(time) { false }
+//            waitUntil(time) { false }
+            waitForIdle()
         } catch (e: ComposeTimeoutException) {
             Log.e("test wait", "timeout")
         }
