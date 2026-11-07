@@ -12,8 +12,10 @@ import jatx.russianrocksongbook.domain.repository.cloud.CloudRepository
 import jatx.russianrocksongbook.domain.repository.cloud.CloudSearchOrderBy
 import jatx.russianrocksongbook.domain.repository.cloud.result.*
 import jatx.russianrocksongbook.domain.repository.local.LocalRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -28,28 +30,17 @@ class CloudRepositoryTestImpl @Inject constructor(
 ): CloudRepository {
     override var isOnline = true
 
-    private val list1 by lazy {
-        runBlocking {
-            localRepo.getSongsByArtist("Немного Нервно")
-        }
-    }
-    private val list2 by lazy {
-        runBlocking {
-            localRepo.getSongsByArtist("Александр Башлачёв")
-        }
-    }
-    private val list3 by lazy {
-        runBlocking {
-            localRepo.getSongsByArtist("Сплин")
-        }
-    }
-
     private val arrayList by lazy {
-        arrayListOf<Song>().apply {
-            addAll(list1)
-            addAll(list2)
-            addAll(list3)
-            reverse()
+        runBlocking(Dispatchers.IO) {
+            val list1 = localRepo.getSongsByArtist("Немного Нервно")
+            val list2 = localRepo.getSongsByArtist("Александр Башлачёв")
+            val list3 = localRepo.getSongsByArtist("Сплин")
+            arrayListOf<Song>().apply {
+                addAll(list1)
+                addAll(list2)
+                addAll(list3)
+                reverse()
+            }
         }
     }
 
@@ -86,16 +77,15 @@ class CloudRepositoryTestImpl @Inject constructor(
             orderByLambda(it, orderBy)
         }
 
-
     override suspend fun sendCrash(appCrash: AppCrash): ResultWithoutData {
         TODO("Not yet implemented")
     }
 
-    override suspend fun addCloudSong(cloudSong: CloudSong): ResultWithoutData {
+    override suspend fun addCloudSong(cloudSong: CloudSong): ResultWithoutData = withContext(Dispatchers.IO) {
         val oldList = list
         val newList = oldList + listOf(cloudSong)
         list = newList
-        return ResultWithoutData(STATUS_SUCCESS, null)
+        ResultWithoutData(STATUS_SUCCESS, null)
     }
 
     override suspend fun addCloudSongList(cloudSongs: List<CloudSong>): ResultWithAddSongListResultData {
@@ -122,7 +112,6 @@ class CloudRepositoryTestImpl @Inject constructor(
         data = 1.0f
     )
 
-
     override suspend fun delete(
         secret1: String,
         secret2: String,
@@ -135,15 +124,15 @@ class CloudRepositoryTestImpl @Inject constructor(
         searchFor: String,
         orderBy: CloudSearchOrderBy,
         page: Int
-    ): ResultWithCloudSongListData {
+    ): ResultWithCloudSongListData = withContext(Dispatchers.IO) {
         delay(100)
-        return if (isOnline) {
-            val list = search(searchFor, orderBy)
+        if (isOnline) {
+            val pagedList = search(searchFor, orderBy)
                 .safeSublist((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
             ResultWithCloudSongListData(
                 status = STATUS_SUCCESS,
                 message = null,
-                data = list
+                data = pagedList
             )
         } else {
             ResultWithCloudSongListData(
@@ -156,9 +145,6 @@ class CloudRepositoryTestImpl @Inject constructor(
 }
 
 fun <T: Any> List<T>.safeSublist(fromIndex: Int, toIndex: Int): List<T> {
-    return when {
-        fromIndex >= size -> listOf()
-        toIndex >= size -> subList(fromIndex, size - 1)
-        else -> subList(fromIndex, toIndex)
-    }
+    if (fromIndex !in indices) return listOf()
+    return drop(fromIndex).take(toIndex - fromIndex)
 }

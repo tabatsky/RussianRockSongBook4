@@ -19,7 +19,7 @@ jobs:
     
     strategy:
         matrix:
-          api-level: [24, 27, 29, 30, 31, 33, 34, 35, 36]
+          api: [{level: 24, arch: x86}, {level: 27, arch: x86}, {level: 29, arch: x86_64}, {level: 30, arch: x86_64}, {level: 31, arch: x86_64}, {level: 33, arch: x86_64}, {level: 34, arch: x86_64}, {level: 35, arch: x86_64}, {level: 36, arch: x86_64}]
           target: [default]
     
     steps:
@@ -53,15 +53,16 @@ jobs:
       - name: Android Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: ${{ matrix.api-level }}
+          api-level: ${{ matrix.api.level }}
           target: ${{ matrix.target }}
           profile: 29
-          arch: x86_64
+          arch: ${{ matrix.api.arch }}
           ram-size: 2048
           heap-size: 512
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
+          disable-linux-hw-accel: false
           script: |
             adb logcat -c
             adb logcat *:E | grep test &

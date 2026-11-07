@@ -3,16 +3,16 @@ package jatx.russianrocksongbook
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import android.view.KeyEvent
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
-import androidx.test.espresso.Espresso
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnitRunner
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -38,6 +38,9 @@ import jatx.russianrocksongbook.localsongs.api.methods.selectSongByArtistAndTitl
 import jatx.russianrocksongbook.localsongs.internal.viewmodel.LocalViewModel
 import jatx.russianrocksongbook.navigation.*
 import jatx.russianrocksongbook.testing.*
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import leakcanary.DetectLeaksAfterTestSuccess
 import org.junit.After
@@ -132,10 +135,10 @@ class UITest {
         val appWasUpdated = settingsRepository.appWasUpdated
 
         while (settingsRepository.appWasUpdated) {
-            composeTestRule.waitForTimeout(1000L)
+            composeTestRule.waitForIdle()
         }
 
-        composeTestRule.waitForTimeout(1000L)
+        composeTestRule.waitForIdle()
 
         if (appWasUpdated) {
             composeTestRule
@@ -449,7 +452,7 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(ARTIST_1))
         Log.e("test $testNumber assert", "app bar title starts equally with $ARTIST_1")
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -488,7 +491,7 @@ class UITest {
             .onNodeWithText(TITLE_1_2)
             .assertDoesNotExist()
         Log.e("test $testNumber assert", "$TITLE_1_2 does not exist")
-        composeTestRule.waitForTimeout(timeout)
+        composeTestRule.waitForIdle()
 
         val indexSong2 = (titles.indexOf(TITLE_1_2) - 3)
             .takeIf { it >= 0 }
@@ -497,7 +500,7 @@ class UITest {
             .onNodeWithTag(SONG_LIST_LAZY_COLUMN)
             .performScrollToIndex(indexSong2)
         Log.e("test $testNumber scroll", "songList to index $indexSong2")
-        composeTestRule.waitForTimeout(timeout)
+        composeTestRule.waitForIdle()
         composeTestRule.waitForCondition {
             composeTestRule
                 .onNodeWithText(TITLE_1_2)
@@ -508,7 +511,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "$TITLE_1_2 is displayed")
 
-        composeTestRule.waitForTimeout(timeout)
+        composeTestRule.waitForIdle()
 
         composeTestRule
             .onNodeWithText(TITLE_1_3)
@@ -521,7 +524,7 @@ class UITest {
             .onNodeWithTag(SONG_LIST_LAZY_COLUMN)
             .performScrollToIndex(indexSong3)
         Log.e("test $testNumber scroll", "songList to index $indexSong3")
-        composeTestRule.waitForTimeout(timeout)
+        composeTestRule.waitForIdle()
         composeTestRule.waitForCondition {
             composeTestRule
                 .onNodeWithText(TITLE_1_3)
@@ -532,7 +535,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "$TITLE_1_3 is displayed")
 
-        composeTestRule.waitForTimeout(timeout)
+        composeTestRule.waitForIdle()
 
         composeTestRule
             .onNodeWithText(TITLE_1_4)
@@ -579,7 +582,7 @@ class UITest {
         val songIndex1 = titles.indexOf(TITLE_1_3)
         val song1 = songs[songIndex1]
 
-        composeTestRule.waitForTimeout(timeout)
+        composeTestRule.waitForIdle()
         composeTestRule.waitForCondition {
             composeTestRule
                 .onNodeWithTag(SONG_LIST_LAZY_COLUMN)
@@ -1001,7 +1004,7 @@ class UITest {
         composeTestRule
             .onNodeWithText(stringConst.cancel)
             .assertIsDisplayed()
-        Log.e("test $testNumber assert", "$stringConst.cancel is displayed")
+        Log.e("test $testNumber assert", "${stringConst.cancel} is displayed")
         composeTestRule
             .onNodeWithText(stringConst.ok)
             .performClick()
@@ -1202,7 +1205,7 @@ class UITest {
                 .performTextReplacement("Ло")
             Log.e("test $testNumber input", "Ло")
             closeSoftKeyboard()
-            composeTestRule.waitForTimeout(timeout)
+            composeTestRule.waitForIdle()
             composeTestRule
                 .onNodeWithTag(SEARCH_BUTTON)
                 .performClick()
@@ -1396,7 +1399,7 @@ class UITest {
             .performTextReplacement("Хзщшг")
         Log.e("test $testNumber input", "Хзщшг")
         closeSoftKeyboard()
-        composeTestRule.waitForTimeout(timeout)
+        composeTestRule.waitForIdle()
         composeTestRule
             .onNodeWithTag(SEARCH_BUTTON)
             .performClick()
@@ -1725,13 +1728,18 @@ class UITest {
                 .onNodeWithTag(DOWNLOAD_BUTTON)
                 .performClick()
             Log.e("test $testNumber click", DOWNLOAD_BUTTON)
-            composeTestRule.waitForCondition {
-                runBlocking {
-                    localRepository
+            var isSongDownloaded = false
+            MainScope().launch {
+                do {
+                    isSongDownloaded = localRepository
                         .getSongsByArtist(list[2].artist)
                         .map { it.title }
                         .contains(list[2].visibleTitle)
-                }
+                    delay(50)
+                } while (!isSongDownloaded)
+            }
+            composeTestRule.waitForCondition {
+                isSongDownloaded
             }
             assert(
                 runBlocking {
@@ -1797,6 +1805,8 @@ class UITest {
                 .onNodeWithTag(LIKE_BUTTON)
                 .performClick()
             Log.e("test $testNumber click", LIKE_BUTTON)
+            composeTestRule.waitForTimeout(timeout)
+            composeTestRule.waitForIdle()
             composeTestRule.waitForCondition {
                 composeTestRule
                     .onNodeWithText(cloudSong2.visibleTitleWithArtistAndRating)
@@ -1869,6 +1879,8 @@ class UITest {
                 .onNodeWithTag(DISLIKE_BUTTON)
                 .performClick()
             Log.e("test $testNumber click", DISLIKE_BUTTON)
+            composeTestRule.waitForTimeout(timeout)
+            composeTestRule.waitForIdle()
             composeTestRule.waitForCondition {
                 composeTestRule
                     .onNodeWithText(cloudSong3.visibleTitleWithArtistAndRating)
@@ -1996,14 +2008,20 @@ class UITest {
             .performClick()
         Log.e("test $testNumber click", stringConst.ok)
 
-        composeTestRule.waitForTimeout(timeout)
+        composeTestRule.waitForIdle()
 
         with (cloudRepository) {
+            var isArtistNew = false
+            MainScope().launch {
+                do {
+                    val list = search("", CloudSearchOrderBy.BY_ID_DESC)
+                    val cloudSong = list[0]
+                    Log.e("cloud song", cloudSong.artist)
+                    isArtistNew = cloudSong.artist == ARTIST_NEW
+                } while (!isArtistNew)
+            }
             composeTestRule.waitForCondition {
-                val list = search("", CloudSearchOrderBy.BY_ID_DESC)
-                val cloudSong = list[0]
-                Log.e("cloud song", cloudSong.artist)
-                cloudSong.artist == ARTIST_NEW
+                isArtistNew
             }
 
             val list = search("", CloudSearchOrderBy.BY_ID_DESC)
@@ -2113,8 +2131,8 @@ class UITest {
         Log.e("test $testNumber input", ARTIST_NEW)
 
         closeSoftKeyboard()
-        composeTestRule.waitForTimeout(timeout)
-        composeTestRule.pressBackUnconditionally()
+        composeTestRule.waitForIdle()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -2130,7 +2148,7 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -2195,7 +2213,7 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -2329,11 +2347,11 @@ class UITest {
         composeTestRule
             .onNodeWithTag(TEXT_FIELD_SCROLL_SPEED)
             .performTextReplacement("2.0")
-        Log.e("test $testNumber input", ARTIST_NEW)
+        Log.e("test $testNumber input", "2.0")
 
         closeSoftKeyboard()
-        composeTestRule.waitForTimeout(timeout)
-        composeTestRule.pressBackUnconditionally()
+        composeTestRule.waitForIdle()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -2349,7 +2367,7 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -2498,7 +2516,7 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -2551,7 +2569,7 @@ class UITest {
                 Log.e("test $testNumber assert", "$it is displayed")
             }
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -2567,7 +2585,7 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -2638,7 +2656,7 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -2696,7 +2714,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "${stringConst.choose} is displayed")
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -2712,7 +2730,7 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -2788,7 +2806,7 @@ class UITest {
         assertTrue(actualArtist.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -2909,7 +2927,7 @@ class UITest {
             .assertDoesNotExist()
         Log.e("test $testNumber assert", "$TITLE_1_3 does not exist")
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3023,7 +3041,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song text is displayed correctly")
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3044,7 +3062,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song title is displayed correctly")
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3102,7 +3120,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song title is displayed correctly")
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3151,7 +3169,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song text is displayed correctly")
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3172,7 +3190,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song title is displayed correctly")
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3244,7 +3262,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song title is displayed correctly")
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3347,7 +3365,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song text is displayed correctly")
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3368,7 +3386,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song title is displayed correctly")
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3494,7 +3512,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song title is displayed correctly")
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3611,7 +3629,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "cloud song 2 text is displayed correctly")
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3648,9 +3666,9 @@ class UITest {
             .performTextReplacement("Ло")
         Log.e("test $testNumber input", "Ло")
         closeSoftKeyboard()
-        composeTestRule.waitForTimeout(timeout)
+        composeTestRule.waitForIdle()
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3666,7 +3684,7 @@ class UITest {
         assertTrue(actualArtistAfterSecondBackPressing.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3834,7 +3852,7 @@ class UITest {
         assertTrue(actualArtistAfterSecondBackPressing.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3882,7 +3900,7 @@ class UITest {
             .performTextReplacement("сердца")
         Log.e("test $testNumber input", "сердца")
         closeSoftKeyboard()
-        composeTestRule.waitForTimeout(timeout)
+        composeTestRule.waitForIdle()
         composeTestRule
             .onNodeWithTag(SEARCH_BUTTON)
             .performClick()
@@ -3961,7 +3979,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song text is displayed correctly")
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3982,7 +4000,7 @@ class UITest {
             .assertIsDisplayed()
         Log.e("test $testNumber assert", "song title is displayed correctly")
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -3998,7 +4016,7 @@ class UITest {
         assertTrue(actualArtistAfterSecondBackPressing.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -4046,7 +4064,7 @@ class UITest {
             .performTextReplacement("сердца")
         Log.e("test $testNumber input", "сердца")
         closeSoftKeyboard()
-        composeTestRule.waitForTimeout(timeout)
+        composeTestRule.waitForIdle()
         composeTestRule
             .onNodeWithTag(SEARCH_BUTTON)
             .performClick()
@@ -4176,7 +4194,7 @@ class UITest {
         assertTrue(actualArtistAfterSecondBackPressing.startEquallyWith(settingsRepository.defaultArtist))
         Log.e("test $testNumber assert", "app bar title starts equally with ${settingsRepository.defaultArtist}")
 
-        composeTestRule.pressBackUnconditionally()
+        pressBackUnconditionally()
         Log.e("test $testNumber action", "press back")
 
         composeTestRule.waitForCondition {
@@ -4251,7 +4269,7 @@ class UITest {
             .performTextReplacement("сердца")
         Log.e("test $testNumber input", "сердца")
         closeSoftKeyboard()
-        composeTestRule.waitForTimeout(timeout)
+        composeTestRule.waitForIdle()
         composeTestRule
             .onNodeWithTag(SEARCH_BUTTON)
             .performClick()
@@ -4314,7 +4332,7 @@ class UITest {
             .performTextReplacement("сердца")
         Log.e("test $testNumber input", "сердца")
         closeSoftKeyboard()
-        composeTestRule.waitForTimeout(timeout)
+        composeTestRule.waitForIdle()
         composeTestRule
             .onNodeWithTag(SEARCH_BUTTON)
             .performClick()
@@ -4394,7 +4412,7 @@ class UITest {
             .performTextReplacement("сердца")
         Log.e("test $testNumber input", "сердца")
         closeSoftKeyboard()
-        composeTestRule.waitForTimeout(timeout)
+        composeTestRule.waitForIdle()
         composeTestRule
             .onNodeWithTag(SEARCH_BUTTON)
             .performClick()
@@ -4410,7 +4428,7 @@ class UITest {
             .performTextReplacement("Ппщдылдж")
         Log.e("test $testNumber input", "Ппщдылдж")
         closeSoftKeyboard()
-        composeTestRule.waitForTimeout(timeout)
+        composeTestRule.waitForIdle()
         composeTestRule
             .onNodeWithTag(SEARCH_BUTTON)
             .performClick()
@@ -4447,7 +4465,7 @@ class UITest {
             .performTextReplacement("сердца")
         Log.e("test $testNumber input", "сердца")
         closeSoftKeyboard()
-        composeTestRule.waitForTimeout(timeout)
+        composeTestRule.waitForIdle()
         composeTestRule
             .onNodeWithTag(SEARCH_BUTTON)
             .performClick()
@@ -4500,7 +4518,7 @@ class UITest {
             .performTextReplacement("сердца")
         Log.e("test $testNumber input", "сердца")
         closeSoftKeyboard()
-        composeTestRule.waitForTimeout(timeout)
+        composeTestRule.waitForIdle()
         composeTestRule
             .onNodeWithTag(SEARCH_BUTTON)
             .performClick()
@@ -4624,19 +4642,39 @@ class UITest {
                 .onNodeWithText("${song.title} (${song.artist})")
                 .assertIsDisplayed()
             Log.e("test $testNumber assert", "${song.title} (${song.artist}) is displayed")
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithText(song.text)
+                    .isDisplayed()
+            }
             composeTestRule
                 .onNodeWithText(song.text)
                 .assertIsDisplayed()
             Log.e("test $testNumber assert", "song text is displayed")
+            composeTestRule.waitForCondition {
+                composeTestRule
+                    .onNodeWithTag(DELETE_FROM_FAVORITE_BUTTON)
+                    .isDisplayed()
+            }
+            composeTestRule
+                .onNodeWithTag(DELETE_FROM_FAVORITE_BUTTON)
+                .assertIsDisplayed()
+            Log.e("test $testNumber assert", "$DELETE_FROM_FAVORITE_BUTTON is displayed")
             composeTestRule
                 .onNodeWithTag(DELETE_FROM_FAVORITE_BUTTON)
                 .performClick()
+            Log.e("test $testNumber click", DELETE_FROM_FAVORITE_BUTTON)
+
+            composeTestRule.waitForTimeout(timeout)
+            composeTestRule.waitForIdle()
         }
 
         actualSongs[2].let {
             composeTestRule
                 .onNodeWithText(it.title)
                 .performClick()
+            composeTestRule.waitForTimeout(timeout)
+            composeTestRule.waitForIdle()
             checkAndRemoveSong(it)
         }
 
@@ -4658,22 +4696,24 @@ class UITest {
 
     private fun closeSoftKeyboard() {
         composeTestRule.activityRule.scenario.onActivity { activity ->
-            WindowCompat.getInsetsController(activity.window, activity.window.decorView)
-                .hide(WindowInsetsCompat.Type.ime())
+            val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val view = activity.currentFocus ?: activity.window.decorView
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+            activity.currentFocus?.clearFocus()
         }
+        composeTestRule.waitForTimeout(timeout)
+        composeTestRule.waitForIdle()
     }
 
-    // TODO: need to rename the method and remove the parameter
-    fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.waitForTimeout(time: Long) {
+    private fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.waitForTimeout(time: Long) {
         try {
-//            waitUntil(time) { false }
-            waitForIdle()
+            waitUntil(time) { false }
         } catch (e: ComposeTimeoutException) {
             Log.e("test wait", "timeout")
         }
     }
 
-    fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.waitForCondition(
+    private fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.waitForCondition(
         condition: () -> Boolean
     ) {
         try {
@@ -4683,10 +4723,12 @@ class UITest {
         }
     }
 
-    fun AndroidComposeTestRule<out TestRule, out ComponentActivity>.pressBackUnconditionally() {
+    private fun pressBackUnconditionally() {
         closeSoftKeyboard()
-        waitForTimeout(timeout)
-        Espresso.pressBackUnconditionally()
+//        Espresso.pressBackUnconditionally()
+        InstrumentationRegistry
+            .getInstrumentation()
+            .sendKeyDownUpSync(KeyEvent.KEYCODE_BACK)
     }
 }
 
