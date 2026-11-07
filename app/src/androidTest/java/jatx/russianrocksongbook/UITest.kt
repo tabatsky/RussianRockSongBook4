@@ -4729,6 +4729,8 @@ class UITest {
         InstrumentationRegistry
             .getInstrumentation()
             .sendKeyDownUpSync(KeyEvent.KEYCODE_BACK)
+        composeTestRule.waitForTimeout(timeout)
+        composeTestRule.waitForIdle()
     }
 }
 
