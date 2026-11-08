@@ -19,6 +19,7 @@ import kotlinx.coroutines.withContext
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.milliseconds
 
 const val PAGE_SIZE = 15
 
@@ -92,8 +93,9 @@ class CloudRepositoryTestImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun addWarning(warning: Warning): ResultWithoutData =
+    override suspend fun addWarning(warning: Warning): ResultWithoutData = withContext(Dispatchers.IO) {
         ResultWithoutData(STATUS_SUCCESS, null)
+    }
 
     override suspend fun searchSongs(
         searchFor: String,
@@ -106,11 +108,13 @@ class CloudRepositoryTestImpl @Inject constructor(
         cloudSong: CloudSong,
         userInfo: UserInfo,
         voteValue: Int
-    ): ResultWithNumber = ResultWithNumber(
-        status = STATUS_SUCCESS,
-        message = null,
-        data = 1.0f
-    )
+    ): ResultWithNumber = withContext(Dispatchers.IO) {
+        ResultWithNumber(
+            status = STATUS_SUCCESS,
+            message = null,
+            data = 1.0f
+        )
+    }
 
     override suspend fun delete(
         secret1: String,
@@ -125,7 +129,7 @@ class CloudRepositoryTestImpl @Inject constructor(
         orderBy: CloudSearchOrderBy,
         page: Int
     ): ResultWithCloudSongListData = withContext(Dispatchers.IO) {
-        delay(100)
+        delay(100.milliseconds)
         if (isOnline) {
             val pagedList = search(searchFor, orderBy)
                 .safeSublist((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
